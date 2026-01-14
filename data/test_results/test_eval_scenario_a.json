@@ -1,0 +1,36 @@
+{
+  "model_name": "gpt-4.1-mini",
+  "llm_disclosure_set": [],
+  "gt_disclosure_set": [],
+  "convergence_history": [
+    []
+  ],
+  "converged": true,
+  "iterations": 1,
+  "metrics": {
+    "llm": {
+      "profit": 3.5,
+      "consumer_surplus": 1.4000000000000001,
+      "welfare": 4.9,
+      "disclosure_rate": 0.0
+    },
+    "ground_truth": {
+      "profit": 3.5,
+      "consumer_surplus": 1.4000000000000001,
+      "welfare": 4.9,
+      "disclosure_rate": 0.0
+    },
+    "deviations": {
+      "profit_mae": 0.0,
+      "cs_mae": 0.0,
+      "welfare_mae": 0.0,
+      "disclosure_rate_mae": 0.0
+    }
+  },
+  "labels": {
+    "llm_disclosure_rate_bucket": "low",
+    "gt_disclosure_rate_bucket": "low",
+    "llm_over_disclosure": 0,
+    "gt_over_disclosure": 0
+  }
+}

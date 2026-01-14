@@ -1,0 +1,1224 @@
+
+
+=== PAGE 1 / 39 ===
+
+1 
+To Partner or Not to Partner? The Partnership Between Platforms and 
+Data Brokers in Two-sided Markets 
+ 
+Xin Zhang 
+School of Management, University of Science and Technology of China, 96 Jinzhai Road, Hefei 
+230026, Anhui, P.R. China 
+Email: zx01@mail.ustc.edu.cn 
+ 
+Lihong Cheng  
+School of Management, University of Science and Technology of China, 96 Jinzhai Road, Hefei 
+230026, Anhui, P.R. China 
+Email: clh2016@mail.ustc.edu.cn 
+ 
+Yugang Yu 
+School of Management, University of Science and Technology of China, 96 Jinzhai Road, Hefei 
+230026, Anhui, P.R. China 
+Email: ygyu@ustc.edu.cn 
+ 
+Yong Tan 
+Michael G. Foster School of Business, University of Washington, Seattle, Washington 98195 
+Email: ytan@uw.edu  
+ 
+ 
+ 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 2 / 39 ===
+
+2 
+To Partner or Not to Partner? The Partnership Between Platforms and 
+Data Brokers in Two-sided Markets 
+Abstract 
+Data has become an important competitive asset , especially for online advertising platforms , and t he 
+huge demand for data has spawned a new data broker industry. Platforms usually partner with data 
+brokers to acquire external data to enhance their targeting capabilities , but this practice has stoked 
+consumer privacy concerns. This study develops a game-theoretic model to examine the economic  
+mechanism underlying the partnership between competing platforms and a data broker in a two-sided 
+market. Interestingly, our analysis shows that the increase in consumer privacy concerns caused by the 
+data broker may incentivize platforms to partner with the data broker  rather than discourag ing them. 
+The driving force is that due to negative cross-side network effects, increased privacy concerns can be 
+a strategic lever to soften price competition on the advertiser side. However, when both platforms 
+partner with the data broker, a prisoner ’s dilemma situation may arise in equilibrium even though the 
+data broker can greatly improve the targeting capabilities. We find that the platform-data broker 
+partnership hurts consumer surplus when platforms adopt a pure ad-sponsored model without charging 
+consumers, but it may benefit consumer surplus when platforms adopt a mixed model with ad-
+sponsored and subscription -based revenue. We consider several model extensions to seek additional 
+insights, including the data broker charg ing an endogenous commission fee and cases where  the 
+consumer or advertiser can multihome (join more than one platform) . Managerial and policy 
+implications of the findings are discussed.  
+Keywords: platforms, data brokers, platform-data broker partnership, privacy concerns 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 3 / 39 ===
+
+3 
+1. Introduction 
+Data has become a strategic asset for many businesses and industries (DalleMule and Davenport 2017). 
+The huge demand for data has spawned an emerging data broker industry , which was valued at USD 
+232 billion in 2019 and is expected to reach USD 345 billion in 20261. Major data brokers in the market 
+include Acxiom , Experian, Oracle, and Lotame, which actively c ollect consumer data from various 
+online and offline sources  (e.g., social media, web history, offline purchase history ). Data brokers 
+aggregate and process the collected data to generate consumer insights and then share those with other 
+companies for purposes such as targeted advertising and personalized pricing.  
+Given the importance of data, online advertising platforms (e.g., Facebook, TikTok, and publisher 
+websites) have begun to partner with data brokers (Venkatadri et al. 2019). These platforms are funded 
+by digital advertising in a two-sided market, in which they provide online services to consumers while 
+collecting consumer data for selling targeted ads to advertisers. By partnering with data brokers , 
+platforms can improve their targeting capabilities by acquiring external data and analytic services. For 
+instance, Facebook used to partner with several data brokers (e.g., Acxiom, Experion), allowing for the 
+data collected online by Facebook to be linked against data collected offline by data brokers. This 
+enables platforms to refine their targeting b ased on information compiled by these partners, such as 
+offline demographic and behavioral information like addresses, income, and purchase history. Other 
+examples include  the partnership between  TikTok and Oracle , where TikTok can  gain better user 
+insights by leveraging Oracle’s data analytics service  (Goetzen 2020 ). According to recent media 
+ 
+1 https://www.knowledge-sourcing.com/report/global-data-broker-market 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 4 / 39 ===
+
+4 
+reports (Lotame 2020), partnering with data brokers has become an important competitive strategy for 
+platforms to increase their competitive edge in the advertising market. 
+The platform -data broker partnership, while beneficial to advertisers,  may hurt consumers . 
+According to a survey by eMarketer (2019 ), 77% of US internet users are concerned that targeted 
+advertising based on their personal data may invade privacy. Recently, the emergence of platform-data 
+broker partnerships has exacerbated consumer privacy concerns  because the linking of the data from 
+two parties may leak more sensitive information about users to advertisers (Venkatadri et al. 2018). In 
+line with recent privacy regulations such as the California Consumer Privacy Act (CCPA) and EU’s 
+General Data Protection Regulation (GDPR), platforms must disclose with whom they share consumer 
+data. Hence, platform-data broker partnerships are much more visible to consumers than ever before. 
+However, consumers ar e unclear about whether and how data brokers may utilize their personal data 
+for any other purpose. Due to the untransparent operations of the data broker industry, platform -data 
+broker partnerships have triggered greater concerns over invasion of privacy (Ram and Murgia 2019; 
+Sherman 2020). Moreover, increasingly common data breach incidents have also heightened privacy 
+concerns about the platform -data broker partnership. One of the most notorious examples is the 
+Facebook Cambridge Analytica Scandal, where Facebook exposed user data to an external data broker 
+for political advertising.  Typically, when platforms sell more targeted ads, consumers are more 
+vulnerable to privacy invasion as their data may be shared with more advertisers (i.e., negative cross-
+side network effects). The increased privacy concern may lead to loss of users  and reduced platform 
+usage, which indirectly affect the platforms’ competitiveness on the advertiser si de (i.e., revenue -
+generating side). As a consequence, platforms’ ad pricing and advertiser demands may also be affected. 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 5 / 39 ===
+
+5 
+Faced with tremendous pressure from consumer privacy groups and regulatory authorities, some 
+platforms have stopped partnering with data brokers (Tau 2020). For instance, Facebook announced it 
+would terminate its partnership with data brokers in 201 8 after the Cambridge Analytica Scandal 
+(Ingram and Fioretti 2018). Evidently, such a decision is made to save the firm’s image and reputation 
+in reaction to a wave of criticism . Nevertheless, when surveying the market, we find that many other 
+platforms are still closely partnering with data brokers  to share consumer insights with advertisers or 
+marketing agencies. For instance, Snapchat has partnered with Oracle to improve its ad targeting since 
+2017 (Maytom 2017). Besides these examples, many publisher websites have partnered with Lotame 
+to enhance targeting capabilities. These diverse partnership strategies motivate our investigation of 
+platforms’ incentives to partner with the data broker given the potential merits (i.e., improved targeting 
+level) and demerits (i.e., increased privacy concerns) in a two-sided market. Moreover, in view of the 
+ongoing debate about the data broker industry, it is important to examine the welfare implications of 
+platform-data broker partnerships. 
+In particular , we address the following research que stions in this study : (i) How does the 
+partnership with a data broker affect platforms’ pricing strategies and profits?  (ii) When should 
+competing platforms partner with a data broker? (iii) How does the partnership between the data broker 
+and platforms affect the consumer surplus, advertiser surplus , and social welfare? To answer the se 
+questions, we build a game -theoretic model in which two competing platforms provide service s to 
+consumers while selling targeted ads to advertisers.  Partnering with the data broker can improve 
+platforms’ targeting capabilities, but it also invokes greater consumer privacy concerns, and platforms 
+need to pay a commission to the data broker for each ad sale. In the main model, we assume platforms 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 6 / 39 ===
+
+6 
+adopt a pure ad -sponsored model without charging consumers . In the extension, we consider the case 
+where platforms adopt a mixed model of subscription -based (i.e., charge consumers a price) and ad-
+sponsored revenue. We also consider other extensions in which the data broker set s the commission 
+rate endogenously, and the consumers or advertisers can join multiple platforms (i.e., multihoming).  
+Our analysis yields several interesting and important insights. First, we find that the increase in 
+consumer privacy concerns caused by data broker s may incentivize rather than discourag e platforms 
+from partnering with the data broker. This counterintuitive result can be explained from the perspective 
+of the negative cross-side network effect in two-sided markets. To elaborate, when partnering with the 
+data broker invokes greater privacy concerns about targeted advertising, platforms are compelled  to 
+compete for advertisers less aggressively to avoid consumer churn. Hence, both platforms will charge 
+a higher ad price, which softens the price competition and leads to higher profits. This result has an 
+important implication: increased privacy concerns caused by platform-data broker partnership can be 
+a strategic lever to soften price competition on the advertiser side. This privacy concern-induced higher 
+price is consistent with trends observed in the industry. In practice, many publishers are trying to 
+increase ad prices and reduce the number of ads in response to consumers’ growing privacy concerns 
+about targeted ads , which has proven to boost revenue for some publishers (Bishop 2018; Marshall 
+2017). Our research provides a possible ex planation of why platform -data broker partnerships still 
+prevail in the market despite growing consumer privacy concerns about data brokers. 
+Another important factor motivating the platforms to partner with the data broker is that the latter 
+can help improve platform targeting capabilities, which aligns with our expectation s. However, it is 
+intriguing to find that partnering with the data broker may lead to a prisoner’s dilemma for platforms ; 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 7 / 39 ===
+
+7 
+that is, platforms may be worse off than if they  both commit not to partner with the data broker. This 
+happens when the data broker induces high, but not too high, privacy concerns. In this case, platform 
+competition will be eased, but not substantially, so the incremental revenue from partnering with the 
+data broker cannot compensate for the commissions paid to the data broker. This result resonates well 
+with recent field studies and industrial reports, which indicate that although partnering with a data 
+broker can increase platforms’ competitive advantage in targeting capabilities, their profits may even 
+decrease because the data broker extracts a large proportion of ad revenue (CMA 2020; Neumann 2019). 
+Overall, our findings confirm that platforms should carefully assess consumer privacy concerns about 
+data brokers and the commission charged by the data broker before making such partnership decisions.  
+Our results also reveal important welfare implications by examining consumer surplus, advertiser 
+surplus, and social welfare. We find that the platform’s business model plays a crucial role in whether 
+partnering with data broker benefit s or hurts consumers. When platforms adopt a pure ad -sponsored 
+model, partnering with a data broker always hurt s consumers due to  the increased privacy concerns. 
+However, when platforms adopt a mixed model of subscription -based and ad -sponsored revenue, a 
+platform-data broker partnership can benefit consumers because it will intensify the price competition 
+on the consumer side, resulting in a lower consumer price and thus higher consumer surplus. The caveat 
+here is that although the ad-sponsored model does not charge consumers, it can harm them in the context 
+of platform -data broker partnership s. Hence, policymakers should take into account the platform’s 
+business model when scrutinizing the impact of platform-data broker partnerships on consumer surplus. 
+Looking at advertiser surplus and social welfare, we show that advertisers and society can be better off 
+when the improvement in targeting capabilities outweighs the increase in consumer privacy concerns.  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 8 / 39 ===
+
+8 
+The remainder of this paper is organized as follows. We review relevant literature in Section 2. In 
+Section 3, we describe our model framework, followed by the model analysis and the equilibrium results 
+about platforms’ partnership strategies in Section 4. Section 5 extends the model with several alternative 
+model setups. Finally, the paper concludes in Section 6 with a discussion of managerial implications, 
+limitations of the study, and future research directions.  
+2. Literature Review 
+This study relates to the growing literature on two-sided platform markets. Starting with pioneer works 
+by Caillaud and Jullien (2003) and Rochet and Tirole (2003), a  rapidly increasing number of studies 
+have investigated pricing strategies for two-sided platforms (Armstrong 2006; Hagiu 2009; Parker and 
+Van Alstyne 2005; Rochet and Tirole 2006). Given the presence of cross-side network effects, a major 
+implication from these studies is that platforms can maximize profits by subsidizing one side and 
+charging a high price on the other side. This result is derive d in the setting where both sides of two-
+sided platforms  singlehome (i.e., agents on both sides are allowed to join only one platform ) 
+(Belleflamme and Peitz 2019 ), or where agents on one side singlehome and the other side can 
+multihome (i.e., join multiple platforms); the latter setting is called a competitive bottleneck (Armstrong 
+2006; Armstrong and Wright 2007 ). In the setting where agents on both sides multihome, however, 
+Bakos and Halaburda (2020) show that it may not be optimal for platforms to subsidize one side because 
+there is no strategic interdependence between two sides in this case. Most research in this stream 
+considers that both sides of the market have positive cross-side network effects on the other side. In our 
+context, cross -side network effects are positive in one direction (i.e., consumers to advertisers) but 
+negative in the other due to privacy concerns (i.e., advertisers and data brokers to consumers). 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 9 / 39 ===
+
+9 
+Some studies examine the implications of nonprice factors on platform competition under cross-
+side network effects (Hagiu and Spulber 2013; Anderson et al. 2014; Dou and Wu 2021). For instance, 
+Hagiu and Spulber (2013) examine platform incentives to invest in first -party content as a strategic 
+nonprice control and how such content interacts with the platforms’ pricing strategies.  Dou and Wu 
+(2021) investigate how piggybacking, in which platforms can import exclusive external users , affects 
+platforms’ optimal pricing and subsidization strategies. The current study contributes to this literature 
+by introducing the partnership with data broker s as a nonprice control for platforms and showing the 
+interplay between cross-side network effects and price competition.  
+Recently, some studies have focused on two -sided media markets (e.g., Ambrus et al. 2016 ; 
+Anderson et al. 2018;  Athey et al. 2014 ), which are closer to our research context.  One of the studies 
+most relevant to ours is Gopal et al. (2018), which examines the impact of privacy concerns on publisher 
+websites’ incentives to share user information with third parties (e.g., advertisers). In their model, third 
+parties generate negative network effects on the consumer side , driven by user privacy concerns as in 
+Casadesus-Masanell and Hervas-Drane (2015). Although we also consider consumer privacy concerns, 
+our study departs from theirs in that we focus on the partnership between platforms and the data broker 
+as a strategic  variable for platforms. We characterize the conditions when partnering with the data 
+broker can improve profit and when it leads to a prisoner’s dilemma outcome for platforms. Moreover, 
+in Gopal et al. (2018), platforms charge prices from both sides  (advertisers and consumers), and there 
+is no competition on the advertiser side. In contrast, in our setting, platforms can adopt an ad-sponsored 
+model without charging consumers, and we model the platform competition on the advertiser side.  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 10 / 39 ===
+
+10 
+This study also contributes to the literature on online data markets (Bergemann and Bonatti 2019), 
+in which data brokers play a strategic role in deciding how to sell data to downstream firms (e.g., 
+advertising platforms in this study ). Prior literature examines data brokers’ data sharing strategies in 
+various contexts, where data can be used to price discriminate (Bounie et al. 2021; Braulin and Valletti 
+2016; Montes et al. 2019 ), predict market demand ( Bimpikis et al. 2019), and improve consumer 
+targeting (Bergemann, and Bonatti 2015; Zhang et al. 2020). Different from these papers that focus on 
+a one-sided market where the interactions between firms and consumers are considered, we focus on a 
+two-sided market where the platform-data broker partnership benefits the advertiser side but hurts the 
+consumer side . Our study sheds light on the implications of platform -data broker partnership on 
+different stakeholders, including platforms, advertisers, consumers, and the data broker.  
+Finally, this study broadens the literature on the economics of privacy (see Acquisti et al. 2016 for 
+a comprehensive literature survey). A recent strand of literature examines the implications of consumer 
+privacy in the context of price discrimination (Chen et al. 2020; Conitzer et al. 2012) and personalized 
+service provision (Chellappa and Shivendu 2010). Close to our context, several papers examine the 
+impact of privacy concerns when platforms collect consumer data for targeted advertising. For instance, 
+Gal-Or et al. (2018) study the role of privacy concerns on  platform competition, finding that a higher 
+privacy concern can intensify platform competition because it reduces the targeting differentiation of 
+competing platforms. Dimakopoulos and Sudaric (2018) examine how privacy concerns and platform 
+competition affect platforms’ decisions on how much data to collect. They find that the data collection 
+level can be inefficiently high if the competition is weak. Our study contributes to this literature by 
+examining how consumer privacy concerns affect the partnership between platforms and the data broker, 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 11 / 39 ===
+
+11 
+which is a growing trend in practice but rarely studied. Our analysis provides insights into the economic 
+mechanisms that explain the platform-data broker partnership.  
+3. Model  
+We consider a two-sided market consisting of three types of players, i.e., two symmetric competing 
+platforms (denoted by 𝑖 = 𝐴, 𝐵), a unit mass of consumers, and a unit mass of advertisers. Platforms 
+provide services to consumers while collecting their data and selling targeted ads to advertisers. Thus, 
+platforms compete for both the consumer side (called the 𝑋 side) and the advertiser side (called the 𝑌 
+side). Following the prior literature (Bakos and Halaburda 2020; Dimakopoulos and Sudaric 2018), we 
+employ a two -sided Hotelling model to capture the competition between platforms. Specifically, 
+consumers and advertisers are uniformly distributed along two Hotelling lines , i.e., 𝑥~𝑈[0,1] for the 
+𝑋 side, 𝑦~𝑈[0,1] for the 𝑌 side. Platforms are located at the endpoints of the two Hotelling lines, 
+with platform 𝐴 being at 0 and platform 𝐵 being at 1. In the main model, we assume both consumers 
+and advertisers singlehome. In the extension, we consider the case where consumers or advertisers can 
+multihome. Below, we describe the platform profits, consumer utility, and advertiser payoff.  
+3.1. Platforms 
+By analyzing consumer data, platforms can learn  consumer preferences and build consumer profiles. 
+These insights and knowledge enable the platform to develop targeting capabilities to find relevant 
+consumers, thereby attracting advertisers to purchase ad slots on their platforms. We denote platforms’ 
+baseline targeting capabilities as 𝛽. Typically, a higher targeting capability can increase advertisers’ 
+willingness to pay for a higher ad price. In the main model, we assume platforms adopt a pure ad-
+sponsored business model  without charging consumers, which is commonly adopted by many 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 12 / 39 ===
+
+12 
+advertising platforms (e.g., Facebook and YouTube). In Section 5 .1, we also consider platforms 
+adopting a mixed model with both ad-sponsored and subscription-based revenue. 
+To further improve targeting capabilities, platforms can partner with data brokers who collect a 
+wide variety of consumer data from online and offline sources. For instance, Facebook used to partner 
+with several data brokers (e.g., Ac xiom, Experion, and Oracle), allowing for the data collected online 
+by Facebook to be linked to data collected offline by data brokers. This partnership enables platforms 
+to refine their targeting based on information compiled by these partners, such as offline demographic 
+and behavioral information like homeownership or purchase history. As a result, after partnering with 
+the data broker, the platforms’ targeting capability can be enhanced, which is denoted by 𝛽 + 𝛿, where 
+𝛿 is the targeting improvement enabled by the data broker.  
+Note that when platforms partner with the data broker to improve targeting capabilities, platforms 
+pay a commission to the data broker (i.e., a proportion of advertising revenue), which can be considered 
+as a referral fee . The commission rate is denoted by 𝛾, and we assume 𝛾 is not too high to ensure 
+platforms have incentives to partner with the data broker. In practice, such a revenue-sharing model is 
+widely used between platforms and data brokers (CMA 2020). Platforms can choose whether to partner 
+with the data broker, denoted by 𝑌 (partner) or 𝑁 (not partner). Table 1 summarize s the platforms’ 
+decision matrix. There are four different partnerships between platforms and the data broker. The first 
+(second) argument at each strategy profile represents the platform A’s (B’s) decision. 
+Platform A / Platform B 𝑁 𝑌 
+𝑁 (𝑁, 𝑁) (𝑁, 𝑌) 
+𝑌 (𝑌, 𝑁) (𝑌, 𝑌) 
+Table 1. Platforms’ Decision Matrix 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 13 / 39 ===
+
+13 
+The platforms’ profit functions are as follows, (i) when the platform 𝑖 does not partner with the 
+data broker, 𝜋𝑖 = 𝑝𝑖𝐷𝑖 ; (ii) when the platform 𝑖 partners with the data broker, 𝜋𝑖 = (1 − 𝛾)𝑝𝑖𝐷𝑖 , 
+where 𝑝𝑖 is the ad price charged for advertisers, 𝐷𝑖  is platform 𝑖’s advertiser demand, and 𝛾 is the 
+commission rate. In the main model, we assume the commission rate is exogenous. In Section 5.2, we 
+consider the case of the data broker deciding the commission rate endogenously.  
+3.2. Consumers 
+Consumers derive a value  (denoted by 𝑣𝑐) from consuming the platforms’ content services. In this 
+process, platforms collect consumer data such as names, contact details, search history, IP address es, 
+and number of clicks. Platforms may share the data with advertisers to help advertisers deliver targeted 
+ads to consumers, which has infringed on consumer privacy (Mayer and Mitchell 2012). A recent survey 
+indicates that the majority of respondents resent targeted ads due to perceived privacy intrusions2. Thus, 
+although the service is free of charge, consumers incur privacy costs when using the platforms’ service.  
+Following the prior literature (Lin 202 2), we consider two components of a consumer ’s privacy 
+cost: (i) intrinsic privacy cost  (denoted by 𝜅), which reflects a consumer’s intrinsic preference for 
+privacy, and (ii) variable privacy cost, which relates to how much consumer information is disclosed to 
+other firms. For variable privacy cost, as platforms sell targeted ads to more advertisers, consumers will 
+perceive a higher disutility as their information is more likely to be leaked to more third parties (King 
+2019; Tucker 2012). Therefore, consistent with Gopal et al. (2018), we model the consumers’ variable 
+privacy cost caused by targeted advertising as 𝛼𝑦𝑖, where 𝛼 denotes the consumer privacy concerns, 
+and 𝑦𝑖 represents the number of advertisers served by platform 𝑖.  
+ 
+2 https://www.mediapost.com/publications/article/338009/consumers-dislike-targeted-ads-resent-privacy-int.html? 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 14 / 39 ===
+
+14 
+As we mentioned before, platforms can choose to partner with the data broker to improve their ad 
+targeting capabilities. Typically, platforms and data brokers share the data they have with each other to 
+generate more fine-grained targeting features regarding consumers (Venkatadri et al. 2019). From the 
+consumers’ perspective, however, such a partnership will exacerbate privacy concerns about targeted 
+advertising because more sensitive information can be leaked to advertisers or third parties without 
+consumer control (Molitorisz 2018) . For instance, in the Facebook Cambridge Analytica scandal, 
+Facebook was severely criticized by consumer privacy groups  for sharing consumer data with third -
+party data brokers  for political advertising . Therefore, when partnering with the data broker, the 
+consumers’ privacy concerns will be higher, which we denote as 𝛼 + 𝜌, where 𝜌 is the increase in 
+privacy concerns caused by the data broker3.  
+Taking all these aspects together,  a consu mer located at 𝑥 will obtain the utility 𝑈𝑖(𝑥) when 
+adopting platform 𝑖:  
+𝑈𝐴(𝑥) = 𝑣𝑐 − 𝜅 − (𝛼 + 𝕀𝐴𝜌)𝑦𝐴 − 𝑡𝑥,  
+𝑈𝐵(𝑥) = 𝑣𝑐 − 𝜅 − (𝛼 + 𝕀𝐵𝜌)𝑦𝐵 − 𝑡(1 − 𝑥) 
+where 𝑣𝑐 is the intrinsic service value, which is assumed to be the same for both platforms (Anderson 
+Jr et al. 2014). The second term 𝜅 denotes the consumers’ intrinsic privacy cost. The third term (𝛼 +
+𝕀𝐴𝜌)𝑦𝐴 ((𝛼 + 𝕀𝐵𝜌)𝑦𝐵) represents the privacy costs caused by targeted advertising and the data broker4, 
+ 
+3 Since, in our context, the platform -data broker partnership mainly affects  the ad targeting process, we focus on the impact 
+of this partnership on consumers’ variable privacy cost incurred from targeted advertising. However, it should be noted that 
+our key insights remain unchanged if platforms-data broker partnership also increases intrinsic privacy cost. 
+4 Note that consumer disutility from advertisements can also be interpreted along other dimensions, such as the nuisance cost. 
+Given that platforms increasingly display targeted ads based on consumer data, empirical evidence shows that perceived 
+privacy intrusions have become a primary cause of consumer disutility (Mckeon 2019). Hence, in our context, we follow the 
+literature to interpret this disutility as a consumer privacy concern (Gopal et al. 2018).  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 15 / 39 ===
+
+15 
+and 𝕀𝐴 (𝕀𝐵) is an indicator function that equals one if platform 𝐴 (𝐵) partners with the data broker and 
+zero otherwise. This specification implies that the consumers’ privacy cost increase s when platforms 
+sell targeted ads to more advertisers (Gopal et al. 2018 ; Mckeon 2019 ), which reflects the negative 
+cross-side network effects on the consumer s ide. The expressions 𝑡𝑥 and 𝑡(1 − 𝑥) denote the misfit 
+cost for a consumer at 𝑥 to adopt platform 𝐴 and 𝐵. When 𝑡 increases, consumers are less willing to 
+switch between platforms, so 𝑡 can also measure the degree of competition intensity, with a higher 𝑡 
+indicating that the competition is less intense on the consumer side (Anderson et al. 2014).  
+3.3. Advertisers 
+Advertisers derive benefits from displaying ads on platforms. Such benefits depend on the platforms’ 
+targeting capabilities and the number of consumers on the platform. Formally, an advertiser located at 
+𝑦 will obtain the following payoff 𝑈𝑖 (𝑦) when displaying an ad on platform 𝐴 or platform 𝐵: 
+𝑈𝐴(𝑦) = 𝑣𝑠 + (𝛽 + 𝕀𝐴𝛿)𝑥𝐴 − 𝑝𝐴 − 𝜃𝑦 
+𝑈𝐵(𝑦) = 𝑣𝑠 + (𝛽 + 𝕀𝐵𝛿)𝑥𝐵 − 𝑝𝐵 − 𝜃(1 − 𝑦) 
+where 𝑣𝑠 represents the standalone value advertisers can derive from adopting the platform. Here, 
+(𝛽 + 𝕀𝑖𝛿) represents platform 𝑖’s targeting capabilities, 𝕀𝑖 is the indicator function used to indicate 
+whether platform 𝑖 partners with the data broker, and 𝑥𝑖 is the number of consumers adopting  that 
+platform. Hence, (𝛽 + 𝕀𝑖𝛿) 𝑥𝑖 can be considered as the fraction of users that can be targeted by platform 
+𝑖. The ad price charged by platform 𝑖 is 𝑝𝑖. Finally, 𝜃𝑦 and 𝜃(1 − 𝑦) denote the advertisers’ misfit 
+cost, where 𝜃 can measure the competition intensity on the advertiser side. Note that as the number of 
+consumers increases, advertisers will obtain a higher payoff, which reflects the positive cross -side 
+network effects on the advertiser side.  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 16 / 39 ===
+
+16 
+As illustrated in Figure 1, the timeline of the model has three stages. In stage 1, competing 
+platforms decide whether to partner with the data broker. In stage 2, the platforms determine the price 
+for advertisers simultaneously. In stage 3, both consumers and advertisers decide which platform to join 
+based on the platforms’ pricing and partnering decisions in stage 1 and stage 2.  
+4. Equilibrium Analysis 
+We use the backward induction approach to derive the subgame perfect Nash equilibrium. Based on 
+platforms’ decisions in stage 1 (i.e., 𝑌 or 𝑁), there are four subgames: (𝑁, 𝑁), (𝑌, 𝑁), (𝑁, 𝑌), (𝑌, 𝑌). 
+Since the platforms are symmetric, (𝑌, 𝑁) is equivalent to (𝑁, 𝑌), so we will focus on the (𝑌, 𝑁) case. 
+We first determine platforms’ pricing equilibrium in stage 2 in Section 4.1. Then, in Section 4.2, by 
+comparing three subgames, we examine which can be the equilibrium in stage 1.  
+4.1. Platforms’ pricing decisions in stage 2 
+4.1.1. When neither platform partners with the data broker (𝑵, 𝑵) 
+We begin by analyzing the case where neither platform partners with the data broker (i.e., 𝕀𝐴 = 0, 𝕀𝐵 =
+0 ). By solving 𝑈𝐴
+𝑁𝑁(𝑥)|𝕀𝐴=0 = 𝑈𝐵
+𝑁𝑁(𝑥)|𝕀𝐵=0 , 𝑈𝐴
+𝑁𝑁(𝑦)|𝕀𝐴=0 = 𝑈𝐵
+𝑁𝑁(𝑦)|𝕀𝐵=0 , we can derive the 
+indifferent consumer type 𝑥𝑁𝑁∗ and the indifferent advertiser type 𝑦𝑁𝑁∗: 𝑥𝑁𝑁∗ =
+𝑡+𝛼−2𝛼𝑦𝐴
+2𝑡 , 𝑦𝑁𝑁∗ =
+2𝛽𝑥𝐴−𝑝𝐴+𝑝𝐵+𝜃−𝛽
+2𝜃 . The platforms’ advertiser demands are 𝐷𝐴
+𝑁𝑁 = 𝑦𝑁𝑁∗ and 𝐷𝐵
+𝑁𝑁 = 1 − 𝑦𝑁𝑁∗. Hence, 
+Platforms decide whether 
+to partner with the data 
+broker (i.e., 𝑌 or 𝑁). 
+Platforms charge a price 
+𝑝𝑖 for advertisers.  
+Both consumers and 
+advertisers decide 
+which platform to join.  
+Stage 3 
+Stage 2 
+Stage 1 
+Figure 1. Sequence of events 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 17 / 39 ===
+
+17 
+the platforms’ optimal  profits are max
+𝑝𝐴
+𝑁𝑁 𝜋𝐴
+𝑁𝑁 = 𝑝𝐴
+𝑁𝑁𝐷𝐴
+𝑁𝑁 , max
+𝑝𝐵
+𝑁𝑁
+𝜋𝐵 𝑁𝑁 = 𝑝𝐵
+𝑁𝑁𝐷𝐵
+𝑁𝑁 . By maximizing 
+platforms’ profit functions, we can derive the equilibrium prices and profits in (𝑁,𝑁) case.  
+Lemma 1. When neither platform partners with the data broker, the platforms’ equilibrium ad prices 
+and profits are: 𝑝𝐴
+𝑁𝑁∗ = 𝑝𝐵
+𝑁𝑁∗ =
+𝛼𝛽
+𝑡 + 𝜃, 𝜋𝐴
+𝑁𝑁∗ = 𝜋𝐵
+𝑁𝑁∗ =
+𝛼𝛽
+2𝑡 +
+𝜃
+2. 
+There are several observations from Lemma 1. First, it is interesting to find that wh en consumer 
+privacy concerns (𝛼) increase, platforms charge a higher ad price and obtain higher profits. This result 
+is driven by the negative cross -side network effects on the consumer side. When 𝛼  increases, 
+consumers are more sensitive to targeted advertising due to higher privacy concerns. To avoid the loss 
+of consumers, which is important for the advertiser side, platforms have incentives to limit the number 
+of advertisers. Here, increasing ad prices is an effective way to control the advertiser  demand, so both 
+platforms would choose to increase ad prices, which softens the price competition on the advertiser side 
+and leads to higher profits.  Second, when platforms’ targeting capabilities increase ( 𝛽), platforms can 
+charge a higher price and achieve higher profits. This is because a higher targeting capability brings 
+more value to advertisers, which enhances their willingness to pay.  
+Further, we find that the platforms’ prices increase with advertiser side misfit cost (𝜃). This result 
+is expected because a higher 𝜃 implies that the competition intensity on the advertiser side is less 
+intense. However, interestingly, when the misfit cost of the consumer side (𝑡) increases, platform prices 
+and profits decrease. This happens because when 𝑡 increases, consumers have a stronger preference 
+between the two platforms. In this case, having more advertisers on the platform would not drive many 
+consumers to switch to the rival platform. Hence, platforms have incentives to reduce the ir prices to 
+attract more advertisers, which, in turn, intensifies the price competition, resulting in lower prices and 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 18 / 39 ===
+
+18 
+profits. This result implies that a less -competitive environment on the consumer side can lead to more 
+intense competition on the advertiser side. This finding differs from the prior literature that assumes 
+platforms conduct two -sided pricing (Bakos and Halaburda 2020; Dou and Wu 2021); those studies 
+show that one side’s misfit cost only affects the price of the same side, not the price of the opposite side.  
+4.1.2. When only one platform partners with the data broker (𝒀, 𝑵) 
+We now consider an asymmetric partnership decision by the two platforms. Without loss of generality, 
+we assume platform 𝐴 partners with the data broker while platform 𝐵 does not (i.e., 𝕀𝐴 = 1, 𝕀𝐵 =
+0). In this case, the platform’s targeting capabilities will be improved, but the consumers’ privacy 
+concerns increase when using platform 𝐴. By solving 𝑈𝐴
+𝑌𝑁(𝑥)|𝕀𝐴=1 = 𝑈𝐵
+𝑌𝑁(𝑥)|𝕀𝐵=0, 𝑈𝐴
+𝑌𝑁(𝑦)|𝕀𝐴=1 =
+𝑈𝐵
+𝑌𝑁(𝑦)|𝕀𝐵=0, we can derive the indifferent  consumer type 𝑥𝑌𝑁∗ and the indifferent advertiser type 
+𝑦𝑌𝑁∗: 𝑥𝑌𝑁∗ =
+𝑡+𝛼−(2𝛼+𝜌)𝑦𝐴
+2𝑡 , 𝑦𝑌𝑁∗ =
+(2𝛽+𝛿)𝑥𝐴−𝑝𝐴+𝑝𝐵+𝜃−𝛽
+2𝜃 . Hence, the platforms’ optimal profits are 
+max
+𝑝𝐴
+𝑌𝑁 𝜋𝐴
+𝑌𝑁 = (1 − 𝛾)𝑝𝐴
+𝑌𝑁𝑦𝑌𝑁∗ , max
+𝑝𝐵
+𝑌𝑁
+𝜋𝐵
+𝑌𝑁 = 𝑝𝐵
+𝑌𝑁(1 − 𝑦𝑌𝑁∗) . By maximizing platforms’ profit 
+functions, we can derive the equilibrium prices and profits in the (𝑌, 𝑁) case. 
+Lemma 2. When only platform A partners with the data broker, the platforms’ equilibrium ad prices 
+and profits are as follows: 
+(i) 𝑝𝐴
+𝑌𝑁∗ =
+𝑡(𝛿+6𝜃)+(2𝛽+𝛿)(3𝛼+𝜌)
+6𝑡 , 𝑝𝐵
+𝑌𝑁∗ =
+(2𝛽+𝛿)(3𝛼+2𝜌)−𝑡(𝛿−6𝜃)
+6𝑡  
+(ii) 𝜋𝐴
+𝑌𝑁∗ =
+(1−𝛾)(𝑡(𝛿+6𝜃)+(2𝛽+𝛿)(3𝛼+𝜌))2
+18𝑡(4𝑡𝜃+(2𝛽+𝛿)(2𝛼+𝜌)) , 𝜋𝐵
+𝑌𝑁∗ =
+((2𝛽+𝛿)(3𝛼+2𝜌)−𝑡(𝛿−6𝜃))2
+18𝑡(4𝑡𝜃+(2𝛽+𝛿)(2𝛼+𝜌))  
+Based on Lemma 2, the following corollary summarizes the comparative static analysis of the increased 
+privacy concerns 𝜌 and the improvement in targeting capabilities 𝛿 induced by the data broker.  
+Corollary 1. When only platform A partners with the data broker, the equilibrium outcomes have the 
+following properties: 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 19 / 39 ===
+
+19 
+(i) 
+𝜕𝑝𝐵
+𝑌𝑁∗
+𝜕𝜌 >
+𝜕𝑝𝐴
+𝑌𝑁∗
+𝜕𝜌 > 0; 𝑝𝐴
+𝑌𝑁∗ > 𝑝𝐵
+𝑌𝑁∗ when 𝜌 <
+2𝑡𝛿
+2𝛽+𝛿, otherwise, 𝑝𝐴
+𝑌𝑁∗ < 𝑝𝐵
+𝑌𝑁∗ 𝑤ℎ𝑒𝑛 𝜌 <
+2𝑡𝛿
+2𝛽+𝛿; 
+(ii) 
+𝜕𝜋𝐵
+𝑌𝑁∗
+𝜕𝜌 > 0; 
+𝜕𝜋𝐴
+𝑌𝑁∗
+𝜕𝜌 < 0 when 𝜌 <
+𝑡(𝛿−2𝜃)
+2𝛽+𝛿 − 𝛼, otherwise, 
+𝜕𝜋𝐴
+𝑌𝑁∗
+𝜕𝜌 > 0 𝑤ℎ𝑒𝑛 𝜌 >
+𝑡(𝛿−2𝜃)
+2𝛽+𝛿 − 𝛼;  
+We derive several important insights from Lemma 2 and Corollary 1. First, when partnering with 
+the data broker, the increase in con sumer privacy concerns (i.e., 𝜌) incentivizes the platform 𝐴 to 
+increase its price. Foreseeing the price increase of platform 𝐴, platform 𝐵 can also increase its price 
+accordingly (See Figure 2(a)). Interestingly, we find that platform 𝐵’s price has a higher increasing rate 
+as 𝜌 increases (i.e., 
+𝜕𝑝𝐵
+𝑌𝑁∗
+𝜕𝜌 >
+𝜕𝑝𝐴
+𝑌𝑁∗
+𝜕𝜌 > 0). This is because  when 𝜌 increases, platform 𝐴 will lose 
+consumers due to the higher increase in privacy concerns, while platform 𝐵 will gain consumers. Given 
+the presence of cross-side network effects, platform 𝐵 provides relatively high value on the advertiser 
+side, which enable s platform 𝐵 to increase its price more. We show that when 𝜌 is greater than a 
+threshold (i.e., 𝜌 >
+2𝑡𝛿
+2𝛽+𝛿), platform 𝐵’s price is even higher than that of platform 𝐴.  
+  
+ 
+ 
+ 
+ 
+Second, when 𝜌 increases, we find that platform 𝐵’s profit always increases while platform 𝐴’s 
+profit first decreases and then increases. The reason is that while platform 𝐴’s price increases with 𝜌, 
+its advertiser demand decreases with 𝜌. We find that the price increase can compensate for the demand 
+loss, resulting in a higher profit, only when 𝜌 is relatively large. This result indicates that a U-shaped 
+relationship exists between platform 𝐴’s profits and the increase in consumer privacy concerns  (see 
+Figure 2. The impact of 𝜌 on platforms’ prices and profits  
+(a) price  
+ (b) profits  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 20 / 39 ===
+
+20 
+Figure 2(b)). Intriguingly, when 𝜌 is relatively low, partnering with the data broker may lead to a lower 
+profit for platform 𝐴 even though its targeting capability is improved. This result implies that, in a two-
+sided market, a competitive advantag e on one side of the market does not necessarily lead to a higher 
+overall performance.   
+4.1.3. When both platforms partner with the data broker (𝒀, 𝒀) 
+In this subsection, we analyze the case where both platforms partner with the data broker (i.e., 𝕀𝐴 = 1, 
+𝕀𝐵 = 1). By solving 𝑈𝐴
+𝑌𝑌(𝑥)|𝕀𝐴=1 = 𝑈𝐵
+𝑌𝑌(𝑥)|𝕀𝐵=1, 𝑈𝐴
+𝑌𝑌(𝑦)|𝕀𝐴=1 = 𝑈𝐵
+𝑌𝑌(𝑦)|𝕀𝐵=1, we can derive the 
+indifferent consumer type 𝑥𝑌𝑌∗  and t he indifferent advertiser type 𝑦𝑌𝑌∗ : 𝑥𝑌𝑌∗ =
+𝑡+𝛼+𝜌−2(𝛼+𝜌)𝑦𝐴
+2𝑡 , 
+𝑦𝑌𝑌∗ =
+2(𝛽+𝛿)𝑥𝐴−𝑝𝐴+𝑝𝐵+𝜃−𝛽−𝛿
+2𝜃 . Hence, the optimal platform profits are max
+𝑝𝐴
+𝑌𝑌 𝜋𝐴
+𝑌𝑌 = (1 − 𝛾)𝑝𝐴
+𝑌𝑌𝑦𝑌𝑌∗, 
+max
+𝑝𝐵
+𝑌𝑌
+𝜋𝐵
+𝑌𝑌 = (1 − 𝛾)𝑝𝐵
+𝑌𝑌(1 − 𝑦𝑌𝑌∗). By maximizing the platforms’ profit functions, we can derive the 
+equilibrium prices and profits in the (𝑌, 𝑌) case.  
+Lemma 3. When both platforms partner with the data broker, the platforms’ equilibrium ad prices and 
+profits are: 𝑝𝐴
+𝑌𝑌∗ = 𝑝𝐵
+𝑌𝑌∗ =
+(𝛼+𝜌)(𝛽+𝛿)
+𝑡 + 𝜃, 𝜋𝐴
+𝑌𝑌∗ = 𝜋𝐵
+𝑌𝑌∗ =
+1
+2 (1 − 𝛾)(
+(𝛼+𝜌)(𝛽+𝛿)
+𝑡 + 𝜃). 
+Compared to the  (𝑁, 𝑁) case, Lemma 3 states that when both platforms partner with the data 
+broker, the platforms’ equilibrium prices are higher. This is because the partnership with the data broker 
+increases consumer privacy conce rns by 𝜌, which incentivizes the platform to charge a higher price. 
+Moreover, the platforms’ targeting capabilities also increase by 𝛿, which  increases the advertisers’ 
+willingness to pay a higher price. The higher price helps platforms generate higher revenue from selling 
+ads to advertisers , but the platforms must pay a commission fee to the data broker. Therefore, it is 
+unclear whether the platforms’ net profits will be higher after partnering with the data broker.  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 21 / 39 ===
+
+21 
+4.2. Platforms’ partnership strategies in stage 1 
+So far, we have analyzed the platforms’ equilibrium prices and profits in each subgame. In this section, 
+by comparing platform profits across different subgames, we examine the equilibrium outcomes of the 
+competing platforms’ partnership decisions.  
+Proposition 1. In equilibrium, the platforms’ partnership strategies are as follows, 
+(i) when 0 < 𝜌 < 𝜌1 (0 < 𝛿 < 𝛿1), the equilibrium is neither platform partnering with the data 
+broker, i.e., (𝑁, 𝑁); 
+(ii) when 𝜌1 < 𝜌 < 𝜌2 (𝛿1 < 𝛿 < 𝛿2), the equilibrium is only one platform partner ing with the 
+data broker, i.e., (𝑌, 𝑁) or (𝑁, 𝑌); 
+(iii) when 𝜌 > 𝜌2 (𝛿 > 𝛿2), the equilibrium is both platforms partnering with the data broker, i.e., 
+(𝑌, 𝑌); 
+where the expressions of 𝛿1, 𝛿2, 𝜌1, and 𝜌2 are presented in the Appendix. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+The results of Proposition 1 are illustrated in Figure 3, highlighting the interactive effects of the 
+increased privacy concerns 𝜌  and targeting improvement 𝛿  on platforms’ partnership strategies. 
+Interestingly, platforms are more likely to partner with the data broker when the increase in consumer 
+𝜌 
+𝛿 
+Figure 3. Platforms’ equilibrium partnership strategies  
+𝜌2 
+𝜌1 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 22 / 39 ===
+
+22 
+privacy concerns is large. As shown in Figure 3, for a given 𝛿 (e.g., 𝛿 = 0.5), when 𝜌 increases (see 
+the vertical arrow in Figure 3), the equilibrium switches from (𝑁, 𝑁), to (𝑌, 𝑁), to (𝑌, 𝑌). Intuitively, 
+when partnering with the data broker lead s to higher privacy concerns, we might expect platforms to 
+forego this partnership as it would lead to a loss of consumers on the consumer side, which indirectly 
+hurt the platform’s profits on the advertiser side. However, our result shows that this intuition does not 
+hold. The mechanism is that when the data broker triggers greater privacy concerns, consumers ’ 
+negative perception towards targeted ads increases. To prevent consumer churn, platform s have 
+incentives to compete for advertisers less aggressively, resulting in higher ad prices and higher profits. 
+An implication of this finding is that increased privacy concerns can be a strategic tool leveraged by 
+platforms to soften price competition on the advertiser side. Our finding echoes recent market trends 
+observed in the industry. As consumers become increasingly concerned that targeted advertising would 
+invade privacy, anecdotes show that publishers are trying to increase ad prices and reduce the number 
+of ads, which has been proved to benefit the publisher’s revenue (Bishop 2018; Marshall 2017). 
+As a result,  when 𝜌 increases from small  to moderate value, one platform will start partnering 
+with the data broker because this change can reduce price competition and improve its targeting 
+capability. Meanwhile, the other platform still does not partner with the data broker because avoiding 
+the partnership can help attract more consumers and thus attract more advertisers. This leads to an 
+asymmetric partnership strategy for two symmetric platforms. Finally, when 𝜌 becomes large, the other 
+platform will also benefit from partnering with the data broker, which allows the platform to charge a 
+higher price, further mitigating the price competition.  Due to the effect of relaxed competition, our 
+analysis reveals that a h igher privacy concern induced by the data broker would prompt rather than 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 23 / 39 ===
+
+23 
+hinder the platform -data broker partnership. This finding provides a possible explanation of why 
+platform-data broker partnerships still prevail in the market despite growing consumer privacy concerns 
+about the data broker. 
+When examining the  equilibrium conditions in terms of  𝛿 , we find that  when the targeting 
+improvement is greater, the platforms are more likely to partner with the data broker. As shown in 
+Figure 3 (see the horizontal arrow), for a given 𝜌 (e.g., 𝜌 = 0.4), as 𝛿 increases, the equilibrium 
+switches from ( 𝑁, 𝑁), to ( 𝑌, 𝑁), to ( 𝑌, 𝑌). This result is in line with our expectation s because the 
+improvement in targeting capabilities increases the targeting benefits to advertisers, allowing platforms 
+to charge a higher price. This result resonates with some case studies demonstrating that partnering with 
+a data broker can help publisher websites increase their CMPs (cost-per-thousand impressions). For 
+instance, a data broker called Zeotap partnered with a leading EU publisher to develop advanced 
+audience targeting options, allowing the publisher to obtain 28% higher CPMs from advertisers5. 
+Overall, our findings reveal two underlying mechanisms to explain the partnership between 
+platforms and the data broker. First, the growing privacy concerns about the data broker industry may 
+prompt platforms to partner with the data broker. Second, the data broker’s data advantage and superior 
+analytics capabilities, which can improve the targeting significantly, will also drive platforms to partner 
+with the data broker. 
+Despite the growing popularity of the partnership between platforms and the data broker, a natural 
+and important question is whether such a partnership increases the profit compared to the case where 
+both platforms do not partner with the data broker. We examine this issue in the following proposition. 
+ 
+5 https://zeotap.com/resources/case-studies/eu-publisher-cpm/ 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 24 / 39 ===
+
+24 
+Proposition 2. When 𝜌2 < 𝜌 < 𝜌3, both platforms partnering with the data broker is a prisoner’s 
+dilemma situation, where 𝜌3 =
+𝛼(𝛾(𝛽+𝛿)−𝛿)+𝑡𝛾𝜃
+(1−𝛾)(𝛽+𝛿) . 
+Proposition 2 shows that after partnering with the data broker, platforms may be worse off than if 
+neither one partners with the data broker, leading to a prisoner’s dilemma outcome. This result occurs 
+when the increase in consumer privacy concerns is relatively high but not high enough to ease 
+competition to a large extent (i.e., 𝜌2 < 𝜌 < 𝜌3). When 𝜌 is relatively high (i.e., 𝜌 > 𝜌2), partnership 
+with the data broker is the dominant strategy for both platforms because the data broker can help 
+improve the targeting capabilities, and the increase in consumer privacy concerns can ease price 
+competition. However, as each platform partners with the data broker, the competitive advantage in the 
+advertiser market weakens. Besides, unlike the case where platforms do not partner with the data broker, 
+platforms must pay a commission fee to the data broker, i.e., share their advertising revenue. We show 
+that when the increase in consumer privacy concerns is not very high (i.e., 𝜌 < 𝜌3), the incremental 
+revenue due to a high price cannot offset the commission paid to the data broker. Consequently, both 
+platforms receive a lower profit. This finding is supported by a recent field study showing that while it 
+is prevalent for platforms to partner with a data broker, doing so can harm the platforms’ profit when 
+the third-party data cost is high (Neumann 2019).  
+Note that the threshold 𝜌3  increases with the consumer side and advertiser side misfit cost 
+parameters (𝑡, 𝜃) and the commission rate (𝛾). This implies that the prisoner’s dilemma is more likely 
+to happen when the competition on the consumer side or the advertiser side is less intense and when 
+platforms need to pay a high commission fee. The intuition is that weaker competition on the consumer 
+side intensifies the price competition on the advertiser side, and this adverse effect is more prominent 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 25 / 39 ===
+
+25 
+when both platforms partner with the data broker. Besides this, when the advertiser side competition is 
+less intense, the benefits of partnering with the data broker decrease. Therefore, although platforms 
+currently are keen to partner with a data broker to improve their targeting capabilities, such a partnership 
+may hurt them, especially when no fierce competition exists on both sides (consumer and advertiser), 
+and the data broker has high bargaining power over the commission rate. Some industrial examples 
+confirm the potential perils of partnering with the data broker. For instance, many publishers believe 
+that partnering with Google Analytics 360 (Google’s data service) indeed will improve their 
+competitive advantage in targeting capabilities, but their profits may decrease because Google often 
+charges a high fee for its data service in targeted advertising due to its dominant position (CMA 2020).  
+4.3. Welfare implications of the partnership between platforms and the data broker  
+Given that the partnership between platforms and the data broker significantly affects both the consumer 
+side and advertiser side, another important question is how such a partnership affects consumer surplus, 
+advertiser surplus, and social welfare. In this section, we examine this issue by comparing these welfare 
+outcomes in the scenario where platforms do not partner with the data broker  (i.e., (𝑁, 𝑁)) with the 
+scenario where both platforms partner with the data broker (i.e., (𝑌, 𝑌)).  
+Proposition 3. Compared to the scenario where platforms do not partner with the data broker, when 
+both platforms partner with the data broker,  
+(i) consumer surplus decreases; 
+(ii) advertiser surplus increases when 𝜌 is small (i.e., 𝜌 <
+(𝑡−2𝛼)𝛿
+2(𝛽+𝛿) ) and decreases when 𝜌 is 
+large (i.e., 𝜌 >
+(𝑡−2𝛼)𝛿
+2(𝛽+𝛿) ); 
+(iii) social welfare increases when 𝛿 > 𝜌 and decreases when 𝛿 < 𝜌. 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 26 / 39 ===
+
+26 
+The results of Proposition 3 are illustrated in Figure 4. The implications are the following. First, 
+we show that the partnership between  platforms and the data broker always hurts consumer surplus. 
+This is because  such a partnership  increases consumer privacy concerns. The increase in privacy 
+concerns, such as perceived higher risks of data breaches, makes consumers bear a higher privacy cost, 
+resulting in a lower consumer surplus. Note that in the main model, we do not consider the price on the 
+consumer side, so the consumer surplus is not affected by platforms’ pricing decisions. As we show in 
+Section 5.1, when we incorporate a consumer-side price, the partnership between the platforms and data 
+broker can benefit consumer surplus because the consumer price may decrease.  
+Second, when the increase in consumer privacy concerns c aused by the data broke r is small, the 
+partnership between platforms and the data broker benefits advertiser surplus (see region I in Figure 4). 
+There are two opposite effects at play. On the one hand, the partnership can improve the platforms’ 
+targeting capabilities, which positively affects the advertiser surplus. On the other hand, the partnership 
+leads platforms to charge a high price to the advertiser due to relaxed competition , which negatively 
+affects the advertiser surplus. We show that when 𝜌 is small, the former effect dominates, leading to a 
+𝛿 
+𝜌 
+Figure 4. The welfare implications of platform-data broker partnership  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 27 / 39 ===
+
+27 
+net increase in advertiser surplus. In contrast, when 𝜌 is large, the platform charges a much higher price, 
+which makes the latter effect dominate the former, resulting in a net decrease in advertiser surplus (see 
+regions II and III in Figure 4). 
+Finally, from the whole society perspective, we find that partnerships between platforms and data 
+brokers can improve social welfare if the targeting improvement outweighs the increase in consumer 
+privacy concerns (see regions I and II in Figure 4). This result implies that the emerging data broker 
+industry may not be a scourge to society  if consumer privacy issue s can be addressed. However, it is 
+worth noting that in region II, the platform -data broker partnership increases social welfare , but 
+decreases consumer surplus and advertiser surplus. In practice, policymakers can require data brokers 
+to be more transparent about their operations, for example, to obtain consumers’ consent before using 
+their data. Overall, our finding cautions that the policymakers should scrutinize the platform-data broker 
+partnership carefully because the platform -data broker partnership may improve social welfare at the 
+expense of consumer surplus and advertiser surplus. 
+4.4. Platforms’ privacy protection strategies 
+In the previous sections, we have examined the impact of platform-data broker partnership on platform 
+profits and welfare outcomes.  Faced with growing privacy concerns, platforms have started to take 
+measures (e.g., restrict ing access, firewalls , and encryption protection)  to protect the consumers’ 
+personal data  and reduce their privacy concern s. Moreover, recent privacy regulation s (e.g., GDPR, 
+CCPA) also put pressure on  firms to protect consumer privacy. In this subsection, we examine the 
+platforms’ motivation for privacy protection when they both establish a partnership with the data broker. 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 28 / 39 ===
+
+28 
+In particular, we investigate whether and when competing platforms have incenti ves to adopt high or 
+low levels of privacy protection.  
+We assume both platforms can choose to adopt a high  (𝐻) or low (𝐿) level of privacy protection, 
+denoted by 𝜙𝑖 (𝑖 ∈ {𝐻, 𝐿}). In total, there are four scenarios for platforms’ privacy protection strategies.  
+Platform A / Platform B 𝐻 𝐿 
+𝐻 (𝐻, 𝐻) (𝐻, 𝐿) 
+𝐿 (𝐿, 𝐻) (𝐿, 𝐿) 
+Table 2. Platform decisions on privacy protection 
+When platforms adopt privacy protection, the consumer utility can be rewritten as follows: 
+𝑈𝐴(𝑥) = 𝑣𝑐 − 𝜅(1 − 𝜙𝑖) − (𝛼 + 𝜌)(1 − 𝜙𝑖)𝑦𝐴 − 𝑡𝑥,  
+𝑈𝐵(𝑥) = 𝑣𝑐 − 𝜅(1 − 𝜙𝑖) − (𝛼 + 𝜌)(1 − 𝜙𝑖)𝑦𝐵 − 𝑡(1 − 𝑥) 
+where platforms’ privacy protection could reduce consumers’ intrinsic privacy concern to 𝜅(1 − 𝜙𝑖) 
+and consumers ’ privacy concerns toward targeted advertising  to (𝛼 + 𝜌)(1 − 𝜙𝑖). The following 
+proposition summarizes the platforms’ equilibrium privacy protection strategies.  
+Proposition 4. When platforms adopt privacy protection, there exists 𝜌2
+∗ > 𝜌1
+∗ > 0 such that: 
+(i) when 0 < 𝜌 < 𝜌1
+∗ , both platform s adopt a high level of privacy protection, i.e., (𝐻, 𝐻) is the 
+equilibrium;  
+(ii) when 𝜌1
+∗ < 𝜌 < 𝜌2
+∗ , one platform adopts a high level of privacy protection, whereas the other 
+platform adopts a low level of privacy protection, i.e., (𝐻, 𝐿) is the equilibrium.  
+(iii) when 𝜌 > 𝜌2
+∗ , both platforms adopt a low level of privacy concern, i.e., (𝐿, 𝐿) is the equilibrium. 
+where the expressions of 𝜌1
+∗ and 𝜌2
+∗ are presented in the Appendix. 
+Figure 5 illustrates the results in Proposition 4. Contrary to the common intuition that both 
+platforms would adopt a high privacy protection level, Proposition 4 shows that platforms may adopt a 
+low privacy protection level. More intriguingly, symmetric platforms  may adopt asymmetric privacy 
+protection strategies. There are two forces at play when platforms adopt privacy protection. On the one 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 29 / 39 ===
+
+29 
+hand, adopting a high privacy protection level can help platforms improve their reputation and obtain 
+consumer trust, whic h reduces the consumers’ intrinsic privacy concerns about the platform (i.e., 
+lowering the intrinsic privacy cost 𝜅). This would benefit platforms. On the other hand, adopting a high 
+privacy protection level reduces the consumers’ privacy concerns (i.e., 𝜌) regarding the data broker and 
+targeted advertising, which intensifies platform competition on the advertiser side and harm s the 
+platform. As a consequence, when 𝜅 is high and 𝜌 is low, both platforms have incentives  to adopt a 
+high level of privacy protection to reduce consumers’ intrinsic privacy cost. In contrast, when 𝜅 is low 
+and 𝜌 is high, platforms would rather adopt a low level of privacy protection to avoid intensified 
+competition. In practice, consumers ma y have different degrees of intrinsic privacy concerns for 
+different types of data in different industries. For instance, consumers might be more sensitive regarding 
+their healthcare and financial data than their news browsing and online shopping data. Hence, our result 
+suggests that platforms that deal with consumers’ sensitive information , such as mobile payment 
+platforms (e.g., Alipay and WeChat Pay) and online healthcare platforms (e.g., Haodf.com and Chunyu 
+Yisheng), should invest heavily in privacy protection, while platforms like news websites (e.g., New 
+York Times and Forbes) could invest less.  
+𝜌 
+𝜅 
+Figure 5. Platforms’ Privacy Protection Strategies  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 30 / 39 ===
+
+30 
+Interestingly, when 𝜅 and 𝜌 are in the middle range, platforms adopt an asymmetric privacy 
+protection strateg y, i.e., one platform (say platform A) adopts a high level of privacy protection to 
+reduce consumers’ intrinsic privacy cost, while the other platform (say platform B) adopts a low level 
+to soften competition. In this case, adopting an asymmetric strategy  can help platforms differentiate 
+from each other. Also, if consumers’ intrinsic privacy concern is not very high, adopting a low level of 
+privacy protection will not cause much harm to platform B. Indeed, this asymmetric privacy protection 
+strategy has been observed in real -world market practice . For example, considering social media 
+platforms, Snap chat has adopted a higher level of privacy protection than  Instagram. Specifically, 
+Snapchat uses end-to-end encryption on photos and videos shared between its users to better protect 
+their privacy 6 . Likewise, in the browser and email service market, Google and Microsoft adopt 
+differentiated privacy protection strategies. Google collects consumers ’ data about their browsing 
+behavior extensively and goes through the content of each Gmail to serve targeted ads, while Microsoft 
+took steps to improve privacy features on its browser Internet Explorer (e.g., tracking protection), and 
+has committed to not using the content of the email in Outlook for targeted ads (Gal-Or et al. 2018). 
+5. Extensions  
+In this section, we extend our main model in four ways to generalize our results and seek new insights. 
+In Section 5.1, we consider the case where platforms also charge prices from consumers. In Section 5.2, 
+we endogenize the data broker’s commission rate and examine how this change affects the partnership 
+between platforms and the data broker. Moreover, we stu dy two other extensions: (i) consumer 
+ 
+6 https://www.mobileappdaily.com/snapchat-vs-instagram 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 31 / 39 ===
+
+31 
+multihoming and (ii) advertiser multihoming , scenarios where consumers  or advertisers can join 
+multiple platforms. Due to space considerations, we relegate the latter two extensions to Appendix A. 
+5.1. Platforms charge prices on the consumer side 
+In the main model , platform s adopt a pure ad -sponsored model, i.e., the content service is free to 
+consumers. In this section, we extend the model to consider the scenario where platforms also charge 
+fees on the consumer side for their content. In the real world, this corresponds to the practice of some 
+publisher websites (e.g., New York Times, The Economist) that charge consumers a subscription price.  
+Letting 𝑟𝐴  (𝑟𝐵 ) denote the consumer price s charged by platform A (B) , the c onsumer utility 
+functions can be rewritten as:  
+𝑈𝐴(𝑥) = 𝑣𝑐 − 𝜅 − (𝛼 + 𝕀𝐴𝜌)𝑦𝐴 − 𝑡𝑥 − 𝑟𝐴, 𝑈𝐵(𝑥) = 𝑣𝑐 − 𝜅 − (𝛼 + 𝕀𝐵𝜌)𝑦𝐵 − 𝑡(1 − 𝑥) − 𝑟𝐵 
+Platforms now can obtain profits from both the consumer side and advertiser side, resulting in the 
+following profit functions: (i) when platform 𝑖 does not partner with the data broker, 𝜋𝑖 = 𝑟𝑖𝑑𝑖 + 𝑝𝑖𝐷𝑖; 
+(ii) when platform 𝑖 partners with the data broker, 𝜋𝑖 = 𝑟𝑖𝑑𝑖 + 𝑝𝑖𝐷𝑖(1 − 𝛾), where 𝑟𝑖 (𝑝𝑖) represents 
+the consumer (advertiser) price, and 𝑑𝑖 (𝐷𝑖 ) is the consumer (advertiser) demand.  
+Following the same procedure as in Section 4, we can derive platforms’ equilibrium prices on both 
+sides and their profits in each subgame . The detailed analytical derivation is provided in Appendix  B. 
+Below, we highlight some key insights on platforms’ pricing strategies.  
+First, we find that the consumer price decreases with the platforms’ ad targeting capabilities (𝛽). 
+As 𝛽 increases, platforms have incentives to compete for consumers more aggressively so as to 
+amplify the targeting value on the advertiser side, leading to a lower consumer price. This result implies 
+that the improvement of targeting capabilities induced by the data broker can intensify price competition 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 32 / 39 ===
+
+32 
+on the consumer side.  Second, on the advertiser side, when consumer privacy concerns increase, 
+platforms increase their ad price. The intuition is the same as the main model ; that is, the increase in 
+consumer privacy concerns incentivizes platforms to compete for advertisers less aggressively to avoid 
+consumer churn, resulting in a higher ad price.  
+Therefore, when platforms adopt a mixed model of ad-sponsored and subscription-based revenue, 
+partnering with the data broker will have  different effects on the two sides. On the one hand, the 
+targeting improvement will intensify the price competition on the consumer side, but on the other hand, 
+the increase in consumer privacy concerns will mitigate the competition on the advertiser side . By 
+comparing the platform profits in each subgame, we find that the equilibrium partnership strategies are 
+qualitatively the same as the main model.  
+Recall that in the main model, we find that consumers are worse off, and advertisers can be better 
+off, when platforms partner with the data broker . We r eexamine the welfare implications  in the 
+following proposition to check whether these results hold when platforms charge prices from consumers. 
+Proposition 5. If platforms charge prices on both sides, compared to the scenario where platforms do 
+not partner with the data broker, both platforms partner ing with the data broker  increase consumer 
+surplus when 𝛿 >
+2𝛽𝛾+𝜌
+2(1−𝛾). 
+Proposition 5 shows that when platforms charge prices from consumers, the partnership between 
+platforms and the data broker can benefit consumers when the improvement in targeting capabilities 
+brought by the data broker is relatively large. This result differs from the main model result. The driving 
+force is that improvement in targeting capabilities prompts platforms to reduce prices on the consumer 
+side. Hence, although consumers suffer a privacy loss, they can receive a monetary benefit (i.e., a lower 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 33 / 39 ===
+
+33 
+price) as compensation. This result highlights that the impact of platform -data broker partnerships on 
+consumers depends on the business model of the platform. The takeaway for consumers is that platform-
+data broker partnership s may make them better off  when they pay for the platforms’ content, which 
+provides implications for consumer advocates who might consider pushing to prevent this practice. As 
+for advertiser surplus and social welfare, we show the results are similar to those for the main model.  
+5.2. The data broker decides the commission rate endogenously 
+In our main model, we assume the data broker’s commission rate ( 𝛾) is exogenously given. However, 
+in practice, the data broker may have the market power to endogenously decide the commission rate or 
+the price of the data sold to platforms (Bimpikis et al. 2019; Montes et al. 2018) . In this section, we 
+investigate the da ta broker’s decisions on the commission rate and how those decisions affect the 
+partnership between platforms and the data broker.  
+Corollary 2. When the data broker sets different commission rates  (𝛾), the pla tforms’ equilibrium 
+partnership strategies are: (i) when 0 < 𝛾 < 𝛾1, (𝑌, 𝑌) is the equilibrium; (ii) when 𝛾1 < 𝛾 < 𝛾2, (𝑌, 
+𝑁) or (𝑁, 𝑌) is the equilibrium; when 𝛾2 < 𝛾 < 1, (𝑁, 𝑁) is the equilibrium.  
+Note that the expressions of 𝛾1 and 𝛾2 are presented in Appendix B. Corollary 2 shows that when 
+𝛾 is low, both platforms optimally partner with the data broker, while when 𝛾 is moderate, only one 
+platform has an incentive to partner with the data broker . When 𝛾 is very high, neither platform has 
+incentives to partner with the data broker.  
+Based on Corollary 2,  we can find  that it is never optimal for the data broker to charge a 
+commission rate higher than 𝛾2. However, it is not immediately clear whether the data broker should 
+charge a low commission rate ( i.e., 𝛾1 ) to induce more partnerships or charge a relatively high 
+commission rate (i.e., 𝛾2) to partner with only one platform. We address this issue in Proposition 6.  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 34 / 39 ===
+
+34 
+Proposition 6. When the data broker can endogenously determine the commission rate, 
+(i) if 0 < 𝜌 < 𝜌4 , the data broker’s optimal commission rate is 𝛾2 , resulting in  only one 
+platform partnering with the data broker; 
+(ii) if 𝜌 > 𝜌4, the data broker’s optimal commission rate is 𝛾1, resulting in both platform s 
+partnering with the data broker.  
+Proposition 6 reveals that the data broker’s optimal commission rate depends on the extent of 
+increased privacy concerns. When 𝜌 is large, relaxed competition allows platforms to obtain higher 
+profits by partnering with the data broker. In this case, the data broker can be better off by setting a low 
+commission rate to seek partnerships with both platforms. On the contrary, when 𝜌 is small, the 
+platforms’ profits are not higher when the data broker partners with both platforms. Hence, it is better 
+for the data broker to set a relatively high commission rate to partner with only one platform.  
+Our result contrasts with prior literature showing that it is always optimal for the data broker to 
+sell (or share) data to only one downstream firm (Montes et al. 2018). Previous studies found that the 
+data broker selling data to both firms intensifies competition, which reduces the information rent that 
+the data broker can extract from firms , leading to the conclusion that it is always better for the data 
+broker to sell exclusively to one firm. Our results, however, show that the data broker partner ing with 
+both platforms can mitigate the price competition due to negative cross-side network effects in the two-
+sided market, which enables the data broker to extract more profit from the platforms. By incorporating 
+consumer privacy concerns, our study provides more nuanced insights into the interactions between the 
+data broker and platforms. The data broker  thus is advised to consider the downstream market 
+environment when devising their data offering strategies.  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 35 / 39 ===
+
+35 
+6. Discussion and Conclusions 
+Motivated by the growing popularity of platform-data broker partnership s, this study builds a game-
+theoretic model to investigate the economic mechanisms that underli ne the partnership between 
+platforms and data brokers in a two-sided market. Our model incorporates the impact of the data broker 
+on both the advertiser and consumer side s. We contribute to the literature by considering partnering 
+with the data broker as a strategic variable for competing platforms and by studying how such partnering 
+interacts with the platforms’ pricing strategies. We also examine the welfare implications of platform-
+data broker partnerships.  
+This study provides important implications for both research and practice.  Our analysis reveals 
+that the increase in consumer privacy concerns caused by the data broker may incentivize platforms to 
+partner with the data broker  rather than discouraging them. The driving force for this counterintuitive 
+result is that when consume r privacy concerns are high, platforms compete for a dvertisers less 
+aggressively to avoid consumer churn , resulting in high ad prices. This result implies that  partnering 
+with the data broker can not only improve targeting capabilities but also serve as a lever for platforms 
+to ease price competition. Therefore, platform managers should be aware that growing privacy concerns 
+may not always hinder platforms from working with data brokers.  
+Despite the growing popularity of partnership s between platforms and data broker s, we find that 
+platforms can be in a prisoner’s dilemma situation when deciding whether to partner with the data 
+broker. This situation is likely to occur when consumer privacy concern s are not extremely high, the 
+data broker’s data analytics capability is low, and the data broker charges a high commission. In this 
+case, each platform has an incentive to partner with the data broker, but by doing so, they are worse off 
+than if they both commit not to partner with the data broker . This finding echoes a recent field study 
+showing that while partnering with the data broker is the dominant strategy for platforms, their profits 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 36 / 39 ===
+
+36 
+may suffer because of a high third-party data cost and low targeting improvement enabled by the data 
+broker (Neumann 2019).  Moreover, some industrial reports reveal that publishers indeed face a 
+dilemma regarding the use of third-party data services. For instance, publishers realized that partnering 
+with Google Analytics 360 (Google’s data service) can improve their competitive advantage in targeting 
+capabilities, but their profits may even decrease because Google charges a high commission rate due to 
+its market power . Therefore, our analysis suggests that platforms that intend to partner with the data 
+broker must carefully evaluate the commission rate charged by the data broker  and the data broker’s 
+potential impact on consumer privacy concerns and targeting capabilities.  
+From the welfare perspective, our results provide important insights into the recent debate about 
+the regulation of the data broker industry  (Sherman 2020 ). Contrary to the common belief that the 
+emerging data broker industry hurts consumer surplus due to higher privacy costs, we find that platform-
+data broker partnership may make consumers better off, especially when platforms adopt a mixed model 
+of subscription -based and ad -sponsored revenue.  The driving force is that partnering with the data 
+broker will intensify the platforms’ price competition on the consumer side, leading to a lower consumer 
+price. However, when platforms adopt a pure ad -sponsored model without charging consumers , the 
+platform-data broker partnership  does hurt consumers . This finding provides implications for 
+policymakers by pointing out that the business model adopted by platform s plays a crucial role in the 
+welfare implications of the platform -data broker partnerships. Regarding advertiser surplus and social 
+welfare, we find that the platform-data broker partnership can be a welfare-enhancing practice if it does 
+not trigger strong concerns about personal privacy . Thus, policymakers shoul d take measures to 
+alleviate the consumers’ privacy concerns about the data broker,  such as making the operations of the 
+data broker more transparent. For example, obtaining consumers’ consent before  using their data has 
+been considered the first step toward regulating data brokers (Kraus 2020). Overall, our findings provide 
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 37 / 39 ===
+
+37 
+interesting and testable hypotheses for future research to empirically analyze the economic impact of 
+platform-data broker partnerships. 
+This study has several limitations and thus provides opportunities for future research. First, in our 
+model, we assume the markets on both the consumer side and advertiser side are fully covered. Future 
+research might consider a scenario wher e the market may not be fully covered and examine how that 
+change affects the platforms’ partnership strategies. Second, this study considers competition between 
+two symmetric firms. Future studies can extend the model to incorporate heterogeneities between the 
+two platforms. For instance, on the consumer side, the platforms’ intrinsic service value may differ, and 
+on the advertiser side, platforms might have different baseline targeting capabilities. It is worthwhile to 
+investigate how these heterogeneities affect platforms’ partnership strategies. Finally, in our model, we 
+assume that the platforms’ baseline targeting capability is exogenously  given. Given the growing 
+importance of targeting technology, platforms may endogenously determine their optimal investment 
+level in targeting technology (e.g., data analytics level). Future research could investigate the interplay 
+between investing in targeting technology and the platforms’ optimal partnership decisions.   
+References 
+Acquisti, A., Taylor, C., and Wagman, L. (2016). The Economics of Privacy. Journal of Economic 
+Literature, 54(2), 442-92. 
+Armstrong, M. (2006). “Competition in Two‐sided Markets,” The RAND Journal of Economics, 37(3), 
+668-691.  
+Armstrong, M., and Wright, J. (2007). Two -sided Markets, Competitive Bottlenecks and Exclusive 
+Contracts. Economic Theory, 32(2), 353-380. 
+Anderson Jr, E. G., Parker, G. G., and Tan, B. (2014). “Platform Performance Investment in the 
+Presence of Network Externalities,” Information Systems Research, 25(1), 152-172. 
+Anderson, S. P., Foros, Ø., & Kind, H. J. (2018). Competition for advertisers and for viewers in media 
+markets. The Economic Journal, 128(608), 34-54. 
+Athey, S., Calvano, E., and Gans, J. S. (2018). The Impact of Consumer Multi-homing on Advertising 
+Markets and Media Competition. Management Science, 64(4), 1574-1590. 
+Bakos, Y., and Halaburda, H. (2020). Platform competition with multihoming on both sides: Subsidize 
+or not?. Management Science, 66(12), 5599-5607.  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 38 / 39 ===
+
+38 
+Bergemann, D., and Bonatti, A. (2019). “Markets for Information: An Introduction,” Annual Review of 
+Economics, 11, 85-107. 
+Bhargava, H. K., and Choudhary, V. (2004). Economics of an information intermediary with 
+aggregation benefits. Information Systems Research, 15(1), 22-36. 
+Bimpikis, K., C rapis, D., and Tahbaz -Salehi, A. (2019). “Information Sale and Competition,” 
+Management Science, 65(6), 2646-2664. 
+Brizo, K. (2017). “ Less is MORE: How Removing 2 Ads from a Page Made More Money ”, 
+https://www.forbes.com/sites/forbesproductgroup/2017/02/01/less-is-more-how-removing-2-ads-
+from-a-page-made-more-money/?sh=38d8b9bd720e 
+Caillaud, B., and Jullien, B. (2003). Chicken & Egg: Competition among Intermediation Service 
+Providers. RAND Journal of Economics, 309-328. 
+Casadesus-Masanell, R., & Hervas -Drane, A. (2015). Competing with privacy. Management Science, 
+61(1), 229-246. 
+Chellappa, R. K., and Shivendu, S. (2010). Mechanism design for “free” but “no free disposal” services: 
+The economics of per sonalization under privacy concerns. Management Science, 56(10), 1766 -
+1780. 
+Chen, Z., Choe, C., and Matsushima, N. (2020). Competitive personalized pricing. Management 
+Science, 66(9), 4003-4023. 
+Competition and Markets Authority  (CMA). (2020). “Online Platforms and Digital Advertising”, 
+https://assets.publishing.service.gov.uk/media/5fa557668fa8f5788db46efc/Final_report_Digital_
+ALT_TEXT.pdf 
+Conitzer, V., Taylor, C. R., and Wagman, L. (2012). Hide and seek: Costly consumer privacy in a 
+market with repeat purchases. Marketing Science, 31(2), 277-292. 
+DalleMule, L., and Davenport, T. H. (2017). “What’s Your Data Strategy,” Harvard Business Review, 
+95(3), 112-121. 
+Dimakopoulos, P. D., and Sudaric, S. (2018). Privacy and platform competition. International Journal 
+of Industrial Organization, 61, 686-713. 
+Dou, Y., and Wu, D. J. (2021). Platform Competition under Network Effects: Piggybacking and 
+Optimal Subsidization. Information Systems Research, 32(3), 820-835. 
+eMarketer (2019). Consumer Attitudes on Marketing 2019: Privacy Concerns Mount, and Ad Blocking 
+Isn’t Going Away. https://bit.ly/3aJk9pp. 
+Hagiu, A. (2009). Two‐sided platforms: Product variety and pricing structures.  Journal of Economics 
+& Management Strategy, 18(4), 1011-1043. 
+Gal-Or, E., Gal -Or, R., and Penmetsa, N. (2018). The r ole of user privacy concerns in shaping 
+competition among platforms. Information Systems Research, 29(3), 698-722. 
+Goetzen, B. (2020). What Oracle and TikTok stand to gain from a partnership . 
+https://www.businessinsider.com/oracle-tiktok-both-stand-to-benefit-from-partnership-2020-9 
+Ingram, D., and Fioretti, J. (2018). “Facebook Cuts Ties to Data Brokers in Blow to Targeted Ads” 
+https://www.reuters.com/article/us-facebook-privacy-idUKKBN1H41KV 
+King, B. (2019). Why Targeted Ads Are a Serious Threat to Your Priva cy. 
+https://www.makeuseof.com/tag/targeted-ads-threat-privacy/  
+Electronic copy available at: https://ssrn.com/abstract=4189518
+
+=== PAGE 39 / 39 ===
+
+39 
+Kraus, D., (2020). Transparency as a First Step to Regulating Data Brokers . 
+https://nyujlpp.org/quorum/kraus-transparency-first-step-regulating-data/ 
+Lotame, (2020). “Benefits of a DMP for Publishers, Media Companies, Agencies and Marketers”, 
+https://www.lotame.com/benefits-of-a-dmp/ 
+Lin, T. (2022). Valuing Intrinsic and Instrumental Preferences for Privacy. Marketing Science.  
+Marshall, J. (2017). “ Online Publishers Try Reducing Ads to Boost Revenue ,” 
+https://www.wsj.com/articles/online-publishers-try-reducing-ads-to-boost-revenue-1499940061 
+Mayer, J. R., and Mitchell, J. C. (2012). “Third -Party Web  Tracking: Policy and Technology,” in 
+Proceedings of the 2012 IEEE Symposium on Security and Privacy, Los Alamitos, CA: IEEE, pp. 
+413-427. 
+Mckeon, K. (2019). “Is Targeted Advertising an Invasion of Privacy?”, https://visualobjects.com/web-
+design/blog/targeted-advertising-invasion-of-privacy  
+Molitorisz, S. (2018) “It’s time for third -party data brokers to emerge from the shadows,” 
+https://theconversation.com/its-time-for-third-party-data-brokers-to-emerge-from-the-shadows-
+94298 
+Montes, R., Sand -Zantman, W., and Valletti, T. (2019). The value of personal information in online 
+markets with endogenous privacy. Management Science, 65(3), 1342-1362. 
+Neumann, N., Tucker, C. E., and Whitfield, T. (2019). Frontiers: How effective is third-party consumer 
+profiling? Evidence from field studies. Marketing Science, 38(6), 918-926. 
+Sherman, J. (2020). “Federal Privacy Rules Must Get “Data Broker” Definitions Right,” 
+https://www.lawfareblog.com/federal-privacy-rules-must-get-data-broker-definitions-right 
+Ram, A., and Murgia, M. (2019) “Data Brokers: Regulators Try to Rein in the ‘Privacy Deathstars”, 
+https://www.ft.com/content/f1590694-fe68-11e8-aebf-99e208d3e521 
+Rochet, J . C., and Tirole, J. (2003). Platform Competition in Two -sided Markets. Journal of the 
+European Economic Association, 1(4), 990-1029. 
+Rochet, J. C., and Tirole , J. (2006). Two‐sided Markets: A Progress Report. The RAND Journal of 
+Economics, 37(3), 645-667. 
+Tau, B. (2020). Apple and Google to Stop X-Mode From Collecting Location Data From Users’ Phones, 
+https://www.wsj.com/articles/apple-and-google-to-stop-x-mode-from-collecting-location-data-
+from-users-phones-11607549061 
+Tucker, C. E. (2012). The economics of advertising and pri vacy. International Journal of Industrial 
+Organization, 30(3), 326-329. 
+Venkatadri, G., Andreou, A., Liu, Y., Mislove, A., Gummadi , K. P., Loiseau, P., and Goga, O. (2018, 
+May). Privacy risks with Facebook's PII -based targeting: Auditing a data broker's advertising 
+interface. In 2018 IEEE Symposium on Security and Privacy (SP) (pp. 89-107). 
+Venkatadri, G., Sapiezynski, P., Redmiles, E. M., Mislove, A., Goga, O., Mazurek, M., and Gummadi, 
+K. P. (2019, May). Auditing Offline Data Brokers via Facebook's Advertising Platform. In  The 
+World Wide Web Conference (pp. 1920-1930). 
+Zhang, X., Zhang, A. R., Yue, W. T., and Yugang, Y. U. (2020). The More, the Better? The Impact of 
+Data Analytics and Data Provisioning on Publisher Competition. In Proceedings of International 
+Conference on Information Systems 2020. 
+Electronic copy available at: https://ssrn.com/abstract=4189518

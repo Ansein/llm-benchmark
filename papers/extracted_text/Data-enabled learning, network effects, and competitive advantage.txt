@@ -1,0 +1,2251 @@
+
+
+=== PAGE 1 / 44 ===
+
+Data-enabled learning, network eﬀects and competitive advantage ∗
+Andrei Hagiu†and Julian Wright‡
+June 2020
+Abstract
+We model competition between ﬁrms which improve their products through learn-
+ing from customer data. We explore the implications for competitive dynamics of three
+new features of such learning compared to traditional learning-by-doing: (i) learning
+increases willingness-to-pay rather than reducing marginal cost, (ii) ﬁrms can improve
+their products for each customer based on their individual usage experience, (iii) prod-
+ucts can improve while customers are still consuming them. The model allows us to
+analyze data-sharing, the shape of the learning curves, and other factors aﬀecting an
+incumbent’s competitive advantage. Finally, we show when and how network eﬀects
+arise endogenously from data-enabled learning.
+Keywords: machine learning, dynamic competition, data sharing, switching costs.
+1 Introduction
+In recent years, much attention has been focused on the role data can play in providing
+incumbent ﬁrms with a competitive advantage. Digitization, connectivity to cloud-based
+infrastructures, together with cheaper storage and more eﬀective use of data (i.e. improve-
+ments in machine learning algorithms), have made it possible for ﬁrms in many industries
+to learn from their customer data and rapidly improve their products. And with better
+products, these ﬁrms can attract more customers (or more usage from existing customers),
+and therefore obtain more data, potentially creating a self-reinforcing cycle that can make
+∗We would like to thank LMU (and Tobias Kretschmer in particular) for hosting us in May and June of
+2019, and the valuable feedback colleagues there gave us as we developed a very early version of this paper.
+Thanks also to Luis Cabral, Emilio Calvano, Jacques Cremer, Bruno Jullien, and Martin Peitz as well as
+other participants at the 17th ZEW Conference on ICT, at APIOC 2019, at IDEI’s 2020 Digital Economics
+Conference, and at the Economics of Platforms and MaCCI/EPoS Virtual IO online seminar series for their
+comments and suggestions. Gunhaeng Lee and Tat-How Teh provided excellent research assistance.
+†Boston University Questrom School of Business, E-mail: ahagiu@bu.edu
+‡Department of Economics, National University of Singapore, Singapore, E-mail: jwright@nus.edu.sg
+1
+
+=== PAGE 2 / 44 ===
+
+it diﬃcult for any new entrant to compete. We call this self-reinforcing cycle “data-enabled
+learning”.1
+As an example, consider Google Maps, which relies on learning across users. As its traﬃc
+predictions improve, more drivers adopt it, resulting in more data to improve traﬃc predic-
+tions, more drivers adopting, and so on. Or consider Google’s Nest smart thermostat, which
+relies on personalized learning. As customers use their thermostat more, it learns their pref-
+erences better, resulting in improved temperature setting, meaning users tend to keep using
+it, and so on. Other notable examples that exhibit data-enabled learning include search
+engines (Google, Bing, Baidu), speech recognition applications (e.g. dictation software, vir-
+tual assistants, chatbots), smart connected devices (e.g. smart beds by Eight Sleep and
+the Tonal home gym), online services that use recommender systems (e.g. Netﬂix, Stitch-
+ﬁx, Spotify, Tinder, TrueFit), advanced driver assistance and autonomous vehicle systems
+(Cruise, Mobileye, Waymo), as well as a myriad of startups developing AI-based real-time
+monitoring and predictions across sectors as diverse as agriculture (Blue River Technology
+and Prospera), healthcare (Notable Labs and SkinVision), law (Genie AI and Luminance)
+and security (SeeTrue and Vaak).
+Data-enabled learning would seem to give incumbent ﬁrms a competitive advantage.
+But how strong is this advantage and how does it diﬀer from that obtained from more
+traditional mechanisms, such as (i) learning-by-doing, in which an incumbent lowers its costs
+as it produces (and sells) more, thereby being able to oﬀer a lower price, and attract more
+sales, and (ii) standard network eﬀects, in which an incumbent ﬁrm becomes more valuable
+to consumers as it attracts more consumers, thereby attracting even more consumers and
+oﬀering even higher value?
+To address these questions, and determine the drivers of competitive advantage with data-
+enabled learning, we develop a theory of dynamic competition in which ﬁrms can improve
+their products via data gleaned from their customers. The theory is based on Bertrand
+competition between two inﬁnitely lived ﬁrms, which can diﬀer in the amount of their prior
+learning as well as in the shape of their respective learning functions. We allow ﬁrms to set
+prices to compete for consumers every period, taking into account how attracting consumers
+(and therefore more data) increases the value they can oﬀer to consumers in subsequent
+periods. This diﬀers from traditional learning-by-doing because learning works through
+willingness-to-pay rather than costs. Aside from diﬀerences in standalone utility and learning
+functions, the two ﬁrms in our model are assumed to be identical. An attractive feature of
+1Some practitioners have called this phenomenon “data network eﬀects”. Our use of “data-enabled
+learning” is intended to be more general since, as discussed below, the phenomenon need not involve any
+network eﬀect (for example, if the learning is speciﬁc to each customer). Indeed, one of the contributions of
+this paper is to determine when data-enabled learning creates genuine network eﬀects.
+2
+
+=== PAGE 3 / 44 ===
+
+our setup is that, despite allowing for general learning functions, we are able to completely
+characterize the equilibrium outcomes, determining which ﬁrm will win and each ﬁrm’s value
+for any arbitrary starting position of the two ﬁrms.
+As a baseline, we consider the case with across-user learning only (Section 3), in which
+the two ﬁrms only learn based on the total number of consumers they served in the past.
+Since consumers’ willingness-to-pay can increase over time with more users even if prices
+remain unchanged, there is a type of dynamic network eﬀect at play. As a result, if a ﬁrm
+is able to win in one period, it will enjoy an increasing advantage, and be able to win in all
+subsequent periods.
+We then consider the case of within-user learning only (Section 4), in which any given
+consumer’s willingness-to-pay for a given ﬁrm’s product only depends on how many times
+the ﬁrm has served that particular consumer in the past. This highlights a second key
+diﬀerence between data-enabled learning and traditional mechanisms, which is the role of
+customization: ﬁrms can often improve their products for each individual customer based
+on that customer’s particular usage experience. Within-user learning implies the more a
+customer uses a ﬁrm’s product, the greater is the eﬀective cost of switching to use the rival’s
+product. Such data-enabled learning therefore creates an endogenous switching cost that
+grows over time, but not any type of network eﬀect.
+In these baseline models, we show that despite the fact that sometimes both the winning
+ﬁrm and the losing ﬁrm price below cost to consumers, the competitive outcome always
+coincides with the socially optimal outcome. This is not at all an obvious result despite our
+Bertrand competition setting: the determination of which ﬁrm wins in a particular period
+depends on how much each ﬁrm is willing to subsidize consumers in the current period, which
+in turn depends on how much each ﬁrm’s value increases by winning this period as opposed
+to losing this period, both of which are only deﬁned recursively. A second fundamental
+result comes from comparing across-user learning and within-user learning. We ﬁnd the
+conditions for either ﬁrm to win are identical in the two cases. However, all else equal, the
+winning ﬁrm makes higher proﬁts when learning is across users rather than within users.
+Fundamentally, this is because within-user learning creates endogenous switching costs, so
+each individual consumer takes into account that they would beneﬁt if the losing ﬁrm had
+a stronger competitive position in the future, which in turn makes the winning ﬁrm have to
+price more competitively. We also explain how various factors, such as how far each ﬁrm is
+along its learning curve and the nature of the learning curve, aﬀect the condition for either
+ﬁrm to win.
+In these two baseline models, consumers do not face any coordination problem arising
+from network eﬀects. Our third main contribution consists in showing how network eﬀects
+3
+
+=== PAGE 4 / 44 ===
+
+that lead to a coordination problem among consumers and thus create a scope for beliefs
+to aﬀect the competitive outcome can arise endogenously (Section 5) when we introduce
+either one of two realistic features. The ﬁrst is that for cloud-based products and services
+that beneﬁt from across-user learning, ﬁrms can often improve their products while their
+customers are still consuming them. In these cases, consumers need to form expectations
+over how many other consumers will purchase the same product in order to determine the
+value they will get from the product.
+The second feature that creates a coordination problem from network eﬀects is the com-
+bination of across-user and within-user learning. Remarkably, this feature gives rise to a
+consumer coordination problem even in the absence of any within-period learning, exoge-
+nous switching costs or prices. Speciﬁcally, even if the product is available for free and
+consumers are free to change ﬁrms each period, within-user learning creates an endogenous
+switching cost. This means consumers also want to choose the product that other consumers
+are expected to choose in order to also beneﬁt from across-user learning in subsequent pe-
+riods. For example, this means Google likely beneﬁts from real network eﬀects in organic
+search, even though it is “costless” for users to switch to Bing.
+A key implication of our analysis is that even though data can create a type of dynamic
+network eﬀect, there is no systematic ineﬃciency in the market outcome unless the dynamic
+network eﬀect leads to a consumer coordination problem and consumer beliefs favor one
+of the ﬁrms. On the other hand, even absent any such coordination problem, our analysis
+implies that increasing the learning of the losing ﬁrm generally increases consumer surplus.
+This might suggest that a policy that forces incumbents to share their superior data with
+entrants would be good for consumers. We use our dynamic framework to explore how
+data sharing works, and ﬁnd that if ﬁrms anticipate such a policy, they may compete less
+aggressively in the ﬁrst place, which in our model means subsidizing consumers less, and
+potentially lowering consumer surplus. Finally, we also show that whether data protects
+an incumbent from an entrant or not depends on a comparison of the two ﬁrms’ learning
+curves. Even if the entrant starts with less data, if it can ultimately create more value from
+data, through dynamic pricing it may actually be able to attract consumers and become the
+market leader.
+2 Related literature
+Our paper combines aspects from three large and established literatures. First, it relates
+to works that provide theoretical models of competition with learning-by-doing (Fudenberg
+and Tirole, 1983, Dasgupta and Stiglitz, 1988, Salant, 1990, Cabral and Riordan, 1994,
+4
+
+=== PAGE 5 / 44 ===
+
+Besanko et al., 2010). Aside from the fact learning increases consumer’s willingness to pay
+rather than decreases ﬁrms’ costs, our particular model of learning is quite distinct from
+any in the existing literature. The baseline model with pure across-user learning is closest
+to that in the classic paper of Cabral and Riordan (1994). A key diﬀerence is that they
+allow for horizontal diﬀerentiation between the two ﬁrms, whereas we allow for vertical
+diﬀerentiation (both in standalone values and via asymmetric learning functions). Because
+of the tractability of our particular framework, we are able to obtain several new results,
+including a general eﬃciency result, the implications of learning for consumer surplus, and
+comparative statics on the shape of the learning curves. And we apply the framework to
+study questions that do not arise in the learning-by-doing setting: the implications of data
+sharing policies, the diﬀerence in competitive outcomes between across-user and within-user
+learning, and conditions under which data-enabled learning leads to meaningful network
+eﬀects.
+Second, our paper relates to the substantial literature on network eﬀects. From this
+literature we borrow the modelling of consumer “beliefs” to select equilibria when consumers
+play coordination games (Katz and Shapiro, 1986, and Caillaud and Jullien, 2001). At a high
+level, our model with across-user and within-period learning is related to dynamic models
+with network eﬀects (e.g. Mitchell and Skrzypacz, 2006, Cabral, 2011, Biglaiser and Cremer
+2020, Halaburda et al., 2020), since the combination of these two features works in the same
+way as exogenous network eﬀects within a period. However, a key diﬀerence is that in our
+setting with learning, willingness-to-pay depends not only on the current stock of consumers,
+as it would in network eﬀects models, but also on past consumers even if they are no longer
+consuming from the ﬁrm.
+Third, our paper relates to IO models of switching costs, such as the classic papers of
+Klemperer (1987) and Beggs and Klemperer (1992). As noted in the introduction, within-
+user learning creates an endogenous switching cost that grows the longer a consumer is with
+a particular ﬁrm. To the best of our knowledge, such a feature has not previously been
+considered in the switching cost literature even though it seems relevant more generally.
+Finally, there are some recent works that also study aspects of data-enabled learning,
+albeit using approaches that are very diﬀerent from ours. Prufer and Schottm¨ uller (2017)
+model a dynamic feedback loop in which a ﬁrm’s current cost of investing in quality is
+decreasing in the ﬁrm’s previous period sales, and greater investment in quality leads to
+higher demand in the current period. This diﬀers from our approach in a few ways. They do
+not explicitly model consumers’ choices or ﬁrms’ pricing decisions, but focus instead on ﬁrms’
+investment decisions. While they allow for learning across users, they do not consider either
+within-period learning or within-user learning, and so user coordination issues do not arise.
+5
+
+=== PAGE 6 / 44 ===
+
+Finally, they explore the interesting issue of how learning from data allows the dominant ﬁrm
+to enter connected markets when the existing data the ﬁrm has collected can be reused, an
+issue we do not consider. Farboodi et al. (2019) provide a model of data-enabled learning in
+which data helps ﬁrms choose the best production technique and so higher quality products.
+They abstract from any strategic ﬁrm behavior or consumer decisions, and instead focus
+on the industry dynamics generated from a continuum of price-taking ﬁrms. De Corni` ere
+and Taylor (2020) also study the eﬀect of data on competition but focus on showing how
+diﬀerent uses of data (including improving a ﬁrm’s product, but also ad targeting and price
+discrimination) determine whether data is pro- or anti-competitive. While their framework
+is much more general in other ways, they don’t analyze a fully dynamic setting in which
+data learning can accumulate. Schaefer et al. (2018) investigate how data drives the quality
+of internet search results, providing evidence that the quality of search results improve with
+more data on previous searches, and that personalized information is particularly valuable.
+Finally, Biglaiser et al. (2019) provides a high-level discussion of the diﬀerent ways ﬁrms
+can enjoy incumbency advantages, including access to more data: they note that across-user
+learning and within-user learning are two distinct ways in which data generates a competitive
+advantage for incumbents.
+3 Across-user learning
+In this section we focus on across-user learning—each ﬁrm improves the product for each
+consumer based on what it learns from the usage of all its consumers. For example, traﬃc
+information in Google Maps updates based on information collected from all drivers, and
+the traﬃc information shown at any point in time is likely to be the same (or very similar)
+for everyone using Google Maps. The learning technology we consider in this section has
+the general property that the value to consumers of a given ﬁrm’s product in a period is an
+increasing function of the measure of consumers who have purchased the product previously
+(past consumers) from the same ﬁrm. We will refer to the model described below as our
+baseline setting because it turns out that much of the model setup and analysis, as well
+as many of the results in this section carry over (with suitable adjustments) to when we
+allow for within-user learning (Section 4 and Section 5.3) and when we allow for learning to
+happen within the period(s) that users consume products in (Sections 5.1 and 5.2).
+Two ﬁrms, which we refer to as the incumbent I and the entrant E, compete over inﬁnitely
+many periods. Both ﬁrms face a marginal cost of production equal tocand compete in prices.
+We assume consumers have unit demand in each period and cis high enough that prices are
+never negative, thus ensuring consumers would only ever want to purchase one product in
+6
+
+=== PAGE 7 / 44 ===
+
+a given period. The (common) one period ahead discount factor is denoted δ, and satisﬁes
+0 <δ <1. We normalize the measure of consumers in each period to one, and so the number
+of periods that a ﬁrm has previously won also represents the total measure of consumers it
+can learn from. In this formulation of across-user learning, there is no distinction between
+consumers who are purchasing again (repeat consumers) vs. entirely new consumers. Thus,
+our setting in this section is compatible with two interpretations:
+•Consumers live for one period only. New consumers in a period make a single buying
+decision and then exit.
+•The same consumers are active and make purchasing decisions in every period, i.e.
+they are inﬁnitely lived, but there is no cost for each of these individual consumers
+to switch from one ﬁrm to the other across periods. In this case, the learning from
+consumers when they purchase again is assumed to be the same as that from new
+consumers.
+We assume all consumers are atomistic, which is reasonable given the large number of
+consumers ﬁrms are learning from in most of our examples. This means even if consumers
+are of the second type above, they do not need to consider the impact of their purchase
+decision on the pricing game or the options they will face in subsequent periods. Later,
+when we look at within-user learning (or more generally, endogenous switching costs), this
+will no longer be true.
+The standalone value of ﬁrm i’s product (or service) is denoted si, where i∈{I,E}. This
+value is augmented by learning. In any period, ﬁrms are asymmetric Bertrand competitors,
+so each ﬁrm will either sell to all (measure one) of the consumers or none. As a result, the
+measure of consumers a ﬁrm has learnt from is equivalent to the number of periods in which
+it has made positive sales. If ﬁrm ihas sold in Ni periods in the past, then the value current
+consumers obtain from ﬁrm i’s product is si+fi
+(
+min
+{
+Ni,Ni
+})
+, where fi is ﬁrm i’s learning
+function and Ni is the number of periods ﬁrm imust sell in to reach its maximum threshold
+of learning.2
+This speciﬁcation captures that ﬁrms learn more as they obtain more consumer data, and
+this allows them to increase the value of the product they oﬀer, but at some point they cannot
+use consumer data to increase the value of the product oﬀered any further (i.e. learning is
+bounded). Later in this section we will show how our results extend to handle unbounded
+learning functions. The only requirements on fi are that it is everywhere weakly increasing,
+2In what follows, since it will be equivalent, we will refer to the number of periods of positive sales as the
+measure of consumers the ﬁrm has sold to.
+7
+
+=== PAGE 8 / 44 ===
+
+and without loss of generality, strictly increasing in the last step to reach its maximum
+threshold (i.e. fi(Ni) > fi(Ni −1)). In particular, fi need not be a continuous function.
+Thus, at any point in time there are potentially three sources of asymmetry between ﬁrms:
+(i) diﬀerences in standalone value ( sI ̸= sE), (ii) diﬀerences in the learning curve ( fI ̸= fE
+and/or NI ̸= NE), and (iii) diﬀerences in how far along each ﬁrm is on its learning curve in
+the current period ( NI ̸= NE).
+Consumers and ﬁrms have perfect and complete information. Our focus is on Markovian
+strategies and a Markov-perfect equilibrium (MPE). Among MPEs, we also rule out equilibria
+which are supported by the losing ﬁrm pricing in such a way that its value would be negative
+if it instead won consumers at the prices charged in a particular period and then ﬁrms
+followed their equilibrium pricing strategies in all subsequent periods. This is equivalent to
+the standard approach of focusing on a Nash equilibrium in which the losing ﬁrm does not
+price below its marginal cost in the one-shot asymmetric Bertrand game. Thus, when we
+refer to a unique MPE we mean the MPE is unique after eliminating MPEs that involve such
+weakly dominated strategies. Finally, we use the convention that E wins in case consumers
+are indiﬀerent when both ﬁrms price at the lowest level they would still be willing to sell at.
+The relevant state at the start of any period is deﬁned by ( NI,NE), the measures of
+past consumers for each ﬁrm. The corresponding value functions for I and E (i.e. the
+present discounted values of future proﬁt ﬂows starting with the current period when ﬁrms
+follow their equilibrium pricing strategies in every period) are denoted by VI(NI,NE) and
+VE(NI,NE). An implicit assumption in our setup is that a ﬁrm will continue to compete
+even if in equilibrium its value is zero. This is consistent with our assumption that ﬁrms
+do not face any ﬁxed cost to remain in operation and ensures ﬁrms always face some form
+of competition. If instead ﬁrms incur ﬁxed costs of operating, the competitive dynamics we
+model are best thought of as playing out in one segment of one market, but each of the
+two ﬁrms may also serve other market segments, so each ﬁrm covers its ﬁxed costs via these
+other market segments. In practice the ﬁrms may also be subject to shocks which allow the
+losing ﬁrm to sometimes become the winner (e.g. the discovery of a new technology that
+allows them to use their data to reach the learning threshold) and this possibility provides
+another reason for a losing ﬁrm to remain in the market. We will analyze a version of our
+model with one such shock in Section 3.2, when we consider a data sharing policy.
+Consider ﬁrms starting from the state ( NI,NE), so both ﬁrms have reached their re-
+spective learning thresholds. Then I oﬀers sI + fI(NI) to consumers in every period and E
+oﬀers sE + fE(NE) to consumers in every period. Given the resulting asymmetric Bertrand
+competition, and taking into account that the competitive situation will be the same in
+every subsequent period, E wins every period starting with the current one if and only if
+8
+
+=== PAGE 9 / 44 ===
+
+sE + fE(NE) ≥sI + fI(NI). Furthermore, for each ﬁrm i∈{I,E}, we must have
+Vi(NI,NE) = 1
+1 −δmax
+{
+si −sj + fi(Ni) −fj(Nj),0
+}
+,
+where i̸= j.
+When a ﬁrm has not yet reached its learning threshold, in order to win in the current
+period it will be willing to oﬀer a subsidy equal to the diﬀerence in the discounted value of
+its future proﬁts if it were to win the current period and its future proﬁts if it were to lose
+the current period. Taking into account the maximum subsidy each ﬁrm is willing to oﬀer in
+order to win, we can work out which ﬁrm will win in each period and its corresponding value
+function, working backwards from (NI,NE) = (NI,NE). Using this approach, we show that
+for any state ( NI,NE), there is a cutoﬀ level of sE −sI above which E wins and below
+which I wins. We use two-dimensional backwards induction (in NI and NE) to establish the
+following Proposition (unless stated otherwise, all proofs are in the Appendix).
+Proposition 1. Suppose I has previously sold to 0 ≤NI ≤NI consumers and E has
+previously sold to 0 ≤NE ≤NE consumers. There exists a unique MPE in which E wins in
+all periods if and only if sE −sI ≥∆(NI,NE), and I wins in all periods otherwise, where
+∆(NI,NE) = (1 −δ)
+
+
+NI−NI∑
+j=0
+δjfI(NI + j) −
+NE−NE∑
+j=0
+δjfE(NE + j)
+
+ (1)
++δNI−NI+1fI(NI) −δNE−NE+1fE(NE).
+Proposition 1 characterizes I’s competitive advantage, which is captured by ∆( NI,NE).
+The higher is ∆( NI,NE), the higher is the level of sE −sI required for E to win. This
+function is proportional to the diﬀerence in the present discounted value (PDV) of gross
+surplus generated from learning across the two ﬁrms, comparing the paths where each ﬁrm
+wins in every period from the current period onwards. It is easily veriﬁed that ∆( NI,NE)
+is increasing in NI and decreasing in NE. This captures that along the equilibrium path,
+if a ﬁrm wins in the current period, because it beneﬁts from an additional learning period,
+∆(NI,NE) shifts such that the same ﬁrm will continue to win in each subsequent period, and
+indeed does so even more easily. This last feature is reminiscent of the “increasing increasing
+dominance” property explored by Cabral and Riordan (1994). Yet in our setting, E may
+win and so move ahead of I even though it is currently behind (e.g. NE < NI). Trivially,
+this could be because it learns more despite having less data (so fE (NE) > fI (NI)). More
+interestingly, even iffE (NE) <fI (NI), this can be true if its learning curve is steeper and/or
+9
+
+=== PAGE 10 / 44 ===
+
+is increasing for longer, and so ultimately generates more value from getting ahead. For
+example, inspecting (1), it is easily seen that if fE(NE) >fI(NI), then for all δ suﬃciently
+close to 1 (i.e. whenever agents are suﬃciently patient), we have ∆( NI,NE) < 0, so E
+has an overall competitive advantage. Thus, with asymmetric learning curves, increasing
+dominance does not necessarily hold in our setting.
+Proposition 1 was worked out assuming maximum learning thresholds NI and NE exist.
+The next Proposition extends these results to the case of any increasing learning curves by
+taking the limit of our results as NI →∞ and NE →∞, showing that our framework can
+also allow for unbounded learning functions.
+Proposition 2. Suppose I has previously sold to 0 ≤NI <NI consumers, E has previously
+sold to 0 ≤NE < NE consumers. The equilibrium deﬁned in Proposition 1 remains an
+equilibrium in the limit as NI →∞ and NE →∞ (i.e. such that the learning functions
+continue to increase forever) provided there exists some power function which the learning
+curves lie below in the limit.
+The condition in Proposition 2 involves a very weak requirement that allows us to capture
+any reasonable learning function. Moreover, by the same logic underlying this result, all our
+subsequent characterizations of ∆ (NI,NE), VI(NI,NE) and VE(NI,NE) also extend to this
+unbounded case, by taking the limit as NI →∞ and NE →∞.
+As part of the proof of Proposition 1 we characterize the value function for each ﬁrm,
+which we summarize here.
+Corollary 1. Suppose I has previously sold to 0 ≤NI ≤NI consumers and E has previously
+sold to 0 ≤ NE ≤ NE consumers. In the unique MPE, the ﬁrms’ value functions are
+determined as follows:
+•if sE −sI < ∆(NI,NE + 1) then VE(NI,NE) = 0 and VI(NI,NE) = sI−sE
+1−δ +
+∆(NI,NE)−δ∆(NI,NE+1)
+(1−δ)2 (no subsidization by E)
+•if ∆(NI,NE + 1) ≤sE −sI < ∆(NI,NE), then VE(NI,NE) = 0 and VI(NI,NE) =
+sI−sE+∆(NI,NE)
+(1−δ)2 (subsidization by E)
+•if ∆(NI,NE) ≤sE −sI < ∆(NI + 1,NE), then VE(NI,NE) = sE−sI−∆(NI,NE)
+(1−δ)2 and
+VI(NI,NE) = 0 (subsidization by I)
+•if sE −sI ≥∆(NI + 1,NE), then VE(NI,NE) = sE−sI
+1−δ −∆(NI,NE)−δ∆(NI+1,NE)
+(1−δ)2 and
+VI(NI,NE) = 0 (no subsidization by I),
+10
+
+=== PAGE 11 / 44 ===
+
+where we deﬁne ∆(NI + 1,NE) ≡∆(NI,NE) for any 0 ≤NE ≤NE and ∆(NI,NE + 1) ≡
+∆(NI,NE) for any 0 ≤NI ≤NI.
+Corollary 1 characterizes the PDV of the ﬁrms’ equilibrium proﬁts for diﬀerent states
+(NI,NE) and diﬀerent ranges of sE −sI. An interesting implication of the Corollary is that
+the losing ﬁrm is still willing to oﬀer a subsidy to consumers for some range of parameters
+when the winning ﬁrm’s competitive advantage is not too large. Thus, if ∆( NI,NE + 1) ≤
+sE −sI < min
+{
+∆
+(
+NI,NE + 1
+)
+,∆ (NI,NE)
+}
+, then I wins and E subsidizes for a ﬁnite
+number of periods, 3 whereas if ∆( NI,NE + 1) ≤sE −sI < ∆(NI,NE), then I wins and E
+subsidizes forever, i.e. even after I reaches its learning threshold. And symmetrically when E
+wins and I subsidizes. This reﬂects that in the oﬀ-equilibrium situation that the losing ﬁrm
+actually wins the current period, it expects to have a positive value (via some future proﬁts).
+This implies the winning ﬁrm’s competitive advantage will be limited by the losing ﬁrm’s
+willingness to subsidize consumers in such cases. The willingness of a ﬁrm to oﬀer a subsidy
+reﬂects the “prize” that the ﬁrm can obtain from winning, which is not only that it obtains
+an improvement in its product (or moves closer to obtaining this improvement) but that the
+other ﬁrm does not. This underlying logic is similar to that in standard learning-by-doing
+settings (e.g. Cabral and Riordan, 1994) but the price dynamics are diﬀerent: the winning
+ﬁrm can charge more with data-enabled learning, whereas the winning ﬁrm would charge
+less in a setting equivalent to our model except that learning would decrease marginal costs
+instead. Finally, note that Corollary 1 does not rule out the winning ﬁrm also subsidizing
+consumers. Speciﬁcally, if ∆( NI,NE) ≤sE −sI < fI (NI) −fE (NE), then E wins and
+subsidizes in the current period (and symmetrically for I).
+Finally, we analyze how the prospect of future learning impacts the ﬁrms’ proﬁts. Specif-
+ically, starting from ( NI,NE), we ask whether ﬁrm proﬁts are higher when NI > NI and
+NE >NE, so there is scope for future learning, or when NI = NI and NE = NE, so there is
+no scope for future learning. We answer this question for two special cases in the following
+proposition.
+Proposition 3. If fE = fI = f, NI = NE = N and NE = NI <N, then for any sE ̸= sI,
+the PDV of proﬁts of the winning ﬁrm (and of joint proﬁts) is higher than if there were no
+scope for future learning. If, instead, there is some asymmetry in the learning functions and
+sE −sI ̸= fI (NI) −fE (NE), then there exists ε >0, such that for any (sE,sI) such that
+|sE −sI −∆(NI,NE)|<ε, the PDV of joint proﬁts is lower than if there were no scope for
+future learning.
+3Speciﬁcally, E subsidizes for the ﬁrst kperiods, where k≤NI −NI is uniquely deﬁned by the inequality
+∆(NI + k,NE + 1) <sE −sI <∆(NI + k+ 1,NE + 1).
+11
+
+=== PAGE 12 / 44 ===
+
+The ﬁrst part of the proposition says that when ﬁrms have identical learning functions
+and start on the same point on the learning function, removing the prospect of future learn-
+ing decreases the proﬁts of the winner. This is in contrast with the result in Cabral and
+Riordan (1994), according to which symmetric ﬁrm are always better oﬀ when the prospect
+of future learning-by-doing is removed. The diﬀerence is explained by the presence of vertical
+diﬀerentiation independent of learning in our model ( sE ̸= sI), which is absent from Cabral
+and Riordan. Thus, when ﬁrms are symmetric in their learning functions in our model, the
+availability of future learning necessarily increases the magnitude of vertical diﬀerentiation
+that is eventually achieved by the winner (I if sI > sE and E if sE > sI). This eﬀect co-
+exists with the eﬀect identiﬁed in Cabral and Riordan, namely that future learning increases
+the ﬁrms’ willingness to subsidize, i.e. price more aggressively, which tends to decrease the
+winner’s proﬁts. When ﬁrms are symmetric in their learning functions in our setting, the
+former eﬀect dominates the latter (unless sI = sE), so we obtain the opposite result from
+Cabral and Riordan. However, when ﬁrms are asymmetric, the availability of future learning
+no longer necessarily increases vertical diﬀerentiation between the two ﬁrms. In fact, it may
+even decrease it, as illustrated by the second part of the proposition.
+3.1 Welfare analysis
+Since the cutoﬀ (1) in Proposition 1 is directly proportional to the diﬀerence in the PDV
+of gross surplus generated from learning if I wins in every period vs. if E wins in every
+period, we have the following result.
+Proposition 4. The unique MPE outcome characterized in Proposition 1 is socially optimal.
+Starting from any point, whichever ﬁrm creates greater PDV of gross surplus from stan-
+dalone value and learning assuming it wins every period should be able to oﬀer a higher level
+of current utility plus subsidy to consumers, and so given the Bertrand setting should be
+able to win in the current period. And if a particular ﬁrm wins in the current period, this
+just further increases the value it can oﬀer in future periods, thereby ensuring the same ﬁrm
+wins in all future periods. However, the logic behind the eﬃciency result in Proposition 4
+is more subtle than this. Indeed, the winning ﬁrm does not always capture the full PDV of
+gross surplus that it creates over and above that created by the losing ﬁrm because it has
+to compete with a ﬁrm that will sometimes be willing to subsidize in an attempt to win.
+Nevertheless, the PDV of the subsidy oﬀered by the losing ﬁrm is just the PDV of its own
+future proﬁt assuming it is able to win in the current period. Thus, despite the possibility
+of subsidies, it turns out that the only way a ﬁrm wins (and has a positive value) is if the
+12
+
+=== PAGE 13 / 44 ===
+
+PDV of gross surplus that it creates by winning every period is greater than that created by
+the rival ﬁrm. This is equivalent to the condition for eﬃciency to be maximized.
+Further emphasizing that the result does not just follow automatically from Bertrand
+competition, the cutoﬀ for E to win in a ﬁnite period version of the model is not generally
+socially optimal. Indeed, in an Online Appendix we show that the equilibrium cutoﬀ when
+the ﬁrms start with ( NI,NE) previous sales and the game ends after T ≥1 periods is
+∆(NI,NE,T) = (1 −δ)
+(T−1∑
+j=0
+δj(1 −δT−j)
+1 −(T + 1)δT + TδT+1 (fI(NI + j) −fE(NE + j))
+)
+,
+while the socially eﬃcient cutoﬀ in the T-period model is
+∆S(NI,NE,T) = (1 −δ)
+(T−1∑
+j=0
+δj
+1 −δT (fI(NI + j) −fE(NE + j))
+)
+.
+When T > 1, we generally have ∆( NI,NE,T) ̸= ∆ S(NI,NE,T), however it is easily
+veriﬁed that when fi(Ni) = fi
+(
+min
+{
+Ni,Ni
+})
+for i = I,E and T tends to inﬁnity, both
+∆(NI,NE,T) and ∆S(NI,NE,T) converge to ∆(NI,NE) deﬁned in (1).
+In the ﬁnite case withT >1, the distortion ∆(NI,NE,T)−∆S(NI,NE,T) can go in either
+direction depending on the shapes of the learning curves. For example, it is straightforward
+to verify that with fI = fE ≡f and NI > NE, this distortion is positive if f is concave,
+negative if f is convex, and zero iff is linear. On the other hand, if fi(x) = θixand NI ≥NE,
+the distortion is positive if θI <θE, negative if θI >θE, and zero if θI = θE.
+Clearly prices play a key role in the eﬃciency result of Proposition 4. If prices were
+constrained to be zero in every period, there would be no subsidies, meaning consumers
+would compare sI + fI(NI) and sE + fE(NE) in the current period, and choose E in every
+period if and only if sE−sI ≥fI(NI)−fE(NE). Future learning beneﬁts would not be taken
+into account and the equilibrium choice of ﬁrm would diverge from the socially optimal one.
+This emphasizes that competitive subsidies play a key role in ensuring atomistic consumers
+who make their purchase decisions in every period solely on the basis of current period utility
+(because even in the case that they are long-lived, they face no cost of switching ﬁrms in any
+future period and can ignore the implications of their individual choice on the future options
+they will face), end up taking into account the future beneﬁts of their choices in deciding
+which ﬁrm to buy from.
+With respect to consumer surplus, note that in equilibrium, the ﬁrms’ prices in any given
+period leave consumers indiﬀerent between the two ﬁrms. Since along the equilibrium path,
+once a ﬁrm wins, it will win in all future periods, this implies that the PDV of consumer
+13
+
+=== PAGE 14 / 44 ===
+
+surplus is determined by the surplus oﬀered by the losing ﬁrm in each period along the
+equilibrium path. As a result, learning by the winning ﬁrm as it sells to additional consumers
+each period makes consumers weakly worse oﬀ. To see this note ﬁrst that if the losing ﬁrm
+has already stopped oﬀering a subsidy (e.g. the no-subsidization case in Corollary 1), then
+learning by the winner does not change the PDV of consumer surplus oﬀered by the loser,
+which in case ﬁrm i is the losing ﬁrm is ﬁxed at
+CS(NI,NE) = si −c+ fi(Ni)
+1 −δ .
+In case the losing ﬁrm currently oﬀers a subsidy (either one of the two subsidization cases in
+Corollary 1), the PDV of consumer surplus can be determined by the PDV of total surplus
+less the PDV of the winning ﬁrm’s proﬁt stream, i.e.
+CS(NI,NE) = si −c
+1 −δ +
+Ni−Ni∑
+k=0
+δkfi(Ni + k) + δNi−Ni+1
+1 −δ fi(Ni) −
+(si −sj + ∆(NI,NE)
+(1 −δ)2
+)
+in case ﬁrm iis the winning ﬁrm and ﬁrm j is the losing ﬁrm. It is straightforward to check
+that in this case CS(NI,NE) is decreasing in Ni, so consumer surplus is strictly decreasing
+as the winning ﬁrm learns more along the equilibrium path. This reﬂects that the losing
+ﬁrm’s subsidy gets smaller over time as the winning ﬁrm’s learning advantage continues to
+increase along the equilibrium path.
+The fact that additional learning by the winning ﬁrm as it sells to more consumers does
+not help consumers reﬂects the fact that in this model, the winning ﬁrm extracts all the
+additional learning beneﬁt above the surplus that the losing ﬁrm can oﬀer. While with a
+more general model of competition or with elastic aggregate demand we may expect some of
+the winning ﬁrm’s learning beneﬁt to be shared with consumers, the result that consumers
+can be made worse oﬀ by the winning ﬁrm’s learning because the losing ﬁrm is no longer
+willing to subsidize as much in an attempt to compete is likely to be much more general. It
+suggests consumers would be better oﬀ if they could somehow deviate by coordinating on
+joining the losing ﬁrm instead of the winning ﬁrm for a number of periods. However, given
+each individual consumer is atomless and can freely switch in each period, she has no reason
+to internalize this eﬀect since her own decision about which ﬁrm to join will not aﬀect the
+consumer surplus she can obtain next period (in the case she is long lived). This suggests a
+possible role for a data sharing policy, which we consider in the next section.
+14
+
+=== PAGE 15 / 44 ===
+
+3.2 Data sharing
+Requiring the incumbent to share its data with the entrant would be one way to help E
+catch up to the learning of I, and based on the analysis in the previous section, would seem
+to be good for consumers. However, there is potentially a countervailing eﬀect highlighted
+by our model. If E anticipates being able to catch up to I’s learning through such a policy,
+it may compete less aggressively in the ﬁrst place (a form of free-riding), which in our model
+can mean subsidizing consumers less.
+To formalize this tradeoﬀ in the simplest possible way and determine the eﬀect of data
+sharing on consumer surplus, we assume both ﬁrms face the same learning function f and
+learning threshold N, and that I has achieved maximal learning while E has not. For the
+anticipatory eﬀect of data sharing on E’s pricing to be captured, there should be at least
+one period in which ﬁrms compete before I’s data is shared with E. To reﬂect this and the
+likely uncertainty over the time until E actually obtains I’s data under a data sharing policy,
+we assume that each period, with probability 0 < λ≤1, I shares its superior data with E
+whenever E remains behind at the end of that period.
+In the following proposition, we compare the implied PDV of consumer surplus with data
+sharing to that arising without data sharing. To proceed, we deﬁne for every 0 ≤NE <N
+the cutoﬀs4
+∆(N,NE,λ) = (1 −δ(1 −λ))
+N−NE−1∑
+j=0
+(δ(1 −λ))j (
+f(N) −f(NE + j)
+)
+. (2)
+and
+Θa(
+N,NE,λ
+)
+=
+∆(N,NE,0)
+(1−δ)2 −∆(N,NE,λ)
+(1−δ(1−λ))2
+1
+(1−δ)2 − 1
+(1−δ(1−λ))2
+. (3)
+It can be veriﬁed that
+0 ≤∆(N,NE + 1,λ) ≤Θa(
+N,NE,λ
+)
+<∆(N,NE,λ).
+In the appendix, we show that when I is at the learning threshold and E can get the
+full beneﬁt of data sharing with probability λ, E wins the current period if and only if
+sE −sI ≥∆(N,NE,λ). Otherwise, I wins the current period. However, unlike the baseline
+model, the same ﬁrm need not win all periods. Indeed, if 0 ≤sE −sI <∆(N,NE,λ), then I
+wins every period as long as E does not get access to I’s data, but once E shares that data,
+the outcome switches to E winning forever. We then obtain the following result.
+4We use the convention that ∆(N,N,λ) = 0.
+15
+
+=== PAGE 16 / 44 ===
+
+Proposition 5. Suppose the learning functions are identical, i.e. fI = fE = f, and assume
+NI = N >NE. Then:
+•if sE −sI ≤ Θa(
+N,NE,λ
+)
+, data sharing with probability λ increases the PDV of
+consumer surplus
+•if Θa(
+N,NE,λ
+)
+< sE −sI ≤∆(N,NE,λ), data sharing with probability λ decreases
+the PDV of consumer surplus
+•if sE −sI ≥∆(N,NE,λ), data sharing with probability λ does not change the PDV of
+consumer surplus.
+Proposition 5 compares the PDV of consumer surplus when λ >0 (i.e. under a data
+sharing policy) with λ = 0 (so there is no chance of I being forced to share its data with
+E). It conﬁrms that data sharing is not always good for consumers, and indeed shows that
+it can be bad. For data sharing to be bad for consumers, E must have a suﬃciently strong
+product advantage (i.e. sE −sI >Θa(
+N,NE,λ
+)
+). This ensures the subsidy it oﬀers absent
+data sharing is large, which means the extent to which data sharing can reduce E’s subsidy
+is also large. But the advantage cannot be so strong that E would win prior to any data
+being shared (i.e. we require sE −sI ≤∆(N,NE,λ)). In this range, the anticipation of
+possible data sharing leads E to reduce the extent of its subsidy to consumers. For example,
+in the extreme case in which data sharing happens for sure at the end of the ﬁrst period
+(λ= 1), E completely removes its subsidy to consumers under a data sharing policy. Given
+we are considering the range of sE −sI for which E loses prior to any data being shared,
+the higher pricing of E reduces the competitive pressure on I, and so increases the price
+consumers pay for I’s oﬀering. On the other hand, consumers will be better oﬀ after I’s data
+is shared, reﬂecting that I will share more of the surplus it creates with consumers—this is
+either because I still wins but E now provides a stronger competitive constraint on I’s pricing,
+or because I now loses and so is willing to oﬀer all of the surplus it creates in an attempt
+to attract consumers. In the range of Θ a(
+N,NE,λ
+)
+< sE −sI < ∆(N,NE,λ), the former
+negative ex-ante eﬀect of data sharing on consumers outweighs the latter ex-post positive
+eﬀect, reﬂecting that data sharing leads to a large reduction in E’s subsidy in this range. In
+the range ∆(N,NE+1,λ) ≤sE−sI <Θa(
+N,NE,λ
+)
+this result reverses because data sharing
+only leads to a relatively small reduction in E’s subsidy. In case sE−sI <∆(N,NE+1,λ), E
+never subsidizes consumers, so we only get the positive ex-post eﬀect of data sharing. Finally,
+when sE −sI ≥∆(N,NE,λ), E wins prior to any data being shared, and it continues to win
+after I’s data is shared, so consumers obtain the surplus created by I which is unchanged by
+data sharing.
+16
+
+=== PAGE 17 / 44 ===
+
+While consumers may be better or worse oﬀ under data sharing, it is straightforward to
+conﬁrm that the PDV of expected welfare is strictly higher with this type of data sharing
+whenever it implies a positive probability of E winning (since E’s surplus is shifted up in the
+case any data is shared), and is otherwise unchanged.
+3.3 Determinants of competitive advantage
+Recall I’s competitive advantage is measured by ∆( NI,NE) since a higher value of
+∆(NI,NE) means E requires a higher standalone beneﬁt to win. Some general compara-
+tive static results are summarized in the following Proposition.
+Proposition 6. Consider the general learning functions fI and fE. Suppose 0 ≤NI ≤NI
+and 0 ≤ NE ≤ NE. Then I’s competitive advantage is (i) increasing in the number of
+previous consumers NI that I has sold to and decreasing in the number of previous consumers
+NE that E has sold to; (ii) increasing in the maximum threshold for I’s learning NI and
+decreasing in the maximum threshold for E’s learning NE; (iii) increasing in anything that
+increases I’s learning function fI and decreasing in anything that increases E’s learning
+function fE; and (iv) independent of an equal (additive) increase in both ﬁrms learning
+functions.
+The result in (i) was already noted earlier and is entirely intuitive—being higher up its
+learning curve gives I more of an advantage. The results in (ii) and (iii) follow directly from
+an inspection of (1). Simply put, the higher a ﬁrm’s learning threshold or the value the
+ﬁrm gains from learning, the bigger that ﬁrm’s competitive advantage. Adding the same
+constant to both fI and fE does not change ∆(NI,NE), so any additive change to the value
+of learning that aﬀects both ﬁrms equally cancels out, which explains the result in (iv).
+To explore the implications of changes that aﬀect both ﬁrms at the same time, we now
+resort to a speciﬁc functional form by assuming both ﬁrms face S-shaped learning functions.
+In general, with an S-shaped learning curve, the value initially increases little with additional
+data since it takes some initial minimum corpus of data to get things started, then increases
+rapidly once the minimum training data has been gathered, and ﬁnally no longer increases
+much after most learning has been exhausted. We approximate such a learning curve by
+assuming there is no learning until a minimum amount of past sales is obtained, after which
+there is linear learning until the maximum threshold level of learning is achieved. Formally,
+we assume when ﬁrm i has sold to Ni past consumers, the value it oﬀers from learning is
+fi
+(
+min
+{
+Ni,Ni
+})
+= θimax
+{
+min
+{
+Ni,Ni
+}
+−Ni,0
+}
+, where Ni and Ni are the minimum and
+maximum thresholds for ﬁrm i and 0 ≤Ni ≤Ni. Note that this formulation of S-shaped
+17
+
+=== PAGE 18 / 44 ===
+
+learning functions includes as special cases that one or both of the learning functions are
+linear (Ni = 0) and one or both are step functions ( Ni −Ni = 1 and Ni >0).
+Applying these functions to (1) reveals that the cutoﬀ for E to win in this case is
+∆(NI,NE) = θI
+(
+max {NI −NI,0}+ δmax{NI−NI,0}+1 −δNI−NI+1
+1 −δ
+)
+(4)
+−θE
+(
+max {NE −NE,0}+ δmax{NE−NE,0}+1 −δNE−NE+1
+1 −δ
+)
+,
+for all 0 ≤NI ≤NI and 0 ≤NE ≤NE. Note (4) implies that when neither ﬁrm has
+reached the increasing part of its learning curve yet, what really matters is how far each
+ﬁrm is from being able to move up its learning curve Ni, rather than which ﬁrm has sold to
+more customers in the past. Thus, even though I may begin with more data ( NI > NE), if
+E’s learning begins sooner ( NE −NE < NI −NI), it may enjoy a competitive advantage.
+Likewise, if additional data translates into a better product for E at a faster rate than for I
+(θE >θI).
+Using this cutoﬀ we are able to show the following comparative statics.
+Proposition 7. Suppose both ﬁrms have S-shaped learning functions. (i) I’s competitive
+advantage is increasing in an equal additive increase in θI and θE if I is (weakly) closer to
+reaching its maximum threshold and the increasing part of I’s learning curve lasts (weakly)
+longer (i.e. NI −NI ≤NE −NE and NI −NI ≥NE −NE, with one inequality strict).
+(ii) If the learning functions are identical (i.e. θI = θE, NI = NE = N, NI = NE = N)
+and NI > NE, then I’s competitive advantage is increasing in how close both ﬁrms are to
+obtaining some positive value from learning when neither ﬁrm has learnt anything yet (i.e.
+is larger when both NI and NE increase by k, provided NI + k ≤N and NE + k ≤N)
+and decreasing in how close both ﬁrms are to obtaining maximum learning when both have
+already obtained some positive value from learning (i.e. is smaller when both ﬁrms are k
+periods closer to the maximum learning threshold provided NI >N and NE >N ).
+The ﬁrst result covers several diﬀerent cases including the case when the ﬁrms have the
+same thresholds but I is just further along its learning curve, and the case when both ﬁrms
+are the same number of periods away from reaching their respective minimum thresholds
+but the increasing part of I’s learning curve lasts longer. The logic for the result is that if
+I has had more periods of learning and/or will have more periods of future learning, then
+an equal increase in the value obtained from each learning period for the two ﬁrms provides
+an advantage for I. The result in (ii) is less obvious. The ﬁrst part can be interpreted as
+18
+
+=== PAGE 19 / 44 ===
+
+considering what happens when both ﬁrms experience some improvement in their learning
+(e.g. access to some new data or some new technology that allows them to speed up their
+initial learning) so that both ﬁrms ﬁnd themselves further along the initial ﬂat part of their
+learning curve (i.e. closer to where they can oﬀer positive value from learning). Alternatively,
+it can be interpreted as considering what happens when the learning technology improves
+so ﬁrms require fewer periods of initial consumer data until the value from learning starts
+to increase. Either way, it means that this common improvement in learning increases I’s
+competitive advantage. To understand this result note that if ﬁrms are yet to move onto the
+increasing part of the learning curve, requiring fewer periods of customer data to reach the
+increasing part brings forward (i.e. discounts less) the advantage that I obtains from being
+closer to the threshold, thereby increasing its competitive advantage. This result reverses
+when ﬁrms are already on the increasing part of the learning curve. Here, a reduction in the
+number of learning periods both ﬁrms need to reach the maximum threshold decreases the
+number of periods over which I can enjoy its learning advantage, so helps E.
+4 Within-user learning
+In this section we focus on within-user learning. To be comparable to the case of across-
+user learning, we assume the same measure one of consumers are present in every period.
+Thus, consumers are inﬁnitely lived but can switch ﬁrms in any period.
+Like the previous section, the value to a given consumer of ﬁrm i’s product in the current
+period is si + fi
+(
+min
+{
+Ni,Ni
+})
+for i ∈{I,E}. The diﬀerence is that here Ni refers to the
+number of times the consumer has purchased from the same ﬁrm before, rather than the
+total number of consumers that the ﬁrm has sold to. Another key diﬀerence that naturally
+arises in the case of within-period learning is the possibility for ﬁrms to price discriminate
+based on an individual consumer’s history. Unlike the case with across-user learning, here
+the individual consumer’s history aﬀects the value oﬀered by each ﬁrm’s product. Consistent
+with our perfect information setup, we assume that both ﬁrms can observe how many periods
+a customer has consumed from each ﬁrm previously, and can price discriminate accordingly.5
+The fact that there is no across-user learning and that ﬁrms can price discriminate with
+respect to individual consumers ensures that the analysis can be done independently for
+each individual consumer.
+5Obviously, each ﬁrm will know how many times a consumer has purchased from it before, so can condition
+its prices on this information. Given the model setup in which the same consumers are present in every period,
+each ﬁrm would therefore also be able to work out how many times a consumer has purchased from the rival
+ﬁrm in the past. In practice, ﬁrms may elicit this information from consumers by requiring a consumer
+supply their past purchase records so as to provide them with a better deal if they switch.
+19
+
+=== PAGE 20 / 44 ===
+
+We can then characterize when E wins, when I wins, the social eﬃciency of the outcome,
+and the value obtained by ﬁrms.
+Proposition 8. Suppose I has sold NI times in the past to a given consumer and E has
+sold NE times to that consumer, where 0 ≤NI ≤NI and 0 ≤NE ≤NE. Then a unique
+MPE exists in which E wins in all periods if and only if sE −sI ≥∆(NI,NE), and I wins in
+all periods otherwise, where ∆(NI,NE) is deﬁned by (1). The outcome is socially optimal.
+Moreover, the ﬁrms’ value functions are determined as follows:
+•if sE −sI <∆(NI,NE), then VE(NI,NE) = 0 and VI(NI,NE) = sI−sE+∆(NI,NE)
+1−δ (with
+subsidization by E if and only if ∆(NI,NE + 1) ≤sE −sI <∆(NI,NE))
+•if sE −sI ≥∆(NI,NE), then VE(NI,NE) = sE−sI−∆(NI,NE)
+1−δ and VI(NI,NE) = 0 (with
+subsidization by I if and only if ∆(NI,NE) ≤sE −sI <∆(NI + 1,NE)).
+Proposition 8 shows that the cutoﬀ in sE −sI that determines which ﬁrm wins in each
+period coincides with that obtained in the across-user case, and therefore remains socially
+optimal. As in the case with across-user learning, all the results in the Proposition remain
+valid when NI →∞ and NE →∞, provided learning functions are bounded by some power
+function. This means the comparative static results in Section 3.3 carry over to the case of
+within-user learning. However, despite this equivalence, the logic behind the result and its
+proof are quite diﬀerent. With across-user learning, we never had to solve the consumers’
+forward-looking problem given their choice in any given period didn’t aﬀect their options in
+subsequent periods. In contrast, here consumers have to take into account the eﬀect of their
+current choice of ﬁrm on their future options (within-user learning acts as an endogenous
+switching cost), and so we need to determine the value functions for consumers as well as
+for ﬁrms. In the proof of Proposition 8, we construct the consumers’ value functions, and
+show that consumers never expect to switch ﬁrms in equilibrium.
+In contrast to the case of across-user learning, the logic for why the equilibrium outcome
+under within-user learning coincides with the socially optimal outcome is quite straightfor-
+ward. Here consumers are forward looking, so they take into account all future subsidies
+and utility they will receive from their chosen ﬁrm. Starting from any point, whichever ﬁrm
+creates greater PDV of gross surplus from learning assuming it wins every period will be
+able to oﬀer a higher level of utility plus subsidy to consumers, and so given the Bertrand
+setting will win in the current period. And if a particular ﬁrm wins in the current period,
+this just further increases the value it can oﬀer in future periods, thereby ensuring the same
+ﬁrm wins in all future periods. Consistent with this, in the Online Appendix we conﬁrm
+20
+
+=== PAGE 21 / 44 ===
+
+that the outcome with within-user learning and a ﬁnite time horizon is also always socially
+optimal, in contrast to what we found for across-user learning.
+To further highlight the fact that although the cutoﬀ is the same, the rationale for the
+result is diﬀerent, note that prices no longer drive the equilibrium result. Indeed, if prices
+were set to zero in all periods (which obviously rules out any subsidies), consumers would
+simply compare their respective present discounted willingness-to-pay between the two ﬁrms,
+so the condition for E to win would remain the same.
+Another particularly interesting diﬀerence relative to the results with across-user learning
+is that the winning ﬁrm always does better with across-user learning than with the equivalent
+setting under within-user learning.
+Proposition 9. Comparing the case of within-user learning with across-user learning for
+the same learning curves, the same learning thresholds, and the same current state (NI,NE),
+then provided either NI <NI or NE <NE, the PDV of the winning ﬁrm’s proﬁt is strictly
+higher under across-user learning than in the case of within-user learning.
+The main reason behind the result in Proposition 9 is that the winning ﬁrm needs to price
+more aggressively under within-user learning because consumers need to take into account
+future utility when making their choice of ﬁrm. The logic is that within-user learning acts as
+an endogenous switching cost: consumers take into account that the surplus they will be left
+with in any period is the surplus oﬀered by the losing ﬁrm (due to Bertrand competition),
+and that this surplus will be lower if they buy from the winning ﬁrm this period versus if they
+buy from the losing ﬁrm this period. Thus, the winning ﬁrm must compensate consumers by
+pricing lower in the current period compared to the case with across-user learning, in which
+consumers did not need to take into account future utility when making their choice of ﬁrm.
+Indeed, with across-user learning, each individual consumer’s choice in the current period
+had no impact on the relative competitiveness of the two ﬁrms next period (since consumers
+are atomistic). Obviously, Proposition 9 implies that consumers are better oﬀ under within-
+user learning than under the comparable situation with across-user learning. This result can
+also be interpreted as meaning that under within-user learning, forward-looking consumers
+are better oﬀ than myopic consumers. Indeed, the setting with within-user learning but
+myopic consumers would result in exactly the same outcome as the case with across-user
+learning, where consumers had no reason to consider more than their current surplus when
+deciding which ﬁrm to buy from.
+Finally, we can compare the eﬀect of anticipated data sharing under within-user learning
+with that under across-user learning. To do so, we use exactly the same set-up for data
+21
+
+=== PAGE 22 / 44 ===
+
+sharing as in Section 3.2. Following very similar steps to Proposition 5, we show in the
+Appendix that data sharing decreases consumer surplus if and only if
+Θw(
+N,NE,λ
+)
+<sE −sI <∆(N,NE,λ), (5)
+where ∆(N,NE,λ) is still given by (2) and
+Θw(
+N,NE,λ
+)
+=
+∆(N,NE,0)
+1−δ −∆(N,NE,λ)
+1−δ(1−λ)
+1
+1−δ − 1
+1−δ(1−λ)
+. (6)
+If sE −sI is less than the lower bound in (5), then data sharing increases consumer surplus,
+while if sE −sI is greater than the upper bound in (5), then data sharing has no impact on
+consumer surplus. It is easily conﬁrmed that Θ w(
+N,NE,λ
+)
+is lower than the corresponding
+cutoﬀ Θa(
+N,NE,λ
+)
+for the case with across-user learning given by (3), which means that
+the region under which data sharing decreases consumer surplus is larger under within-
+user learning. This is consistent with the result above that within-user learning makes the
+two ﬁrms compete more aggressively in the absence of data sharing, which diminishes the
+potential beneﬁts of data sharing.
+5 Endogenous network eﬀects and consumer beliefs
+So far network eﬀects have not played any role in the equilibrium analysis. In particular,
+consumers have not had to form beliefs about which ﬁrm other consumers will coordinate
+on in any given period. In Section 4 this was because learning was speciﬁc to each consumer
+and ﬁrms could price discriminate with respect to individual consumers. With across-user
+learning in Section 3, although there was a self-reinforcing dynamic across periods in which
+a ﬁrm that attracts consumers this period improves its product and ﬁnds it easier to attract
+consumers in subsequent periods, current consumers still did not face the usual coordination
+problem that arises under classic network eﬀects. Indeed, even with long-lived consumers,
+because each consumer was atomistic and could costlessly switch each period, a consumer’s
+decision in one period had no eﬀect on the opportunities they could enjoy in subsequent
+periods, so there was no reason to take into account the decisions of contemporary consumers.
+The purpose of this section is to show when network eﬀects which create a coordination
+problem for consumers can arise endogenously in our framework. We will consider three
+ways in which this can happen. In the ﬁrst two subsections, we assume that the product
+continues to improve during the period (Section 5.1) or periods (5.2) over which consumers
+derive utility from the product. This means each consumer needs to anticipate how many
+22
+
+=== PAGE 23 / 44 ===
+
+other contemporary or future consumers will choose the same product. Meanwhile (and most
+interestingly), in Section 5.3 we show network eﬀects arise endogenously once we combine
+across-user and within-user learning, even in the absence of any exogenous switching cost or
+price (the products are assumed to be available for free).
+5.1 Across-user learning and within-period learning
+Consider our benchmark model of Section 3 in which there is across-user learning, but
+now allow ﬁrms to learn immediately from consumers purchasing in the current period, i.e.
+we allow for “within-period” learning. As argued in the introduction, within-period learning
+is a key distinguishing feature of cloud-based learning from consumers, and contrasts with
+earlier types of learning from consumers, where the new product features were only embedded
+in the next releases of the product which would be sold to future consumers. Within-period
+learning is assumed to work in exactly the same way as learning from past sales to consumers:
+it is just like another period of learning, except it provides value to current consumers.
+Speciﬁcally, if ﬁrm i has previously sold to a total measure of Ni consumers and sells to
+ni ≤ 1 consumers in the current period, then the value current consumers obtain from
+ﬁrm i’s product is si + fi
+(
+min
+{
+Ni + ni,Ni
+})
+, where Ni is the number of periods of sales
+(including the current period) it takes for ﬁrm ito reach the maximum threshold of learning.
+A consequence of combining within-period learning and across-user learning is that there
+can be multiple equilibria in consumers’ decision of which ﬁrm to buy from, given prices in
+any period, just like with regular network eﬀects. Speciﬁcally, consumers may prefer buying
+from I if they expect all other consumers to buy from I in the current period, and they may
+prefer to buy from E if they expect all other consumers to buy from E in the current period.
+We will compare the outcomes under two types of beliefs. First, we assume that consumers
+believe all other consumers will coordinate on the equilibrium outcome that is best for them
+in the given period. This selects the equilibrium which maximizes the consumers’ surplus
+(i.e. net utility) in that period. In the case consumers live for one period only, which recall
+is one interpretation of our across-user learning setup, this will indeed correspond to the
+Pareto optimal equilibrium for consumers, and with this in mind, we refer to these beliefs
+as “Pareto” beliefs. We will then contrast Pareto beliefs with beliefs that always favor the
+incumbent. The latter means that in each period consumers believe all other consumers will
+buy from I whenever for given prices, buying from I is an equilibrium outcome.
+Relative to Proposition 1, the case of within-period learning and Pareto beliefs is as if
+both ﬁrms were one period closer to their respective maximum learning thresholds, whereas
+the case of within-period learning and beliefs favoring I is as if only I were one period closer
+23
+
+=== PAGE 24 / 44 ===
+
+to its maximum learning threshold. Then following an almost identical proof to that of
+Proposition 1 we obtain the following result.
+Proposition 10. Suppose I has previously sold to 0 ≤NI ≤NI consumers and E has
+previously sold to 0 ≤NE ≤NE consumers. With Pareto beliefs, E wins in all periods
+if and only if sE −sI ≥∆(NI + 1,NE + 1), and I wins in all periods otherwise, where
+∆(NI,NE) is deﬁned by (1). With favorable beliefs for I, E wins in all periods if and only if
+sE −sI ≥∆(NI + 1,NE), and I wins in all periods otherwise. The equilibrium outcome is
+socially eﬃcient with Pareto beliefs and involves I winning too often with beliefs favoring I.
+The intuition for these results is the same as before. Note the socially optimal outcome
+takes into account the higher willingness-to-pay created from learning within the period, just
+as the equilibrium conditions do. Moreover, Corollary 1 and Corollary ?? continue to apply,
+given that the cutoﬀs that apply here are deﬁned in the same way as (1), but with the terms
+in NI and NE increased by zero or one depending on the type of beliefs. By the same logic,
+other results similarly carry over.
+Taking the diﬀerence in cutoﬀs when beliefs favor I vs. when beliefs are Pareto, we obtain
+∆(NI+1,NE)−∆(NI+1,NE+1) = (1 −δ)
+
+
+NE−NE−1∑
+j=0
+δj(fE(NE + j+ 1) −fE(NE + j))
+
+,
+(7)
+which is strictly positive whenever NE < NE.6 The expression in (7) is a measure of the
+distortion that arises in the cutoﬀ for E to win due to I’s favorable beliefs, as compared to
+the socially optimal outcome. It shows that whether I is close or far away from its learning
+threshold is irrelevant to the distortion implied by I enjoying favorable beliefs. This is because
+under both types of beliefs, consumers evaluate the PDV of future product improvements
+that can be oﬀered by I assuming I will win in every period. The expression (7) also illustrates
+that the impact of beliefs on I’s competitive advantage reﬂects that E is eﬀectively viewed
+by consumers as being one period of learning behind in every period under beliefs that favor
+I compared to under Pareto beliefs.
+Taking the diﬀerence between (7) evaluated at NE −k and (7) evaluated at NE, the
+following result follows almost immediately.
+Proposition 11. Suppose there is across-user learning and within-period learning. If E’s
+learning function fE is weakly concave, the distortion in the cutoﬀ resulting from beliefs
+favoring I is higher the further away E is from its maximum learning threshold (i.e. the
+lower NE is).
+6When NE = NE, beliefs are irrelevant, and (7) is zero.
+24
+
+=== PAGE 25 / 44 ===
+
+This result reﬂects that shifting E back by one period of learning has a bigger eﬀect when
+E is on the steeper (i.e. earlier) part of its learning function, and that the corresponding
+disadvantage for E arises over additional periods when E is further away from its maximum
+learning threshold. Put more directly, under the conditions of Proposition 11, the concern
+that beliefs favoring I give I an ineﬃcient advantage is greater the further away E is from its
+maximum learning threshold.
+5.2 Across-user learning with one-time purchase
+Consider the model of pure across-user learning from Section 3, but now assume con-
+sumers only need to purchase once to derive consumption utility over all subsequent periods
+based on the value of the product oﬀered in each period. Thus, we have in mind products
+that can be used over multiple periods of time, e.g. operating systems, software, apps and
+connected devices that are purchased upfront and can be used repeatedly at no additional
+cost thereafter. We assume there is a measure one of new consumers joining in each pe-
+riod and all consumers are inﬁnitely lived. These consumers purchase one of the two ﬁrms’
+products and get to enjoy the stream of future utility associated with their choice of prod-
+uct. Consumers could, if they wanted, switch to use the other product in any period, but
+this would require purchasing that product as well. Finally, consistent with our baseline
+model of across-user learning with new consumers in each period, a ﬁrm only learns once
+from any consumer it sells to. Formally, if ﬁrm i has sold to a total measure of Ni unique
+consumers in the past, then the value current consumers obtain from ﬁrm i’s product is
+si + fi
+(
+min
+{
+Ni,Ni
+})
+, where Ni is the total measure of unique past sales it takes for ﬁrm i
+to reach the maximum threshold of learning.
+Once again, there can be multiple equilibria in consumers’ decision of which ﬁrm to buy
+from, given prices in any period. Here, network eﬀects arise despite the absence of any within-
+period learning, and are due to the repeated usage consumers enjoy from a purchase, which
+creates a type of switching cost. If a consumer buys a product and then decides to switch
+to the other product in a later period, she needs to purchase the other product, whereas she
+could have continued to consume the existing product without any further payment. This
+means that, all other things equal, consumers prefer to buy the product which they expect
+will also be bought by current and future consumer cohorts, because that product will beneﬁt
+from the most learning in the future. Because of this switching cost, each consumer now
+has an incentive to coordinate her purchase decision with the purchase decisions of the other
+consumers arriving in the same period.
+Beliefs once again play an important role and, like in the previous subsection, we highlight
+25
+
+=== PAGE 26 / 44 ===
+
+their eﬀect by comparing the outcomes with Pareto beliefs vs. beliefs that always favor I.
+The diﬀerence relative to the previous section is that here the beliefs of the current cohort
+of consumers must also include the behavior of future cohorts of consumers. Speciﬁcally, the
+current cohort of consumers believe future cohorts will choose the same ﬁrm as the current
+cohort. These beliefs always turn out to be fulﬁlled in equilibrium because the ﬁrm that
+wins the current period has a higher competitive advantage and therefore always wins in all
+future periods.
+The proof, which is lengthy, follows similar steps as the proof of Proposition 1. We
+relegate it to the Online Appendix, where we establish the following proposition.
+Proposition 12. Suppose I has previously sold to 0 ≤NI ≤NI unique consumers and E
+has previously sold to 0 ≤NE ≤NE unique consumers. Under Pareto beliefs, E wins if and
+only if sE −sI ≥∆(NI,NE), where
+∆(NI,NE) = (1 −δ)2
+
+
+NI−NI−1∑
+j=0
+(j+ 1)δjfI(NI + j) −
+NE−NE−1∑
+j=0
+(j+ 1)δjfE(NE + j)
+
+
++δNI−NI(1 + (1−δ)(NI −NI))fI(NI) −δNE−NE(1 + (1−δ)(NE −NE))fE(NE).
+In contrast, under favorable beliefs for I, E wins if and only if sE −sI ≥∆I(NI,NE), where
+∆I(NI,NE) = (1 −δ)2
+
+
+NI−NI−1∑
+j=0
+(j+ 1)δjfI(NI + j) −
+NE−NE−1∑
+j=0
+δjfE(NE + j)
+
+
++δNI−NI(1 + (1−δ)(NI −NI))fI(NI) −δNE−NEfE(NE).
+The cutoﬀ in sE −sI above which E wins with Pareto beliefs is socially eﬃcient and lower
+than the cutoﬀ in sE −sI above which E wins with beliefs favorable to I, i.e. ∆(NI,NE) <
+∆I(NI,NE) for all (NI,NE) such that 0 ≤NI ≤NI and 0 ≤NE ≤NE −1.
+To understand this result, note that in each state, consumers evaluate the ﬁrms based
+on the utility they oﬀer in the current period (which reﬂects the ﬁrms’ additional learning),
+plus the subsidy each ﬁrm oﬀers in the current period (reﬂecting how much each ﬁrm stands
+to beneﬁt if it is able to capture consumers in the current period relative to the case when
+it loses the current period), plus the PDV of the future utility stream that the consumer
+expects will be oﬀered in all subsequent periods. The ﬁrms’ value functions are deﬁned in
+the proof of Proposition 12. They turn out to be identical to the expressions in Corollary
+1 except that the ∆( NI,NE) is now deﬁned as above (and depends on whether beliefs are
+26
+
+=== PAGE 27 / 44 ===
+
+Pareto or favor I), and that we need to divide everywhere by an additional 1 −δ in order to
+reﬂect that consumers get an inﬁnite stream of future beneﬁts from the product when they
+purchase. The ( j+ 1) factors in the expression of ∆( NI,NE) in the proposition reﬂect that
+now the learning levels fI(NI + j) and fE(NI + j) are enjoyed not just by the current cohort
+of consumers, but also by the next j cohorts.
+Proposition 12 shows that beliefs clearly aﬀect E’s ability to win: E wins more often under
+Pareto beliefs relative to favorable beliefs for I. Moreover, like in the case of within-period
+learning analyzed in the previous subsection, favorable beliefs for I lead to a socially ineﬃcient
+cutoﬀ rule, in which I sometimes wins even though it would be eﬃcient for consumers to
+buy from E.
+5.3 Across-user and within-user learning
+In this ﬁnal section we demonstrate that by combining across-user and within-user learn-
+ing we can generate network eﬀects that create a coordination problem for consumers. In
+particular, we shut down the channels that led to such network eﬀects in the previous two
+sections—within-period learning (Section 5.1), and switching costs that arise via prices (Sec-
+tion 5.2). We do so by combining the models of Sections 3 and 4 in the following way. First,
+we assume that the value a given consumer obtains from ﬁrm i’s product in the current
+period depends on the two types of learning—the total measure of consumers who have
+previously purchased from the same ﬁrm, and the number of times the same consumer has
+previously purchased from the same ﬁrm. Second, we set the prices of both ﬁrms to zero in
+all periods to show that prices are not necessary to obtain our result (meaning our theory
+can also apply to free products, such as Google search). Thus, while consumers can only
+consume from one ﬁrm in a given period, they are free to switch between the two ﬁrms across
+periods. And ﬁnally, we assume there is just one ﬁxed set of consumers of measure one who
+are present in all periods, consistent with the model of within-user learning used in Section
+4.
+A consumer who has previously consumed ni times from ﬁrm i ∈{I,E}when ﬁrm i
+has previously served Ni ≤1 of all consumers in the past derives utility si + fA(Ni) +
+fW (min {ni,n}) in the current period if she chooses ﬁrm i’s product, where n ≥1 is the
+threshold level of within-user learning for either ﬁrm. We assume the learning functions fA
+and fW are everywhere weakly increasing and identical across ﬁrms. Thus, the maximum
+utility that can ever be oﬀered by ﬁrm ito an individual consumer in a period is si+fA(1)+
+fW (n), which is achieved when all consumers have chosen ﬁrm i at least n times in the
+past. Without loss of generality, we assume that fA(1) >f A(0) = 0, and that fW is strictly
+27
+
+=== PAGE 28 / 44 ===
+
+increasing in the last step to reach its maximum threshold (i.e. fW(n) > fW(n−1)) with
+fW (0) = 0.
+Here, a coordination problem arises because of the endogenous switching cost created
+by within-user learning, which provides a reason for each consumer to want to coordinate
+on the ﬁrm that will attract the other consumers, in order to also beneﬁt from across-
+user learning. For example, if all consumers are expected to choose I in every period, a
+consumer that chooses E in every period would forgo the beneﬁts of across-user learning,
+while a consumer that switches between the two ﬁrms at least once would not be reaping
+the maximum beneﬁts of within-user learning. Of course, when both ﬁrms have reached
+maximum learning (i.e. when both have served all consumers n times in the past so they
+oﬀer utility sI+fA(1)+fW (n) and sE+fA(1)+fW (n), respectively), there is no coordination
+problem: the unique equilibrium has consumers choosing I in every period if sI > sE, and
+otherwise choosing E in every period. In order to clearly illustrate how network eﬀects create
+a coordination problem for consumers in this setting, we focus on the case in which both
+ﬁrms start with a blank slate, that is, NI = NE = 0 and nI = nE = 0.
+It turns out that in this setting there are only two pure-strategy equilibria, i.e. equilibria
+in which all users who are in the same state choose the same action in every period: (i) all
+consumers choose I in every period (I-wins), (ii) all consumers choose E in every period (E-
+wins). The respective conditions for each equilibrium (I-wins or E-wins) are pinned down by
+ruling out a consumer’s two best deviations. These two deviations turn out to be (i) switching
+to the other ﬁrm for all periods, and (ii) starting on the other ﬁrm for one period and then
+switching to the ﬁrm that is supposed to win all periods in equilibrium from period 2 onwards
+(this involves free-riding on the across-user learning generated by all other consumers). In
+the Appendix, we formally prove this, and determine the ranges of parameter values under
+which the two equilibria exist, which are as follows:
+•if sE −sI < −δmin
+{
+fA(1) ,(1 −δ) ∑n
+j=1 δj−1fW (j) + δnfW (n)
+}
+, then I-wins is the
+unique equilibrium.
+•if sE −sI ≥δmin
+{
+fA(1) ,(1 −δ) ∑n
+j=1 δj−1fW (j) + δnfW (n)
+}
+, then E-wins is the
+unique equilibrium.
+•in the remaining range of sE −sI, both I-wins and E-wins equilibria exist.
+The multiplicity of equilibria in the third parameter range creates the possibility for
+consumer beliefs to determine which equilibrium gets selected. Under Pareto beliefs, in case
+there are multiple equilibria, consumers coordinate on the equilibrium that yields a higher
+PDV of surplus for them, which means E wins if and only if sE −sI ≥0. In contrast,
+28
+
+=== PAGE 29 / 44 ===
+
+under beliefs that favor I, the only way for E to possibly win is when E-wins is the unique
+equilibrium (the second case above), since this rules out the equilibrium in which consumers
+choose I in every period. The next proposition summarizes our ﬁndings.
+Proposition 13. Suppose both ﬁrms start with no previous learning, i.e. NI = NE = 0 and
+nI = nE = 0 for every consumer. Under Pareto beliefs, E wins if and only if sE −sI ≥0,
+which is the socially optimal cutoﬀ given the two ﬁrms are otherwise symmetric. Under
+favorable beliefs for I, E wins if and only if
+sE −sI ≥δmin
+{
+fA(1),(1 −δ)
+n∑
+j=1
+δj−1fW (j) + δnfW (n)
+}
+,
+i.e. the cutoﬀ for E to win is too high in this case compared to the socially optimal cutoﬀ.
+Like in the two previous sections, beliefs that favor I shift the outcome in I’s favor relative
+to the case with Pareto beliefs, which remains socially optimal. It is important to emphasize
+that both types of learning are necessary for network eﬀects to matter in this model. If
+either type of learning is shut down (i.e. if either fA(1) = 0 or fW(j) = 0 for all j), then
+the condition for E to win under beliefs favorable to I becomes identical to the condition for
+E to win under Pareto beliefs, so the nature of beliefs and network eﬀects no longer matter.
+6 Conclusion
+Data-enabled learning is becoming an essential ingredient to the competitive dynamics
+between providers of an increasing range of products and services. Our analysis provides
+several key take-aways regarding the determinants of a ﬁrm’s competitive advantage in the
+presence of data-enabled learning. First, we have shown that the proﬁts extracted by the
+winning ﬁrm are higher under across-user learning than within-user learning. This suggests
+that competitive positions built around across-user learning should be more defensible than
+those built around within-user learning. Second, everything else equal, a ﬁrm’s advantage (in
+winning) is greater, the higher is its learning curve, the further along the ﬁrm is on its learning
+curve, and the higher is the remaining learning potential. However, even if an incumbent
+starts with a data advantage, if the entrant’s learning curve is steeper and can ultimately
+reach a higher threshold of learning value, through dynamic pricing the entrant may be able
+to seize the market. Third, data-enabled learning creates a user coordination problem due
+to network eﬀects when across-user learning is combined with either (i) continued product
+improvement during the period(s) over which consumers derive utility from the product, or
+29
+
+=== PAGE 30 / 44 ===
+
+(ii) within-user learning. In these cases, favorable user expectations towards the incumbent
+can be another important source of competitive advantage.
+Even when the equilibrium outcome with data-enabled learning is socially eﬃcient, an
+unanticipated improvement in the learning of the losing ﬁrm helps consumers. This creates
+a potential role for a data sharing policy. However, if such a policy is anticipated, it creates
+a tradeoﬀ in terms of consumer surplus: the enhanced competitive position of the losing ﬁrm
+after data is shared tends to lower prices, but the losing ﬁrm is now less likely to subsidize in
+order to win prior to data being shared, which tends to increase prices. Taking into account
+this tradeoﬀ, we’ve shown that a key condition for data sharing policy to improve consumer
+surplus is that the ﬁrm that beneﬁts from data sharing is suﬃciently far behind the leader.
+The analysis in this paper showed how data-enabled learning can give rise to endogenous
+switching costs and endogenous network eﬀects. Powerful platform businesses like those
+run by Amazon, Facebook and Google beneﬁt from data-enabled learning, but in addition,
+they also enjoy traditional direct network eﬀects. An interesting direction for future work,
+building on our model, is to consider how data-enabled learning works when combined with
+direct network eﬀects.
+7 Appendix
+This appendix contains the proofs of results not already proven in the main text.
+7.1 Proof of Proposition 1 and Corollary 1
+The state (NI,NE) = (NI,NE) is already handled in the main text. Recall the value function
+of proﬁt in this case is given by
+Vi(NI,NE) = 1
+1 −δmax
+{
+si −sj + fi(Ni) −fj(Nj),0
+}
+.
+Consider the case with NI = NI and 1 ≤NE ≤NE. Suppose ∆( NI,NE), VI(NI,NE) and
+VE(NI,NE) are given by ∆(NI,NE), VI(NI,NE) and VE(NI,NE) as characterized in Proposition
+1 and Corollary 1 with NI = NI (this is the induction hypothesis).
+Now consider the case in which NI = NI and E has previously sold to NE −1 consumers.
+Suppose E charges pE and I charges pI in the current period. I wins the current period if sI +
+fI(NI) −pI > sE + fE(NE −1) −pE. Otherwise, E wins. If E wins the current period, the
+PDV of its current and future proﬁts will be pE −c+ δVE(NI,NE). If it doesn’t win the current
+period, the PDV of its current and future proﬁts will be δVE(NI,NE −1). So E is willing to
+price down to the point where pE −c+ δVE(NI,NE) = δVE(NI,NE −1), or in other words
+30
+
+=== PAGE 31 / 44 ===
+
+pE = c−δ(VE(NI,NE) −VE(NI,NE −1)). Based on the same logic, I is willing to price down to
+pI = c−δ(VI(NI,NE −1) −VI(NI,NE)).
+Thus, if we denote by Ω i(NI,NE) the maximum surplus ﬁrm i is willing to oﬀer consumers to
+win in the current period when the current state is ( NI,NE), then
+ΩI (
+NI,NE −1
+)
+= sI −c+ fI(NI) + δ(VI(NI,NE −1) −VI(NI,NE)) (8)
+ΩE(
+NI,NE −1
+)
+= sE −c+ fE(NE −1) + δ(VE(NI,NE) −VE(NI,NE −1)). (9)
+Given Bertrand competition, I wins the current period iﬀ
+ΩI (
+NI,NE −1
+)
+>ΩE(
+NI,NE −1
+)
+. (10)
+Suppose (10) holds. Then in the current period E setspE = c−δ(VE(NI,NE)−VE(NI,NE−1))
+and I wins by setting pI = sI + fI(NI) −ΩE(
+NI,NE −1
+)
+. Then I’s value is
+VI(NI,NE −1) = δVI(NI,NE) + ΩI (
+NI,NE −1
+)
+−ΩE(
+NI,NE −1
+)
+,
+and E’s value is VE(NI,NE −1) = δVE(NI,NE −1) given it loses and so will be in the same
+situation next period. Since δ <1, this implies VE(NI,NE −1) = 0.
+Conversely, suppose (10) doesn’t hold. Then in the current period I setspI = c−δ(VI(NI,NE−
+1) −VI(NI,NE)) and E wins by setting pE = sE+ fE(NE−1) −ΩI (
+NI,NE −1
+)
+. Then E’s value
+is
+VE(NI,NE −1) = δVE(NI,NE −1) + ΩE(
+NI,NE −1
+)
+−ΩI (
+NI,NE −1
+)
+and I’s value is VI(NI,NE −1) = δVI(NI,NE) given it loses and will be in the state ( NI,NE)
+next period.
+Combining the above two cases when (10) holds and when it doesn’t, we have
+VI(NI,NE −1) = δVI(NI,NE) + max
+{
+ΩI (
+NI,NE −1
+)
+−ΩE(
+NI,NE −1
+)
+,0
+}
+(11)
+VE(NI,NE −1) = δVE(NI,NE −1) + max
+{
+ΩE(
+NI,NE −1
+)
+−ΩI (
+NI,NE −1
+)
+,0
+}
+.(12)
+There are two possibilities: VE(NI,NE −1) = 0 and VE(NI,NE −1) >0.
+Suppose ﬁrst VE(NI,NE−1) = 0. We can solve (11) for VI(NI,NE−1) using the expressions
+for VI(NI,NE) and VE(NI,NE) from the induction hypothesis and the fact thatVE(NI,NE−1) =
+0, which gives
+VI(NI,NE −1) =
+{ sI−sE+fI(NI)−fE(NE−1)
+1−δ if sE −sI <∆(NI,NE)
+sI−sE+(1−δ)(fI(NI)−fE(NE−1))+δ∆(NI,NE)
+(1−δ)2 if sE −sI ≥∆(NI,NE)
+,
+31
+
+=== PAGE 32 / 44 ===
+
+with VI(NI,NE −1) ≥0 iﬀ
+sE −sI ≤(1 −δ)(fI(NI) −fE(NE −1)) + δ∆(NI,NE) = ∆(NI,NE −1).
+Next, suppose VE(NI,NE−1) >0, so VI(NI,NE−1) = δVI(NI,NE). Since VI (
+NI,NE −1
+)
+≥
+VI (
+NI,NE
+)
+, we must have VI(NI,NE −1) = VI(NI,NE) = 0 in this case. We can solve (12) for
+VE(NI,NE −1) using the expression for VE(NI,NE) from the induction hypothesis and the fact
+that VI(NI,NE −1) = VI(NI,NE) = 0, which gives
+VE(NI,NE −1) = sE −sI + (1 −δ)(fE(NE −1) −fI(NI)) −δ∆(NI,NE)
+1 −δ ,
+which is positive iﬀ sE −sI >∆(NI,NE −1).
+Thus, combining the results with VE(NI,NE −1) = 0 and VE(NI,NE −1) > 0, we have
+proven that ∆(NI,NE −1), VI(NI,NE −1) and VE(NI,NE −1) satisfy the characterization in
+Proposition 1 and Corollary 1, and by induction, this is true for any 0 ≤NE ≤NE when NI = NI.
+Symmetry can be used to obtain a parallel result for all 0 ≤NI ≤NI when NE = NE.
+Now consider any state (NI,NE) with 0 ≤NI ≤NI−1 and 0 ≤NE ≤NE−1, and suppose that
+the results in Proposition 1 and Corollary 1 hold for the states (NI+1,NE) and (NI,NE+1)—this
+is the induction hypothesis. Using the same logic as above when the state is ( NI,NE), we have
+VI(NI,NE) = δVI(NI,NE + 1) + max{Ω (NI,NE) ,0} (13)
+VE(NI,NE) = δVE(NI + 1,NE) + max{−Ω (NI,NE) ,0} (14)
+where
+Ω (NI,NE) = sI + fI(NI) + δ(VI(NI + 1,NE) −VI(NI,NE + 1))
+−sE −fE(NE) −δ
+(
+VE(NI,NE + 1) −VE(NI + 1,NE)
+)
+.
+Again there are two possibilities, depending on whether Ω ( NI,NE) is positive or not. If
+Ω (NI,NE) ≥0, then we must have VE(NI,NE) = VE(NI + 1,NE) = 0, while if Ω ( NI,NE) ≤0,
+then we must have VI(NI,NE) = VI(NI,NE + 1) = 0. In each of these two cases, we can use the
+expressions of VI(NI,NE+1) and VE(NI+1,NE) from the induction hypothesis to solve (13) and
+(14) for VI(NI,NE) and VE(NI,NE). After some careful manipulations, which include rewriting
+the resulting summation expressions for VI(NI,NE) and VE(NI,NE) in terms of ∆( NI,NE) and
+∆(NI,NE+1), we conﬁrm that the expressions of ∆(NI,NE), VI(NI,NE) and VE(NI,NE) satisfy
+the characterization in Proposition 1 and Corollary 1 (these additional details are provided in the
+Online Appendix).
+By repeated application of the induction hypothesis, we obtain that the expressions forVI(NI,NE)
+and VE(NI,NE) in Corollary 1, and the expression for ∆( NI,NE) in Proposition 1 hold for all
+32
+
+=== PAGE 33 / 44 ===
+
+states (NI,NE), where 0 ≤NI ≤NI −1 and 0 ≤NE ≤NE −1.
+7.2 Proof of Proposition 2
+To show Proposition 1 continues to apply in the limit as NI →∞ and NE →∞, we need
+to prove the expression in (1) continues to be well deﬁned in this limit case. This is equivalent
+to proving limNi→∞
+∑Ni
+j=0 δjfi(j) exists given this also implies lim Ni→∞ δNifi(Ni) exists since the
+summation includes the later expression and other positive terms. Consider the power function
+fi(x) = θixρi where θi > 0 and ρi > 0. Using the ratio test, we know that lim j→∞(δj+1(j+1)ρ
+δjjρ ) =
+δ <1 which implies the limit exists for any such power function. Then by the limit comparison
+test, since the relevant terms are all positive, the limits exist for any unbounded learning function
+fi provided there exists some κi >0, such that limj→∞
+fi(j)
+jρ ≤κi for i= {I,E}.
+7.3 Proof of Proposition 3
+If NI = NE = N and sE −sI <0, then I wins and E makes zero proﬁts regardless of whether
+N <N or N = N. If N = N, then I’s PDV of proﬁts is VI (
+N,N
+)
+= sI−sE
+1−δ . If instead N <N,
+then I’s PDV of proﬁts is
+VI (N,N ) =
+{ sI−sE
+1−δ −δ∆(N,N+1)
+(1−δ)2 if sE −sI <∆(N,N + 1)
+sI−sE
+(1−δ)2 if ∆( N,N + 1) ≤sE −sI <0
+,
+which is clearly always larger than sI−sE
+1−δ , given that ∆( N,N + 1) <0 = ∆(N,N ). By symmetry,
+the same holds when sE −sI >0.
+Now suppose there is some asymmetry between the two ﬁrms’ learning functions, and we have
+NI > NI, NE > NE and sE −sI = ∆(NI,NE). This means that Vi(NI,NE) = 0 for i∈{I,E}.
+In contrast, if NI = NI, NE = NE, then Vi(NI,NE) = max
+{si−sj+fi(Ni)−fj(Nj)
+1−δ ,0
+}
+for i ̸= j ∈
+{NI,NE}. Thus, as long as fI (NI)−fE(NE) ̸= ∆(NI,NE), one ﬁrm sees its proﬁts strictly increase
+when the prospect of future learning is eliminated (the other ﬁrm’s proﬁt remains equal to zero).
+By continuity, this remains true when sE −sI is suﬃciently close to ∆( NI,NE).
+7.4 Proof of Proposition 4
+Consider the socially optimal outcome. If I wins in every period, the value created is
+sI
+1 −δ + δNI−NI+1
+1 −δ fI(NI) +
+NI−NI∑
+j=0
+δjfI(NI + j)
+33
+
+=== PAGE 34 / 44 ===
+
+while if E wins in every period, the value created is
+sE
+1 −δ + δNE−NE+1
+1 −δ fE(NE) +
+NE−NE∑
+j=0
+δjfE(NE + j).
+The socially optimal cutoﬀ is the level of sI −sE for which these two expressions are equal, which
+corresponds exactly to the equilibrium cutoﬀ ∆( NI,NE).
+7.5 Proof of Proposition 5
+Given that E moves to the threshold level of data at the end of each period with probability
+0 ≤λ ≤1 which is independent of the ﬁrm’s current position, the maximum surplus ﬁrm E and
+I are willing to oﬀer consumers to win are given by the same expressions (8)-(9) except that δ is
+replaced by δ(1 −λ). We can derive the value functions and the cutoﬀ for E to win following the
+same steps as in Proposition 1 and Corollary 1. The main diﬀerence is that it is now possible for
+both ﬁrms to have positive value. The full details are relegated to the Online Appendix, where
+we also show that ∆( N,NE,λ) is increasing in λ, a property we use below. The resulting value
+functions are:
+VI(N,NE,λ) =
+
+
+
+sI−sE
+1−δ + f(N)−f(NE)
+1−δ(1−λ) if sE −sI <∆(N,N,λ) = 0
+sI−sE+f(N)−f(NE)
+1−δ(1−λ) if ∆( N,N,λ) ≤sE −sI <∆(N,NE + 1,λ)
+sI−sE+∆(N,NE,λ)
+(1−δ(1−λ))2 if ∆( N,NE + 1,λ) ≤sE −sI <∆(N,NE,λ)
+0 if sE −sI ≥∆(N,NE,λ)
+(15)
+VE(N,NE,λ) =
+
+
+
+0 if sE −sI <∆(N,N,λ) = 0
+δλ
+1−δ(1−λ)
+sE−sI
+1−δ if ∆( N,N,λ) ≤sE −sI <∆(N,NE,λ)
+sE−sI
+1−δ −∆(N,NE,λ)
+1−δ(1−λ) if sE −sI ≥∆(N,NE,λ)
+. (16)
+The PDV of consumer surplus is determined by the surplus oﬀered by the losing ﬁrm in each
+period along the equilibrium path taking into account E’s chances of shifting to the threshold.
+There are four diﬀerent cases.
+1. Suppose sE −sI < ∆(N,N,λ) = 0. This means I always wins, E never subsidizes, and
+consumers get the surplus oﬀered by E which is sE + f(NE) −c each period until I shares
+its data, and sE + f
+(
+N
+)
+−c each period after I shares its data. Since f
+(
+N
+)
+>f (NE), the
+PDV of consumer surplus is increasing in λ.
+2. Suppose 0 = ∆( N,N,λ) ≤sE −sI <∆(N,NE + 1,λ). This means I wins every period until
+E catches up, after which E wins forever. However, in this range, since even if E somehow
+manages to win one period, it will still not win the following period (without I sharing its
+data), it will not subsidize. Thus, consumers get sE+f(NE)−ceach period until I shares its
+34
+
+=== PAGE 35 / 44 ===
+
+data and sI+f
+(
+N
+)
+−ceach period after I shares its data. Since sE−sI <∆(N,NE+1,λ) <
+f
+(
+N
+)
+−f(NE), the PDV of consumer surplus is increasing in λ. Note this range only exists
+if NE ≤N −2.
+3. Suppose ∆( N,NE + 1,λ) ≤sE −sI <∆(N,NE,λ). In this range, consumer surplus is the
+same as in case 2 except now consumer surplus is higher because E oﬀers a subsidy of
+δ(1 −λ)
+(
+VE(N,NE + 1) −VE(N,NE)
+)
+= δ(1 −λ)
+(
+sE −sI −∆(N,NE + 1,λ)
+)
+1 −δ(1 −λ) (17)
+each period until I shares its data. This subsidy reﬂects that if E manages to win one period,
+it will thereafter win in all following periods even if I doesn’t share its data. Using (15)-(16),
+the PDV of consumer surplus can be written as
+sE −sI −∆(N,NE,λ)
+(1 −δ(1 −λ))2 + sI + f
+(
+N
+)
+−c
+1 −δ
+and the change in consumer surplus due to data sharing when sE −sI = x is therefore
+∆CS(x,λ) ≡x−∆(N,NE,λ)
+(1 −δ(1 −λ))2 −x−∆(N,NE,0)
+(1 −δ)2 .
+Clearly, ∆CS(x,λ) is decreasing in x. Furthermore, when x= ∆(N,NE,λ), we have
+∆CS
+(
+∆(N,NE,λ),λ
+)
+= ∆(N,NE,0) −∆(N,NE,λ)
+(1 −δ)2 <0.
+Finally, when sE −sI = ∆(N,NE + 1,λ), the subsidy in (17) is exactly zero and the change
+in consumer surplus due to data sharing is identical to that arising in case 2 for the same
+value of sE −sI, which recall is positive. Thus, we have ∆ CS
+(
+∆(N,NE + 1,λ),λ
+)
+>0. So
+we conclude there exists a unique Θa(
+N,NE,λ
+)
+∈
+(
+∆(N,NE + 1,λ),∆(N,NE,λ)
+)
+such that
+∆CS
+(
+Θa(
+N,NE,λ
+)
+,λ
+)
+= 0, which indeed has the solution given by (3).
+4. Finally, suppose sE −sI ≥∆(N,NE). This means E wins in every period. Since we must
+also have sE −sI >0, I will never subsidize in this region. Thus, consumers always get the
+surplus oﬀered by I when it loses and prices at c. As a result, the PDV of consumer surplus
+is independent of λ.
+7.6 Proof of Proposition 7
+To prove the result in (i) we need to show that the term (in large brackets) multiplied by θI
+in (4) is greater than the corresponding term multiplied by θE when NI −NI ≤NE −NE and
+NI −NI ≥NE −NE, with one inequality strict.
+35
+
+=== PAGE 36 / 44 ===
+
+If NE ≤NE and NI ≤NI, then the inequality we require simpliﬁes to
+δNI−NI+1
+(
+1 −δNI−NI
+)
+>δNE−NE+1
+(
+1 −δNE−NE
+)
+,
+which follows by combining the above assumptions. If NE >N E and NI >N I, then the inequality
+we require simpliﬁes to
+NI −NI + δ1 −δNI−NI
+1 −δ >NE −NE + δ1 −δNE−NE
+1 −δ ,
+which once again can be shown to follow from the above assumptions. Finally, given NI −NI ≤
+NE −NE and NI −NI ≥NE −NE, the only remaining case is NE ≤NE and NI >N I. In this
+case, the inequality we wish to prove becomes
+NI −NI + δ
+(
+1 −δNI−NI
+1 −δ
+)
+>δNE−NE+1
+(
+1 −δNE−NE
+1 −δ
+)
+.
+The LHS is lowest when NI = NI + 1 while the RHS is highest when NE = NE, so a suﬃcient
+condition for the inequality to hold is that
+1 + δ
+(
+1 −δNI−NI−1
+1 −δ
+)
+>δ
+(
+1 −δNE−NE
+1 −δ
+)
+or equivalently 1 −δNI−NI >δ
+(
+1 −δNE−NE
+)
+, which holds because NI −NI ≥NE −NE.
+For (ii), suppose NI + k ≤N, which implies NE + k < Nbecause NI > NE. Then imposing
+that learning functions are identical on (4), we get
+∆(NI + k,NE + k) −∆(NI,NE) = (1 −δk)(1 −δN−N)(δN−NI −δN−NE)θ
+(1 −δ)δN−N+k−1 >0.
+Suppose instead NI >N and NE >N . Then
+∆(NI + k,NE + k) −∆(NI,NE) = −(1 −δk)(δN−NI+1 −δN−NE+1)θ
+(1 −δ)δk ,
+which is negative given NI >NE.
+7.7 Proof of Proposition 8
+As discussed in the text, the analysis can be conducted with a representative consumer. A key
+diﬀerence with the proof of Proposition 1 is that we need to construct the value function for the
+consumer since the consumer needs to take future utility into account when deciding which ﬁrm to
+buy from. We denote this u(NI,NE), which measures the PDV of surplus a consumer expects to
+36
+
+=== PAGE 37 / 44 ===
+
+obtain from making her optimal choices in every stage when ﬁrms play their equilibrium strategies
+and the consumer has previously bought NI times from ﬁrm I and NE times from ﬁrm E.
+It is easily veriﬁed that when ( NI,NE) = (NI,NE), we have
+VI(NI,NE) = max
+{
+sI + fI(NI) −sE −fE(NE),0
+}
+1 −δ
+VE(NI,NE) = max
+{
+sE + fE(NE) −sI −fI(NI),0
+}
+1 −δ
+u(NI,NE) = min
+{
+sI + fI(NI),sE + fE(NE)
+}
+−c
+1 −δ .
+Consider the case with NI = NI and 1 ≤NE ≤NE. Suppose that ∆(NI,NE), VI(NI,NE) and
+VE(NI,NE) are given by ∆(NI,NE), VI(NI,NE) and VE(NI,NE) as characterized in Proposition
+8 with NI = NI, and that the corresponding value function for consumers is
+u(NI,NE) = min
+
+
+fI(NI) + sI + δfI(NI) −c
+1 −δ ,
+NE−NE∑
+j=0
+δjfE(NE + j) + sE + δNE−NE+1fE(NE) −c
+1 −δ
+
+
+.
+This is the induction hypothesis.
+Consider now the state ( NI,NE −1). The consumer chooses I in the current period iﬀ
+sI + fI(NI) −pI + δu(NI,NE −1) >sE + fE(NE −1) −pE + δu(NI,NE).
+I is willing to set pI down to the point where it is indiﬀerent between winning or losing the current
+period, i.e. pI = c−δ(VI(NI,NE −1) −VI(NI,NE)). Similarly, E is willing to set pE down to
+pE = c−δ(VE(NI,NE) −VE(NI,NE −1)).
+If we denote by Ωi(NI,NE) the PDV of the maximum surplus ﬁrmiis willing to oﬀer consumers
+to win in the current period when the current state is ( NI,NE), then
+ΩI (
+NI,NE −1
+)
+= sI −c+ fI(NI) + δ(VI(NI,NE −1) −VI(NI,NE) + u(NI,NE −1))
+ΩE(
+NI,NE −1
+)
+= sE −c+ fE(NE −1) + δ(VE(NI,NE) −VE(NI,NE −1) + u(NI,NE)).
+Given Bertrand competition, I wins the current period iﬀ
+ΩI (
+NI,NE −1
+)
+>ΩE(
+NI,NE −1
+)
+.
+Using the same logic as in the Proof of Proposition 1 and Corollary 1, we obtain
+u(NI,NE −1) = min
+{
+ΩI (
+NI,NE −1
+)
+,ΩE(
+NI,NE −1
+)}
+(18)
+VI(NI,NE −1) = δVI(NI,NE) + max
+{
+ΩI (
+NI,NE −1
+)
+−ΩE(
+NI,NE −1
+)
+,0
+}
+(19)
+VE(NI,NE −1) = δVE(NI,NE −1) + max
+{
+ΩE(
+NI,NE −1
+)
+−ΩI (
+NI,NE −1
+)
+,0
+}
+.(20)
+37
+
+=== PAGE 38 / 44 ===
+
+There are two possibilities: ΩI (
+NI,NE −1
+)
+≥ΩE(
+NI,NE −1
+)
+or ΩI (
+NI,NE −1
+)
+<ΩE(
+NI,NE −1
+)
+.
+Suppose ﬁrst Ω I (
+NI,NE −1
+)
+≥ΩE(
+NI,NE −1
+)
+, which immediately implies VE(NI,NE −
+1) = 0. Using the expressions of VI(NI,NE), VE(NI,NE) and u(NI,NE) from the induction
+hypothesis, we then solve (18) and (19) for VI(NI,NE −1) and u(NI,NE −1) to obtain
+VI(NI,NE −1) = sI −sE + ∆(NI,NE −1)
+1 −δ
+u(NI,NE −1) = sE + δNE−NE+2fE(NE) −c
+1 −δ +
+NE−NE+1∑
+j=0
+δjfE(NE −1 + j). (21)
+Now suppose ΩI (
+NI,NE −1
+)
+<ΩE(
+NI,NE −1
+)
+, which means E wins the current period, so
+VI(NI,NE −1) = δVI(NI,NE), which implies VI(NI,NE −1) = VI(NI,NE) = 0 because we
+must have VI(NI,NE −1) ≥VI(NI,NE). Furthermore, (18) and (20) become
+u(NI,NE −1) = sI + fI(NI) −c
+1 −δ (22)
+VE(NI,NE −1) = sE −sI −∆(NI,NE −1)
+1 −δ .
+Thus, combining the results with Ω I (
+NI,NE −1
+)
+≥ΩE(
+NI,NE −1
+)
+and ΩI (
+NI,NE −1
+)
+<
+ΩE(
+NI,NE −1
+)
+, we have proven that ∆( NI,NE −1), VI(NI,NE −1) and VE(NI,NE −1)
+satisfy the characterization in Proposition 8, and u(NI,NE −1) is given by the minimum of the
+two expressions in (21) and (22). By induction, this is true for any 0 ≤NE ≤NE when NI = NI.
+Symmetry can then be used to obtain a parallel result for all 0 ≤NI ≤NI when NE = NE.
+Now consider any state (NI,NE) with 0 ≤NI ≤NI −1 and 0 ≤NE ≤NE −1. The induction
+hypothesis is that the result in Proposition 8 holds for the states ( NI + 1,NE) and ( NI,NE + 1)
+and that the value functions for consumers in these two states are
+u(NI + 1,NE) = min
+
+
+
+∑NI−NI−1
+j=0 δjfI(NI + 1 +j) + sI+δNI−NIfI(NI)−c
+1−δ ,
+∑NE−NE
+j=0 δjfE(NE + j) + sE+δNE−NE+1fE(NE)−c
+1−δ
+
+
+
+u(NI,NE + 1) = min
+
+
+
+∑NI−NI
+j=0 δjfI(NI + j) + sI+δNI−NI+1fI(NI)−c
+1−δ ,
+∑NE−NE+1
+j=0 δjfE(NE + 1 +j) + sE+δNE−NEfE(NE)−c
+1−δ
+
+
+.
+Using the same logic as above, we have
+u(NI,NE) = min
+{
+ΩI(NI,NE),ΩE(NI,NE)
+}
+, (23)
+38
+
+=== PAGE 39 / 44 ===
+
+where
+ΩI(NI,NE) = sI −c+ fI(NI) + δ(VI(NI + 1,NE) −VI(NI,NE + 1) +u(NI + 1,NE))
+ΩE(NI,NE) = sE −c+ fE(NE) + δ(VE(NI,NE + 1) −VE(NI + 1,NE) + u(NI,NE + 1))
+and
+VI(NI,NE) = δVI(NI,NE + 1) + max{Ω(NI,NE),0} (24)
+VE(NI,NE) = δVE(NI + 1,NE) + max{−Ω(NI,NE),0}, (25)
+where Ω(NI,NE) ≡ΩI(NI,NE) −ΩE(NI,NE).
+Again there are two possibilities, depending on whether Ω( NI,NE) >0 or not. If Ω( NI,NE) >
+0, then we must have VE(NI,NE) = VE(NI + 1,NE) = 0, while if Ω( NI,NE) ≤0, then we must
+have VI(NI,NE) = VI(NI,NE + 1) = 0. For each of these cases, we can use the expressions of
+u(NI + 1,NE), u(NI,NE + 1), VI(NI,NE + 1) and VE(NI + 1,NE) from the induction hypothesis
+to solve (23), (24) and (25) for VI(NI,NE), VE(NI,NE) and u(NI,NE). Then we can rewrite the
+resulting summation expressions in VI(NI,NE) and VE(NI,NE) in terms of ∆( NI,NE) to obtain
+VI(NI,NE) = max
+{sI −sE + ∆(NI,NE)
+1 −δ ,0
+}
+VE(NI,NE) = max
+{sE −sI −∆(NI,NE)
+1 −δ ,0
+}
+and
+u(NI,NE) = min
+
+
+
+∑NI−NI
+j=0 δjfI(NI + j) + sI+δNI−NI+1fI(NI)−c
+1−δ ,
+∑NE−NE
+j=0 δjfE(NE + j) + sE+δNE−NE+1fE(NE)−c
+1−δ
+
+
+.
+By repeated application of the induction hypothesis, the result in Proposition 8 holds for all states
+(NI,NE), with 0 ≤NI ≤NI and 0 ≤NE ≤NE.
+Finally, we can conﬁrm that consumers do not want to switch ﬁrms along the equilibrium path.
+Suppose the current state is ( NI,NE). If sE −sI < ∆(NI,NE), then consumers choose I in the
+current period, so next period the state will be ( NI + 1,NE). Since ∆( NI,NE) is increasing in
+NI, this means in the subsequent period consumers will choose I again, and so on until NI = NI.
+When the state is ( NI,NE), all subsequent periods will have an identical state and outcome, in
+which consumers choose I. Conversely, if sE −sI ≥∆(NI,NE), then consumers choose E in the
+current period, so next period the state will be ( NI,NE+ 1). Since ∆(NI,NE) is decreasing in NE,
+this means in the subsequent period consumers will choose E again, and so on until NE = NE.
+At the state ( NI,NE), all subsequent periods will have an identical state and outcome, in which
+consumers choose E.
+39
+
+=== PAGE 40 / 44 ===
+
+7.8 Proof of Proposition 9
+There are four diﬀerent cases, depending on the value of sE −sI. If sE −sI <∆(NI,NE + 1)
+then VI(NI,NE) is higher under across-user learning since
+sI −sE
+1 −δ + ∆(NI,NE) −δ∆(NI,NE + 1)
+(1 −δ)2 > sI −sE + ∆(NI,NE)
+1 −δ >0
+given ∆(NI,NE) >∆(NI,NE + 1). If ∆(NI,NE + 1) ≤sE −sI <∆(NI,NE), then VI(NI,NE) is
+higher under across-user learning since
+sI −sE + ∆(NI,NE)
+(1 −δ)2 > sI −sE + ∆(NI,NE)
+1 −δ >0.
+If ∆(NI,NE) ≤sE −sI < ∆(NI + 1,NE), then VE(NI,NE) is higher under across-user learning
+since
+sE −sI −∆(NI,NE)
+(1 −δ)2 > sE −sI −∆(NI,NE)
+1 −δ >0.
+Finally, if sE −sI ≥∆(NI + 1,NE), then VE(NI,NE) is higher under across-user learning since
+sE −sI
+1 −δ −∆(NI,NE) −δ∆(NI + 1,NE)
+(1 −δ)2 > sE −sI −∆(NI,NE)
+1 −δ >0
+given ∆(NI + 1,NE) >∆(NI,NE).
+7.9 Data sharing under within-user learning
+Here we prove the results regarding data sharing under within-user learning claimed at the end
+of Section 4. The logic parallels that used in the Proof of Proposition 5 but adjusted to take into
+account in this case we have pure within-user learning. The details of obtaining the ﬁrms’ (and in
+this case, the consumers’) value functions are relegated to the Online Appendix. There we show
+that a representative user’s value function is
+u(N,NE,λ) =
+
+
+
+sE+f(N)−c
+1−δ −∆(N,NE,λ)
+1−δ(1−λ) if sE −sI <0
+sE+f(N)−c
+1−δ −∆(N,NE,λ)
+1−δ(1−λ) + δλ
+1−δ(1−λ)
+sI−sE
+1−δ if 0 ≤sE −sI <∆(N,NE,λ)
+sI+f(N)−c
+1−δ if sE −sI ≥∆(N,NE,λ)
+and that (2) still characterizes the cutoﬀ in sE −sI, above which E wins.
+To determine the eﬀect of data sharing on consumer surplus, we simply compare u(N,NE,λ)
+to u(N,NE,0). There are three cases:
+1. If sE−sI <0, then u(N,NE,λ) is increasing in λ, so data sharing increases consumer surplus.
+40
+
+=== PAGE 41 / 44 ===
+
+2. If 0 ≤sE −sI <∆(N,NE,λ), then
+u
+(
+N,NE,λ
+)
+−u
+(
+N,NE,0
+)
+= − δλ(sE −sI)
+(1 −δ(1 −λ)) (1−δ) + ∆(N,NE,0)
+1 −δ −∆(N,NE,λ)
+1 −δ(1 −λ),
+which is clearly decreasing in sE−sI. Furthermore, when sE−sI = 0, we have u
+(
+N,NE,λ
+)
+−
+u
+(
+N,NE,0
+)
+>0. To see this, note that
+∆(N,NE,λ)
+1 −δ(1 −λ) =
+N−NE−1∑
+j=0
+(δ(1 −λ))j (
+f(N) −f(NE + j)
+)
+,
+so ∆(N,NE,λ)
+1−δ(1−λ) is decreasing in λ. And when sE −sI = ∆(N,NE,λ), we have
+u
+(
+N,NE,λ
+)
+−u
+(
+N,NE,0
+)
+= ∆(N,NE,0) −∆(N,NE,λ)
+1 −δ <0,
+because recall from the Proof of Proposition 5 that ∆( N,NE,λ) is increasing in λ. Thus, we
+can conclude that data sharing increases consumer surplus when 0≤sE−sI <Θw(
+N,NE,λ
+)
+and decreases consumer surplus when Θ w(
+N,NE,λ
+)
+< sE −sI < ∆(N,NE,λ), where
+Θw(
+N,NE,λ
+)
+is given by (6).
+3. If sE−sI ≥∆(N,NE,λ), then u(N,NE,λ) is constant in λ, so data sharing has no eﬀect on
+consumer surplus.
+7.10 Proof of Proposition 13
+The ﬁrst step to prove the result is to show the only pure-strategy equilibria involve consumers
+always buying from I or always buying from E. It is easy to rule out equilibria in which consumers
+switch more than once from one ﬁrm to the other. To rule out equilibria with one switch, we
+show that there is always a proﬁtable deviation for a consumer: not switching at all, or switching
+one period later than everyone else (i.e. free-riding on other consumers generating the across-user
+learning), or else switching to the other ﬁrm earlier than everyone else because it must oﬀer higher
+utility when the other two deviations are not proﬁtable. The details of the proof are a bit involved
+and so relegated to the Online Appendix. Here we characterize the two candidate pure-strategy
+equilibria.
+To keep the notation streamlined, deﬁne
+f
+W
+(n) ≡
+{
+fW (n) if n≤n
+fW (n) if n> n
+.
+Consider the equilibrium in which consumers choose I in all periods. In this equilibrium, each
+41
+
+=== PAGE 42 / 44 ===
+
+consumer gets a surplus of
+sI
+1 −δ + δ
+1 −δfA(1) + δ
+∞∑
+j=1
+δj−1f
+W
+(j) .
+The optimal deviation by a consumer cannot involve switching more than once between I and
+E. To see this, suppose the optimal deviation involves choosing E for the ﬁrst mE ≥1 periods,
+then I for the next mI ≥1 periods, and then switching back to E in period mE + mI + 1. There
+are two possible cases. If sE + f
+W
+(mE) ≥sI + fA(1) +f
+W
+(mI), then, regardless of the deviation
+path from period mE + mI + 2 onwards, choosing E in every period yields a higher total payoﬀ:
+it yields a strictly higher payoﬀ in every period from mE + 1 to mE + mI and a weakly higher
+payoﬀ in all periods thereafter. If instead sE + f
+W
+(mE) <sI + fA(1) +f
+W
+(mI), then choosing I
+from period mE + mI + 1 onwards yields a strictly higher payoﬀ. Thus, this cannot be an optimal
+deviation. Similarly, suppose the optimal deviation involves choosing I for the ﬁrst mI ≥1 periods,
+then E for the next mE ≥1 periods, and then switching back to I in period mI + mE + 1. If
+sE + f
+W
+(mE) <sI + f
+W
+(mI) +fA(1), then choosing I in every period would yield a higher total
+payoﬀ. If instead sE+f
+W
+(mE) ≥sI+f
+W
+(mI)+ fA(1), then choosing E from period mI+mE+1
+onwards yields a strictly higher payoﬀ. So this cannot be an optimal deviation either.
+Now suppose the optimal deviation involves choosing E for mE ≥1 periods and then choosing
+I from period mE + 1 onwards. This means we must have sE + f
+W
+(mE) <sI + fA(1), otherwise
+the payoﬀ would be higher by sticking to E forever. This implies that if mE > 1, then in period
+mE −1 choosing I yields sI + fA(1), whereas choosing E yields sE + f
+W
+(mE), which is strictly
+lower. Thus, the deviation payoﬀ could be increased by switching to I from period mE −1. So for
+this to be an optimal deviation it must be that mE = 1.
+Finally, suppose the optimal deviation involves choosing I formI ≥0 periods and then choosing
+E from period mI + 1 onwards. If mI ≥1, this means we must have sE ≥sI + fA(1) + f
+W
+(mI),
+otherwise the payoﬀ would be higher by sticking to I forever. But this implies sE ≥sI + fA(1) +
+f
+W
+(mI −1), so the payoﬀ could be improved by switching to E in period mI. Consequently, for
+this to be an optimal deviation, we must have mI = 0, i.e. choosing E in every period.
+Thus, we have proven there are only two possible deviations that we need to consider. Either
+a consumer chooses E in every period, or chooses E in period 1, waits for I’s product to improve
+from across-user learning, and switches to I in period 2 and stays with I for all subsequent periods.
+Considering these two optimal deviations, for always choosing I to be an equilibrium we need
+sI
+1 −δ + δ
+1 −δfA(1) + δ
+∞∑
+j=1
+δj−1f
+W
+(j)
+≥ max
+
+
+
+sE
+1 −δ + δ
+∞∑
+j=1
+δj−1f
+W
+(j) ,sE + δ
+1 −δ
+(
+sI + fA(1)
+)
++ δ2
+∞∑
+j=1
+δj−1f
+W
+(j)
+
+
+
+42
+
+=== PAGE 43 / 44 ===
+
+or equivalently,
+sE −sI ≤δmin
+
+
+fA(1) ,(1 −δ)
+∞∑
+j=1
+δj−1f
+W
+(j)
+
+
+.
+By symmetry, for always choosing E to be an equilibrium we need
+sE −sI ≥−δmin
+
+
+fA(1) ,(1 −δ)
+∞∑
+j=1
+δj−1f
+W
+(j)
+
+
+.
+This leads to the three possible parameter regions for sE −sI in Section 5.3. The rest of the
+Proposition is proven in the main text.
+References
+Beggs, A. and P. Klemperer (1992) “Multi-period competition with switching costs,”Econometrica,
+60(3), 651-666.
+Besanko, D., U. Doraszelski, Y. Kryukov, and M. Satterthwaite (2010) “Learning-by-doing, orga-
+nizational forgetting, and industry dynamics,” Econometrica, 78(2), 453-508.
+Biglaiser, G. and J. Cr´ emer (2020) “The value of incumbency when platforms face heterogenous
+consumers,” AEJ-Micro, forthcoming.
+Biglaiser, G., E. Calvano, and J. Cr´ emer (2019) “Incumbency advantage and its value,”Journal of
+Economics and Management Strategy, 28(1), 41-48.
+Cabral, L. M (2011) “Dynamic price competition with network eﬀects,” Review of Economic Stud-
+ies, 78, 83-111.
+Cabral, L. M. and M. H. Riordan (1994) “The learning curve, market dominance, and predatory
+pricing,” Econometrica, 62(5), 1115.
+Caillaud, B. and B. Jullien (2001) “Competing cybermediaries,” European Economic Review, 45(4-
+6), 797-808.
+Dasgupta, P. and J.Stiglitz (1988) “Learning-by-doing, market structure and industrial and trade
+policies,” Oxford Economic Papers, 40(2), 246-268.
+De Corniere, A. and G. Taylor (2020) “Data and Competition,” Working paper.
+Farboodi, M., R. Mihet, T. Philippon, and L. Veldkamp (2019) “Big data and ﬁrm dynamics,”
+AER Papers and Proceedings, 109, 38-42.
+43
+
+=== PAGE 44 / 44 ===
+
+Fudenberg, D. and J. Tirole (1983) “Learning-by-doing and market performance,” Bell Journal of
+Economics, 14(2) 522-530.
+Halaburda, H. B. Jullien, and Y. Yehezkel (2020) “Dynamic competition with network externalities:
+Why history matters,” RAND Journal of Economics, 51(1), 3-31.
+Katz, M. L. and C. Shapiro (1986) “Technology adoption in the presence of network externalities,”
+Journal of Political Economy, 94(4), 822-841.
+Klemperer, P. (1987) “Markets with consumer switching costs,” Quarterly Journal of Economics,
+102(2), 375-394.
+Mitchell, M. and A. Skrzypacz (2006) “Network externalities and long-run market shares,” Eco-
+nomic Theory, 29(3), 621-648.
+Prufer, J. and C. Schottm¨ uller (2017) “Competing with big data,” Tilburg Law School Research
+Paper.
+Salant, D. (1990) “Some Stochastic Oligopoly Races for Experience,” Working paper.
+Schaefer, M., G. Sapi and S. Lorincz (2018) “The eﬀect of big data on recommendation quality: The
+example of internet search,” No 284. D¨ usseldorf Institute for Competition Economics Discussion
+Papers.
+44

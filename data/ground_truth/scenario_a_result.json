@@ -1,0 +1,6196 @@
+{
+  "params": {
+    "n": 8,
+    "theta": [
+      0.8,
+      1.0,
+      0.6,
+      1.0,
+      1.0,
+      0.4,
+      0.6,
+      0.6
+    ],
+    "c_privacy": [
+      0.1648122229914668,
+      0.13342715278475548,
+      0.0857167044804852,
+      0.2127221182372132,
+      0.06410289475677507,
+      0.2304996930667062,
+      0.28463817725393753,
+      0.050194691460253585
+    ],
+    "seller_cost": 0.1,
+    "seed": 42
+  },
+  "gt_numeric": {
+    "eq_disclosure_set": [],
+    "eq_uniform_price": 0.6,
+    "eq_profit": 3.5,
+    "eq_CS": 1.4000000000000001,
+    "eq_W": 4.9,
+    "fb_disclosure_set": [
+      5
+    ],
+    "fb_uniform_price": 0.6,
+    "fb_profit": 3.8,
+    "fb_CS": 1.1695003069332939,
+    "fb_W": 4.969500306933294,
+    "externality_gap_W": 0.06950030693329357,
+    "externality_gap_CS": -0.23049969306670626
+  },
+  "gt_labels": {
+    "disclosure_rate_bucket": "low",
+    "disclosure_rate": 0.0,
+    "over_disclosure": 0,
+    "eq_size": 0,
+    "fb_size": 1
+  },
+  "all_outcomes": {
+    "[]": {
+      "D": [],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.0,
+      "profits_undisclosed": 3.5,
+      "total_profit": 3.5,
+      "consumer_surplus": 1.4000000000000001,
+      "welfare": 4.9,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0]": {
+      "D": [
+        0
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.7000000000000001,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.7,
+      "consumer_surplus": 1.0351877770085331,
+      "welfare": 4.735187777008534,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1]": {
+      "D": [
+        1
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.9,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.8665728472152446,
+      "welfare": 4.766572847215245,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[2]": {
+      "D": [
+        2
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.5,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.5,
+      "consumer_surplus": 1.314283295519515,
+      "welfare": 4.814283295519515,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[3]": {
+      "D": [
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.9,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.7872778817627869,
+      "welfare": 4.687277881762787,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[4]": {
+      "D": [
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.9,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.935897105243225,
+      "welfare": 4.835897105243225,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[5]": {
+      "D": [
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.30000000000000004,
+      "profits_undisclosed": 3.5,
+      "total_profit": 3.8,
+      "consumer_surplus": 1.1695003069332939,
+      "welfare": 4.969500306933294,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[6]": {
+      "D": [
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.5,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.5,
+      "consumer_surplus": 1.1153618227460627,
+      "welfare": 4.615361822746062,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[7]": {
+      "D": [
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.5,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.5,
+      "consumer_surplus": 1.3498053085397466,
+      "welfare": 4.849805308539747,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1]": {
+      "D": [
+        0,
+        1
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.6,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.5017606242237778,
+      "welfare": 4.601760624223777,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2]": {
+      "D": [
+        0,
+        2
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.2000000000000002,
+      "profits_undisclosed": 2.7,
+      "total_profit": 3.9000000000000004,
+      "consumer_surplus": -0.250528927471952,
+      "welfare": 3.6494710725280486,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 3]": {
+      "D": [
+        0,
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.6,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.42246565877132003,
+      "welfare": 4.52246565877132,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 4]": {
+      "D": [
+        0,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.6,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.5710848822517581,
+      "welfare": 4.671084882251757,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 5]": {
+      "D": [
+        0,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.0,
+      "profits_undisclosed": 3.0,
+      "total_profit": 4.0,
+      "consumer_surplus": 0.8046880839418271,
+      "welfare": 4.804688083941827,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 6]": {
+      "D": [
+        0,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.2000000000000002,
+      "profits_undisclosed": 2.7,
+      "total_profit": 3.9000000000000004,
+      "consumer_surplus": -0.44945040024540434,
+      "welfare": 3.450549599754596,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 7]": {
+      "D": [
+        0,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.2000000000000002,
+      "profits_undisclosed": 2.7,
+      "total_profit": 3.9000000000000004,
+      "consumer_surplus": -0.21500691445172038,
+      "welfare": 3.68499308554828,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2]": {
+      "D": [
+        1,
+        2
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.7808561427347595,
+      "welfare": 4.6808561427347595,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 3]": {
+      "D": [
+        1,
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.8,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.2538507289780314,
+      "welfare": 4.5538507289780314,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 4]": {
+      "D": [
+        1,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.8,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.40246995245846956,
+      "welfare": 4.702469952458469,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 5]": {
+      "D": [
+        1,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.2000000000000002,
+      "profits_undisclosed": 3.0,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.6360731541485385,
+      "welfare": 4.836073154148538,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 6]": {
+      "D": [
+        1,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.581934669961307,
+      "welfare": 4.481934669961307,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 7]": {
+      "D": [
+        1,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.8163781557549911,
+      "welfare": 4.716378155754991,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3]": {
+      "D": [
+        2,
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.7015611772823017,
+      "welfare": 4.601561177282302,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[2, 4]": {
+      "D": [
+        2,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.8501804007627398,
+      "welfare": 4.75018040076274,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[2, 5]": {
+      "D": [
+        2,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.8,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.8,
+      "consumer_surplus": 1.0837836024528087,
+      "welfare": 4.883783602452809,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[2, 6]": {
+      "D": [
+        2,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.0,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 3.8000000000000003,
+      "consumer_surplus": 0.22964511826557715,
+      "welfare": 4.029645118265577,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 7]": {
+      "D": [
+        2,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.0,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 3.8000000000000003,
+      "consumer_surplus": 0.4640886040592611,
+      "welfare": 4.264088604059261,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 4]": {
+      "D": [
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.8,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.3231749870060118,
+      "welfare": 4.623174987006012,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[3, 5]": {
+      "D": [
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.2000000000000002,
+      "profits_undisclosed": 3.0,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.5567781886960808,
+      "welfare": 4.756778188696081,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[3, 6]": {
+      "D": [
+        3,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.5026397045088493,
+      "welfare": 4.402639704508849,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[3, 7]": {
+      "D": [
+        3,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.7370831903025333,
+      "welfare": 4.637083190302533,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[4, 5]": {
+      "D": [
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.2000000000000002,
+      "profits_undisclosed": 3.0,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.7053974121765189,
+      "welfare": 4.905397412176519,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[4, 6]": {
+      "D": [
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.6512589279892875,
+      "welfare": 4.551258927989288,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[4, 7]": {
+      "D": [
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.4,
+      "profits_undisclosed": 2.5,
+      "total_profit": 3.9,
+      "consumer_surplus": 0.8857024137829714,
+      "welfare": 4.785702413782971,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[5, 6]": {
+      "D": [
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.8,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.8,
+      "consumer_surplus": 0.8848621296793564,
+      "welfare": 4.684862129679356,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[5, 7]": {
+      "D": [
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 0.8,
+      "profits_undisclosed": 3.0,
+      "total_profit": 3.8,
+      "consumer_surplus": 1.1193056154730403,
+      "welfare": 4.91930561547304,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[6, 7]": {
+      "D": [
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.0,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 3.8000000000000003,
+      "consumer_surplus": 0.26516713128580877,
+      "welfare": 4.065167131285809,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        0.0,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2]": {
+      "D": [
+        0,
+        1,
+        2
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.4160439197432926,
+      "welfare": 4.516043919743292,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 3]": {
+      "D": [
+        0,
+        1,
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.5,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.11096149401343547,
+      "welfare": 4.389038505986565,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 4]": {
+      "D": [
+        0,
+        1,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.5,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.5,
+      "consumer_surplus": 0.037657729467002674,
+      "welfare": 4.537657729467003,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 5]": {
+      "D": [
+        0,
+        1,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.9000000000000001,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.27126093115707156,
+      "welfare": 4.671260931157072,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 6]": {
+      "D": [
+        0,
+        1,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.21712244696984023,
+      "welfare": 4.31712244696984,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 7]": {
+      "D": [
+        0,
+        1,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.4515659327635242,
+      "welfare": 4.551565932763523,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3]": {
+      "D": [
+        0,
+        2,
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.33674895429083485,
+      "welfare": 4.4367489542908345,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2, 4]": {
+      "D": [
+        0,
+        2,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.48536817777127295,
+      "welfare": 4.585368177771272,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2, 5]": {
+      "D": [
+        0,
+        2,
+        5
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.5000000000000002,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.2,
+      "consumer_surplus": -0.4810286205386582,
+      "welfare": 3.718971379461342,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2, 6]": {
+      "D": [
+        0,
+        2,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.5351671047258896,
+      "welfare": 3.8648328952741107,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 7]": {
+      "D": [
+        0,
+        2,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.30072361893220556,
+      "welfare": 4.099276381067795,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 4]": {
+      "D": [
+        0,
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.5,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.04163723598545506,
+      "welfare": 4.458362764014545,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 3, 5]": {
+      "D": [
+        0,
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.9000000000000001,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.19196596570461383,
+      "welfare": 4.591965965704614,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 3, 6]": {
+      "D": [
+        0,
+        3,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.1378274815173825,
+      "welfare": 4.237827481517382,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 3, 7]": {
+      "D": [
+        0,
+        3,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.37227096731106646,
+      "welfare": 4.472270967311066,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 4, 5]": {
+      "D": [
+        0,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.9000000000000001,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.340585189185052,
+      "welfare": 4.740585189185053,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 4, 6]": {
+      "D": [
+        0,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.28644670499782066,
+      "welfare": 4.38644670499782,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 4, 7]": {
+      "D": [
+        0,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.1,
+      "consumer_surplus": 0.5208901907915046,
+      "welfare": 4.6208901907915045,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 5, 6]": {
+      "D": [
+        0,
+        5,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.5,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.2,
+      "consumer_surplus": -0.6799500933121105,
+      "welfare": 3.5200499066878894,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 5, 7]": {
+      "D": [
+        0,
+        5,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.5,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.2,
+      "consumer_surplus": -0.4455066075184266,
+      "welfare": 3.7544933924815735,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 6, 7]": {
+      "D": [
+        0,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.4996450917056579,
+      "welfare": 3.9003549082943425,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3]": {
+      "D": [
+        1,
+        2,
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.16813402449754622,
+      "welfare": 4.468134024497546,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 2, 4]": {
+      "D": [
+        1,
+        2,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.3167532479779843,
+      "welfare": 4.616753247977984,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 2, 5]": {
+      "D": [
+        1,
+        2,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.5503564496680532,
+      "welfare": 4.750356449668053,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 2, 6]": {
+      "D": [
+        1,
+        2,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": -0.10378203451917829,
+      "welfare": 3.8962179654808216,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 7]": {
+      "D": [
+        1,
+        2,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": 0.13066145127450565,
+      "welfare": 4.130661451274506,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 4]": {
+      "D": [
+        1,
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.7,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.21025216577874367,
+      "welfare": 4.489747834221257,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 3, 5]": {
+      "D": [
+        1,
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.023351035911325202,
+      "welfare": 4.623351035911325,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 3, 6]": {
+      "D": [
+        1,
+        3,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": -0.030787448275906126,
+      "welfare": 4.2692125517240935,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 3, 7]": {
+      "D": [
+        1,
+        3,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.20365603751777783,
+      "welfare": 4.503656037517778,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 4, 5]": {
+      "D": [
+        1,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.17197025939176336,
+      "welfare": 4.771970259391763,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 4, 6]": {
+      "D": [
+        1,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.11783177520453202,
+      "welfare": 4.417831775204532,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 4, 7]": {
+      "D": [
+        1,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.35227526099821593,
+      "welfare": 4.652275260998215,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 5, 6]": {
+      "D": [
+        1,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.3514349768946009,
+      "welfare": 4.551434976894601,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 5, 7]": {
+      "D": [
+        1,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.5858784626882848,
+      "welfare": 4.785878462688285,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 6, 7]": {
+      "D": [
+        1,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": -0.06826002149894668,
+      "welfare": 3.9317399785010534,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        0.0,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 4]": {
+      "D": [
+        2,
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.23745828252552661,
+      "welfare": 4.5374582825255265,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[2, 3, 5]": {
+      "D": [
+        2,
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.4710614842155955,
+      "welfare": 4.6710614842155955,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[2, 3, 6]": {
+      "D": [
+        2,
+        3,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": -0.183076999971636,
+      "welfare": 3.816923000028364,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 3, 7]": {
+      "D": [
+        2,
+        3,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": 0.05136648582204792,
+      "welfare": 4.051366485822048,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 4, 5]": {
+      "D": [
+        2,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.6196807076960337,
+      "welfare": 4.819680707696034,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[2, 4, 6]": {
+      "D": [
+        2,
+        4,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": -0.03445777649119788,
+      "welfare": 3.9655422235088023,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 4, 7]": {
+      "D": [
+        2,
+        4,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": 0.19998570930248605,
+      "welfare": 4.199985709302486,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 5, 6]": {
+      "D": [
+        2,
+        5,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.3,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 4.1000000000000005,
+      "consumer_surplus": -0.0008545748011290627,
+      "welfare": 4.099145425198872,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 5, 7]": {
+      "D": [
+        2,
+        5,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.3,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 4.1000000000000005,
+      "consumer_surplus": 0.23358891099255488,
+      "welfare": 4.333588910992556,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 6, 7]": {
+      "D": [
+        2,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.5,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": 0.17945042680532355,
+      "welfare": 4.479450426805324,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 4, 5]": {
+      "D": [
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.1,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.09267529393930561,
+      "welfare": 4.692675293939305,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[3, 4, 6]": {
+      "D": [
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.03853680975207428,
+      "welfare": 4.338536809752074,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[3, 4, 7]": {
+      "D": [
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.3,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.2729802955457582,
+      "welfare": 4.572980295545758,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 5, 6]": {
+      "D": [
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.27214001144214317,
+      "welfare": 4.472140011442144,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[3, 5, 7]": {
+      "D": [
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.5065834972358271,
+      "welfare": 4.706583497235827,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 6, 7]": {
+      "D": [
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": -0.1475549869514044,
+      "welfare": 3.8524450130485954,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        0.0,
+        -0.2127221182372132,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[4, 5, 6]": {
+      "D": [
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.4207592349225813,
+      "welfare": 4.6207592349225814,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[4, 5, 7]": {
+      "D": [
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 1.7000000000000002,
+      "profits_undisclosed": 2.5,
+      "total_profit": 4.2,
+      "consumer_surplus": 0.6552027207162653,
+      "welfare": 4.855202720716266,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[4, 6, 7]": {
+      "D": [
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.9,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.0,
+      "consumer_surplus": 0.0010642365290337297,
+      "welfare": 4.001064236529034,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        0.0,
+        0.19999999999999996,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[5, 6, 7]": {
+      "D": [
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.3,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 4.1000000000000005,
+      "consumer_surplus": 0.03466743821910255,
+      "welfare": 4.134667438219103,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        0.0,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3]": {
+      "D": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.19667819849392065,
+      "welfare": 4.30332180150608,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 4]": {
+      "D": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.048058975013482524,
+      "welfare": 4.4519410249865174,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 5]": {
+      "D": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.18554422667658638,
+      "welfare": 4.5855442266765865,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.668594257510645,
+      "welfare": 3.7314057424893554,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.43415077171696104,
+      "welfare": 3.965849228283039,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 4]": {
+      "D": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.4,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.5750643887702106,
+      "welfare": 4.324935611229789,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 3, 5]": {
+      "D": [
+        0,
+        1,
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.34146118708014167,
+      "welfare": 4.458538812919858,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 3, 6]": {
+      "D": [
+        0,
+        1,
+        3,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.395599671267373,
+      "welfare": 4.104400328732627,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 3, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.16115618547368904,
+      "welfare": 4.338843814526311,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 4, 5]": {
+      "D": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.19284196359970351,
+      "welfare": 4.607158036400296,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 4, 6]": {
+      "D": [
+        0,
+        1,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.24698044778693484,
+      "welfare": 4.253019552213065,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 4, 7]": {
+      "D": [
+        0,
+        1,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.012536961993250911,
+      "welfare": 4.487463038006749,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 5, 6]": {
+      "D": [
+        0,
+        1,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.013377246096865969,
+      "welfare": 4.386622753903135,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 5, 7]": {
+      "D": [
+        0,
+        1,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.221066239696818,
+      "welfare": 4.621066239696819,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 6, 7]": {
+      "D": [
+        0,
+        1,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.6330722444904134,
+      "welfare": 3.766927755509587,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 4]": {
+      "D": [
+        0,
+        2,
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.12735394046594026,
+      "welfare": 4.37264605953406,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2, 3, 5]": {
+      "D": [
+        0,
+        2,
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.10624926122412863,
+      "welfare": 4.506249261224129,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2, 3, 6]": {
+      "D": [
+        0,
+        2,
+        3,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.7478892229631028,
+      "welfare": 3.6521107770368975,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 3, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.5134457371694188,
+      "welfare": 3.8865542628305816,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 4, 5]": {
+      "D": [
+        0,
+        2,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.2548684847045668,
+      "welfare": 4.654868484704567,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2, 4, 6]": {
+      "D": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.5992699994826646,
+      "welfare": 3.8007300005173357,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 4, 7]": {
+      "D": [
+        0,
+        2,
+        4,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.36482651368898067,
+      "welfare": 4.035173486311019,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 5, 6]": {
+      "D": [
+        0,
+        2,
+        5,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.0,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.7656667977925957,
+      "welfare": 3.9343332022074042,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 5, 7]": {
+      "D": [
+        0,
+        2,
+        5,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.0,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.5312233119989118,
+      "welfare": 4.168776688001088,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 6, 7]": {
+      "D": [
+        0,
+        2,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.5853617961861431,
+      "welfare": 4.314638203813857,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 4, 5]": {
+      "D": [
+        0,
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.27213692905216125,
+      "welfare": 4.527863070947839,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 3, 4, 6]": {
+      "D": [
+        0,
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.3262754132393926,
+      "welfare": 4.173724586760607,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 3, 4, 7]": {
+      "D": [
+        0,
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.09183192744570864,
+      "welfare": 4.408168072554291,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 5, 6]": {
+      "D": [
+        0,
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.0926722115493237,
+      "welfare": 4.307327788450676,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 3, 5, 7]": {
+      "D": [
+        0,
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.14177127424436026,
+      "welfare": 4.54177127424436,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 6, 7]": {
+      "D": [
+        0,
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.7123672099428712,
+      "welfare": 3.6876327900571293,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        -0.2127221182372132,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 4, 5, 6]": {
+      "D": [
+        0,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.05594701193111444,
+      "welfare": 4.455947011931115,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 4, 5, 7]": {
+      "D": [
+        0,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.4000000000000004,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.4,
+      "consumer_surplus": 0.2903904977247984,
+      "welfare": 4.690390497724799,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 4, 6, 7]": {
+      "D": [
+        0,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.4,
+      "consumer_surplus": -0.563747986462433,
+      "welfare": 3.8362520135375675,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 5, 6, 7]": {
+      "D": [
+        0,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.0,
+      "profits_undisclosed": 2.7,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.7301447847723641,
+      "welfare": 3.969855215227636,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 4]": {
+      "D": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.1999999999999997,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.699999999999999,
+      "consumer_surplus": -0.2959688702592289,
+      "welfare": 4.404031129740771,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 2, 3, 5]": {
+      "D": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.5999999999999996,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.062365668569159996,
+      "welfare": 4.53763433143084,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 2, 3, 6]": {
+      "D": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": -0.11650415275639132,
+      "welfare": 4.183495847243608,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 3, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.11793933303729262,
+      "welfare": 4.4179393330372925,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 4, 5]": {
+      "D": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.5999999999999996,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.08625355491127815,
+      "welfare": 4.686253554911278,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 2, 4, 6]": {
+      "D": [
+        1,
+        2,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.03211507072404682,
+      "welfare": 4.332115070724047,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 4, 7]": {
+      "D": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.26655855651773075,
+      "welfare": 4.56655855651773,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 5, 6]": {
+      "D": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.3342817275858845,
+      "welfare": 3.965718272414116,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 5, 7]": {
+      "D": [
+        1,
+        2,
+        5,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.09983824179220055,
+      "welfare": 4.2001617582078,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 6, 7]": {
+      "D": [
+        1,
+        2,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.4,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.15397672597943188,
+      "welfare": 4.346023274020568,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 4, 5]": {
+      "D": [
+        1,
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0,
+      "profits_undisclosed": 2.0,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.4407518588454499,
+      "welfare": 4.5592481411545505,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 3, 4, 6]": {
+      "D": [
+        1,
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.2,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.4948903430326812,
+      "welfare": 4.205109656967319,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 3, 4, 7]": {
+      "D": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.2,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.2604468572389973,
+      "welfare": 4.439553142761003,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 5, 6]": {
+      "D": [
+        1,
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.26128714134261233,
+      "welfare": 4.338712858657387,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 3, 5, 7]": {
+      "D": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.026843655548928383,
+      "welfare": 4.573156344451071,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 6, 7]": {
+      "D": [
+        1,
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": -0.08098213973615971,
+      "welfare": 4.21901786026384,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 4, 5, 6]": {
+      "D": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.11266791786217419,
+      "welfare": 4.487332082137826,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 4, 5, 7]": {
+      "D": [
+        1,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.12177556793150976,
+      "welfare": 4.721775567931509,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 4, 6, 7]": {
+      "D": [
+        1,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.06763708374427843,
+      "welfare": 4.367637083744278,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 5, 6, 7]": {
+      "D": [
+        1,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.29875971456565287,
+      "welfare": 4.001240285434347,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        0.0,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 4, 5]": {
+      "D": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.5999999999999996,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.006958589458820413,
+      "welfare": 4.60695858945882,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[2, 3, 4, 6]": {
+      "D": [
+        2,
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": -0.047179894728410915,
+      "welfare": 4.252820105271589,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 3, 4, 7]": {
+      "D": [
+        2,
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": 0.18726359106527302,
+      "welfare": 4.487263591065273,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 5, 6]": {
+      "D": [
+        2,
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.4135766930383422,
+      "welfare": 3.8864233069616585,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 3, 5, 7]": {
+      "D": [
+        2,
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.17913320724465828,
+      "welfare": 4.120866792755343,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 6, 7]": {
+      "D": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.4,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.2332716914318896,
+      "welfare": 4.26672830856811,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 4, 5, 6]": {
+      "D": [
+        2,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.2649574695579041,
+      "welfare": 4.035042530442096,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 4, 5, 7]": {
+      "D": [
+        2,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.03051398376422014,
+      "welfare": 4.26948601623578,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 4, 6, 7]": {
+      "D": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.4,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.08465246795145147,
+      "welfare": 4.415347532048549,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 5, 6, 7]": {
+      "D": [
+        2,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 1.8,
+      "profits_undisclosed": 2.8000000000000003,
+      "total_profit": 4.6000000000000005,
+      "consumer_surplus": -0.05104926626138265,
+      "welfare": 4.548950733738618,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 4, 5, 6]": {
+      "D": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.1919628833146319,
+      "welfare": 4.408037116685367,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[3, 4, 5, 7]": {
+      "D": [
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.6,
+      "profits_undisclosed": 2.0,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.042480602479052026,
+      "welfare": 4.6424806024790515,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 4, 6, 7]": {
+      "D": [
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 2.8,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.3,
+      "consumer_surplus": -0.011657881708179302,
+      "welfare": 4.288342118291821,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 5, 6, 7]": {
+      "D": [
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.3780546800181106,
+      "welfare": 3.92194531998189,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        0.0,
+        -0.2127221182372132,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[4, 5, 6, 7]": {
+      "D": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.2,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.300000000000001,
+      "consumer_surplus": -0.22943545653767247,
+      "welfare": 4.0705645434623285,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        0.0,
+        0.19999999999999996,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 4]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.9,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.6607810932506958,
+      "welfare": 4.239218906749304,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 3, 5]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.42717789156062685,
+      "welfare": 4.372822108439373,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 3, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.4813163757478582,
+      "welfare": 4.018683624252142,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 3, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.24687288995417425,
+      "welfare": 4.253127110045826,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 4, 5]": {
+      "D": [
+        0,
+        1,
+        2,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.2785586680801887,
+      "welfare": 4.521441331919811,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 4, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.33269715226742,
+      "welfare": 4.16730284773258,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 4, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.09825366647373611,
+      "welfare": 4.401746333526264,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 5, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        5,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.8990939505773512,
+      "welfare": 3.800906049422649,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 5, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        5,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.6646504647836673,
+      "welfare": 4.035349535216333,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 3.1,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.7187889489708986,
+      "welfare": 4.181211051029102,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 4, 5]": {
+      "D": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.7,
+      "profits_undisclosed": 1.5,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.8055640818369167,
+      "welfare": 4.394435918163083,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 3, 4, 6]": {
+      "D": [
+        0,
+        1,
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.9,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.8597025660241481,
+      "welfare": 4.040297433975852,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 3, 4, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.9,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.6252590802304642,
+      "welfare": 4.2747409197695365,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 5, 6]": {
+      "D": [
+        0,
+        1,
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.6260993643340792,
+      "welfare": 4.1739006356659205,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 3, 5, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.39165587854039524,
+      "welfare": 4.408344121459605,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 6, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.44579436272762657,
+      "welfare": 4.054205637272373,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 4, 5, 6]": {
+      "D": [
+        0,
+        1,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.47748014085364104,
+      "welfare": 4.322519859146359,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 4, 5, 7]": {
+      "D": [
+        0,
+        1,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.2430366550599571,
+      "welfare": 4.556963344940042,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 4, 6, 7]": {
+      "D": [
+        0,
+        1,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.2971751392471884,
+      "welfare": 4.202824860752812,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.8635719375571196,
+      "welfare": 3.836428062442881,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 4, 5]": {
+      "D": [
+        0,
+        2,
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.35785363353264643,
+      "welfare": 4.4421463664673535,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 2, 3, 4, 6]": {
+      "D": [
+        0,
+        2,
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.41199211771987776,
+      "welfare": 4.088007882280122,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 3, 4, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.17754863192619386,
+      "welfare": 4.322451368073806,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 5, 6]": {
+      "D": [
+        0,
+        2,
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.9783889160298089,
+      "welfare": 3.721611083970191,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 3, 5, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.743945430236125,
+      "welfare": 3.956054569763875,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 6, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 3.1,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.7980839144233564,
+      "welfare": 4.101916085576644,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 4, 5, 6]": {
+      "D": [
+        0,
+        2,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.8297696925493708,
+      "welfare": 3.8702303074506292,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 4, 5, 7]": {
+      "D": [
+        0,
+        2,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.5953262067556868,
+      "welfare": 4.104673793244313,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 4, 6, 7]": {
+      "D": [
+        0,
+        2,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 3.1,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.6494646909429181,
+      "welfare": 4.250535309057082,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 5, 6, 7]": {
+      "D": [
+        0,
+        2,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.5,
+      "profits_undisclosed": 2.7,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.8158614892528493,
+      "welfare": 4.384138510747151,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 4, 5, 6]": {
+      "D": [
+        0,
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.5567751063060988,
+      "welfare": 4.243224893693901,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 3, 4, 5, 7]": {
+      "D": [
+        0,
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.3223316205124148,
+      "welfare": 4.477668379487585,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 4, 6, 7]": {
+      "D": [
+        0,
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.5,
+      "consumer_surplus": -0.37647010469964615,
+      "welfare": 4.123529895300354,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 5, 6, 7]": {
+      "D": [
+        0,
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.9428669030095773,
+      "welfare": 3.757133096990423,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        -0.2127221182372132,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 2.9000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.7942476795291392,
+      "welfare": 3.905752320470861,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        0.0,
+        0.0,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 4, 5]": {
+      "D": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.5,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.5264685633259351,
+      "welfare": 4.473531436674065,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[1, 2, 3, 4, 6]": {
+      "D": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.6999999999999997,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.699999999999999,
+      "consumer_surplus": -0.5806070475131664,
+      "welfare": 4.119392952486833,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 3, 4, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.6999999999999997,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.699999999999999,
+      "consumer_surplus": -0.3461635617194825,
+      "welfare": 4.353836438280517,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 5, 6]": {
+      "D": [
+        1,
+        2,
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0999999999999996,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.3470038458230975,
+      "welfare": 4.252996154176902,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 3, 5, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0999999999999996,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.11256036002941358,
+      "welfare": 4.487439639970586,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 6, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.4000000000000001,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.5666988442166451,
+      "welfare": 4.133301155783355,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 4, 5, 6]": {
+      "D": [
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0999999999999996,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.19838462234265938,
+      "welfare": 4.401615377657341,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 4, 5, 7]": {
+      "D": [
+        1,
+        2,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0999999999999996,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": 0.03605886345102456,
+      "welfare": 4.636058863451024,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 4, 6, 7]": {
+      "D": [
+        1,
+        2,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.4000000000000001,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.4180796207362069,
+      "welfare": 4.281920379263793,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 5, 6, 7]": {
+      "D": [
+        1,
+        2,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.7,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.800000000000001,
+      "consumer_surplus": -0.38447641904613805,
+      "welfare": 4.415523580953863,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 4, 5, 6]": {
+      "D": [
+        1,
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.5,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.7253900360993875,
+      "welfare": 4.2746099639006125,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 3, 4, 5, 7]": {
+      "D": [
+        1,
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.5,
+      "profits_undisclosed": 1.5,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.49094655030570344,
+      "welfare": 4.509053449694297,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 4, 6, 7]": {
+      "D": [
+        1,
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.7,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.5450850344929348,
+      "welfare": 4.154914965507065,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 5, 6, 7]": {
+      "D": [
+        1,
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.1,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.3114818328028659,
+      "welfare": 4.288518167197134,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 4, 5, 6, 7]": {
+      "D": [
+        1,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.1,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.16286260932242777,
+      "welfare": 4.437137390677572,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 4, 5, 6]": {
+      "D": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0999999999999996,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.27767958779511714,
+      "welfare": 4.322320412204882,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[2, 3, 4, 5, 7]": {
+      "D": [
+        2,
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.0999999999999996,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.04323610200143317,
+      "welfare": 4.556763897998566,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 4, 6, 7]": {
+      "D": [
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 3.3,
+      "profits_undisclosed": 1.4000000000000001,
+      "total_profit": 4.7,
+      "consumer_surplus": -0.49737458618866465,
+      "welfare": 4.202625413811336,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 5, 6, 7]": {
+      "D": [
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.7,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.800000000000001,
+      "consumer_surplus": -0.4637713844985958,
+      "welfare": 4.336228615501405,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 4, 5, 6, 7]": {
+      "D": [
+        2,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 2.7,
+      "profits_undisclosed": 2.1,
+      "total_profit": 4.800000000000001,
+      "consumer_surplus": -0.3151521610181577,
+      "welfare": 4.484847838981843,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[3, 4, 5, 6, 7]": {
+      "D": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.1,
+      "profits_undisclosed": 1.5,
+      "total_profit": 4.6,
+      "consumer_surplus": -0.2421575747748855,
+      "welfare": 4.3578424252251144,
+      "consumer_utilities": [
+        0.20000000000000007,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 4, 5]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.2,
+      "profits_undisclosed": 1.0,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.8912807863174019,
+      "welfare": 4.308719213682599,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 3, 4, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "p_uniform": 0.4,
+      "profits_disclosed": 4.4,
+      "profits_undisclosed": 0.6000000000000001,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.7454192705046333,
+      "welfare": 4.254580729495367,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        0.19999999999999996
+      ]
+    },
+    "[0, 1, 2, 3, 4, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        7
+      ],
+      "p_uniform": 0.4,
+      "profits_disclosed": 4.4,
+      "profits_undisclosed": 0.6000000000000001,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.5109757847109494,
+      "welfare": 4.48902421528905,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        0.19999999999999996,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 5, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.7118160688145644,
+      "welfare": 4.088183931185435,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 3, 5, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.4773725830208805,
+      "welfare": 4.3226274169791195,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 4.0,
+      "profits_undisclosed": 0.9,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.9315110672081118,
+      "welfare": 3.9684889327918884,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 4, 5, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.5631968453341263,
+      "welfare": 4.236803154665873,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 4, 5, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.3287533595404423,
+      "welfare": 4.471246640459557,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 4, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 4.0,
+      "profits_undisclosed": 0.9,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.7828918437276736,
+      "welfare": 4.117108156272327,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 3.4000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.9492886420376048,
+      "welfare": 4.250711357962396,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 4, 5, 6]": {
+      "D": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.2,
+      "profits_undisclosed": 1.0,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.0902022590908542,
+      "welfare": 4.109797740909146,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 3, 4, 5, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.2,
+      "profits_undisclosed": 1.0,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.8557587732971703,
+      "welfare": 4.34424122670283,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 4, 6, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.4,
+      "profits_disclosed": 4.4,
+      "profits_undisclosed": 0.6000000000000001,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.7098972574844017,
+      "welfare": 4.290102742515598,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.19999999999999996,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.6762940557943328,
+      "welfare": 4.123705944205667,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        0.4,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.5276748323138947,
+      "welfare": 4.272325167686105,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        0.4,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 4, 5, 6]": {
+      "D": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.642491810786584,
+      "welfare": 4.157508189213416,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 2, 3, 4, 5, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.40804832499290006,
+      "welfare": 4.3919516750071,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 4, 6, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 4.0,
+      "profits_undisclosed": 0.9,
+      "total_profit": 4.9,
+      "consumer_surplus": -0.8621868091801314,
+      "welfare": 4.037813190819869,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 5, 6, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 3.4000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.0285836074900625,
+      "welfare": 4.171416392509938,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        2,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 3.4000000000000004,
+      "profits_undisclosed": 1.8,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.8799643840096244,
+      "welfare": 4.320035615990376,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 3, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 3.8,
+      "profits_undisclosed": 1.0,
+      "total_profit": 4.8,
+      "consumer_surplus": -0.6069697977663524,
+      "welfare": 4.193030202233647,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.4,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 4, 5, 6]": {
+      "D": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.0,
+      "profits_undisclosed": 1.0,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.8111067405798726,
+      "welfare": 4.188893259420127,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[1, 2, 3, 4, 5, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.0,
+      "profits_undisclosed": 1.0,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.5766632547861886,
+      "welfare": 4.4233367452138115,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 4, 6, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 4.199999999999999,
+      "profits_undisclosed": 0.7000000000000001,
+      "total_profit": 4.8999999999999995,
+      "consumer_surplus": -0.83080173897342,
+      "welfare": 4.069198261026579,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 5, 6, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 3.5999999999999996,
+      "profits_undisclosed": 1.4000000000000001,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.7971985372833512,
+      "welfare": 4.202801462716649,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.19999999999999996,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 4, 5, 6, 7]": {
+      "D": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 3.5999999999999996,
+      "profits_undisclosed": 1.4000000000000001,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.6485793138029131,
+      "welfare": 4.351420686197087,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.19999999999999996,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 3, 4, 5, 6, 7]": {
+      "D": [
+        1,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.0,
+      "profits_undisclosed": 1.0,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.775584727559641,
+      "welfare": 4.224415272440359,
+      "consumer_utilities": [
+        0.20000000000000007,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[2, 3, 4, 5, 6, 7]": {
+      "D": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 3.5999999999999996,
+      "profits_undisclosed": 1.4000000000000001,
+      "total_profit": 5.0,
+      "consumer_surplus": -0.7278742792553708,
+      "welfare": 4.272125720744629,
+      "consumer_utilities": [
+        0.0,
+        0.19999999999999996,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 4, 5, 6]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.7,
+      "profits_undisclosed": 0.5,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.1759189635713394,
+      "welfare": 4.024081036428661,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        0.0
+      ]
+    },
+    "[0, 1, 2, 3, 4, 5, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.7,
+      "profits_undisclosed": 0.5,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.9414754777776555,
+      "welfare": 4.258524522222345,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        0.0,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 4, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7
+      ],
+      "p_uniform": 0.4,
+      "profits_disclosed": 4.9,
+      "profits_undisclosed": 0.30000000000000004,
+      "total_profit": 5.2,
+      "consumer_surplus": -0.9956139619648868,
+      "welfare": 4.204386038035113,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        0.0,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 4.3,
+      "profits_undisclosed": 0.9,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.162010760274818,
+      "welfare": 4.037989239725182,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        0.0,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 4.3,
+      "profits_undisclosed": 0.9,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.0133915367943798,
+      "welfare": 4.18660846320562,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        0.0,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 3, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.6,
+      "profits_disclosed": 4.7,
+      "profits_undisclosed": 0.5,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.1403969505511078,
+      "welfare": 4.059603049448892,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        0.0,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 2, 3, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 1.0,
+      "profits_disclosed": 4.3,
+      "profits_undisclosed": 0.9,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.0926865022468375,
+      "welfare": 4.107313497753163,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        0.0,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[1, 2, 3, 4, 5, 6, 7]": {
+      "D": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.8,
+      "profits_disclosed": 4.5,
+      "profits_undisclosed": 0.7000000000000001,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.0613014320401262,
+      "welfare": 4.1386985679598745,
+      "consumer_utilities": [
+        0.0,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    },
+    "[0, 1, 2, 3, 4, 5, 6, 7]": {
+      "D": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "p_uniform": 0.0,
+      "profits_disclosed": 5.2,
+      "profits_undisclosed": 0.0,
+      "total_profit": 5.2,
+      "consumer_surplus": -1.226113655031593,
+      "welfare": 3.973886344968407,
+      "consumer_utilities": [
+        -0.1648122229914668,
+        -0.13342715278475548,
+        -0.0857167044804852,
+        -0.2127221182372132,
+        -0.06410289475677507,
+        -0.2304996930667062,
+        -0.28463817725393753,
+        -0.050194691460253585
+      ]
+    }
+  },
+  "nash_equilibria_count": 1
+}

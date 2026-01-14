@@ -1,0 +1,2164 @@
+
+
+=== PAGE 1 / 38 ===
+
+Too Much Data: Prices and Inefﬁciencies in Data Markets*
+Daron Acemoglu † Ali Makhdoumi ‡ Azarakhsh Malekian § Asu Ozdaglar ¶
+Abstract
+When a user shares her data with an online platform, she typically reveals relevant information
+about other users. We model a data market in the presence of this type of externality in a setup
+where one or multiple platforms estimate a user’s type with data they acquire from all users and
+(some) users value their privacy. We demonstrate that the data externalities depress the price of
+data because once a user’s information is leaked by others, she has less reason to protect her data
+and privacy. These depressed prices lead to excessive data sharing. We characterize conditions
+under which shutting down data markets improves (utilitarian) welfare. Competition between
+platforms does not redress the problem of excessively low price for data and too much data shar-
+ing, and may further reduce welfare. We propose a scheme based on mediated data-sharing that
+improves efﬁciency.
+Keywords: data, informational externalities, online markets, privacy.
+JEL Classiﬁcation: D62, L86, D83.
+*We are grateful to Alessandro Bonatti and Hal Varian for useful conversations and comments. We gratefully ac-
+knowledge ﬁnancial support from Google, Microsoft, the National Science Foundation, and the Toulouse Network on
+Information Technology.
+†Department of Economics, Massachusetts Institute of Technology daron@mit.edu
+‡Fuqua School of Business, Duke University ali.makhdoumi@duke.edu
+§Rotman School of Management, University of Toronto azarakhsh.malekian@rotman.utoronto.ca
+¶Dept. of Electrical Engineering and Computer Science, Massachusetts Institute of Technology asuman@mit.edu
+
+=== PAGE 2 / 38 ===
+
+1 Introduction
+The data of billions of individuals are currently being utilized for personalized advertising or
+other online services.1 The use and transaction of individual data are set to grow exponentially in
+the coming years with more extensive data collection from new online apps and integrated tech-
+nologies such as the Internet of Things and with the more widespread applications of artiﬁcial
+intelligence (AI) and machine learning techniques. Most economic analyses emphasize beneﬁts
+from the use and sharing of data because this permits better customization, better information,
+and more input into AI applications. It is often claimed that because data enables a better allo-
+cation of resources and more or higher quality innovation, the market mechanism generates too
+little data sharing (e.g., Varian [2009], Jones et al. [2018], Farboodi et al. [2019], and Veldkamp and
+Chung [2019]). Economists have recognized that consumers might have privacy concerns (e.g.,
+Stigler [1980], Posner [1981], and Varian [2009]), but have often argued that data markets could
+appropriately balance privacy concerns and the social beneﬁts of data (e.g., Laudon [1996] and
+Posner and Weyl [2018]). In any case, the willingness of the majority of users to allow their data
+to be used for no or very little direct beneﬁts is argued to be evidence that most users place only a
+small value on privacy.2
+This paper, in contrast, argues that there are forces that will make individual-level data under-
+priced and the market economy generate too much data. The reason is simple: when an individual
+shares her data, she compromises not only her own privacy but also the privacy of other individ-
+uals whose information is correlated with hers. This negative externality tends to create excessive
+data sharing. Moreover, when there is excessive data sharing, each individual will overlook her
+privacy concerns and part with her own information because others’ sharing decisions will have
+already revealed much about her.
+The following example illustrates the nature of the problem, introduces some of our key con-
+cepts, and clariﬁes why there will be excessive data sharing and very little willingness to protect
+privacy on the part of users. Consider a platform with two users, i = 1, 2. Each user owns her
+own personal data, which we represent with a random variable Xi (from the viewpoint of the
+platform). The relevant data of the two users are related, which we capture by assuming that their
+random variables are jointly normally distributed with mean zero and correlation coefﬁcient ρ.
+The platform can acquire or buy the data of a user in order to better estimate her preferences or
+actions. Its objective is to minimize the mean square error of its estimates of user types, or maxi-
+mize the amount of leaked information about them. Suppose that the valuation (in monetary terms)
+of the platform for the users’ leaked information is one, while the value that the ﬁrst user attaches
+to her privacy, again in terms of leaked information about her, is 1/2 and for the second user it is
+v >0. We also assume that the platform makes take-it-or-leave-it offers to the users to purchase
+1Just Facebook has almost 2.5 billion monthly (active) individual users.
+2Consumers often report valuing privacy (e.g., Westin [1968]; Goldfarb and Tucker [2012]), but do not take much
+action to protect their privacy (e.g., “Why your inbox is crammed full of privacy policies”, WIRED, May 24, 2018 and
+Athey et al. [2017]).
+1
+
+=== PAGE 3 / 38 ===
+
+their data. In the absence of any restrictions on data markets or transaction costs, the ﬁrst user will
+always sell her data (because her valuation of privacy, 1/2, is less than the value of information
+to the platform, 1). But given the correlation between the types of the two users, this implies that
+the platform will already have a fairly good estimate of the second user’s information. Suppose,
+for illustration, that ρ ≈1. In this case, the platform will know almost everything relevant about
+user 2 from user 1’s data, and this undermines the willingness of user 2 to protect her data. In fact,
+since user 1 is revealing almost everything about her, she would be willing to sell her own data
+for a very low price (approximately 0 given ρ ≈1). But once the second user is selling her data,
+this also reveals the ﬁrst user’s data, so the ﬁrst user can only charge a very low price for her data.
+Therefore in this simple example, the platform will be able to acquire both users’ data at approx-
+imately zero price. Critically, however, this price does not reﬂect the users’ valuation of privacy.
+When v ≤1, the equilibrium is efﬁcient because data are socially beneﬁcial in this case (even if
+data externalities change the distribution of economic surplus to the advantage of the platform).
+However, it can be arbitrarily inefﬁcient when vis sufﬁciently high. This is because the ﬁrst user,
+by selling her data, is creating a negative externality on the second user.
+We develop a stylized and tractable reduced-form model, consisting of a community of users
+with correlated information, to explore more systematically the ideas illustrated by this example.
+We analyze the model both under a monopoly platform and under competition between platforms
+trying to simultaneously attract users and acquire their data.
+Our main results correspond to generalizations of the insights summarized by the preceding
+example. First, we introduce our general framework and characterize the ﬁrst-best allocation
+which maximizes the sum of surplus of users and platforms. The ﬁrst best typically involves
+considerable data transactions, but those individuals creating signiﬁcant (negative) externalities
+on others should not share their data. Second, we establish the existence of an equilibrium and
+characterize the prices at which data will be transacted. This characterization clariﬁes how the
+market price of data for a user and the distribution of surplus depend on information leaked by
+other users. Third and more importantly, we provide conditions under which the equilibrium in
+the data market is inefﬁcient as well as conditions for simple restrictions on markets to improve
+welfare. At the root of these inefﬁciencies are the economic forces already highlighted by our
+example: inefﬁciencies arise when a subset of users are willing to part with their data, which are
+informative about other users whose value of privacy is high. We show that these insights extend
+to environments with competing platforms and incomplete information as well.
+We further investigate various policy approaches to data markets. Person-speciﬁc taxes on
+data transactions can restore the ﬁrst best, but are impractical. We show in addition how uniform
+taxation on all data transactions might, under some conditions, improve welfare. Finally, we
+propose a new regulation scheme where data transactions are mediated in a way that reduces their
+correlation with the data of other users, thus minimizing leaked information about others. We
+additionally develop a procedure for implementing this scheme based on “de-correlation”, meaning
+2
+
+=== PAGE 4 / 38 ===
+
+transforming users’ data so that their correlation with others’ data and types is removed.3
+Our paper relates to the literature on privacy and its legal and economic aspects. The clas-
+sic deﬁnition of privacy, proposed by justices Warren and Brandeis in 1890, is the protection of
+someone’s personal space and the right to be let alone (Warren and Brandeis [1890]). Relatedly,
+and more relevant to our focus, Westin [1968] deﬁnes it as the control over and safeguarding of
+personal information, and this perspective has been explored from various angles in recent work
+(e.g., Pasquale [2015], Tirole [2019], Zuboff [2019]).
+More closely related to our paper include MacCarthy, Boyd [2011], and Fairﬁeld and Engel
+[2015] who are the ﬁrst contributions we are aware of that emphasize externalities in data shar-
+ing. More recently, Choi et al. [2019] develop a model with a related informational externality
+and a number of results similar to our excessive information sharing ﬁnding. There are several
+important differences between this paper and ours, however. First, Choi et al. [2019] assume that
+consumers are identical, while our above example illustrates that heterogeneity in privacy con-
+cerns plays a critical role in the inefﬁciencies in data markets. Our analysis highlights that there
+are only limited inefﬁciencies when users are homogeneous (speciﬁcally, the equilibrium is efﬁ-
+cient in this case when they have low or sufﬁciently high value of privacy). Second, in contrast
+to this paper, much of our analysis is devoted to the study of how the correlation structure across
+different users jointly determines sharing decisions, prices, and the amount of leaked informa-
+tion. Third, their paper does not analyze the case with competing platforms. More recent and
+independent work by Bergemann et al. [2019] also studies an environment with data externalities.
+Though there are some parallels between the two papers, their work is different from and largely
+complementary to ours. In particular, they analyze an economy with symmetric users where there
+is a monopolist platform and data are used by this monopolist or other downstream ﬁrms (such
+as advertisers) for price discrimination. They also consider learning (willingness to pay) on the
+users’ side and focus on the implications for market prices, proﬁts, and efﬁciency of the structure
+of the downstream market and whether data are collected in an anonymized or non-anonymized
+form. Other recent and relevant contributions to this literature include Fainmesser et al. [2019]
+and Jullien et al. [2020], which consider the negative effects of leaking user’s (private) personal-
+ized data but do not study data externalities; Gradwohl [2017] which investigates user behavior
+in the presence of data externality but does not analyze prices and inefﬁciencies; and Ichihashi
+[2019], Ichihashi [2020b] and Ichihashi [2020a] which study the role of information intermediaries
+and dynamic data collection by platforms.
+Our paper also relates to the growing literature on information markets. One branch of this
+literature focuses on the use of personal data for improved allocation of online resources (e.g.,
+Bergemann and Bonatti [2015], Goldfarb and Tucker [2011], and Montes et al. [2019]). Another
+branch investigates how information can be monetized either by dynamic sales or optimal mech-
+anisms. For example, Anton and Yao [2002], Babaioff et al. [2012], Es˝o and Szentes [2007], Horner
+3This de-correlation procedure is different from anonymization of data because it does not hide information about
+the user sharing her data but about others who are correlated with this user.
+3
+
+=== PAGE 5 / 38 ===
+
+and Skrzypacz [2016], Bergemann et al. [2018], and Eliaz et al. [2019] consider either static or dy-
+namic mechanisms for selling data, Ghosh and Roth [2015] uses differential privacy framework of
+Dwork et al. [2014] and study mechanism design with privacy constraints, and Admati and Pﬂei-
+derer [1986] and Begenau et al. [2018] study markets for ﬁnancial data. A third branch focuses
+on optimal collection and acquisition of information, for example, Agarwal et al. [2019], Chen
+and Zheng [2019], and Chen et al. [2018]. Lastly, a number of papers investigate the question of
+whether information harms consumers, either because users are unaware of the data being col-
+lected about them (Taylor [2004]) or because of price discrimination related reasons (Acquisti and
+Varian [2005]). See Acquisti et al. [2016], Bergemann and Bonatti [2019], and Agrawal et al. [2018]
+for excellent surveys of different aspects of this literature.
+The rest of the paper proceeds as follows. Section 2 presents our model, focusing on the case
+with a single platform for simplicity. Section 3 provides our main results, in particular, charac-
+terizing the structure of equilibria in data markets and highlighting their inefﬁciency due to data
+externalities. It also shows how shutting down data markets may improve welfare. Section 4
+extends these results to a setting with competing platforms, while Section 5 presents a number
+of generalizations. Section 6 studies how taxes and third-party-mediated information sharing
+schemes can improve welfare. Section 7 concludes, while Appendix A presents the proofs of some
+of the results stated in the text and the online Appendix contains the remaining proofs and addi-
+tional results.
+2 Model
+In this section we introduce our model, focusing ﬁrst on the case with a single platform. Compe-
+tition between platforms is analyzed in Section 4.
+2.1 Information and Payoffs
+We consider nusers represented by the set V= {1,...,n }. Each user i∈V has a type denoted by
+xi which is a realization of a random variable Xi. We assume that the vector of random variables
+X = ( X1,...,X n) has a joint normal distribution N(0,Σ), where Σ ∈ Rn×n is the covariance
+matrix of X. Let Σij designate the (i,j)-th entry of Σ and Σii = σ2
+i > 0 denote the variance of
+individual i’s type.
+Each user has some personal data, Si, which are informative about her type. These include
+both data that user activity on the platform generates (such as from search and purchase histories)
+and additional data that users may share about their preferences, contacts or past behavior. We
+suppose that Si = Xi + Zi where Zi is an independent random variable with standard normal
+distribution, i.e., Zi ∼N(0,1).4
+4For transparency, we assume that both user type and personal data are represented by one-dimensional variables,
+but all of our main results and insights generalize to a setting with multi-dimensional types and data.
+4
+
+=== PAGE 6 / 38 ===
+
+For any user joining the platform, the platform can derive additional revenue if it can predict
+her type. This might be because of improved personalized services, targeted advertising, or price
+discrimination for some services sold on the platform. Since the exact source of revenue for the
+platform is immaterial for our analysis, we simply assume that the platform’s revenue from each
+user is a(n inverse) function of the mean square error of its forecast of the user’s type, minus what
+the platform pays to users to acquire their information. Namely, the objective of the platform is to
+minimize ∑
+i∈V
+(
+E
+[
+(ˆxi(S) −Xi)2
+]
+−σ2
+i + pi
+)
+, (1)
+where S is the vector of data the platform acquires, ˆxi(S) is the platform’s estimate of the user’s
+type given this information, −σ2
+i is included as a convenient normalization, and pi denotes pay-
+ments to user i from the platform. This price represents both direct payments to the users in
+exchange for the type and amount of data shared and indirect payments, for example, in the form
+of some good or service the platform provides to the user in exchange for her data.
+Users value their privacy, which we also model in a reduced-form manner as a function of the
+same mean square error.5 This reﬂects both pecuniary and nonpecuniary motives, for example,
+the fact that a user may receive a greater consumer surplus when the platform knows less about
+her or she may have a genuine demand for keeping her preferences, behavior, and information
+private. There may also be political and social reasons for privacy, for example, for concealing
+dissident activities or behaviors disapproved by some groups. We assume, speciﬁcally, that user
+i’s value of privacy isvi ≥0, and her payoff is
+vi
+(
+E
+[
+(ˆxi(S) −Xi)2
+]
+−σ2
+i
+)
++ pi.
+This expression and its comparison with (1) clariﬁes that the platform and users have potentially-
+opposing preferences over information about user type. We have again subtractedσ2
+i as a normal-
+ization, which ensures that if the platform acquires no additional information about the user and
+makes no payment to her, her payoff is zero.6
+Critically, users with vi < 1 value their privacy less than the valuation that the platform at-
+taches to information about them, and thus reducing the mean square error of the estimates of
+their types is socially beneﬁcial. In contrast, users with vi > 1 value their privacy more, and
+reducing their mean square error is socially costly. In a world without data externalities (where
+data about one user have no relevance to the information about other users), the ﬁrst group of
+users should allow the platform to acquire (buy) their data, while the second group should not. A
+simple market mechanism based on prices for data can implement this efﬁcient outcome.
+5For simplicity, we postpone the introduction of joining decisions to Section 4.
+6The positive social beneﬁts from data are represented by the platform’s payoff function. This may be because the
+platform can price its other services in such a way as to capture all of these gains from users. But in our analysis, this
+assumption is imposed mainly for notational simplicity. If these social beneﬁts from data were shared between the
+platform and users so that the fraction βi <1 of these gains go directly to users, all of our results would apply without
+any modiﬁcation.
+5
+
+=== PAGE 7 / 38 ===
+
+We will see that the situation is very different in the presence of data externalities.
+2.2 Leaked Information
+A key notion for our analysis isleaked information, which captures the reduction in the mean square
+error of the platform’s estimate of the type of a user. When the platform has no information about
+user i, its estimate satisﬁes E
+[
+(ˆxi −Xi)2
+]
+= σ2
+i. As the platform receives data from this and other
+users, its estimate improves and the mean square error declines. The notion of leaked information
+captures this reduction in mean square error.
+Speciﬁcally, let ai ∈{0,1}denote the data sharing action of user i∈V with ai = 1 correspond-
+ing to sharing. Denote the proﬁle of sharing decisions by a = ( a1,...,a n) and the decisions of
+agents other than iby a−i. We also use the notation Sa to denote the data of all individuals for
+whom aj = 1, i.e., Sa = (Sj : j ∈V s.t. aj = 1). Given a proﬁle of actions a, the leaked information
+of (or about) user i∈V is the reduction in the mean square error of the best estimator of the type
+of user i:
+Ii(a) = σ2
+i −min
+ˆxi
+E
+[
+(Xi −ˆxi(Sa))2
+]
+.
+Notably, because of data externalities, leaked information about user i depends not just on her
+decisions but also on the sharing actions taken by all users. With this notion at hand, we can write
+the payoff of user igiven the price vector p = (p1,...,p n) as
+ui(ai,a−i,p) =
+
+
+
+pi −viIi(ai = 1,a−i) ai = 1
+−viIi(ai = 0,a−i) ai = 0,
+where recall that vi ≥0 is user’s value of privacy. The platform’s objective is to minimize (1) or to
+maximize
+U(a,p) =
+∑
+i∈V
+Ii(a) −
+∑
+i∈V: ai=1
+pi. (2)
+2.3 Equilibrium Concept
+An action proﬁle a = ( a1,...,a n) and a price vector p = ( p1,...,p n) constitute a pure strategy
+equilibrium if both users and the platform maximize their payoffs given other players’ strategies.
+More formally, in the next deﬁnition we deﬁne an equilibrium as aStackelberg equilibrium in which
+the platform chooses the price vector recognizing theuser equilibrium that will result following this
+choice.
+Deﬁnition 1. Given the price vector p = ( p1,...,p n), an action proﬁle a = ( a1,...,a n) is user
+equilibrium if for all i∈V,
+ai ∈argmaxa∈{0,1}ui(ai = a,a−i,p).
+6
+
+=== PAGE 8 / 38 ===
+
+We denote the set of user equilibria at a given price vectorp by A(p). A pair (pE,aE) of price and
+action vectors is a pure strategy Stackelberg equilibrium if aE ∈A(pE) and there is no proﬁtable
+deviation for the platform, i.e.,
+U(aE,pE) ≥U(a,p), for all p and for all a ∈A(p).
+In what follows, we refer to a pure strategy Stackelberg equilibrium simply as an equilibrium.
+The notion of Stackelberg equilibrium in Deﬁnition 1 is a reﬁnement of subgame perfect equilib-
+rium and ensures that the platform can choose the best action proﬁle among those that are best
+responses for users. Without this reﬁnement, there may be additional multiplicity of equilibria.
+3 Analysis
+In this section, we ﬁrst study the ﬁrst-best information sharing decisions that maximize the sum of
+users and platform payoffs and then proceed to characterizing the equilibrium and its efﬁciency
+properties.
+3.1 First Best
+We deﬁne the ﬁrst best as the data sharing decisions that maximize utilitarian social welfare or
+social surplus given by the sum of the payoffs of the platform and users. Social surplus from an
+action proﬁle a is
+Social surplus(a) = U(a,p) +
+∑
+i∈V
+ui(a,p) =
+∑
+i∈V
+(1 −vi)Ii(a).
+Prices do not appear in this expression because they are transfers from the platform to users.7 The
+ﬁrst-best action proﬁle, aW, maximizes this expression. The next proposition characterizes the
+ﬁrst-best action proﬁle.
+Proposition 1. The ﬁrst best involves aW
+i = 1 if
+∑
+j∈V
+(1 −vj)
+(
+Cov
+(
+Xi,Xj |ai = 0,aW
+−i
+))2
+1 + σ2
+j −Ij(ai = 0,aW
+−i) ≥0, (3)
+and aW
+i = 0 if the left-hand side of (3) is negative.
+The proof of this proposition as well as all other proofs, unless otherwise stated, are presented
+in Appendix A.
+7In including the platform’s payoff in social surplus we are assuming that this payoff is not coming from shifting
+revenues from some other (perhaps off-line) businesses. If we do not include the payoff of the platform in our welfare
+measure, our inefﬁciency results would hold a fortiori.
+7
+
+=== PAGE 9 / 38 ===
+
+To understand this result, consider ﬁrst the case in which there are no data externalities so that
+the covariance terms in (3) are zero, except Cov
+(
+Xi,Xi |ai = 0,aW
+−i
+)
+= σ2
+i, so that the left-hand
+side is simply σ4
+i/(1 + σ2
+i) times 1 −vi. This yields aW
+i = 1 if vi ≤1. The situation is different in
+the presence of data externalities, because now the covariance terms are non-zero. In this case, an
+individual should optimally share her data only if it does not reveal too much about users with
+vj >1.
+3.2 Equilibrium Preliminaries
+The next lemma characterizes two important properties of the leaked information function Ii :
+{0,1}n →R.
+Lemma 1. 1. Monotonicity: for two action proﬁles a and a′with a ≥a′,
+Ii(a) ≥Ii(a′), for all i∈{1,...,n }.
+2. Submodularity: for two action proﬁles a and a′with a′
+−i ≥a−i,
+Ii(ai = 1,a−i) −Ii(ai = 0,a−i) ≥Ii(ai = 1,a′
+−i) −Ii(ai = 0,a′
+−i).
+The monotonicity property states that as the set of users who share their information expands,
+the leaked information about each user (weakly) increases. This is an intuitive consequence of
+the fact that more information always facilitates the estimation problem of the platform and re-
+duces the mean square error of its estimates. More important for the rest of our analysis is the
+submodularity property, which implies that the marginal increase in the leaked information from
+individual i’s sharing decision is decreasing in the information shared by others. This too is intu-
+itive and follows from the fact that when others’ actions reveal more information, there is less to
+be revealed by the sharing decision of any given individual.
+Using Lemma 1 we next show that for any price vector p ∈Rn, the set A(p) is a (non-empty)
+complete lattice.
+Lemma 2. For any p, the set A(p) is a complete lattice, and thus has a least and a greatest element.
+Lemma 2 implies that the set of user equilibria is always non-empty, but may not be singleton
+as we illustrate in the next example.
+Example 1. Suppose there are two users1 and 2 with covariance matrixΣ such that Σ11 = Σ22 = 1
+and Σ12 = Σ21 = ρand values v1 = v2 = 1. The set of user equilibria in this case is depicted in
+Figure 1. When p1,p2 ∈
+[
+(2−ρ2)2
+2(4−ρ2) ,1
+2
+]
+, both action proﬁles a1 = a2 = 0 and a1 = a2 = 1 are user
+equilibria. This is a consequence of the submodularity of the leaked information function (Lemma
+1): when user 1 shares her data, she is also revealing a lot about user 2, and making it less costly
+for her to share her data. Conversely, when user 1 does not share, this encourages user 2 not to
+share. Despite this multiplicity of user equilibria, there exists a unique (Stackelberg) equilibrium
+8
+
+=== PAGE 10 / 38 ===
+
+1
+2
+1
+2
+1
+2
+1
+2
+(2 −ρ2)2
+2(4 −ρ2)
+(2 −ρ2)2
+2(4 −ρ2)
+(2 −ρ2)2
+2(4 −ρ2)
+(2 −ρ2)2
+2(4 −ρ2)
+a1 = 1 a1 = 1 
+a1 = 1 a1 = 1 a2 = 0 a2 = 0 
+a1 = 0 a1 = 0 
+a2 = 1 a2 = 1 
+p2p2
+p1p1
+a2 = 0 a2 = 0 
+a1 = 0 a1 = 0 
+a2 = 1 a2 = 1 
+Figure 1: The user equilibrium as a function of price vector(p1,p2) in the setting of Example 1. For
+the prices in the purple area in the center, both a1 = a2 = 0 and a1 = a2 = 1 are user equilibria.
+for this game given by aE
+1 = aE
+2 = 1 and pE
+1 = pE
+2 = (2−ρ2)2
+2(4−ρ2) . This uniqueness follows because the
+platform can choose the price vector to encourage both users to share.
+3.3 Existence of Equilibrium
+The next theorem establishes the existence of a (pure strategy) equilibrium.
+Theorem 1. An equilibrium always exists. That is, there exist an action proﬁle aE and a price vector pE
+such that aE ∈A(pE), and
+U(aE,pE) ≥U(a,p), for all p and for all a ∈A(p). (4)
+Note that the equilibrium may not be unique, but if there are multiple equilibria, all of them
+yield the same payoff for the platform (since otherwise (4) would not be satisﬁed for the equilib-
+rium with lower payoff for the platform).
+3.4 An Illustrative Example
+In this subsection, we provide an illustrative example that highlights a few of the subtle aspects
+of the equilibrium. Consider the same setting as in Example 1 with two users with the same
+value of privacy, v, and a correlation coefﬁcient ρbetween their information. We ﬁrst show that
+the total payment from the platform to users is non-monotone in the number of users sharing
+their information. When the platform induces both users to share ( a1 = a2 = 1), it makes a total
+payment of v(2−ρ2)2
+4−ρ2 . In contrast, when it only induces the ﬁrst user to share ( a1 = 1, a2 = 0), this
+will cost v
+2 . Therefore, when ρ2 ≥7−
+√
+17
+4 ≈0.71, the platform pays less to have both users share
+their data. Intuitively, this cost-saving for the platform is a consequence of the submodularity of
+leaked information (Lemma 1): when both users share, the data of each are less valuable in view
+9
+
+=== PAGE 11 / 38 ===
+
+1 1
+4
+(2 −ρ2)2
+4
+(2 −ρ2)2 v v
+aE
+1 = aE
+2 = 1 aE
+1 = aE
+2 = 1 
+aE
+1 = aE
+2 = 0 aE
+1 = aE
+2 = 0 
+Social s()pl(s Social s()pl(s 
+4
+4−ρ2
+4
+4−ρ2
+Figure 2: Equilibrium and social surplus as a function of the value of privacy vfor a setting with
+two users with σ2
+1 = σ2
+2 = 1, Σ12 = ρ, and v1 = v2 = v.
+of the information revealed by the other user. This ﬁnding reﬂects one of the claims made in the
+Introduction: market prices for data do not reﬂect the value that users attached to their privacy
+and may be depressed because of data externalities.
+We next illustrate that equilibrium (social) surplus is non-monotonic in the users’ value of
+privacy. Equilibrium surplus is depicted in Figure 2. For values of v larger than 4
+(2−ρ2)2 , users
+do not share their data and equilibrium surplus is zero. When v is smaller than 1, users share
+their data and equilibrium surplus is positive. For intermediate values of v, in particular for
+v∈[1, 4
+(2−ρ2)2 ], the platform chooses a price vector that induces both users to share their data, but
+in this case, the social surplus is negative. The intuition is related to the point already emphasized
+in the previous paragraph: when both users share their data, the externalities depress the market
+prices for data and this makes it proﬁtable for the platform to acquire the users’ data even though
+v >1. More explicitly, when user 2 shares her data, this reveals sufﬁcient information about user
+1 that she becomes willing to accept a relatively low price for sharing her data, and this maintains
+an equilibrium with low prices for data even though both users attach a relatively high value to
+their privacy.
+3.5 Equilibrium Prices
+In this subsection, we characterize the equilibrium price vector. For any action proﬁle a ∈{0,1}n,
+let pa denote the least (element-wise minimum) equilibrium price vector that sustains an action
+proﬁle a in a user equilibrium. More speciﬁcally, pa is deﬁned such that:8
+pa ≤p, for all p such that a ∈A(p).
+8Prices for users not sharing their data are not well-deﬁned.
+10
+
+=== PAGE 12 / 38 ===
+
+Proﬁt maximization by the platform implies that equilibrium prices must satisfy this property —
+since otherwise the platform could reduce prices and still implement the same action proﬁle. We
+therefore refer to pa as “equilibrium price vector” or simply as “equilibrium prices” (with the
+understanding that these would be the equilibrium prices when the platform chooses to induce
+action proﬁle a).
+The next theorem computes this price vector (and shows that it exists).
+Theorem 2. For any action proﬁle a ∈{0,1}n, we have
+Ii(ai = 1,a−i) = Ii(ai = 0,a−i) +
+(
+σ2
+i −Ii(ai = 0,a−i)
+)2
+(σ2
+i + 1) −Ii(ai = 0,a−i), (5)
+and
+Ii(ai = 0,a−i) = dT
+i (I+ Di)−1 di, for all ai = 1,
+where Di is the matrix obtained by removing row and column i from matrix Σ as well as all rows and
+columns j for which aj = 0, and di is (Σij : js.t. aj = 1). The equilibrium price that sustains action
+proﬁle a is
+pa
+i =
+
+
+
+vi
+(σ2
+i −Ii(ai=0,a−i))
+2
+(σ2
+i +1)−Ii(ai=0,a−i) ai = 1
+0 ai = 0.
+The ﬁrst part of Theorem 2 provides a decomposition of leaked information about user i in
+terms of leaked information about her when she does not share her data. In particular, the ﬁrst
+term on the right-hand side of the equation (5), Ii(ai = 0,a−i), is her leaked information resulting
+from the data sharing of other users and thus represents the data externality. The second term
+is the additional leakage when user ishares her data. The second part of Theorem 2 states that,
+because the platform offers the prices, the equilibrium price for any user iwho shares her infor-
+mation must equal her reservation value, making her indifferent between sharing and not sharing.
+This result explains why the equilibrium price, pa
+i, is equal to the value of privacy, vi, multiplied
+by the second term in (5), which is the additional leakage of information and hence the loss of
+privacy resulting from the user’s own data sharing.
+The following is an immediate corollary of Theorem 2.
+Corollary 1. For any user i, the equilibrium price p(ai=1,a−i)
+i (that induces ai = 1 for any action proﬁle
+a−i ∈{0,1}n−1) is increasing in σ2
+i and decreasing in the data externality captured by Ii(ai = 0,a−i).
+Moreover, leaked informationIi(ai = 1,a−i) is increasing inσ2
+i and in the data externalityIi(ai = 0,a−i).
+The ﬁrst part of Corollary 1 shows that a higher variance of user’s type, σ2
+i, increases the
+equilibrium price. Intuitively, a higher variance makes the user’s type more difﬁcult to predict
+and thus her own information more valuable. This also explains why the price is decreasing in the
+data externality — represented by information leaked by others, Ii(ai = 0,a−i). The last part of
+Corollary 1 shows that a higher variance of individual type, as well as a greater data externality,
+increase the overall leakage of information about the user.
+11
+
+=== PAGE 13 / 38 ===
+
+The next proposition establishes that equilibrium prices are nonincreasing in the set of users
+that share their data as well.
+Proposition 2. For two action proﬁles a,a′with a′≥a, we have pa′
+i ≤pa
+i for all i∈V for which ai = 1.
+Proposition 2 follows from Theorem 2 and Lemma 1. In particular, using Theorem 2 the equi-
+librium price for user iis her additional loss of privacy (increase in the information leakage multi-
+plied by vi) if she shares her data. From the submodularity of information leakage (Lemma 1) the
+additional information the user leaks about herself decreases when more people share their data.9
+3.6 Inefﬁciency
+This subsection presents one of our main results, documenting the extent of inefﬁciency in data
+markets.
+First note that all users with value of privacy less than 1 will always share their data in equi-
+librium. For future reference, we state this straightforward result as a lemma.
+Lemma 3. All users with value of privacy vi ≤1 share their data in equilibrium.10
+Motivated by this lemma, we partition users into two sets, those with value of privacy below
+1 (“low-value users”) and those above (“high-value users”):
+V(l) = {i∈V : vi ≤1}and V(h) = {i∈V : vi >1}.
+We also denote by v(h) and v(l) the vectors of valuations of privacy for high-value and low-value
+users, respectively. Lemma 3 then implies that for all i∈V(l) we have aE
+i = 1.
+The next theorem provides conditions for efﬁciency and inefﬁciency. More precisely, we show
+that if every high-value user is uncorrelated with all other users, then equilibrium is efﬁcient.
+Otherwise, if either a high-value user is correlated with a low-value user or two high-value users
+are correlated, there exists a set of valuations (consistent with the set of high and low-value users)
+such that any equilibrium is inefﬁcient.
+Theorem 3. 1. Suppose every high-value user is uncorrelated with all other users. Then the equilib-
+rium is efﬁcient.
+9Notice also the connection between Proposition 2 and Cr ´emer and Mclean [1988], who establish in the context of
+a mechanism design problem with correlated values that when agents reveal more information about each other, then
+their information rent becomes smaller. In our setting when more users share their data, the value of another user
+sharing her data becomes small, but this result originates from the correlation in personal data, not from correlated
+values.
+10The only subtlety here is about users with vi = 1. If these users’ information is correlated with others who are
+already sharing, their equilibrium price will be strictly less than 1, and this will make it strictly beneﬁcial for the
+platform to purchase their data. If they are correlated with others who are not sharing, then the platform would still
+like to purchase these data because of the additional reduction in the mean square error of its estimates of others’
+types they enable. When such an individual is uncorrelated with anybody else, then the platform would be indifferent
+between purchasing her data and not. In this case, for simplicity of notation, we suppose that it still purchases.
+12
+
+=== PAGE 14 / 38 ===
+
+2. Suppose at least one high-value user is correlated (has a non-zero correlation coefﬁcient) with a low-
+value user. Then there exists ¯v ∈R|V(h)|such that for v(h) ≥¯v the equilibrium is inefﬁcient.
+3. Suppose every high-value user is uncorrelated with all low-value users and at least one high-value
+user is correlated with another high-value user. Let ˜V(h) ⊆V (h) be the subset of high-value users
+correlated with at least one other high-value user. Then for eachi∈˜V(h) there exists ¯vi >1 such that
+if for any i∈˜V(h) vi <¯vi, the equilibrium is inefﬁcient
+Theorem 3 clariﬁes the source of inefﬁciency in our model. If high-value users are not cor-
+related with others, the equilibrium is efﬁcient. In this case, there may still be data externalities
+among low-value users and these may affect market prices (and the distribution of economic gains
+between the users and the platform). But they do not create a loss of privacy for users who prefer
+not to share their data.
+However, the second part of the theorem shows that if high-value users are correlated with
+low-value users, the equilibrium is typically inefﬁcient. The additional condition v(h) ≥ ¯v is
+not a restrictive one as highlighted in Example 2 below and rules out cases in which high-value
+users suffer only little loss of privacy but generate socially valuable information about low-value
+users. In general, the inefﬁciency identiﬁed in this part of the theorem can take one of two forms:
+either high-value users do not share their data, but because of information leaked about them,
+they suffer a loss of privacy. Or given the amount of leaked information about them, high-value
+users decide to share themselves—even though, absent the correlation with low-value users or
+low-value users’ data sharing, they would have preferred not to do so.
+Finally, the third part of the theorem covers the remaining case, where high-value users are
+uncorrelated with low-value users but are correlated among themselves. The equilibrium is again
+inefﬁcient, because the platform can induce some of them to share their data (even though indi-
+vidually each would prefer not to). This is because when a subset of them share, this compromises
+the privacy of others, depresses data prices, and may incentivize them to share too (in turn further
+depressing data prices). This inefﬁciency applies when some high-value users have intermediate
+values of privacy (i.e., vi ∈(1,¯vi)), since those with sufﬁciently high value of privacy cannot be
+induced to share their data.
+Overall, this theorem highlights that inefﬁciency in data markets originates from the combina-
+tion of sufﬁciently high value attached to privacy by some users and their correlation with other
+users. It therefore emphasizes that inefﬁciency in our model is tightly linked to data externalities.
+3.7 Are Data Markets Beneﬁcial?
+Theorem 3 focuses on the comparison of the market equilibrium to the ﬁrst best. This is a tough
+comparison for the market because in the ﬁrst best some users share their data and beneﬁt from
+market transactions, while others do not share. A lower bar for data markets is whether they
+achieve positive social surplus so that any inefﬁciencies they create are (partially) compensated
+by beneﬁts for other agents. We next show that this is not necessarily the case and provide a
+13
+
+=== PAGE 15 / 38 ===
+
+sufﬁcient condition for the equilibrium (social) surplus to be negative — so that shutting down
+data markets all together would improve social surplus (and thus utilitarian welfare).
+Let us also introduce the following notation: for any action proﬁle a ∈{0,1}n, we let Ii(T)
+denote the leaked information about user iwhere T = {i∈V : ai = 1}.
+Proposition 3. We have
+Social surplus(aE) ≤
+∑
+i∈V(l)
+(1 −vi)Ii(V) −
+∑
+i∈V(h)
+(vi −1)Ii(V(l)).
+This implies that if ∑
+i∈V(h)
+(vi −1)Ii(V(l)) >
+∑
+i∈V(l)
+(1 −vi)Ii(V), (6)
+then the equilibrium surplus is negative and utilitarian welfare improves if data markets are shut down.
+This proposition follows immediately from Lemma 3. The ﬁrst term is an upper bound on
+the gain in social surplus from the sharing decisions of low-value users (even if these gains do
+not necessarily accrue to the users themselves and are mainly captured by the platform). This
+expression is an upper bound because we are evaluating this term under the assumption that all
+users share their data, thus maximizing the amount of socially beneﬁcial information about low-
+value users. The second term is a lower bound on the loss of privacy from high-value users. It is a
+lower bound because the loss of privacy is evaluated for the minimal set of agents, the low-value
+ones, who always share their data (in equilibrium a superset of V(l) will share their data).
+We also add that leaked information in this proposition is only a function of the matrix Σ as
+shown in Theorem 2, so the right-hand side is in terms of model parameters and does not depend
+on equilibrium objects.
+The next proposition provides a sufﬁcient condition in terms of values of privacy and corre-
+lations between data that ensures condition (6) and implies that the equilibrium necessarily has
+negative social surplus.
+Proposition 4. Suppose
+∑
+i∈V(h)
+(
+(vi −1)
+∑
+j∈V(l) Σ2
+ij
+||Σ(l)||1 + 1
+)
+>
+∑
+i∈V(l)
+σ2
+i(1 −vi), (7)
+where ||Σ(l)||1 denotes the 1-norm of the submatrix of Σ which only includes the rows and columns corre-
+sponding to low-value users. Then the equilibrium surplus is negative.11
+Proposition 4 provides a sufﬁcient condition in terms of the values of privacy and the cor-
+relation between high and low-value users for negative equilibrium surplus. It highlights the
+inefﬁciencies caused by direct data externalities which correspond to part 2 of Theorem 3. To in-
+terpret condition (7), let us ﬁx the set of low-value users and their values. Then condition (7) is
+111-norm of a matrix Ais deﬁned as ||A||1 = maxi
+∑n
+j=1 |Aij|.
+14
+
+=== PAGE 16 / 38 ===
+
+Value of privacy for high-value users:vh
+1 2 3 4 5 6 7 8 9 10
+Cross-community correlation: ρ
+0.02
+0.04
+0.06
+0.08
+0.1
+0.12
+0.14
+0.16
+Figure 3: Shaded area shows the pairs of (ρ,vh) with negative equilibrium surplus in the setting
+of Example 2.
+more likely to hold when there exist users with sufﬁciently high values and high correlation with
+low-value users, so that data shared by low-value users leaks a lot of information about users who
+value their privacy highly.
+Example 2. We consider a setting with two communities, each of size10. Suppose that all users in
+community 1 are low-value and have a value of privacy equal to0.9, while all users in community
+2 are high-value (with vh > 1). We also take the variances of all user data to be 1, the correlation
+between any two users who belong to the same community to be 1/20, and the correlation be-
+tween any two users who belong to different communities to be ρ. Figure 3 depicts equilibrium
+surplus as a function of vh and ρ. The curve in the ﬁgure represents the combinations of these
+two variables for which the social surplus is equal to zero. Moving in the northeast direction re-
+duces equilibrium surplus and hence the shaded area has negative surplus. Consequently, in this
+part of the parameter space, shutting down data markets improves utilitarian social welfare. Two
+points are worth noting. First, relatively small values of the correlation coefﬁcient ρare sufﬁcient
+for social surplus to be negative. Second, when vh is very close to 1, the social surplus is always
+positive because the negative surplus from high-value users is compensated by the social beneﬁts
+their data sharing creates for low-value users. In Example B-1 in the online Appendix, we build
+on this example to provide an explicit case where the platform beneﬁts from data markets even
+when users lose out.
+4 Competition Among Platforms
+In this section we generalize the main results from the previous section to a setting in which two
+platforms compete for (the data of) users and focus on the case where the platforms set prices
+before joining decisions to attract users.12 The timing of the events is as follows:
+12An alternative timing of events is one where users ﬁrst join platforms and then data prices are announced. In the
+working paper version of our work, we also analyzed this case and showed that, though the analysis is somewhat
+15
+
+=== PAGE 17 / 38 ===
+
+1. Platforms simultaneously offer price vectors p1 ∈Rn and p2 ∈Rn.
+2. Users simultaneously decide which platform, if any, to join and whether to share their data.
+For any i∈V, we denote by bi ∈{0,1,2}the joining decision of useriwhere bi = 0 means user
+idoes not join, bi = 1 means she joins platform 1, and bi = 2 stands for joining platform 2. Let us
+also deﬁne
+J1 = {i∈V : bi = 1}and J2 = {i∈V : bi = 2},
+as the sets of users joining the two platforms.
+Similar to the monopoly case in the previous section, the payoff of a platform is a function of
+leaked information about users and payments to users. So for platform k∈{1,2}, we have
+U(k)(Jk,aJk,pJk) =
+∑
+i∈Jk
+Ii(aJk) −
+∑
+i∈Jk: a
+Jk
+i =1
+pJk
+i , (8)
+where aJk ∈{0,1}|Jk|denotes the sharing decision of users belonging to this platform, and pJk
+denotes the vector of prices the platform offers to users in Jk.
+The payoff of a user has three parts. First, each user receives a valuable service from the
+platform it joins. Since we are modeling joining decisions in this section, we will be more explicit
+about this “joining value” and assume that it depends on who else joins the platform. We therefore
+write this part of the payoff asci(Jbi) for user ijoining platform bi, with the convention thatJ0 = ∅,
+and also normalize ci(J) = 0 for all J ̸∋iand for all i∈V. Second, the user suffers a disutility due
+to loss of privacy from leaked information as before, and we again denote the value of privacy
+for user iby vi. Third, she receives beneﬁts from any payments from the platform in return of the
+data she shares. Thus the payoff to user ijoining platform bi ∈{1,2}is
+ui(ai,bi,a−i,b−i,p1,p2) =
+
+
+
+pbi
+i −viIi(ai = 1,a
+Jbi
+−i) + ci(Jbi) ai = 1
+−viIi(ai = 0,a
+Jbi
+−i) + ci(Jbi) ai = 0,
+(9)
+where aJk denotes the vector of sharing decisions in the set Jk for k= 1,2.
+Since our focus is on situations in which users join online platforms and share their data, we
+impose that joining values are sufﬁciently large.
+Assumption 1. For each i∈V, we have
+1. for all J and J′such that i∈J and J ⊂J′, we have ci(J′) >ci(J).
+2. ci({i}) >maxj∈Vvjσ2
+j.
+This assumption implies that users receive greater services from a platform when there are
+more users on the platform, which captures the network effects in online services and social media.
+simpler, similar inefﬁciencies apply in this case as well.
+16
+
+=== PAGE 18 / 38 ===
+
+The fact that this beneﬁt is indexed by imeans that users can prefer being on the same platform
+with different sets of other users. The second part of this assumption imposes that the minimum
+value of the (non-data) services provided by the platform is larger than the maximum disutility
+from leaked information. In the rest of this section, we impose Assumption 1 without explicitly
+stating it.
+Equilibria in this environment will typically be in mixed strategies, and we formally deﬁne
+mixed strategy equilibria in the online Appendix in terms of strategies that deﬁne probability
+distributions over price vectors for the platforms and user actions. Theorem B-1 there establishes
+the existence of a mixed strategy equilibrium with competition.13
+The next lemma ensures that all users join one of the platforms and simpliﬁes’s are analysis in
+this section.14
+Lemma 4. Each user joins one of the two platforms. In other words, bi = 1 or 2 for all i∈V.
+We next show that the equilibrium is even more likely to be inefﬁcient when platforms com-
+pete using data prices. In particular, in contrast to the settings studied so far, the equilibrium is
+inefﬁcient not only when high-value users are correlated with other users, but also when there is
+correlation only among low-value users. For this theorem, let us deﬁne:
+δ= min
+i,T⊂V
+ci(V) −ci(T) and ∆ = max
+i,T⊆V
+ci(V) −ci(T).
+Theorem 4. 1. Suppose every user is uncorrelated with all other users. Then the equilibrium is efﬁcient.
+2. Suppose that every high-value user is uncorrelated with all other users, but at least two low-value
+users are correlated with each other. Then there exist δ, ¯∆, ˜∆, ¯v, and ˜v such that:
+2-1) If δ≥δ, the equilibrium is efﬁcient.
+2-2) If ∆ ≤¯∆ and v(l) ≤¯v, the equilibrium is efﬁcient.
+2-3) If ∆ ≤˜∆ and v(l) ≥˜v, the equilibrium is inefﬁcient.
+3. Suppose that at least one high-value user is correlated with a low-value user. Then there exist ˜δ >
+¯∆ >¯δ >0, ¯v ∈R|V(h)|, and v ∈R|V(l)|such that:
+3-1) If v(h) ≥¯v, v(l) ≥v, ∆ ≤¯∆, and δ≥¯δ, the equilibrium is inefﬁcient.
+3-2) If δ≥˜δ, the equilibrium is efﬁcient.
+13In are setting with a monopoly platform, users no longer have the option of switching to another platform, and
+we focus on the Stackelberg equilibrium where the platform set prices anticipating user choices and selects the most
+advantageous user equilibrium for itself (when there were multiple user equilibria). This ensures that an equilibrium
+data price yields a (weakly) greater payoff for the platform than any other price for any other user equilibrium. Because
+users now make their joining decisions after price offers, we use the standard Nash equilibrium notion and require that
+for each platform and any other price than its equilibrium price there exists a user equilibrium in which the platform’s
+payoff is no greater than its equilibrium payoff.
+14This assumption also implies that in a monopoly setting all users join the monopoly platform, which is the reason
+we did not introduce the joining decision in the previous section.
+17
+
+=== PAGE 19 / 38 ===
+
+The ﬁrst part is straightforward: without correlation there is no data externality, ensuring
+efﬁciency.
+The second part is new relative to our previous results: now the equilibrium is inefﬁcient even
+when high-value users are uncorrelated with all other users. This inefﬁciency is caused by compe-
+tition using data prices. Since there is no correlation between high-value and low-value users, the
+ﬁrst best involves all low-value users sharing their data and all (high-value and low-value) users
+joining the same platform in order to beneﬁt from the highest joining values. However, we show
+in part 2.3 that such an allocation is not an equilibrium, because the other platform can attract
+some of the low-value users who can beneﬁt by having less of their information leaked by other
+low-value users (even though information leakage about these users is socially beneﬁcial, it is pri-
+vately costly for them). This leads to a fragmented distribution of users across platforms, leading
+to inefﬁciency (in particular, in this case the surplus under competition is smaller than the surplus
+under monopoly). Parts 2.1 and 2.2 provide conditions for efﬁciency in terms of the c function
+being sufﬁciently steep or the privacy concerns of low-value users being sufﬁciently weak.
+Competition affects not only efﬁciency but also the distribution of surplus. In particular, in
+the monopoly model, data prices are depressed, beneﬁting the platform at the expense of the con-
+sumers. Competition may partially rectify this, because low-value users may segregate between
+the two platforms, which reduces information leakages about them and increase data prices. Nev-
+ertheless, part 2.3 shows that this does not restore efﬁciency, because it fails to exploit the joining
+(service quality) and data-sharing beneﬁts of having low-value users on the same platform.
+Part 3.1 of the theorem is similar to our other inefﬁciency results. In this case, in the ﬁrst
+best all users join the same platform (because the cfunction is sufﬁciently steep), but only low-
+value users uncorrelated with high-value users share their data (because v(h) is sufﬁciently high).
+We show, however, that this allocation cannot be an equilibrium because the other platform can
+deviate and attract a subset of low-value users and induce them to share their data. In part 3.2
+the ﬁrst best is, once again, for all users to join one of platforms (in this case, the surplus under
+competition is higher than the surplus under monopoly). But now because the joining values
+are even steeper, the other platform can no longer attract a subset of these users, while the threat
+of all users switching to this other platform supports the ﬁrst-best allocation (though there also
+exist inefﬁcient equilibria in this case). Finally, we show in the working paper version that when
+high-value users are uncorrelated with low-value users but correlated among themselves, the
+equilibrium may or may not be efﬁcient.
+5 Extensions
+Our framework is purposefully stylized. This raises the question of whether some of our con-
+clusions critically depend on our simplifying assumptions. In this section, we show that all of
+our main insights generalize when the correlation structure across users is more general than the
+Gaussian distributions we have assumed; when the value of privacy of different users are not
+18
+
+=== PAGE 20 / 38 ===
+
+known by the platform(s); and when the correlation of information across users is unknown. For
+simplicity, we focus on the case of a monopoly platform in this section.
+5.1 General Correlation Structures
+As noted above, all of our results so far depend on and follow from Lemma 1, which was estab-
+lished using the fact that the measure of leaked information is mean square error and all data and
+signals are Gaussian. We also prove that this lemma holds, and all of our results readily extend,
+under more general assumptions so long as the following four properties hold (see Appendix A):
+1. (No leakage with independence) If a user i’s information is independent from the informa-
+tion of all other users, then we have Ij(ai = 1,a−i) = Ij(ai = 0,a−i) for all j ̸= i, a−i ∈
+{0,1}n−1.
+2. (Leakage with non-independence)If the information of two usersiand jare non-independent
+(given any set of other users who share), then for any action proﬁle a ∈{0,1}n where user i
+shares her data, leaked information about userjwill be non-zero. That is,Ij(ai = 1,a−i) >0
+for all a−i ∈{0,1}n−1.
+3. (Monotonicity) For two action proﬁles a and a′with a ≥a′, we have Ii(a) ≥Ii(a′) for all
+i= 1,...,n .
+4. (Submodularity) For two action proﬁles a and a′with a′
+−i ≥a−i, we have Ii(ai = 1,a−i) −
+Ii(ai = 0,a−i) ≥Ii(ai = 1,a′
+−i) −Ii(ai = 0,a′
+−i).
+These four properties hold under our baseline leaked information measure and Gaussian sig-
+nals. We also prove in Appendix A that they and thus Lemma 1 generalize to another bench-
+mark case: when the measure of leaked information is mutual information between a user’s
+type and the vector of types of users who have shared their data: Ii(a) = I(Xi; (Xj : aj = 1))
+(where the mutual information between two random variables X and Y is deﬁned as I(X; Y) =
+EX,Y[−log P(X)P(Y)
+P(X,Y) ]). In particular, this measure of leaked information satisﬁes Properties 1-4 for
+any distribution of random variables X.
+5.2 Unknown Valuations
+Our analysis has so far assumed that platforms know the value of privacy of different users. In
+this section, we adopt the more realistic assumption that they do not know the exact valuations of
+users, but understand that the value of privacy of user i, vi, has a distribution represented by the
+cumulative distribution functionFiand density functionfi(with upper support denoted byvmax).
+Users know their own value of privacy. We then show how the platform can design a mechanism
+to elicit this information (in the form of users reporting their value of privacy) and prove that all
+of the main insights from our analysis generalize to this case.
+19
+
+=== PAGE 21 / 38 ===
+
+Using the revelation principle we can deﬁne an equilibrium as a pair (aE,pE) of functions of
+the reported valuations v = (v1,...,v n) such that each user ﬁnds it incentive compatible to report
+her true value and the expected payoff of the platform is maximized taking this reporting behavior
+is given. That is,
+(aE,pE) = max
+a:Rn→{0,1}n,p:Rn→Rn
+Ev
+
+
+n∑
+i=1
+Ii(a(v)) −
+∑
+i: ai(v)=1
+pi(v)
+
+
+pi(v) −viIi(a(v)) ≥pi(v−i,v′
+i) −viIi(a(v−i,v′
+i)), for all v′
+i,v, and i∈V.
+In the online Appendix, using an argument similar to Myerson [1981], we characterize the equi-
+librium in this case and prove that our inefﬁciency results hold with the only difference being that
+instead of valuations, the virtual valuations deﬁne low and high value users, where the virtual
+valuation of a user with value vis Φi(v) = v+ Fi(v)
+fi(v) .
+5.3 Unknown Correlation
+Another simplifying assumption we have utilized is that both the platform and the users know
+the correlation structure Σ. We now show that our main results generalize when this correlation
+structure is unknown. Suppose, in particular, that the correlation structure Σ is drawn from a
+distribution µ over a ﬁnite set Sof covariance matrices. The timing of the events is as follows.
+First, the platform offers prices (knowing only the distribution of correlationsµ), then users decide
+whether they want to share their data (again knowing only the distribution of correlations µ),
+and ﬁnally the correlation structure is realized which together with the action proﬁle of users
+determine the utility of the users and the platform. This implies that, given action proﬁle a ∈
+{0,1}n, the utility of user iin this setting becomes
+ui(ai,a−i,p) =
+
+
+
+pi −viEΣ∼µ[Ii(ai = 1,a−i)] ai = 1
+−viEΣ∼µ[Ii(ai = 0,a−i)] ai = 0
+and the utility of the platform becomes
+U(a,p) =
+∑
+i∈V
+EΣ∼µ[Ii(a)] −
+∑
+i∈V: ai=1
+pi.
+The next theorem, which is the analogue of Theorem 3, characterizes the conditions for efﬁciency
+and inefﬁciency in this case.15
+15One may wish to go even further and investigate whether the platform can learn the distribution of valuations from
+past observations. This is a challenging question both because it would require an extension of our model to a fully
+dynamic setting and new statistical tools for learning the general variance-covariance structure from past observations.
+20
+
+=== PAGE 22 / 38 ===
+
+Theorem 5. 1. Suppose every high-value user is uncorrelated with all other users almost surely, i.e.,
+PΣ∼µ(Σij = 0) = 1 for all i∈V(h),j ∈V(l). Then the equilibrium is efﬁcient.
+2. Suppose at least one high-value user is correlated (has a non-zero correlation coefﬁcient) with a low-
+value user with non-zero probability, i.e., there existsi∈V(h) and j ∈V(l) such that PΣ∼µ(Σij ̸= 0) >
+0. Then there exists ¯v ∈R|V(h)|such that for v(h) ≥¯v the equilibrium is inefﬁcient.
+3. Suppose every high-value user is uncorrelated with all low-value users almost surely and at least one
+high-value user is correlated with another high-value user with positive probability. Let ˜V(h) ⊆V(h)
+be the subset of high-value users correlated with at least one other high-value user with positive
+probability. Then for each i ∈ ˜V(h) there exists ¯vi > 1 such that if for any i ∈ ˜V(h) vi < ¯vi, the
+equilibrium is inefﬁcient
+6 Regulation
+The inefﬁciencies documented so far raise the question of whether certain types of government
+policies or regulations could help data markets function better. We brieﬂy address this question in
+this section. We ﬁrst discuss taxes and then turn to a regulation scheme based on “de-correlation”
+to reduce the informativeness of the data of users about others. For simplicity, we focus on the
+case of a single platform with complete information.
+6.1 Taxation
+It is straightforward to establish that a simple Pigovian tax scheme, using personalized taxes on
+data transactions, can restore the ﬁrst best (see our working paper version). This is because not
+taxing users who should be sharing in the ﬁrst best is sufﬁcient to ensure that they share in the
+post-tax equilibrium as well regardless of the sharing decisions of the rest of the users. Then im-
+posing prohibitive taxes on the data transactions of users who should not be sharing implements
+the ﬁrst best. Pigovian taxes implement the ﬁrst best, but these taxes vary across individuals,
+which presupposes a huge amount of information on the part of the planner/tax authority. A nat-
+ural question is whether a uniform tax scheme can also improve over the equilibrium allocation.
+If equilibrium surplus is negative, then a uniform and sufﬁciently high tax on data transactions
+can shut down the data market and improves equilibrium surplus. However, beyond this simple
+case with negative equilibrium surplus, there is no guarantee that uniform taxes on data transac-
+tions improve welfare. This is because such taxes may prevent beneﬁcial data trades as well. We
+next consider an alternative regulation that keeps the beneﬁcial data trades while eliminating the
+negative effects of data sharing.
+21
+
+=== PAGE 23 / 38 ===
+
+6.2 Mediated Data Sharing and De-correlation
+In this subsection, we propose a different approach to improving the efﬁciency of data markets.
+Our analysis has clariﬁed that a main source of inefﬁciency in such markets is the correlation
+between the data of a user who is not sharing with the data of others who have shared their
+data. Our present approach is founded on the observation that the data of different users can be
+transformed in such a manner as to remove the correlation between any user who does not wish
+to share her data and all other users, while maintaining the correlation of information within the
+set of users sharing their data. We refer to such a scheme as de-correlation.
+Suppose that instead of sharing their data with the platform, users share their data with a
+(trusted third-party) mediator, who can either not share these data with the platform (as in-
+structed) or transform them before revealing them to the platform. 16 Recall that user i’s data
+are represented by Si = Xi + Zi. The main idea is that the mediator collects all the data from the
+users and then computes transformed variables for each user removing the correlation with the
+information of other users and only shares the transformed data of those who are willing to sell
+their data (but utilizes the data of others for removing the correlation with their information).17
+Formally, we consider the following de-correlation scheme: ˜S = Σ−1S where S = (S1,...,S n)
+is the vector of data of all users. Clearly,˜S is jointly normal and has the property that if useridoes
+not share her data, then the data of other users leak no information about user i’s type. This is
+formally stated in the next lemma.
+Lemma 5. With de-correlation, for any action proﬁle a ∈{0,1}n, the leaked information about user iis
+˜Ii(a) = σ2
+i −min
+ˆxi
+E
+[(
+Xi −ˆxi
+(
+˜Sa
+))2]
+=
+
+
+
+0 ai = 0
+Ii(ai,a−i) ai = 1.
+This lemma clariﬁes our claim in the Introduction and shows that the de-correlation scheme
+leaves information leaked about the user sharing her data the same, but removes the leakage about
+users who are not sharing their data.
+We next characterize the equilibrium pricing, denoted by ˜pE, and sharing proﬁle, denoted by
+˜aE, with this transformation, and show that, with de-correlation, there is no information leakage
+about those who do not share, and therefore they do not contribute to the platform’s payoff. More-
+over, the price offered to users who share must make them indifferent between sharing and not
+sharing and thus give them zero payoff (which they can guarantee by not sharing). Given this
+characterization, it follows that de-correlation always improves equilibrium surplus and, more-
+over, eliminates cases where the social surplus is negative.
+16Obviously, a de-correlation scheme can only work if the mediator is fully reliable and trusted, and this is an impor-
+tant constraint in practice, which we are not dealing with in this paper.
+17In practice, it may be more relevant to remove the correlation between a user’s data and the average data of different
+user types. In that case, we can partition the set of users into K cells and apply this de-correlation procedure to the
+average data of cells.
+22
+
+=== PAGE 24 / 38 ===
+
+Theorem 6. 1. The equilibrium sharing proﬁle after de-correlation is given by
+˜aE = argmaxa∈{0,1}n
+∑
+i∈V
+(1 −vi)˜Ii(a),
+with prices ˜pE
+i = vi˜Ii(˜aE) for any i∈V such that ˜aE
+i = 1.
+2. Let (˜aE,˜pE) and (aE,pE) denote the equilibrium with and without the de-correlation scheme, respec-
+tively. Then
+Social surplus(˜aE) ≥max
+{
+Social surplus(aE),0
+}
+.
+That equilibrium surplus increases after de-correlation is a consequence of the fact that in the
+original equilibrium the contribution of high-value users (who do not share) to social surplus is
+less than or equal to zero, while after de-correlation their contribution to social surplus is greater
+than or equal to zero.18 Moreover, because there are no users with negative contribution to social
+surplus after de-correlation, equilibrium surplus is always positive. This observation also implies
+that the de-correlation scheme outperforms policies that shut down data markets — since instead
+of achieving zero equilibrium surplus by shutting down these markets, e.g., as in Proposition 3,
+this scheme always guarantees positive social surplus.
+Our proposed de-correlation scheme provides a simple benchmark that shows how the corre-
+lation between any user who does not wish to share her data and all other users can be removed
+while maintaining the socially beneﬁcial correlation among users interested in sharing their data.
+A more practical version of this scheme would remove the correlation between classes of users,
+but still ensure that leaked information about users not wishing to share their data is minimized.
+An alternative regulation that may achieve similar objectives is to allow users to decide whether
+others’ data can be used in advertisement or for the services that they receive, and this may be
+sufﬁcient to remove some or all of the negative externalities. Open questions include whether
+de-correlation schemes and/or regulations that give additional control to users can be easily im-
+plemented and to what extent users would trust mediators or promises that others’ data will not
+be used for obtaining information about them.
+7 Conclusion
+Because data generated by economic agents are useful for solving economic, social, or technical
+problems facing others in society and for designing or inventing new products and services, much
+of economic analysis in this area argues that the market may produce too little data. This paper
+develops the perspective that, in the presence of privacy concerns of some agents, the market may
+generate too much data. Moreover, because the data of a subset of users reveal information about
+18As with personalized taxes, de-correlation involves a considerable amount of information being pooled in the
+hands of a centralized body. The difference, however, is that de-correlation, by ensuring that no information is leaked
+about users who do not want to share their data, makes such information pooling incentive compatible. Providing
+information to regulatory authorities is typically not incentive compatible.
+23
+
+=== PAGE 25 / 38 ===
+
+other users, the market price of data tends to be depressed, creating the impression that users do
+not value their privacy much. The depressed market price of data and excessive data generation
+are intimately linked.
+We exposit these ideas in a simple model in which a platform wishes to estimate the types of
+a collection of users, and each user has personal data (based on their preferences, past behavior,
+and contacts) which are correlated both with their type and with the data and types of other users.
+As a result, when a user decides to share her data with the platform, this enables the platform to
+improve its estimate of other users’ types. We model the market for data by allowing the platform
+to offer prices (or other services) in exchange of data.
+We prove the existence of an equilibrium in the data market and show that there will be too
+much data shared on the platform and the price of data will be excessively depressed. The result
+that the platform acquires too much data is a direct consequence of the externalities from the data
+of others. The root cause of depressed data prices is the submodularity of leaked information:
+when data sharing by other users already compromises the information of an individual, she has
+less incentive to protect her data and privacy. We further show that under some simple condi-
+tions the social surplus generated by data markets is negative, meaning that shutting down data
+markets improves (utilitarian) social welfare.
+We extend these results to a setting with multiple platforms. Various different types of com-
+petition between platforms do not alter the fundamental forces leading to too much data sharing
+and excessively low prices of data. In fact, competition may make inefﬁciencies worse. This is in
+part because more data may be shared in the presence of competition, and also because the desire
+of some users to avoid excessive data sharing about them may lead to an inefﬁciently fragmented
+distribution of users across platforms, even when network externalities would be better exploited
+by having all users join the same platform. We also extend these results to a setting in which the
+value of privacy of different users are their private information.
+Excessive data sharing may call for policy interventions to correct for the externalities and
+the excessively low prices of data. Individual-speciﬁc (Pigovian) taxes on data transactions can
+restore the ﬁrst best. More interestingly, we propose a scheme based on mediated-data sharing that
+can improve welfare. In particular, in our baseline model, when equilibrium surplus is negative,
+shutting down data markets, for example with high uniform taxes on all data transactions, would
+improve welfare. But this prevents the sharing of the data of users with low value of privacy or
+high beneﬁts from goods and services that depend on the platform accessing their data. We show
+that if user data are ﬁrst shared with a mediator which transforms them before revealing them
+to the platform, the correlation of the data with the information of privacy-conscious users can
+be eliminated, and this would improve welfare relative to the option of shutting off data markets
+altogether.
+We view our work as part of an emerging literature on data markets and the economics of
+privacy. Several interesting areas of research are suggested by our results. First, it is important
+to develop models of the marketplace for data that allow for richer types of competition between
+24
+
+=== PAGE 26 / 38 ===
+
+different platforms. Second, our modeling of privacy and the use of data by the platform has been
+reduced-form. Distinguishing the uses of personal data for price discrimination, advertising, and
+designing of new products and services could lead to additional novel insights. For example, it
+may enable an investigation of whether applications of personal data for designing personalized
+services can be unbundled from their use for intrusive marketing, price discrimination, or mis-
+leading advertising. Third, there is much more to do on the effects of competition for data. One
+interesting direction is to allow platforms to differ in terms of the technology they use for pro-
+cessing data and protecting privacy, which may change the nature of competition. Finally, we
+only touched upon the possibility of designing new mechanisms for improving the functioning
+of data markets while reducing data externalities. Our proposed mechanism can be simpliﬁed
+and made more practical, for example, by aiming to remove the correlation between different user
+classes, as noted above, or by focusing on only some types of data. Other mediated data shar-
+ing arrangements or completely new approaches to this problem could be developed as well, but
+should take into account the possibility that third parties may not be fully trustworthy either. Fi-
+nally, our result that market prices, or current user actions for protecting privacy, do not reveal the
+value of privacy highlights the need for careful empirical analysis documenting and estimating
+the value of data to platforms and the value that users attach to their privacy in the presence of
+data externalities.
+Appendix A
+In this part of the Appendix, we provide some of the proofs omitted from the text. Remaining
+proofs are presented in the online Appendix and the details of several of the examples discussed
+in the text are included in the working paper version.
+Proof of Proposition 1
+Recall that aW denotes the ﬁrst best. For anyi∈V we have aW
+i = 1 if and only ifSocial surplus(aW
+−i,ai =
+1) ≥Social surplus(aW
+−i,ai = 0). Substituting the expression for the social surplus into this equa-
+tion yields ∑
+j∈V
+(1 −vj)
+(
+Ij(aW
+−i,ai = 1) −Ij(aW
+−i,ai = 0)
+)
+≥0. (A-1)
+Conditional on the data provided by other users, i.e., k ̸= ifor which aW
+k = 1, (Xj,Si) are jointly
+normal and their covariance matrix is given by
+(
+σ2
+j −Ij(aW
+−i,ai = 0) Cov( Xi,Xj |aW
+−i,ai = 0)
+Cov(Xi,Xj |aW
+−i,ai = 0) 1 + σ2
+i −Ii(aW
+−i,ai = 0)
+)
+.
+25
+
+=== PAGE 27 / 38 ===
+
+Therefore, if in addition to users k ̸= i for which aW
+k = 1 , user i also shares her data, then the
+leaked information of user jbecomes
+Ij(aW
+−i,ai = 1) = Ij(aW
+−i,ai = 0) + Cov(Xi,Xj |aW
+−i,ai = 0)2
+1 + σ2
+i −Ii(aW
+−i,ai = 0) . (A-2)
+Substituting equation (A-2) into equation (A-1) completes the proof. ■
+Proof of Lemma 1
+Part 1, Monotonicity: In order to show that leaked information is monotonically increasing in the
+set of users who share, it sufﬁces to establish that for any i,j ∈V and a−j ∈{0,1}n−1 we have
+Ii(aj = 1,a−j) ≥Ii(aj = 0,a−j). We next consider the two possible cases where i = j and i ̸= j
+and show this inequality.
+• i = j: conditional on shared data, the joint distribution of (Xi,Si) is normal with covari-
+ance matrix
+(
+ˆσ2
+i ˆσ2
+i
+ˆσ2
+i 1 + ˆσ2
+i
+)
+, where ˆσ2
+i = E[X2
+i | a−j]. We have Ii(ai = 1 ,a−i) = σ2
+i −
+(
+ˆσ2
+i − ˆσ4
+i
+1+ˆσ2
+i
+)
+≥σ2
+i −ˆσ2
+i = Ii(ai = 0,a−i), completing the proof of this part.
+• i̸= j: conditional on shared data, the joint distribution of (Xi,Sj) is normal with covariance
+matrix
+(
+ˆσ2
+i ˆΣij
+ˆΣij 1 + ˆσ2
+j
+)
+, where ˆσ2
+i = E[X2
+i |a−j], ˆσ2
+j = E[X2
+j |a−j], and ˆΣij = E[XiXj |a−j].
+We have Ii(aj = 1,a−j) = σ2
+i −
+(
+ˆσ2
+i −
+ˆΣ2
+ij
+1+ˆσ2
+j
+)
+≥σ2
+i −ˆσ2
+i = Ii(aj = 0,a−j), completing the
+proof of the monotonicity.
+Part 2, Submodularity: We ﬁrst introduce some additional notation for this proof. For any pair
+i,j ∈V, a−{i,j}is the collection of all users’ actions except for useriand user j. To prove this part,
+it sufﬁces to establish that for any a−{i,j}∈{0,1}n−2, we have
+Ij(a−{i,j},aj = 1,ai = 0) −Ij(a−{i,j},aj = 0,ai = 0)
+≥Ij(a−{i,j},aj = 1,ai = 1) −Ij(a−{i,j},aj = 0,ai = 1).
+Conditional on a−{i,j}, (Xj,Sj,Si) has a normal distribution with covariance matrix
+
+
+ˆσ2
+j ˆσ2
+j ˆΣij
+ˆσ2
+j 1 + ˆσ2
+j ˆΣij
+ˆΣij ˆΣij 1 + ˆσ2
+i
+
+,
+where ˆσ2
+i = E[X2
+i | a−{i,j}], ˆσ2
+j = E[X2
+j | a−{i,j}], and ˆΣij = E[XiXj | a−{i,j}]. Note that in
+writing this matrix, we are using the fact that the correlation betweenXi and Sj is the same as the
+correlation between Si and Sj (this holds because Si = Xi + Zi for some independent noise Zi).
+26
+
+=== PAGE 28 / 38 ===
+
+Based on this covariance matrix,
+Ij(a−{i,j},aj = 1,ai = 0) −Ij(a−{i,j},aj = 0,ai = 0) = ˆσ4
+j
+1 + ˆσ2
+j
+. (A-3)
+We also have
+Ij(a−{i,j},aj = 1,ai = 1) −Ij(a−{i,j},aj = 0,ai = 1) =
+ˆσ4
+j(1 + ˆσ2
+i) + ˆΣ2
+ij(1 + ˆσ2
+j) −2ˆΣ2
+ijˆσ2
+j
+(1 + ˆσ2
+i)(1 + ˆσ2
+j) −ˆΣ2
+ij
+−
+ˆΣ2
+ij
+1 + ˆσ2
+i
+.
+(A-4)
+Comparing (A-3) and (A-4), the submodularity of leaked information becomes equivalent toˆσ4
+j(1+
+ˆσ2
+i) + ˆΣ2
+ij(1 + ˆσ2
+j) ≤2ˆσ2
+j(1 + ˆσ2
+j)(1 + ˆσ2
+i), which follows from ˆΣ2
+ij ≤ˆσ2
+iˆσ2
+j. ■
+Proof of Lemma 2
+Using Lemma 1, we ﬁrst establish that the game is supermodular. The rest of the proof fol-
+lows from Tarski’s ﬁxed point theorem. Speciﬁcally, for any i ∈ V, we prove that the game
+has increasing differences property. This follows from part 2 of Lemma 1 that establishes if
+a′
+−i ≥a−i then Ii(ai = 1,a′
+−i) −Ii(ai = 0,a′
+−i) ≤Ii(ai = 1,a−i) −Ii(ai = 0,a−i) which yields
+ui(ai = 1,a′
+−i) −ui(ai = 0,a′
+−i) ≥ui(ai = 1,a−i) −ui(ai = 0,a−i). Now consider the mapping
+F : {0,1}n →{0,1}n where Fi(a) = argmaxa∈{0,1}ui(a,a−i). Using supermodularity of the game,
+this mapping is order preserving and therefore Tarski’s theorem establishes that its ﬁxed points
+form a complete lattice and therefore is non-empty and has greatest and least elements. Finally,
+note that each ﬁxed point of the mapping F is a user equilibrium and vice versa. Therefore, the
+set of ﬁxed points of the mapping F is exactly the set of user equilibria denoted by A(p). ■
+Proof of Theorem 1
+We prove that the following action proﬁle and price vector constitute an equilibrium:
+aE = argmaxa∈{0,1}n
+∑
+i∈V
+(1 −vi)Ii(a) + viIi(a−i,ai = 0),
+and pE
+i = vi
+(
+Ii
+(
+ai = 1,aE
+−i
+)
+−Ii
+(
+ai = 0,aE
+−i
+))
+, if aE
+i = 1 and pE
+i = 0 if aE
+i = 0 . First note that
+aE ∈A(pE). This is because the payoff of user iwhen aE
+i = 1 is pE
+i −viIi(aE) = −viIi(aE
+−i,ai =
+0). If user ideviates and chooses not to share, her payoff would remain unchanged. However,
+when aE
+i = 0, her payoff is −viIi(aE
+−i,ai = 0), and deviation to sharing would lead to the lower
+payoff of −viIi(aE
+−i,ai = 1) . Therefore, faced with the price vector offer of pE, the users do
+not have a proﬁtable deviation from aE. We next show that for any p and a ∈A(p), we have
+U(aE,pE) ≥U(a,p). Since a is a user equilibrium for the price vector p, i.e., a ∈A(p), for all
+i such that ai = 1 , we must have pi ≥ vi(Ii(ai = 1,a−i) −Ii(ai = 0,a−i)). This is because if
+pi < vi(Ii(ai = 1,a−i) −Ii(ai = 0,a−i)), then user i would have a proﬁtable deviation to not
+27
+
+=== PAGE 29 / 38 ===
+
+share her data. Thus,
+U(a,p) =
+∑
+i∈V
+Ii(a) −
+∑
+i∈V: ai=1
+pi ≤
+∑
+i∈V
+Ii(a) −
+∑
+i∈V: ai=1
+vi(Ii(ai = 1,a−i) −Ii(ai = 0,a−i))
+=
+∑
+i∈V
+(1 −vi)Ii(a) + viIi(a−i,ai = 0) ≤U(aE,pE).■
+Proof of Theorem 2
+We use the following lemmas in this proof.
+Lemma A-1 (Horn and Johnson [1987], Chapter 0.7). • The inverse of a matrix in terms of its blocks
+is
+(
+A B
+C D
+)−1
+=
+(
+(A−BD−1C)−1 −A−1B(D−CA−1B)−1
+−D−1C(A−BD−1C)−1 (D−CA−1B)−1
+)
+.
+• Sherman-Morrison-Woodbury formula for the inverse of rank one perturbation of matrix: Suppose
+A ∈Rn×n is an invertible square matrix and u,v ∈Rn are column vectors. Then A+ uvT is
+invertible if and only if 1 +vTA−1u̸= 0. If A+ uvT is invertible, then its inverse is (A+ uvT)−1 =
+A−1 −A−1uvT A−1
+1+vT A−1u .
+Lemma A-2 (Feller [2008], Chapter 5, Theorem 5) . Suppose (X1,...,X n) has a normal distribution
+with covariance matrix Σ. The conditional distribution of X1 given X2,...,X n is normal with covariance
+matrix Σ11 −dTD−1d, where D is the matrix obtained from Σ by removing the ﬁrst row and the ﬁrst
+column and d = (Σ12,..., Σ1n)T.
+We now proceed with the proof of theorem. We ﬁrst prove the existence of pa. Let pa
+i =
+vi(Ii(ai = 1,a−i) −Ii(ai = 0,a−i)). For any price vector p such that a ∈A(p) we have
+ui(ai = 1,a−i) = pi −viIi(ai = 1,a−i) ≥ui(ai = 0,a−i) = −viIi(ai = 0,a−i), for all is.t. ai = 1.
+Rearranging this inequality leads to pi ≥vi(Ii(ai = 1,a−i) −Ii(ai = 0,a−i)) = pa
+i. We next ﬁnd
+the price vector pa in terms of the matrixΣ. Let S ⊆{1,...,n }be the set of users who have shared
+their data. Leaked information about any useriis only a function of the correlation among users in
+Sand the correlation between useriand the users inS. The relevant covariance matrix for ﬁnding
+leaked information about user iis given by the rows and columns of the matrix Σ corresponding
+to users in S∪{i}. Therefore, without loss of generality, we suppose that i= 1 and all users have
+shared their data and work with the entire matrix Σ. We ﬁnd the equilibrium price for user 1 (the
+price offered to other users can be obtained similarly). With a1 = ...,a n = 1, (X1,S1,...,S n) is
+28
+
+=== PAGE 30 / 38 ===
+
+normally distributed with covariance matrix
+
+
+σ2
+1 σ2
+1 Σ12 ... Σ1n
+σ2
+1 1 + σ2
+1 Σ12 ... Σ1n
+Σ12 Σ12 1 + σ2
+2 ... Σ2n
+... ... ... ... ...
+Σ1n Σ1n Σ2n ... 1 + σ2
+n
+
+
+.
+Therefore, using Lemma A-2, the conditional distribution of X1 given s1,...,s n is normal with
+variance σ2
+1−(σ2
+1,Σ12,..., Σ1n)(I+Σ)−1(σ2
+1,Σ12,..., Σ1n)T. The best estimator ofX1 given s1,...,s n
+is its mean which leads to the following leaked information
+I1(a1 = 1,a−1) = (σ2
+1,Σ12,..., Σ1n)(I+ Σ)−1(σ2
+1,Σ12,..., Σ1n)T. (A-5)
+If user 1 deviates to a1 = 0, then (X1,S2,...,S n) has a normal distribution with covariance
+
+
+σ2
+1 Σ12 ... Σ1n
+Σ12
+... ...
+... I+ D
+Σ1n ... ...
+
+
+,
+where Dis obtained from Σ by removing the ﬁrst row and column. Therefore, using Lemma A-2,
+the conditional distribution of X1 given s2,...,s n is normal with variance σ2
+1 −(Σ12,..., Σ1n)(I+
+D)−1(Σ12,..., Σ1n)T and leaked information of user 1 is
+I1(a1 = 0,a−1) = (Σ12,..., Σ1n)(I+ D)−1(Σ12,..., Σ1n)T. (A-6)
+Using A-5 and A-6, the price offered to user1 must satisfy pa
+1
+v1
+= (σ2
+1,dT)T
+(
+σ2
+1 + 1 dT
+d (I+ D)
+)−1
+(σ2
+1,dT)−
+dT(I+ D)−1d, where d = (Σ12,..., Σ1n). We next simplify the right-hand side of the above equa-
+tion. Using part 1 of Lemma A-1,
+(σ2
+1,dT)T
+(
+σ2
+1 + 1 dT
+d I+ D
+)−1
+(σ2
+1,dT) −dT(I+ D)−1d = (σ2
+1,dT)TM(σ2
+1,dT) −dT(I+ D)−1d,
+with
+M =
+
+
+(
+(σ2
+1 + 1) −dT(I+ D)−1d
+)−1 − 1
+σ2
+1+1 dT
+(
+(I+ D) − 1
+1+σ2
+1
+ddT
+)−1
+−(I+ D)−1d
+(
+(σ2
+1 + 1) −dT(I+ D)−1d
+)−1 (
+(I+ D) − 1
+1+σ2
+1
+ddT
+)−1
+
+.
+Using part 2 of Lemma A-1 and I1(a1 = 0 ,a−1) = dT(I + D)−1d, we can further simplify this
+29
+
+=== PAGE 31 / 38 ===
+
+equation to (σ2
+1−I1(a1=0,a−1))
+2
+(σ2
+1+1)−I1(a1=0,a−1) . This also implies the decomposition stated in the theorem. ■
+Proof of Corollary 1
+Using Theorem 2, we have p(ai=1,a−i)
+i = vi
+(σ2
+i −Ii(ai=0,a−i))2
+(σ1
+i +1)−Ii(ai=0,a−i) , which is increasing in σ2
+i and de-
+creasing in Ii(ai = 0,a−i). Again, using Theorem 2, we have Ii(ai = 1,a−i) = Ii(ai = 0,a−i) +
+(σ2
+i −Ii(ai=0,a−i))2
+(σ1
+i +1)−Ii(ai=0,a−i) , which is increasing in both Ii(ai = 0,a−i) and σ2
+i. ■
+Proof of Proposition 2
+Let i∈V be such thata′
+i = ai = 1. Using Theorem 2, we havepa
+i = vi(Ii(ai = 1,a−i) −Ii(ai = 0,a−i))
+(a)
+≥
+vi
+(
+Ii(a′
+i = 1,a′
+−i) −Ii(a′
+i = 0,a′
+−i)
+)
+= pa′
+i , where (a) follows from submodularity of leaked infor-
+mation, i.e., part 2 of Lemma 1. ■
+Proof of Lemma 3
+Suppose to obtain a contradiction that in equilibriumaE
+i = 0 for some i∈V with vi ≤1. We prove
+that there exists a deviation which increases the platform’s payoff. In particular, the platform can
+deviate and offer price pi = vi
+(
+Ii(ai = 1,aE
+−i) −Ii(ai = 0,aE
+−i)
+)
+so that user ishares.
+From Theorem 1, the equilibrium action proﬁleaE must maximize ∑
+i∈V(1−vi)Ii(a)+viIi(ai =
+0,a−i). We show that (ai = 1,aE
+−i) increases this objective, which yields a contradiction:
+
+ ∑
+j∈V\{i}
+Ij(ai = 1,aE
+−i) −Ij(ai = 0,aE
+−i)
+
+−
+
+
+∑
+j∈V: aE
+j =1
+p
+(ai=1,aE
+−i)
+j −p
+(ai=0,aE
+−i)
+j
+
+
++
+(
+(1 −vi)Ii(ai = 1,aE
+−i) + viIi(ai = 0,aE
+−i)
+)
+−Ii(ai = 0,aE
+−i)
+(a)
+≥−
+
+
+∑
+j∈V: aE
+j =1
+p
+(ai=1,aE
+−i)
+j −p
+(ai=0,aE
+−i)
+j
+
++
+(
+(1 −vi)Ii(ai = 1,aE
+−i) + viIi(ai = 0,aE
+−i)
+)
+−Ii(ai = 0,aE
+−i)
+(b)
+≥(1 −vi)
+(
+Ii(ai = 1,aE
+−i) −Ii(ai = 0,aE
+−i)
+)(c)
+≥0,
+where (a) follows from monotonicity of leaked information (i.e., part 1 of Lemma 1), (b) follows
+from Proposition 2, and (c) follows from the fact that vi ≤1 and leaked information is monotone.
+This shows that for any isuch that vi ≤1 we must have aE
+i = 1. ■
+Proof of Theorem 3
+We use the following notation in this proof. For any action proﬁle a ∈{0,1}n and any subset
+T ⊆{1,...,n }, we let aT denote a vector that include all the entries of ai for which i∈T.
+30
+
+=== PAGE 32 / 38 ===
+
+Part 1: For a given action proﬁle a, the social surplus can be written as
+Social surplus(a) =
+∑
+i∈V
+(1 −vi)Ii(a)
+(a)
+=
+∑
+i∈V(l)
+(1 −vi)Ii(aV(l) ,aV(h) = 0) +
+∑
+i∈V(h)
+(1 −vi)Ii(ai,a−i = 0)
+(b)
+≤
+∑
+i∈V(l)
+(1 −vi)Ii(V(l)),
+where (a) follows from the fact that the data of high-value users are not correlated with the data
+of any other user, and (b) follows from the fact that for i ∈V (l), leaked information about user
+i (weakly) increases in the set of users who share (from part 1 of Lemma 1) and 1 −vi ≥ 0.
+Conversely, for i∈V(h) we have 1 −vi <0. This implies aW
+i = 1 if and only if i∈V(l).
+The payoff of the platform for a given action proﬁle a (and the corresponding equilibrium
+prices to sustain it) can be written as
+U(a,pa) =
+∑
+i∈V
+(1 −vi)Ii(a) + viIi(ai = 0,a−i)
+(a)
+=
+∑
+i∈V(l)
+(1 −vi)Ii(aV(l) ) + viIi(aV(l)\{i}) +
+∑
+i∈V(h)
+(1 −vi)Ii(ai,a−i = 0)
+(b)
+≤
+∑
+i∈V(l)
+(1 −vi)Ii(aV(l) ) + viIi(aV(l)\{i})
+(c)
+≤
+∑
+i∈V(l)
+(1 −vi)Ii(V(l)) + viIi(V(l) \{i})
+where (a) follows from the fact that the data of high-value users are not correlated with the data
+of any other user, (b) follows from the fact that1 −vi <0 for i∈V(h), and (c) follows from Lemma
+3. Therefore, no high-value user shares in equilibrium and we have aE = aW.
+Part 2: Let i ∈V (l) and j ∈V (h) be such that Σij > 0. Therefore, there exists δ >0 such that
+Ij(V(l)) = δ >0. We next show that for vj > 1 +
+∑
+i∈V(l) σ2
+i
+δ the surplus of the action proﬁle aE is
+negative, establishing that it does not coincide with the ﬁrst best. We have
+Social surplus(aE) =
+∑
+i∈V(l)
+(1 −vi)Ii(aE) +
+∑
+i∈V(h)
+(1 −vi)Ii(aE)
+(a)
+≤
+∑
+i∈V(l)
+(1 −vi)σ2
+i +
+∑
+i∈V(h)
+(1 −vi)Ii(aE)
+(b)
+≤
+
+∑
+i∈V(l)
+(1 −vi)σ2
+i
+
++ (1 −vj)Ij(V(l)) ≤
+
+∑
+i∈V(l)
+σ2
+i
+
++ (1 −vj)Ij(V(l))
+(c)
+< 0
+where in (a) for low-value users we have upper bounded leaked information with its maximum; in
+(b) we removed all the negative terms in the second summation except for the one corresponding
+to jfor which we replaced the leaked information (of equilibrium action proﬁle) by its minimum
+(using Lemma 3); and in (c) we used vj >1 +
+∑
+i∈V(l) σ2
+i
+δ .
+Part 3: Let i,k ∈V(h) be such that Σik >0. The ﬁrst best involves all low-values are sharing their
+data and none of the high-value users doing so. We next show that if the value of privacy for high-
+value user iis small enough, then at least one high-value user shares in equilibrium. We show this
+31
+
+=== PAGE 33 / 38 ===
+
+by assuming the contrary and then reaching a contradiction. Suppose that none of high-value
+users share. We show that if user ishares, the platform’s payoff increases. We let a′n denote the
+sharing proﬁle in which all users in V(l) ∪{i}share their data and a ∈{0,1}n denote the sharing
+proﬁle in which all users in V(l) share their data. Using this notation, let us write
+U(a′,pa′
+) = (1 −vi)Ii(V(l) ∪{i}) + viIi(V(l)) +
+∑
+k∈V(h)\{i}
+Ik(V(l) ∪{i})
++
+
+∑
+j∈V(l)
+(1 −vj)Ij(V(l) ∪{i}) + vjIj(V(l) ∪{i}\{j})
+
+
+(a)
+= (1 −vi)Ii(V(l) ∪{i}) + viIi(V(l)) +
+
+ ∑
+k∈V(h)\{i}
+Ik(V(l) ∪{i})
+
++ U(a,pa)
+(b)
+> U(a,pa),
+where (a) follows from the fact that high- and low-value users are uncorrelated and (b) follows
+by letting vi <
+Ii(V(l)∪{i})+∑
+k∈V(h)\{i}Ik(V(l)∪{i})
+Ii(V(l)∪{i})−Ii(V(l)) =
+Ii({i})+∑
+k∈V(h)\{i}Ik({i})
+Ii({i}) . Finally, note that using
+Σik >0, the right-hand side of the above inequality is strictly larger than1. The proof is completed
+by letting ¯vi =
+Ii({i})+∑
+k∈V(h)\{i}Ik({i})
+Ii({i}) . ■
+Proof of Proposition 3
+For an equilibrium action proﬁle aE, social surplus is Social surplus(aE) = ∑
+i∈V(1 −vi)Ii(aE)
+(a)
+≤∑
+i∈V(l) (1 −vi)Ii(V) + ∑
+i∈V(h) (1 −vi)Ii(V(l)) where (a) follows from the fact that for i ∈ V(l),
+leaked information about user iincreases in the set of users who share (i.e., part 1 of Lemma 1)
+and 1 −vi ≥0; and for i∈V(h) we have 1 −vi <0 and Ii(aE) ≥Ii(V(l)) by using Lemma 3. ■
+Proof of Proposition 4
+Using Theorem 2, leaked information about a high-value user i∈V(h) if low-value users share is
+(Σij1 ,..., Σijk)((I+ Σ) +M)−1(Σij1 ,..., Σijk)T,
+where low-value users are denoted byj1,...,j k and the diagonal entries of M are zero and Mr,sis
+the covariance between two low-value users rand s. We next prove that this leaked information
+is larger than or equal to ∑k
+l=1
+Σ2
+ijl
+||Σ||1+1 , where ||Σ||1 = maxi=1,...,n
+∑n
+j=1 |Σij|. We ﬁrst show that
+((I+Σ)+ M)−1−((||Σ||1 + 1)I)−1 ⪰0 (i.e., the matrix ((I+Σ)+ M)−1−((||Σ||1 + 1)I)−1 is positive
+semideﬁnite). Letting µi denote an eigen value of the matrix ((I+ Σ) +M)−1 −((||Σ||1 + 1)I)−1,
+it sufﬁces to show that µi ≥0. There exists an eigenvalue, λi, of the matrix (I+ Σ) +M for which
+we have µi = 1
+λi
+− 1
+||Σ||1+1 . We next show that all eigenvalues of the matrix (I + Σ) + M are
+(weakly) smaller than ||Σ||1 + 1, which establishes that µi ≥0. Using Gershgorin Circle Theorem,
+the matrix (||Σ||1 + 1)I−((I+ Σ) + M) is positive semideﬁnite. This is because for row iof this
+32
+
+=== PAGE 34 / 38 ===
+
+matrix, the diagonal entry is ||Σ||1 −Σii which is larger than the summation of the absolute values
+of the off-diagonal entries ∑
+j̸=iΣij. Therefore, for any eigenvalue of the matrix (I+ Σ) +M such
+as λi, we have λi ≤||Σ||1 + 1. We can write
+(Σij1 ,..., Σijk)((I+ Σ) +M)−1(Σij1 ,..., Σijk)T
+≥(Σij1 ,..., Σijk)((||Σ||1 + 1)I)−1(Σij1 ,..., Σijk)T =
+k∑
+l=1
+Σ2
+ijl
+||Σ||1 + 1. (A-7)
+Using Proposition 3, equilibrium surplus is negative if ∑
+i∈V(h) (vi −1)Ii(V(l)) > ∑
+i∈V(l) (1 −
+vi)Ii(V). From inequality (A-7) and Ii(V) ≤σ2
+i, this condition holds provided that ∑
+i∈V(h) (vi −
+1)
+∑
+j∈V(l) Σ2
+ij
+||Σ(l)||+1 > ∑
+i∈V(l) σ2
+i(1 −vi), where Σ(l) denotes the submatrix of Σ which only includes the
+rows and columns corresponding to low value users. This completes the proof. ■
+Proof of Generalization of Lemma 3 under Properties 1-4
+The proof follows the proof of Lemma 3 closely, and we provide a sketch, emphasizing the places
+where we use Properties 1-4. Suppose to obtain a contradiction that in equilibriumaE
+i = 0 for some
+i∈V with vi ≤1. The equilibrium action proﬁle aE must maximize ∑
+i∈V(1 −vi)Ii(a) +viIi(ai =
+0,a−i). We show that (ai = 1,aE
+−i) increases this objective, which yields a contradiction:
+
+ ∑
+j∈V\{i}
+Ij(ai = 1,aE
+−i) −Ij(ai = 0,aE
+−i)
+
+−
+
+
+∑
+j∈V: aE
+j =1
+p
+(ai=1,aE
+−i)
+j −p
+(ai=0,aE
+−i)
+j
+
+
++
+(
+(1 −vi)Ii(ai = 1,aE
+−i) + viIi(ai = 0,aE
+−i)
+)
+−Ii(ai = 0,aE
+−i)
+(a)
+≥−
+
+
+∑
+j∈V: aE
+j =1
+p
+(ai=1,aE
+−i)
+j −p
+(ai=0,aE
+−i)
+j
+
++
+(
+(1 −vi)Ii(ai = 1,aE
+−i) + viIi(ai = 0,aE
+−i)
+)
+−Ii(ai = 0,aE
+−i)
+(b)
+≥(1 −vi)
+(
+Ii(ai = 1,aE
+−i) −Ii(ai = 0,aE
+−i)
+)(c)
+≥0,
+where (a) follows from monotonicity of leaked information (i.e., Property 3), (b) follows from the
+fact that the price is pi = vi
+(
+Ii(ai = 1,aE
+−i) −Ii(ai = 0,aE
+−i)
+)
+and the submodularity of leaked
+information (i.e., Property 4), and (c) follows from the fact that vi ≤1 and leaked information is
+monotone (i.e., Property 3). This shows that for any isuch that vi ≤1 we must have aE
+i = 1. The
+proof of this lemma uses properties 3 and 4. A generalization of Theorem 3 under properties 1-4
+uses this lemma and properties 1 and 2. ■
+Mutual Information Satisﬁes Properties 1-4
+No Leakage with independence: If Xi is independent from (Xj : j ̸= i), then for any action
+proﬁle a−i and any user j we have Ij(ai = 1 ,a−i) = I(Xj; (Xi,Y ))
+(a)
+= H(Y) + H(Xi|Y) −
+33
+
+=== PAGE 35 / 38 ===
+
+(H(Y|Xj) + H(Xi|Xj,Y ))
+(b)
+= H(Y)+ H(Xi)−H(Y|Xj)−H(Xi) = H(Y)−H(Y|Xj) = I(Xj; Y) =
+Ij(ai = 0,a−i), where Y = (Xk : ak = 1,k ̸= i,j); (a) follows from the deﬁnition of mutual infor-
+mation and the entropy function and the chain rule for entropy; and (b) follows from the fact that
+Xi is independent of the rest of the random variables.
+Leakage with non-independence: If Xi and Xj are non-independent conditional on any other set
+of random variables, then for any action proﬁle a−i we have Ij(ai = 1,a−i) −Ij(ai = 0,a−i) =
+I(Xj; (Xi,Y )) −I(Xj; Y) = I(Xi; Xj|Y)
+(a)
+> 0, where Y = (Xk : ak = 1,k ̸= i,j), and (a) follows
+from the fact that mutual information is non-negative and becomes zeros if and only if the two
+random variable are independent.
+shouldMonotonicity: For i ∈ V, let Y = ( Xj : aj = 1) and Z = ( Xj : a′
+j = 1 ,aj = 0) .
+Then the inequality Ii(a′) ≥Ii(a) becomes equivalent to I(Xi; Y,Z) ≥I(Xi; Y). This inequality
+holds because I(Xi; Y,Z) = I(Xi; Y) + I(Xi; Z|Y) ≥ I(Xi; Y), where we used the chain rule
+for mutual information and positivity of (conditional) mutual information (see e.g., Cover and
+Thomas [2012]).
+Submodularity: For i ∈V, let Y = (Xj : aj = 1,j ̸= i) and Z = (Xj : a′
+j = 1,aj = 0,j ̸= i).
+Then the inequality Ii(ai = 1,a−i) −Ii(ai = 0,a−i) ≥Ii(ai = 1,a′
+−i) −Ii(ai = 0,a′
+−i) becomes
+equivalent to I(Xi; Xi,Y ) −I(Xi; Y) ≥I(Xi; Xi,Y,Z ) −I(Xi; Y,Z), that in turn is equivalent to
+I(Xi; Y,Z) ≥I(Xi; Y), wuich we already established above.
+References
+A. Acquisti and H. R. Varian. Conditioning prices on purchase history. Marketing Science, 24(3):
+367–381, 2005.
+A. Acquisti, C. Taylor, and L. Wagman. The economics of privacy. Journal of Economic Literature,
+54(2):442–92, 2016.
+A. R. Admati and P . Pﬂeiderer. A monopolistic market for information.Journal of Economic Theory,
+39(2):400–438, 1986.
+A. Agarwal, M. Dahleh, and T. Sarkar. A marketplace for data: An algorithmic solution. In
+Proceedings of the 2019 ACM Conference on Economics and Computation, pages 701–726, 2019.
+A. Agrawal, J. Gans, and A. Goldfarb. Prediction machines: the simple economics of artiﬁcial intelli-
+gence. Harvard Business Press, 2018.
+J. J. Anton and D. A. Yao. The sale of ideas: Strategic disclosure, property rights, and contracting.
+Review of Economic Studies, 69(3):513–531, 2002.
+S. Athey, C. Catalini, and C. Tucker. The digital privacy paradox: Small money, small costs, small
+talk. Technical report, National Bureau of Economic Research, 2017.
+M. Babaioff, R. Kleinberg, and R. Paes Leme. Optimal mechanisms for selling information. In
+Proceedings of the 2012 ACM Conference on Electronic Commerce, pages 92–109, 2012.
+34
+
+=== PAGE 36 / 38 ===
+
+J. Begenau, M. Farboodi, and L. Veldkamp. Big data in ﬁnance and the growth of large ﬁrms.
+Journal of Monetary Economics, 97:71–87, 2018.
+D. Bergemann and A. Bonatti. Selling cookies. American Economic Journal: Microeconomics , 7(3):
+259–94, 2015.
+D. Bergemann and A. Bonatti. Markets for information: An introduction. Annual Review of Eco-
+nomics, 11, 2019.
+D. Bergemann, A. Bonatti, and A. Smolin. The design and price of information.American Economic
+Review, 108(1):1–48, 2018.
+D. Bergemann, A. Bonatti, and T. Gan-a. Markets for information. mimeo, MIT and Yale, 2019.
+D. Boyd. Networked privacy. Personal Democracy Forum. New York, NY, 2011.
+M. Burkschat and N. Torrado. On the reversed hazard rate of sequential order statistics. Statistics
+& Probability Letters, 85:106–113, 2014.
+Y. Chen and S. Zheng. Prior-free data acquisition for accurate statistical estimation. In Proceedings
+of the 2019 ACM Conference on Economics and Computation, pages 659–677, 2019.
+Y. Chen, N. Immorlica, B. Lucier, V . Syrgkanis, and J. Ziani. Optimal data acquisition for statistical
+estimation. In Proceedings of the 2018 ACM Conference on Economics and Computation, pages 27–44,
+2018.
+J. P . Choi, D.-S. Jeon, and B.-C. Kim. Privacy and personal data collection with information exter-
+nalities. Journal of Public Economics, 173:113–124, 2019.
+E. H. Clarke. Multipart pricing of public goods. Public choice, 11(1):17–33, 1971.
+T. M. Cover and J. A. Thomas. Elements of information theory. John Wiley & Sons, 2012.
+J. Cr ´emer and R. P . Mclean. Full extraction of the surplus in bayesian and dominant strategy
+auctions. Econometrica, 56(6):1247–1257, 1988.
+P . Dasgupta, E. Maskin, et al. The existence of equilibrium in discontinuous economic games, i:
+Theory. Review of Economic Studies, 53(1):1–26, 1986.
+C. Dwork, A. Roth, et al. The algorithmic foundations of differential privacy. Foundations and
+Trends® in Theoretical Computer Science, 9(3–4):211–407, 2014.
+K. Eliaz, R. Eilat, and X. Mu. Optimal privacy-constrained mechanisms. Available at SSRN:
+https://ssrn.com/abstract=3336795, 2019.
+P . Es˝o and B. Szentes. Optimal information disclosure in auctions and the handicap auction.Review
+of Economic Studies, 74(3):705–731, 2007.
+I. P . Fainmesser, A. Galeotti, and R. Momot. Digital privacy. Available at SSRN:
+https://ssrn.com/abstract=3459274, 2019.
+J. A. Fairﬁeld and C. Engel. Privacy as a public good. Duke LJ, 65:385, 2015.
+M. Farboodi, R. Mihet, T. Philippon, and L. Veldkamp. Big data and ﬁrm dynamics. InAEA papers
+and proceedings, volume 109, pages 38–42, 2019.
+35
+
+=== PAGE 37 / 38 ===
+
+W. Feller. An introduction to probability theory and its applications , volume 2. John Wiley & Sons,
+2008.
+A. Ghosh and A. Roth. Selling privacy at auction. Games and Economic Behavior, 91:334–346, 2015.
+A. Goldfarb and C. Tucker. Online display advertising: Targeting and obtrusiveness. Marketing
+Science, 30(3):389–404, 2011.
+A. Goldfarb and C. Tucker. Shifts in privacy concerns. American Economic Review, 102(3):349–53,
+2012.
+R. Gradwohl. Information sharing and privacy in networks. In Proceedings of the 2017 ACM Con-
+ference on Economics and Computation, pages 349–350, 2017.
+T. Groves. Incentives in teams. Econometrica: Journal of the Econometric Society, pages 617–631, 1973.
+R. A. Horn and C. R. Johnson. Matrix analysis. Cambridge, 1987.
+J. Horner and A. Skrzypacz. Selling information. Journal of Political Economy , 124(6):1515–1562,
+2016.
+S. Ichihashi. Non-competing data intermediaries. Available at SSRN:
+https://ssrn.com/abstract=3310410, 2019.
+S. Ichihashi. Dynamic privacy choices. In Proceedings of the 2020 ACM Conference on Economics and
+Computation, pages 539–540, 2020a.
+S. Ichihashi. Online privacy and information disclosure by consumers. American Economic Review,
+110(2):569–95, 2020b.
+C. I. Jones, C. Tonetti, et al. Nonrivalry and the economics of data. In2018 Meeting Papers, number
+477. Society for Economic Dynamics, 2018.
+B. Jullien, Y. Lefouili, and M. H. Riordan. Privacy protection, security, and consumer retention.
+Security, and Consumer Retention (June 1, 2020), 2020.
+K. C. Laudon. Markets and privacy. Communications of the ACM, 39(9):92–104, 1996.
+M. MacCarthy. New directions in privacy: Disclosure, unfairness and externalities. Available at
+SSRN: https://ssrn.com/abstract=3093301.
+R. Montes, W. Sand-Zantman, and T. Valletti. The value of personal information in online markets
+with endogenous privacy. Management Science, 65(3):1342–1362, 2019.
+R. B. Myerson. Optimal auction design. Mathematics of operations research, 6(1):58–73, 1981.
+F. Pasquale. The black box society. Harvard University Press, 2015.
+E. A. Posner and E. G. Weyl. Radical markets: Uprooting capitalism and democracy for a just society .
+Princeton University Press, 2018.
+R. A. Posner. The economics of privacy. American Economic Review, 71(2):405–409, 1981.
+G. J. Stigler. An introduction to privacy in economics and politics. The Journal of Legal Studies ,
+pages 623–644, 1980.
+36
+
+=== PAGE 38 / 38 ===
+
+C. R. Taylor. Consumer privacy and the market for customer information. RAND Journal of Eco-
+nomics, pages 631–650, 2004.
+J. Tirole. Digital dystopia. 2019.
+H. R. Varian. Economic aspects of personal privacy. InInternet policy and economics, pages 101–109.
+Springer, 2009.
+L. Veldkamp and C. Chung. Data and the aggregate economy.Annual Meeting Plenary (No. 2019-1),
+Society for Economic Dynamics, 2019.
+W. Vickrey. Counterspeculation, auctions, and competitive sealed tenders. The Journal of ﬁnance ,
+16(1):8–37, 1961.
+S. D. Warren and L. D. Brandeis. The right to privacy. Harvard law review, pages 193–220, 1890.
+A. F. Westin. Privacy and freedom. Washington and Lee Law Review, 25(1):166, 1968.
+S. Zuboff. The age of surveillance capitalism: The ﬁght for a human future at the new frontier of power .
+Proﬁle Books, 2019.
+37
