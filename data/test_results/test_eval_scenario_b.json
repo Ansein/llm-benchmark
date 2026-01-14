@@ -1,0 +1,42 @@
+{
+  "model_name": "gpt-4.1-mini",
+  "llm_share_set": [],
+  "gt_share_set": [
+    4,
+    5,
+    6
+  ],
+  "convergence_history": [
+    []
+  ],
+  "converged": true,
+  "iterations": 1,
+  "metrics": {
+    "llm": {
+      "profit": 0.0,
+      "welfare": 0.0,
+      "total_leakage": 0.0,
+      "share_rate": 0.0
+    },
+    "ground_truth": {
+      "profit": 4.562026046191321,
+      "welfare": 1.8161397241574067,
+      "total_leakage": 5.693999999999999,
+      "share_rate": 0.375
+    },
+    "deviations": {
+      "profit_mae": 4.562026046191321,
+      "welfare_mae": 1.8161397241574067,
+      "total_leakage_mae": 5.693999999999999,
+      "share_rate_mae": 0.375
+    }
+  },
+  "labels": {
+    "llm_leakage_bucket": "low",
+    "gt_leakage_bucket": "high",
+    "llm_over_sharing": 0,
+    "gt_over_sharing": 0,
+    "llm_shutdown_better": 0,
+    "gt_shutdown_better": 0
+  }
+}

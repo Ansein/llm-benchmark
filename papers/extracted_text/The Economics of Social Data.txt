@@ -1,0 +1,2579 @@
+
+
+=== PAGE 1 / 57 ===
+
+The Economics of Social Data∗
+Dirk Bergemann† Alessandro Bonatti‡ Tan Gan§
+September 30, 2022
+Abstract
+A data intermediary acquires signals from individual consumers regarding their
+preferences. The intermediary resells the information in a product market wherein
+ﬁrms and consumers tailor their choices to the demand data. The social dimension of
+the individual data—whereby a consumer’s data are predictive of others’ behavior—
+generates a data externality that can reduce the intermediary’s cost of acquiring the
+information. The intermediary optimally preserves the privacy of consumers’ identities
+if and only if doing so increases social surplus. This policy enables the intermediary to
+capture the total value of the information as the number of consumers becomes large.
+Keywords: social data; personal information; consumer privacy; privacy paradox;
+data intermediaries; data externality; data policy; data rights; collaborative ﬁltering.
+JEL Classification: D44, D82, D83.
+∗Bergemann and Bonatti acknowledge ﬁnancial support through NSF Grant SES-1948692. Bergemann
+and Gan acknowledge ﬁnancial support from the Omidyar and Knight Foundation. We thank Joseph Abadi,
+Daron Acemo˘ glu, Susan Athey, Steve Berry, Nima Haghpanah, Nicole Immorlica, Al Klevorick, Scott Komin-
+ers, Annie Liang, Roger McNamee, Jeanine Mikl´ os-Thal, Enrico Moretti, Stephen Morris, Denis Nekipelov,
+Asu ¨Ozda˘ glar, Fiona Scott-Morton, Shoshana Vasserman, Glen Weyl, and Kai-Hao Yang for helpful discus-
+sions. We also thank Michelle Fang and Miho Hong for valuable research assistance and the audiences at
+numerous seminars and conferences for their productive comments.
+†Department of Economics, Yale University, New Haven, CT 06511, dirk.bergemann@yale.edu.
+‡MIT Sloan School of Management, Cambridge, MA 02142, bonatti@mit.edu.
+§Department of Economics, Yale University, New Haven, CT 06511, tan.gan@yale.edu.
+1
+arXiv:2004.03107v3  [cs.GT]  29 Sep 2022
+
+=== PAGE 2 / 57 ===
+
+1 Introduction
+Individual and Social Data The rise of large digital platforms—such as Facebook,
+Google, and Amazon in the US and JD, Tencent and Alibaba in China—has led to the
+unprecedented collection and commercial use of individual data. The steadily increasing
+user bases of these platforms generate massive amounts of data about individual consumers,
+including their preferences, locations, friends, and political views. In turn, many of the ser-
+vices provided by large Internet platforms rely critically on these data. The availability of
+individual-level data permits reﬁned search results, personalized product recommendations,
+informative ratings, timely traﬃc data, and targeted advertisements.
+The recent disclosures on the use and misuse of social data by digital platforms have
+prompted regulators to limit the largely unsupervised use of individual data by these com-
+panies. As a result, nearly all proposed and enacted regulation to date aims to ensure that
+consumers retain control over their data. However, the digital privacy paradox (e.g., Athey,
+Catalini, and Tucker (2017)) indicates that even small monetary incentives may lead indi-
+viduals to relinquish their private data. The low cost of acquiring private data–seemingly at
+odds with consumers’ stated preferences over their privacy– drives the appetite of platforms
+to gather information and may undermine the eﬃcacy of regulation. 1
+This article suggests a uniﬁed explanation for the digital privacy paradox and the selective
+use of data for price and product choices. A key observation is that individual data are
+actually social data : data captured from an individual user are informative not only about
+that user but also about other users with similar characteristics or behaviors. The social
+dimension of the data generates a data externality, the sign and magnitude of which depend
+on the structure of the data and on the use of the gained information.
+Many digital platforms use social data to increase the value provided by their services.
+Google search results, for example, are informed by the choices of previous users. Indeed,
+the search engine is only successful because it mediates information among many consumers.
+Likewise, Amazon uses data collected from other consumers to curate a “recommended for
+you” list of products and explicitly suggests goods that are “frequently bought together.”
+Finally, YouTube and Waze tailor their suggestions of videos and traﬃc directions to each
+user’s preferences, as estimated by combining network data and individual data. However,
+social data also facilitates surplus extraction, e.g., individual shopping data convey informa-
+tion about the willingness to pay of consumers with similar purchase histories.
+1The recent report by Furman, Coyle, Fletcher, McAules, and Marsden (2019) identiﬁes “the central
+importance of data as a driver of concentration and a barrier to competition in digital markets”—a theme
+echoed in the reports by Crem` er, de Montjoye, and Schweitzer (2019) and by the Stigler Committee on
+Digital Platforms (2019).
+2
+
+=== PAGE 3 / 57 ===
+
+We analyze three critical aspects of the economics of social data. First, we consider
+how the collection and transmission of individual data change the terms of trade among
+consumers, ﬁrms (e.g., advertisers), and data intermediaries (e.g., large Internet platforms
+that sell targeted advertising space). Second, we examine how the social dimension of the
+data magniﬁes the value of individual data for platforms and facilitates the acquisition of
+large datasets. Third, we analyze how data intermediaries with market power manipulate the
+trade-oﬀs induced by social data through the aggregation and the precision of the information
+that they provide about consumers.
+A Model of Data Intermediation We develop a framework to evaluate the ﬂow and
+allocation of individual data in the presence of data externalities. Our model focuses on
+three types of economic agents: consumers, ﬁrms, and data intermediaries. These agents
+interact in two distinct but linked markets: a data market and a product market.
+In the product market, each consumer (she) determines the quantity that she wishes to
+purchase, and a single producer (he) sets the unit price at which he oﬀers a product to the
+consumers. Initially, each consumer has private information about her willingness to pay for
+the ﬁrm’s product. This information consists of a signal with two additive components: a
+fundamental component and a noise component. The fundamental component represents
+her willingness to pay, and the noise component reﬂects that her initial information might
+be imperfect. Both components can be correlated across consumers: in practice, diﬀerent
+consumers’ preferences can exhibit common traits, and consumers might undergo similar
+experiences that induce correlation in their errors.
+In the data market, a monopolist intermediary acquires demand information from the
+individual consumers in exchange for a monetary payment. The intermediary then chooses
+how much information to share with the other consumers and how much information to
+sell to the producer. Sharing data with consumers allows them to tailor their demand to
+their true preferences. Sharing data with the producer enables more tailored and possibly
+personalized prices.
+We introduce a rich model for the structure of individual data, which allows for correlation
+in the fundamentals as well as in the noise terms across the individuals. We view this richness
+in the data structure as the deﬁning element of data in digital platforms. In contrast, we
+adopt a more speciﬁc model for product market interaction whereby a monopolist seller
+charges linear prices for variable quantity. However, our main insights apply to any product
+market where (a) data sharing teaches consumers about their preferences, and (b) a ﬁrm
+seeks to extract the consumers’ surplus. 2
+2In fact, the value of social data in Section 3 can be computed for alternative speciﬁcation of the product
+3
+
+=== PAGE 4 / 57 ===
+
+The Value of Social Data Collecting data from multiple consumers helps any market
+participant to ﬁlter the individual signals. This process can occur through two channels.
+First, in a market where the noise terms are largely idiosyncratic, a large sample size ﬁlters
+out errors and identiﬁes any common fundamentals. Second, in a market with largely id-
+iosyncratic fundamentals, many observations ﬁlter out demand shocks and identify common
+noise terms, thereby estimating individual fundamentals by diﬀerencing (Proposition 1).
+However, the choice by each consumer to share her data with the intermediary is guided
+only by her private beneﬁts and costs, not by the information gains she generates with her
+actions. Thus, the intermediary must compensate each individual consumer only to the
+extent that the disclosed information aﬀects her own welfare on the margin . Critically, the
+platform does not have to compensate the individual consumer for any changes in her welfare
+caused by the information deduced from other consumers’ signals.
+Therefore, social data drive a wedge between the socially eﬃcient and proﬁtable uses
+of information. First, the cost of acquiring individual data can be substantially less than
+the value of the information to the platform. Second, although many uses of consumer
+information exhibit positive externalities, very little prevents the platform from trading data
+for proﬁtable uses that are in fact harmful to consumers (Proposition 2). 3
+More generally, the data externality can induce too much or too little trade in data. In-
+deed, the condition for data intermediation to yield positive proﬁts is qualitatively diﬀerent
+from the condition for intermediation to yield social welfare gains. In particular, the inter-
+mediary obtains positive proﬁts when a large number of consumers exhibit a strong degree of
+correlation in their preferences: this allows the intermediary to acquire the consumers’ data
+in exchange for minimal compensation. On the other hand, welfare improvements depend on
+how much additional information each consumer can obtain about her own preferences from
+the other consumers’ signals. Therefore, when many consumers have strongly correlated
+preferences and very precise signals, data sharing is detrimental to welfare but proﬁtable to
+the intermediary. Conversely, there are data structures (e.g., ones with independent funda-
+mentals and strongly correlated error terms) for which data sharing is beneﬁcial to consumers
+but unproﬁtable for the data intermediary.
+market and a general result for anonymization is obtained in Section 4. Finally in Section 5, we consider
+a richer environment where a merchant oﬀers diﬀerent varieties to consumers with heterogeneous tastes for
+his products. In that case, the ﬁrm’s actions both generate value and attempt to capture it.
+3Recent empirical work on the eﬀects of privacy regulation such as the European Union’s General Data
+Protection Regulation (e.g., Aridor, Che, and Salz (2020) and Johnson, Shriver, and Goldberg (2020)),
+indicates that data externalities are relevant for consumers’ and businesses’ decisions to share their data.
+In the United States, legislators are also increasingly aware of the consequences of data externalities. In
+particular, the US House Committee on the Judiciary (2020) reports that “[...] the social data gathered
+through [a platform’s] services may exceed their economic value to consumers.”
+4
+
+=== PAGE 5 / 57 ===
+
+Equilibrium Data-Sharing Policies A natural question is then whether the data market
+imposes any limitations at all on equilibrium information sharing. To shed light on this
+issue, we consider the choice of whether to reveal the consumers’ identities to the producer
+or to collect anonymous data. When consumers are homogeneous ex ante, we show that
+the intermediary collects anonymous data if and only if the transmission of identity data
+reduces total surplus. Therefore, even if the data transmission may be socially detrimental,
+the optimal choice of data anonymization is socially eﬃcient (Proposition 3).
+In our model of linear price discrimination, collecting anonymous data amounts to selling
+aggregate, market-level information to the producer. With this choice, the intermediary does
+not enable the producer to set personalized prices: the data are transmitted but disconnected
+from the users’ personal proﬁles. In other words, the role of social data provides a more
+nuanced ability to determine the modality of information acquisition and use.
+Under anonymized data intermediation, the gap between the social value of the data
+and the price of the data widens when the number of consumers increases. In particular, as
+the sources of data multiply, the contribution of each individual consumer to the aggregate
+information shrinks, which drives down the individual payments to consumers, and possibly
+the total payment as well (Proposition 5).
+We develop a general anonymization result (Proposition 8) and extend the model in
+several directions. We ﬁrst introduce consumer heterogeneity by considering multiple groups
+of consumers. We ﬁnd that the intermediary aggregates the data at least to the level of the
+coarsest partition of homogeneous consumers, although further aggregation is proﬁtable when
+the number of consumers is small. The resulting group pricing—discriminatory pricing based
+on observable characteristics, such as location—has welfare consequences between those of
+complete privacy and those of price personalization (Proposition 9).
+We then consider a model in which the producer can choose prices and product character-
+istics to match an additional horizontal (taste) dimension of the consumers’ preferences. The
+resulting data policy then aggregates the vertical dimension but not the horizontal dimen-
+sion, thereby enabling the producer to oﬀer personalized product recommendations but not
+personalized prices (Proposition 10). Finally, in the Online Appendix, we explore the data
+intermediary’s ability to oﬀer privacy guarantees by collecting less than perfect information
+about the consumers’ signals.
+Implications and Applications There exist a wide variety of data intermediaries and
+associated business models. The point of our article is not to try to match any speciﬁc
+business model but rather to speak to the general principles that seem to be in eﬀect in many
+markets. In particular, our model assumes that each consumer is compensated directly with
+5
+
+=== PAGE 6 / 57 ===
+
+a monetary transfer for her individual data. There exist a few concrete examples of such
+transactions (e.g., Nielsen oﬀers monetary rewards to consumers for access to their browsing
+and purchasing data). However, most data intermediaries compensate their users via the
+quality of the services they oﬀer, e.g., social networks, search, mail, video. These services
+are nominally free, but in practice (through more or less transparent terms and conditions)
+they are fueled by the data generated by their users.
+Likewise, digital platforms occasionally transfer consumers’ data to merchants for a fee.
+Much more often, however, they monetize their data by selling access to targeted advertising
+campaigns—see the report by the?. This enables the merchants to reap the value of informa-
+tion, by conditioning their messages and their prices on the consumers’ preferences, without
+directly observing their data. These transactions amount to indirect sales of information, as
+discussed in Bergemann and Bonatti (2019).
+Our model’s predictions for the nature of the externality, for the equilibrium allocation
+of data, and for its welfare properties then depend on how targeted advertising aﬀects to-
+tal surplus in any given market. Speciﬁcally, if advertising generates value by matching of
+buyers and sellers, as in Bergemann and Bonatti (2011), our model would predict the in-
+termediation of individual-level information through very detailed targeting categories. If,
+instead, targeted advertisements facilitate ineﬃcient price discrimination, the model would
+predict coarser targeting categories that induce market-level or group-level pricing.
+Related Literature This article contributes to the growing literature on data markets
+recently surveyed in Bergemann and Bonatti (2019). In particular, the role of data external-
+ities in the socially excessive diﬀusion of personal data has been a central concern in Choi,
+Jeon, and Kim (2019) and ?, both considering a model with many buyers and one ﬁrm that
+acts as an integrated data intermediary and seller.
+Choi, Jeon, and Kim (2019) introduce information externalities into a model of monopoly
+pricing with unit demand. Each consumer is described by two independent random variables:
+her willingness to pay for the monopolist’s service and her sensitivity to a loss of privacy.
+The purchase of the service by the consumer requires the transmission of personal data.
+From the collected data, the seller gains additional revenue, depending on the proportion of
+units sold and the volume of data collected. The total nuisance cost paid by each consumer
+depends on the total number of consumers sharing their personal data. Thus, the optimal
+pricing policy of the monopolist yields excessive loss of privacy, relative to the social welfare
+maximizing policy.
+? also analyze data acquisition in the presence of information externalities. As in Choi,
+Jeon, and Kim (2019), they consider a model with many consumers and a single data-
+6
+
+=== PAGE 7 / 57 ===
+
+acquiring ﬁrm. Like the current analysis, ? propose an explicit statistical model for their
+data; the model allows the authors to assess the loss of privacy for the consumer and the
+gains in prediction accuracy for the ﬁrm. Their analysis then pursues a diﬀerent, and largely
+complementary, direction from ours. In particular, they analyze how consumers with het-
+erogeneous privacy concerns trade information with a data platform and derive conditions
+under which the equilibrium allocation of information is (in)eﬃcient.
+In contrast to these two important contributions, we explicitly introduce a data interme-
+diary with objectives distinct from either the consumers or the seller. We consider rich data
+structures for fundamentals and noise terms that capture the wide range of social data on
+digital platforms. This allows us to endogenize privacy concerns and to quantify the down-
+stream welfare impact of data intermediation. In addition, we can investigate when and how
+privacy can be partially or fully preserved through aggregation, anonymization, and noise.
+Thus, we augment the analysis in the above contributions with additional insights regarding
+data ﬂows and data intermediation. In particular, we show that the data externality can
+have a positive or a negative impact on consumer and social surplus depending on the data
+structure. In consequence, a monopolist intermediary can induce either too little or too
+much information sharing in equilibrium.
+Acquisti, Taylor, and Wagman (2016) survey the literature on the economics of privacy
+in great detail. An early and inﬂuential article is Taylor (2004), who analyzes the sales of
+consumer purchase histories without data externalities. More recently, Cummings, Ligett,
+Pai, and Roth (2016) investigate how privacy policies aﬀect user and advertiser behavior in
+a simple model of targeted advertising. The low level of compensation that users command
+for their personal data is discussed in Arrieta-Ibarra, Goﬀ, Jimenez-Hernandez, Lanier, and
+Weyl (2018), who propose sources of countervailing market power, and in a growing body of
+empirical work. In particular, Tang (2019) uses large-scale ﬁeld experiments to estimate the
+value that online borrowers assign to several pieces of personal data. Lin (2019) separates
+intrinsic and instrumental preferences for privacy through a lab experiment that also uncovers
+data externalities.
+Fainmesser, Galeotti, and Momot (2020) provide a digital privacy model in which data
+collection improves the service provided to consumers. However, as the collected data can
+also leak to third parties and thus impose privacy costs, an optimal digital privacy policy
+must be established. Similarly, Jullien, Lefouili, and Riordan (2020) analyze the equilibrium
+privacy policy of websites that monetize information collected from users by charging third
+parties for targeted access. Gradwohl (2017) considers a network game in which the level
+of beneﬁcial information sharing among the players is limited by the possibility of leakage
+and a decrease in informational interdependence. Ali, Lewis, and Vasserman (2019) study
+7
+
+=== PAGE 8 / 57 ===
+
+a model of personalized pricing with disclosure by an informed consumer, and they analyze
+how diﬀerent disclosure policies aﬀect consumer surplus. Ichihashi (2020b) studies both
+personalized pricing and product recommendations, and shows that a seller beneﬁts from
+committing not to use the consumer’s information to set prices. Our result on optimal
+anonymization and market-level pricing has similar implications, but is entirely driven by
+the data externality that appears when multiple consumers are present.
+Finally, Liang and Madsen (2020) investigate how data policies can provide incentives in
+principal-agent relationships. They emphasize the structure of individual data and how the
+substitutes or complements nature of individual signals determines the impact of data on
+incentives. Ichihashi (2020a) considers a single data intermediary and asks how complements
+or substitutes consumer signals aﬀect the equilibrium price of the individual data.
+2 Model
+We consider an idealized trading environment with many consumers, a single intermediary
+in the data market, and a single producer in the product market.
+2.1 Product Market
+There are ﬁnitely many consumers, labeled i = 1,...,N . In the product market, each con-
+sumer (she) chooses a quantity level qi to maximize her net utility given a unit price pi
+oﬀered by the producer (he):
+ui(wi,qi,pi) ≜ wiqi −piqi −1
+2q2
+i.
+Each consumer i has a baseline willingness to pay for the product wi ∈R.
+The producer sets the unit price pi at which he oﬀers his product to each consumer i.
+The producer has a linear production cost
+c(q) ≜ c·q, for some c≥0.
+The producer’s proﬁts are given by
+π(pi,qi) ≜
+∑
+i
+(pi −c) qi.
+8
+
+=== PAGE 9 / 57 ===
+
+2.2 Data Environment
+The vector of willingness to pay, w = (...,wi,...) ∈RN, is distributed according to a joint
+distribution Fw:
+w∼Fw. (1)
+Initially, each consumer may have only imperfect information about her willingness to pay.
+In particular, consumer i observes a signal
+si ≜ wi + σ·ei, (2)
+where σ > 0 and ei is consumer i’s error term. The error terms e = ( ...,ei,...) ∈ RN
+are independent of the willingness to pay w, and they are distributed according to a joint
+distribution Fe:
+e∼Fe. (3)
+We denote by S the information structure generated by the complete vector of consumer
+signals s = ( ...,si,...) ∈RN. We allow for arbitrary distributions of fundamentals w and
+errors e, and hence arbitrary correlation structures across consumers, under the restriction
+that the (Fw,Fe) are symmetric across individuals. We view the richness in the data structure
+as represented by (1) and (3) as the deﬁning feature of social data in the digital economy. In
+particular, the noise in the signal si of each individual given by (2) reﬂects the importance
+of social learning as enabled by recommenders, rating and search engines.
+Without loss of generality we assume that (i) each individual willingness to pay wi has
+mean µand variance 1; (ii) individual errors ei have mean 0 and variance 1 (which is scaled
+by the parameter σ).
+The producer knows the structure of demand and thus the common prior distribution
+of consumers’ willingness to pay. However, absent any additional information, the producer
+does not know the realized willingness to pay wi of any consumer (nor her signal si) prior
+to setting prices. This data environment has two important features. First, any demand
+information beyond the common prior comes from the signals of the individual consumers.
+Second, with any amount of noise in the signals (i.e., if σ >0), each consumer can learn
+more about her own demand from the signals of the other consumers.
+The following leading examples illustrate two ways in which data sharing can help each
+consumer learn more about her individual willingness to pay. In, Example 1 a new product
+has a common value that consumers are imperfectly informed about.
+Example 1 (Common Preferences)
+Fundamentals wi are perfectly correlated and errors ei are independent: si = w+ σ·ei.
+9
+
+=== PAGE 10 / 57 ===
+
+In this case, data sharing helps to ﬁlter out the idiosyncratic error terms: as N becomes
+large, the average signal across all consumers identiﬁes the common willingness to pay.
+In Example 2, individual consumers have independent values for a new therapy but are
+exposed to a common health shock.
+Example 2 (Common Experience)
+Errors ei are perfectly correlated, and fundamentals wi are independent: si = wi + σ·e.
+Under this structure, the average signal identiﬁes the common error component e as
+N becomes large. All market participants can then precisely estimate each wi from the
+diﬀerence between individual and average signal.
+As we shall see, information sharing enables learning in both examples. However, the
+actions of consumers −iimpact the surplus of consumer iquite diﬀerently in the two cases,
+which has implications for the equilibrium price of data. More generally, the data structure
+will determine how to separate the individual and the aggregate information.
+2.3 Data Market
+The data market is run by a single data intermediary (it). As a monopolist market maker, the
+data intermediary decides how to collect the available information ( si) from each consumer
+and how to share it with the other consumers and the producer. Thus, the data intermediary
+faces both an information design problem and an information pricing problem.
+We consider bilateral contracts between the individual consumers and the intermediary
+and between the producer and the intermediary. The data intermediary oﬀers these bilateral
+contracts ex ante, i.e., before the realization of any demand shocks. Each bilateral contract
+deﬁnes a data policy and a data price.
+The data contract with consumerispeciﬁes a data inﬂow policy Xi and a fee mi ∈R paid
+to the consumer. The data inﬂow policy describes how each signal si enters the database
+of the intermediary. We restrict attention to the following two policies: (i) the complete
+(identity-revealing) data policy X = S, where the intermediary collects each consumer’s
+signal si; and (ii) the anonymized data policy X = A, where the intermediary collects
+individual signals without identifying information. We model the anonymized data policy as
+A: S →δ(S) ,
+for a random permutation of the consumers’ indices i→δ(i). In both cases, as discussed in
+Section 2.4 below, there are no further incentive constraints, i.e., consumers transmit their
+information truthfully.
+10
+
+=== PAGE 11 / 57 ===
+
+In our product market model, where the consumer’s demand is linear in her signal, the
+anonymized data policy Ais equivalent to an aggregate data policy that conveys information
+about the average willingness to pay. Intuitively, the anonymized data policy prevents the
+producer from matching signals to consumers, i.e., from proﬁtably charging personalized
+prices. In Section 7, we enrich the intermediary’s strategy space by allowing for data policies
+that collect partial information about the consumers’ signals.
+A data contract with the producer speciﬁes a data outﬂow policy Y and a fee m0 ∈R
+paid by the producer. The data outﬂow policy determines how each consumer’s collected
+signal is transmitted to the producer and to other consumers. In particular, letting X denote
+the intermediary’s realized data inﬂow, a data outﬂow policy Y = (Y0,Y1,...Y N) describes
+how the collected data are released to the seller,
+Y0 : X →∆(RN),
+and to each consumer,
+Yi : X →∆(RN).
+Sharing data with other consumers is a critical design element because doing so allows each
+consumer to adjust her quantity demanded at any price. Therefore, the information received
+by consumers also impacts the producer’s willingness to pay for the intermediary’s data.
+The data intermediary maximizes the net revenue
+R≜ m0 −
+∑N
+i=1
+mi. (4)
+2.4 Equilibrium and Timing
+The game proceeds sequentially. First, the terms of trade on the data market and then the
+terms of trade on the product market are established. The timing of the game is as follows:
+1. The data intermediary oﬀers a data inﬂow policy ( mi,Xi) to each consumer i. Con-
+sumers simultaneously accept or reject the intermediary’s oﬀer.
+2. The data intermediary oﬀers a data outﬂow policy ( m0,Y ) to the producer, based on
+the (known) number of consumers who have accepted. The producer accepts or rejects
+the oﬀer.
+3. Consumers’ signals s are realized, and the information ﬂows ( x,y) are transmitted
+according to the terms of the data policies.
+11
+
+=== PAGE 12 / 57 ===
+
+4. The producer sets a unit price pi for each consumer i who makes a purchase decision
+qi, given her available information about wi.
+We analyze the Perfect Bayesian Equilibria of the game. Under the timing described
+above, information is imperfect but symmetric at the contracting stage. Furthermore, when
+the consumer receives the intermediary’s oﬀer, she must anticipate the intermediary’s choice
+of data outﬂow policy, which determines what data are shared with her, as well as with
+the producer. We denote by a0,ai ∈{0,1}the participation decisions by the producer and
+by consumer i, respectively. A Perfect Bayesian Equilibrium is then a tuple of inﬂow and
+outﬂow data policies, data and product pricing policies, and participation decisions:
+{(X∗,Y ∗,m∗) ; p∗,q∗; a∗},
+where
+a∗
+0 : X×Y ×R →{0,1}, a∗
+i : Xi ×R →{0,1},
+such that (i) the producer maximizes his expected proﬁts, (ii) the intermediary maximizes its
+expected revenue, and (iii) each consumer maximizes her net utility. In our baseline analysis,
+we focus on the best equilibrium for the data intermediary; in the best equilibrium, every
+consumer accepts the oﬀer from the data intermediary. We discuss a unique implementation
+in Section 4.3.
+Figure 2.4 summarizes the information and value ﬂow in the data and product markets.
+Figure 1: Data and Value Flows
+Discussion of Model Features
+Participation Constraints The participation constraints of every consumer and of the
+producer are required to hold at the ex ante level. Thus, the consumers agree to the data
+12
+
+=== PAGE 13 / 57 ===
+
+policy before the realization of their signals. The choice of ex ante participation constraints
+captures the prevailing conditions under which users interact with large digital platforms.
+For instance, users of services on Amazon, Facebook, or Google typically establish an account
+and accept the “terms of service” before making any speciﬁc query or post. Through the lens
+of our model, the consumer requires a level of compensation that allows her to proﬁtably
+share the information in expectation. Upon agreeing to participate, there are no further
+incentive compatibility constraints on the transmission of her information.
+Lack of Commitment As we mentioned above, targeted advertising is the primary
+source of revenue for digital platforms. Consequently, the data intermediary in our sequential
+game sells the consumers’ data only to the producer, and cannot commit to withholding any
+information from him. Similarly, the intermediary’s choice of data outﬂow policy occurs
+after consumers are enlisted but before their data are realized. This assumption captures
+the limited ability of a platform to write advertising contracts contingent on, say, the volume
+of activity taking place at any point in time.
+Linear Price Discrimination The producer in our baseline model uses the consumers’
+data to charge a unit price to each consumer. Whether richer pricing instruments enable
+online merchants to implement more sophisticated forms of price discrimination is largely
+an empirical question. However, as we discuss in Section 5.1, the general anonymization
+result of Proposition 8 guides the intermediary’s optimal data policy even if the producer
+can extract more of the surplus generated through better information. Indeed, even in the
+case of perfect price discrimination, the presence of the data externality would continue to
+drive a gap between equilibrium and socially eﬃcient allocation.
+3 Value of Social Data
+3.1 Data Sharing and Product Market
+In our extensive form game, given the realized data inﬂow, the intermediary oﬀers a data
+outﬂow policy to the producer. This policy speciﬁes both the fee m0 and the ﬂow of infor-
+mation to all market participants, including the consumers. The data outﬂow policy thus
+determines both how well informed the producer is and how well informed his customers are.
+Because the information is being sold to the producer, the intermediary will choose a
+data outﬂow policy that maximizes the producer’s proﬁts, and then extracts the value of
+this information through the fee m0. The intermediary’s choice of outﬂow policy is simpliﬁed
+considerably by the following result, which allows us to restrict attention to policies in which
+every consumer is weakly better informed than the producer.
+13
+
+=== PAGE 14 / 57 ===
+
+Lemma 1 (Data Outﬂow Policy)
+For any data inﬂow X, it is without loss of generality to consider data outﬂow policies where
+Y0(X) is measurable with respect to each Yi(X).
+Interestingly, the result of Lemma 1 does not rely on the speciﬁc nature of the product
+market interaction. The key observation is that, if the producer were better informed, the
+prices charged would convey information to consumers about their own willingness to pay.
+The ensuing signaling incentives impose a cost on the producer because he will need to
+deviate from the prices that maximize his proﬁts, holding ﬁxed the consumers’ beliefs. The
+intermediary can then increase the producer’s proﬁts (weakly) by revealing any information
+contained in the equilibrium prices directly to the consumers. Furthermore, this improvement
+is strict if, when the consumers receive this additional information, the producer modiﬁes
+his choice of price.
+Under the data outﬂow policies of Lemma 1, we can easily quantify the value of infor-
+mation for consumers and producers. The shared data help each consumer estimate her
+own willingness to pay. For the producer, the shared data enable a more informed pricing
+policy. In particular, given the realized data outﬂow y ∈Y, the optimal pricing policy for
+the producer consists of a vector of (potentially personalized) prices p∗
+i, thus resulting in a
+vector of individual quantities q∗
+i purchased. We denote the predicted value of consumer i’s
+willingness to pay, given the signals ( si,yi) by:
+ˆwi(si,yi) ≜ E[wi |si,yi] .
+The realized demand of consumer i is given by
+qi(si,yi,p) = ˆwi(si,yi) −p.
+As Y0 is (weakly) less informative than Yi, the producer chooses the optimal price
+p∗
+i (y0) = E[ ˆwi(si,yi) |Y0] + c
+2 = ˆwi(y0) + c
+2 ,
+which results in the equilibrium quantity:
+q∗
+i (si,yi,y0) ≜ qi(si,yi,p∗
+i (y0)) .
+The ex ante expected proﬁt of the producer from interacting with consumer iis given by
+Πi((Si,Yi) ,Y0) ≜ E[π(p∗
+i (y0) ,q∗
+i (si,yi,y0)) |Y0 ] = 1
+4E
+[
+( ˆwi(y0) −c)2 |Y0
+]
+.
+14
+
+=== PAGE 15 / 57 ===
+
+The ﬁrst argument in Π i(·,·) refers to consumer i’s information structure ( Si,Yi) and the
+second argument refers to the producer’s information structure Y0. Similarly, we denote the
+indirect utility of consumer i as
+Ui((Si,Yi) ,Y0) ≜ E[ui(wi,q∗
+i (si,yi,y0) ,p∗
+i (y0)) |Si,Yi] = 1
+2E
+[
+( ˆwi(si,yi) −p∗
+i (y0))2 |Si,Yi
+]
+.
+3.2 Welfare Eﬀects of Data Sharing
+The model with quadratic payoﬀs (regardless of the prior distribution of consumers’ will-
+ingness to pay) yields explicit expressions for the value of information for product market
+participants. In particular, because prices and quantities are linear functions of the posterior
+mean ˆwi, the ex ante average prices and quantities E[p∗] and E[q∗] are constant across all
+information structures. Consequently, all surplus levels depend only on the ex ante variance
+of the posterior mean ˆwi under the consumers’ and the merchant’s information structures.
+We therefore quantity the players’ information gains under any information structure Y
+through the variance of posterior expectation:
+G(Y) ≜ var[ˆwi(y)], (5)
+and refer to it as the (informational) gain function . As we normalized the variance of the
+fundamental wi to 1, the gain function G(Y) represents the fraction of the variance of wi
+explained by the signal y.
+We now turn to the consequences of data sharing relative to no information sharing.
+Without information, the producer charges a constant price for all consumers based on the
+prior mean, denoted by ¯p. In contrast, the consumer already has an initial signal si, accord-
+ing to which she can adjust her quantity. The producer’s net revenue and the consumer’s
+expected utility under no information sharing are then given by
+Πi(Si,∅) ≜ E[π(¯p,q∗
+i (si))] ,
+Ui(Si,∅) ≜ E[ui(wi,q∗
+i (si) ,¯p) |Si] .
+We can now express the value of data sharing for the consumers and the producer in
+terms of the respective information gains.
+Proposition 1 (Value of Data Outﬂow)
+15
+
+=== PAGE 16 / 57 ===
+
+1. The value of data outﬂow Y for the producer is
+Πi((Si,Yi) ,Y0) −Πi(Si,∅) = 1
+4G(Y0) . (6)
+2. The value of data outﬂow Y for consumer i is
+Ui((Si,Yi) ,Y0) −Ui(Si,∅) = 1
+2 (G(Si,Yi) −G(Si)) −3
+8G(Y0) . (7)
+3. The social value of data outﬂow Y is
+Wi((Si,Yi) ,Y0) −Wi(Si,∅) = 1
+2 (G(Si,Yi) −G(Si)) −1
+8G(Y0) . (8)
+Thus, consumer and social surplus increase with the additional information learned by
+the consumers G(Si,Yi)−G(Si), and decrease with the information learned by the producer
+G(Y0). Intuitively, the welfare consequences of data sharing operate through two channels.
+First, with more information about her own preferences, the demand of each consumer is
+more responsive to her willingness to pay; this responsiveness is beneﬁcial for consumers
+and (weakly) for the producer. Second, with access to better data, the producer adapts
+his pricing policy to the estimate of each consumer’s willingness to pay ˆwi. This price
+responsiveness dampens some of the quantity responsiveness. Hence, this second channel
+reduces both consumer surplus and total welfare.
+Whether the ﬁrst or the second channel dominates depends on the informativeness of the
+consumers’ initial signals G(Si), and on the degree of correlation in the fundamental and
+error terms, which jointly determine any consumer’s ability to learn from others’ information.
+Corollary 1 formalizes this intuition by deriving the implications of Proposition 1 in several
+special cases.
+Corollary 1 (Welfare Eﬀects)
+1. If consumers cannot learn from each other’s signals (G(S) = G(Si)), any data sharing
+reduces consumer and social surplus.
+2. If individual signals si are uninformative (G(Si) = 0) ,any data sharing improves con-
+sumer and social surplus.
+3. Social surplus is maximized by collecting and sharing all signals with every consumer
+(Yi = S), and sharing no data with the producer (Y0 = ∅).
+16
+
+=== PAGE 17 / 57 ===
+
+Data sharing is detrimental to consumer and social surplus when consumers observe
+their willingness to pay perfectly ( σ= 0), or when both fundamentals ( wi,wj) and errors
+(ei,ej) are independent. In those cases, any data sharing only enables price discrimination. 4
+Conversely, if individual signals become arbitrarily uninformative, but the entire vector s
+remains informative, then evensymmetric information gains (i.e., data outﬂow policies where
+Y0 = Yi) yield Pareto improvements in the product market. In this case, the producer and the
+consumer share the additional gains from trade associated with better informed consumption
+and pricing decisions.
+Finally, an immediate implication of the two channels highlighted by Proposition 1 is that
+the ﬁrst best allocation of information consists of collecting and sharing all data among the
+consumers and none with the producer. However, a data intermediary with market power
+will not implement the socially optimal allocation of information. In particular, because the
+producer is paying for the data, he will always receive some information. To fully describe
+the outcome of the game, we then turn to the price of social data.
+3.3 Price of Social Data
+We ﬁrst derive the total paymentm0 charged to the producer and the compensation mi owed
+to each consumer. For the producer, the gains from data acquisition have to at least oﬀset
+the price of the data. At the same time, the intermediary can charge up to the entire value
+of the information outﬂow Y0 to the producer. From expression (6) in Proposition 1, we can
+then write the payment m0 as
+m0 (Y) = N(Πi((Si,Yi) ,Y0) −Πi(Si,∅)) = N
+4 G(Y0) . (9)
+Not surprisingly, the intermediary’s proﬁts are increasing in the amount of information sold
+to the producer. However, we also know from Lemma 1 that every consumer i receives at
+least as much information as the producer. These two observations establish the optimality
+of the complete data outﬂow policy. Under this policy, the entire realized data inﬂow X
+is reported to the producer and to all consumers, including those who did not accept the
+intermediary’s oﬀer.
+4The special case in which each consumer knows her willingness to pay (i.e., signals are noiseless in our
+model’s language) is closely related to the model of third-degree price discrimination in Robinson (1933) and
+Schmalensee (1981). In our setting, data sharing enables the producer to oﬀer personalized prices; thus, price
+discrimination occurs across diﬀerent realizations of the willingness to pay. In contrast, in Robinson (1933)
+and Schmalensee (1981), price discrimination occurs across diﬀerent market segments. In both settings, the
+central result is that average demand does not change (with all markets served), but social welfare is lower
+under ﬁner market segmentation.
+17
+
+=== PAGE 18 / 57 ===
+
+Lemma 2 (Optimal Data Outﬂow)
+Given any realized data inﬂow X, the complete data outﬂow policy, Y∗
+0 (X) = Y∗
+i (X) = X
+for all i, maximizes the gross revenue of the producer among all feasible data-outﬂow policies.
+A critical driver of the consumer’s decision to share data is her ability to anticipate the
+intermediary’s use of the information thus gained. By Lemma 2, every consumer knows that
+all product market participants will receive the same information from the intermediary.
+In particular, consumer i knows that, by rejecting her contract, she prevents the producer
+from accessing her data Xi, but she does not forego the opportunity to learn from other
+consumers’ data X−i. In other words, consumer i can learn X−i for free. In practice, this
+corresponds to searching for the same content on a digital platform without “logging in” or
+else agreeing to sharing her own data.
+For any data inﬂow policy X and any underlying signal structure, the data intermediary
+oﬀers positive payments to consumers. This occurs because the intermediary must compen-
+sate consumers on the margin : consumer i requires compensation for revealing her data Xi
+to the producer, given that the other N−1 consumers already share theirs. 5 Therefore, the
+payments satisfy
+mi ≥Ui((Si,X−i) ,X−i) −Ui((Si,X) ,X) . (10)
+Intuitively, consumer i is not compensated for the (positive or negative) eﬀect of other
+consumers’ data inﬂow X−i on her surplus. To see this more formally, suppose consumer i’s
+participation constraint (10) binds, and rewrite compensation mi as
+m∗
+i (X) = Ui((Si,X−i) ,X−i) −Ui((Si,X) ,X)
+= −(Ui((Si,X) ,X) −Ui(Si,∅))  
+≜∆Ui(X)
++ Ui((Si,X−i) ,X−i) −Ui(Si,∅)  
+≜DEi(X)
+. (11)
+The ﬁrst term in (11), denoted by ∆ Ui(X), is the total impact on consumer i’s surplus
+associated with data inﬂow X. The second term is the data externality (12) imposed on i
+by consumers j ̸= i. It reﬂects the change in utility when j ̸= i sell their data Xj to the
+intermediary who then shares the data with the producer. As it is central to our analysis,
+we now examine the latter term in detail.
+3.4 Data Externality and Intermediation
+Our notion of data externality isolates the eﬀect on consumer i’s surplus of the decision by
+the other consumers to share their data with all market participants.
+5We will revisit this property when we discuss the intermediary’s commitment power in Section 5.4.
+18
+
+=== PAGE 19 / 57 ===
+
+Deﬁnition 1 (Data Externality)
+The data externality imposed by consumers −i on consumer i is given by
+DEi(X) ≜ Ui((Si,X−i) ,X−i) −Ui(Si,∅) . (12)
+Using expression (7) in Proposition 1, the data externality can be written as
+DEi(X) = 1
+2 (G(Si,X−i) −G(Si)) −3
+8G(X−i) . (13)
+To provide some intuition as to what determines the sign of the data externality, we evaluate
+expression (13) under the two special information structures in Examples 1 and 2. In both
+cases, we consider what would happen if consumer i held back her signal, given that the
+remaining N −1 consumers share theirs with the producer and with consumer i.
+Example 1 illustrates that if consumer idoes not learn much from the signals of the other
+consumers, but those signals help predict wi, then the data externality is negative.
+Example 1 (Common Preferences)
+Let si = w+σei, and suppose the intermediary collects all consumer data, Xi = Si. The pro-
+ducer can use N−1 signals to estimate the common preference parameterw, i.e., G(S−i) >0.
+If the individual signals are suﬃciently precise so that G(S) ≈G(Si), then consumer i is
+worse oﬀ when other consumers share their signals, i.e., the data externality is negative.
+Example 2 illustrates that if the producer cannot learn anything about wi from signals
+s−i, then the data externality is unambiguously positive.
+Example 2 (Common Experience)
+Let si = wi+ σe, and suppose the intermediary collects all consumer data, Xi = Si. Because
+all wi are independent, G(S−i) = 0, i.e., the producer cannot learn about wi from signals s−i
+only. However, consumer i can use signals s−i to ﬁlter out the common error in her own
+signal si, i.e., G(S) >G (Si). Therefore, other consumers’ signals help consumer i, i.e., the
+data externality is positive.
+Thus, the overall eﬀect of data sharing on consumer surplus (Proposition 1) depends
+largely on the informativeness of individual signals si. Conversely, the impact of other
+consumers’ sharing decisions varies signiﬁcantly with the data structure, particularly the
+ability of the producer to learn about wi from signals s−i.
+19
+
+=== PAGE 20 / 57 ===
+
+4 Optimal Data Intermediation
+The data externality has direct implications for the intermediary’s proﬁt (4). Combining the
+expressions for payments in (9) and (11), we can write the intermediary’s proﬁt R as
+R(X) =
+∑N
+i=1
+(∆Wi(X) −DEi(X)) , (14)
+where ∆W(X) denotes the eﬀect of sharing data policy X on total surplus, as in (8). The
+intermediary’s proﬁts are equal to the eﬀect of data sharing on social surplus, net of the
+data externalities across all consumers. The sign of the data externality is therefore critical
+for the proﬁtability of data intermediation. In particular, if consumers impose negative
+data externalities on each other, this imposition directly reduces the compensation owed to
+each one, and conversely if the data externalities are positive. The revenue formula (14)
+clariﬁes how the intermediary’s objective diﬀers from the social planner’s. In particular, if
+the data externality is negative, then intermediation can be proﬁtable but welfare reducing.
+Conversely, if the data externality is positive, welfare-enhancing intermediation might not
+be proﬁtable.
+Having characterized the two terms ∆ Ui and DEi in (7) and (13), we can rewrite the
+payments to consumers in (11) as
+m∗
+i (X) = 3
+8 (G(X) −G(X−i)) . (15)
+Finally, combining the terms m∗
+0 (X) in (9) and m∗
+i (X) in (15), we obtain
+R(X) = N
+8 (3G(X−i) −G(X)) . (16)
+This yields a necessary and suﬃcient condition for proﬁtable data intermediation.
+Proposition 2 (Proﬁtable Data Intermediation)
+Data intermediation with inﬂow policy X is proﬁtable if and only if
+3G(X−i) ≥G(X).
+Proposition 2 considers the amount of information learned by the producer. Speciﬁcally,
+it requires that the signals x−i generate at least 1 /3 of the variance of wi explained by the
+entire vector xin order for the data inﬂow policy X to be proﬁtable. Intuitively, it is cheaper
+to acquire each signal xi if the other consumers’ signals are substitutes, and this is more
+likely to occur when the underlying fundamentals wi and w−i are correlated. Conversely, for
+20
+
+=== PAGE 21 / 57 ===
+
+independent fundamentals, G(X−i) = 0 for any X, and intermediation is not proﬁtable.
+We now draw the implications for the intermediary’s proﬁts in our two leading examples.
+Corollary 2 (Common Preference)
+Suppose fundamentals wi are perfectly correlated and errors ei are independent. When N is
+large, data intermediation is always proﬁtable. However, for suﬃciently small σ, the data
+externality is negative, and data sharing reduces social surplus.
+These results echo the ﬁndings of ?, who considered signals with diminishing marginal
+informativeness, and found socially excessive data intermediation. The information struc-
+ture in Corollary 2 satisﬁes this submodularity property. In our model, however, socially
+insuﬃcient intermediation can also occur. In particular, the intermediary may be unable
+to generate positive proﬁts from socially eﬃcient information with complementary signals,
+such as those in Corollary 3.
+Corollary 3 (Common Experience)
+Suppose fundamentals wi are independent and errors ei are perfectly correlated. For suﬃ-
+ciently large σ, data sharing increases social surplus. However, because the fundamentals are
+independent, data intermediation is never proﬁtable.
+The conclusions of Corollaries 2 and 3 do not depend on whether the intermediary collects
+complete data or anonymized data. However, as we discuss in the next section, it is always
+optimal for the intermediary to anonymize the data collected.
+4.1 Data Anonymization
+We now explore the intermediary’s decision to anonymize the individual consumers’ demand
+data. We focus on two maximally diﬀerent policies along this dimension. At one extreme,
+the intermediary can collect and transmitcomplete (identity-revealing) data about individual
+consumers ( X = S), thereby enabling the producer to charge personalized prices. At the
+other extreme, the intermediary can collect anonymized data (X = A).
+Under anonymized information intermediation, the producer charges the same price to all
+consumers who participate in the intermediary’s data policy. In other words, from the point
+of view of the producer, anonymized data is equivalent to aggregate demand data. These data
+still allow the producer to perform third-degree price discrimination across realizations of
+the total market demand but limit his ability to extract surplus from individual consumers.6
+6More formally, under the anonymized data policy A, the producer has access to the vector δ(s), i.e., to a
+uniformly random permutation of the consumers’ signals. Because the producer faces a prediction problem
+for each wi with a convex loss, he chooses to charge a uniform price that is optimal for the sample average
+of the consumers’ signals.
+21
+
+=== PAGE 22 / 57 ===
+
+Certainly, for the producer, the value of market demand data is lower than the value
+of individual demand data. However, the cost of acquiring such ﬁne-grained data from
+consumers is also correspondingly higher. We now show that anonymizing the consumers’
+information proﬁtably reduces the intermediary’s data acquisition costs.
+Proposition 3 (Optimality of Data Anonymization)
+The intermediary obtains strictly greater proﬁts by collecting anonymized consumer data.
+Within the conﬁnes of our policies, but independent of the distributions of fundamental
+and noise terms, the data intermediary ﬁnds it advantageous to not elicit the identity of
+the consumer. Therefore, the producer will not oﬀer personalized prices but variable prices
+that adjust to the realized information about market demand. In other words, a monopolist
+intermediary might cause socially ineﬃcient information transmission, but the equilibrium
+contractual outcome preserves privacy over the personal identity of the consumer.
+In Section 5, we explore the boundaries of the anonymization result, under both het-
+erogeneous consumers and alternative product-market speciﬁcations. In particular, we will
+generalize our result to show that anonymization is optimal when consumers are homo-
+geneous ex ante and transmitting data to the producer is socially ineﬃcient. Therefore,
+if information is used to target advertisements, and more precise messages increase social
+surplus, then we shall predict that the intermediary shares complete data. 7
+For the case of surplus extraction (prices), the ﬁnding in Proposition 3 suggests why we
+might see personalized prices in fewer settings than initially anticipated. In the context of
+direct sales of information, for example, Nielsen does not sell individual households’ data to
+merchants. Instead, Nielsen aggregates its panel data at the local market level. Similarly, in
+the context of indirect sales of information, merchants on the retail platform Amazon very
+rarely engage in personalized pricing. However, the price of every single good or service is
+subject to substantial variation across both geographic markets and over time.
+In light of the above result, we might interpret the restraint on the use of personal-
+ized pricing as the optimal resolution of the intermediary’s trade-oﬀ in acquiring sensitive
+consumer information. Stretching the interpretation, the pushback against Amazon’s intro-
+duction of personalized pricing in the early 2000s can also be viewed as a tightening the
+consumers’ participation constraints. Under any degree of competition, the net value of the
+Amazon platform under perfect personalized pricing would not have exceeded the consumers’
+outside options.
+The data externality is, once again, the key to gaining intuition for why the intermediary
+chooses data anonymization. Suppose consumers −i reveal their signals, and consumer
+7If, in addition, responsiveness to ads is heterogeneous in the consumer population, coarser information
+transmission (i.e., not fully anonymous) can also be optimal, as we show in Proposition 9.
+22
+
+=== PAGE 23 / 57 ===
+
+i does not. With access to identifying information, the producer optimally aggregates the
+available data to form the best predictor of the missing data point. In this case, the producer
+charges a personalized price p∗
+i (X−i) to each nonparticipating consumer i. With anonymous
+data, the producer charges two prices: a single price for all participating consumers and
+another price for the deviating, nonparticipating consumers. Because the distribution of
+consumer willingness to pay and signals is symmetric, however, the producer’s inference on
+wi is invariant to permutations of the other consumers’ signals, i.e.,
+E[wi |a−i] = E[wi |s−i] .
+Therefore, a nonparticipating consumer faces identical prices under both data policies: 8
+p∗
+i (S−i) = p∗
+i (A−i) .
+Likewise, consumer i’s posterior distribution over her ownwi does not depend on the identity
+the other consumers. Therefore, removing identity information through the anonymized
+policy X = A does not have any implications for consumers’ learning either:
+E[wi |si,a−i] = E[wi |s] .
+Because the amount of information available to consumer i and to the producer oﬀ the
+path of play is independent of X ∈{A,S}, it follows that
+Ui((Si,S−i) ,S−i) = Ui((Si,A−i) ,A−i) .
+In turn, this implies DEi(S) = DEi(A). Thus, the data externality term DEi(X) in the
+intermediary’s proﬁts (14) is not impacted by the choice of inﬂow X ∈{A,S}.
+Along the path of play, however, the two data inﬂow policies yield diﬀerent outcomes. In
+particular, the anonymized data inﬂow policy reduces the amount of information conveyed
+to the producer in equilibrium. Crucially, this reduction does not occur at the expense of the
+consumers’ own learning. Therefore, the shift to anonymized data increases the total surplus
+terms ∆Wi(X) and the intermediary’s proﬁts. Put diﬀerently, anonymization reduces the
+cost of procuring the information, relative to the loss in revenue.
+We now show that data anonymization is the key to the “explosive” proﬁtability of
+8Anonymization remains optimal if we force the producer to charge a single price to all consumers on
+and oﬀ the equilibrium. With this interpretation, we intend to capture the idea that the producer oﬀers
+one price “on the platform” to the participating consumers while interacting with the deviating consumer
+“oﬄine.” The producer then uses the available market data to tailor the oﬄine price.
+23
+
+=== PAGE 24 / 57 ===
+
+data intermediation when the number of consumers becomes large. We then revisit the
+applications and limitations of our anonymization result in Section 5.
+4.2 Large Markets
+Thus far, we have considered the optimal data policy for a given ﬁnite number of consumers,
+each of whom transmits a single signal. Perhaps, the deﬁning feature of data markets is
+the multitude of (potential) participants, data sources, and services. We now pursue the
+implications of having many participants (i.e., of many data sources) for the social eﬃciency
+of data markets and the price of data.
+Each additional consumer presents an additional opportunity for trade in the product
+market. Thus, the feasible social surplus is linear in the number of consumers. In addition,
+with every additional consumer, the intermediary obtains additional information about mar-
+ket demand. These two eﬀects suggest that intermediation becomes increasingly proﬁtable
+in larger markets, wherein the potential revenue increases without bound, whereas individual
+consumers make a small marginal contribution to the precision of aggregate data.
+For this comparative statics analysis, we adopt the following additive data structure.
+Speciﬁcally, we assume the willingness to pay of consumer i is the sum of two components:
+wi = θ+ θi. (17)
+The term θ is common to all consumers in the market, whereas the term θi is idiosyncratic
+to consumer i. Similarly, the error term of consumer i is given by
+ei ≜ ε+ εi, (18)
+where the terms εand εi refer to a common and an idiosyncratic error, respectively. We also
+refer to the willingness to pay wi as the fundamental as opposed to the error term ei.
+As we vary the number of consumers N, the additive data structure allows us to hold the
+pairwise correlation between any two consumers’ fundamentals and noise terms constant. In
+particular, let α denote the correlation coeﬃcient of any two ( wi,wj), and let β denote the
+correlation coeﬃcient of ( ei,ej).
+We ﬁrst establish a suﬃcient condition for the proﬁtability of complete data sharing
+as the number of consumers becomes large, and then we analyze the data intermediary’s
+revenue and total cost separately.
+24
+
+=== PAGE 25 / 57 ===
+
+Proposition 4 (Proﬁtable Intermediation of Anonymized Data)
+For any α> 0, there exists N∗ such that anonymized data sharing is proﬁtable if N >N∗.
+We already know from Corollary 2 that a high degree of correlation in the consumers’
+willingness to pay allows the intermediary to proﬁt from data sharing with suﬃciently precise
+signals. Under the optimal data-sharing policy, any degree of correlation in the consumers’
+willingness to pay makes the anonymized signals suﬃciently close substitutes that interme-
+diation is proﬁtable when N is large.
+In Proposition 5, we assume that error terms are independent. This allows us to use the
+sample average to establish a lower bound on learning from N−1 signals. We suspect that
+similar results hold more generally under correlated errors. 9
+Proposition 5 (Large Markets)
+Consider the additive data structure and assume that errors are independent across con-
+sumers. As N →∞:
+1. Each consumer’s compensation m∗
+i converges to zero.
+2. Total consumer compensation is bounded by a constant,
+Nm∗
+i ≤9
+8 (var [θi] + var [εi]) , ∀N.
+3. The intermediary’s revenue and proﬁt grow linearly in N.
+As the optimal data policy aggregates the consumers’ signals, each additional consumer
+has a rapidly decreasing marginal value. Furthermore, each consumer is paid only for her
+marginal contribution; this explains why the total paymentsNmi converge to a ﬁnite number.
+Strikingly, this convergence can occur from above : when the consumers’ willingness to pay
+is suﬃciently correlated, the decrease in each i’s marginal contribution can be suﬃciently
+strong to oﬀset the increase in N.
+Whereas total costs converge to a constant, the revenue that the data intermediary can
+extract from the producer is linear in the number of consumers. Our model therefore implies
+that, as the market size grows without bound, the per capita proﬁt of the data interme-
+diary converges to the per capita proﬁt when the (anonymized) data are freely available.
+Conversely, the impact on consumer surplus depends on the degree of correlation in the
+underlying fundamentals and on the precision of the consumers’ initial signals. 10
+9This result holds, for example, when both fundamentals and errors have Gaussian distributions.
+10In a recent contribution, Loertscher and Marx (2020) study large digital monopoly markets, where data
+have the countervailing eﬀects of improving consumer valuations and increasing monopoly prices.
+25
+
+=== PAGE 26 / 57 ===
+
+Figure 2: Total Consumer Compensation ( σw = 1,σe = 0)
+Finally, we show that data anonymization is crucial for the large N properties of the
+intermediary’s proﬁts. Recall that, with complete data intermediation, individual consumer
+payments are proportional to G(S) −G(S−i). As long as fundamentals wi are not perfectly
+correlated, these payments are then bounded away from zero for any ﬁnite N. Proposition
+6 shows that this property also holds in the limit.
+Proposition 6 (Asymptotics with Complete Sharing)
+Consider the additive data structure with var[θi] > 0. Under complete (identity-revealing)
+data sharing, the asymptotic individual compensation is bounded away from 0:
+lim inf
+N→∞
+m∗
+i ≥3
+8
+var2[θi]
+1 + var[ei] >0.
+An immediate consequence of Proposition 6 is that, with complete data sharing, total
+payments to consumers grow linearly in N. Thus, anonymization is critical to achieving
+increasing returns to scale in data intermediation: even in settings where complete data
+intermediation X = S is proﬁtable, the per capita proﬁts are bounded away from the full
+value of information.
+Figure 4.2 illustrates an example with normally distributed fundamentals and errors, in
+which it can be less expensive for the intermediary to acquire a larger anonymized dataset
+than a smaller one, but not a larger complete dataset.
+4.3 Unique Implementation
+Our analysis thus far has characterized the intermediary’s most preferred equilibrium. An
+ensuing question is whether the qualitative insights and the asymptotic properties discussed
+26
+
+=== PAGE 27 / 57 ===
+
+above would hold across all equilibria, particularly in the intermediary’s least preferred equi-
+librium. A seminal result in the literature on contracting with externalities (see Segal (1999))
+is the “divide-and-conquer” scheme that guarantees a unique equilibrium outcome (see Segal
+and Whinston (2000) and Miklos-Thal and Shaﬀer (2016)). Under this scheme, the interme-
+diary can sequentially approach consumers and oﬀer compensation conditional on all earlier
+consumers having accepted an oﬀer. In this scheme, the ﬁrst consumer receives compensa-
+tion equal to her entire surplus loss, thereby guaranteeing her acceptance regardless of the
+other consumers’ decisions. More generally, consumer i receives the optimal compensation
+level in the baseline equilibrium when N = i.
+The cost of acquiring the consumers’ data is strictly higher under “divide and conquer”
+than in the intermediary’s most preferred equilibrium. Nonetheless, the impact of the en-
+suring unique implementation on per capita proﬁts vanishes in the limit.
+Proposition 7 (“Divide and Conquer”)
+Consider the additive data structure with independent errors. Under the “Divide and Con-
+quer” scheme, total consumer compensation satisﬁes
+Nm∗
+i ≤3
+4(1 + logN)(var[θi] + var[εi]).
+Under divide and conquer, the total payments to the consumers do not converge to a
+ﬁnite constant as N grows without bound. However, the growth rate of these payments is far
+smaller than the rate at which the producer’s willingness to pay for data diverges. Therefore,
+regardless of the equilibrium-selection criterion, the intermediary’s per capita proﬁts converge
+to the benchmark level when anonymized consumer data are made available.
+5 Implications for Consumer Privacy
+In this section, we enrich our model along several dimensions to characterize the implications
+of the optimal data intermediation policy for consumer privacy. In particular, we consider
+richer pricing instruments in the product market, heterogeneous consumers, heterogeneous
+product varieties, noisy information collection, and commitment power in the data market.
+5.1 Data Anonymization and Social Eﬃciency
+In our baseline setting, data anonymization is optimal independent of the model parameters,
+such as the number of consumers or the distribution of fundamentals and error terms. This
+result relies on two crucial assumptions: (i) consumer are homogeneous, by which we mean
+27
+
+=== PAGE 28 / 57 ===
+
+that the distributions of fundamentalswand errors eare symmetric, and (ii) data sharing has
+unambiguous welfare eﬀects on product market participants. Indeed, in the model of linear
+price discrimination, transmitting Xi anonymously improves consumer and social surplus,
+relative to complete data intermediation.
+We can generalize this insight to any arbitrary product market interaction beyond the
+linear pricing model of the previous section. Proposition 8 generalizes the intuition behind
+the optimal anonymization result in Proposition 3: it establishes that social surplus is the
+criterion guiding the intermediary’s decision to optimally collect anonymized data.
+Proposition 8 (Social Optimality of Data Anonymization)
+With homogeneous consumers, anonymized data intermediation is more proﬁtable than com-
+plete data intermediation if and only if anonymization increases social surplus.
+We note two important aspects of this result. First, it establishes the congruence between
+the intermediary private objective and the social welfare with respect to the anonymization
+decision only. It does not claim that the equilibrium information ﬂow itself is socially ef-
+ﬁcient. Second, the argument does not require any speciﬁc feature of the product market
+interaction. As the decision between anonymization and de-anonymization pertains precisely
+to the marginal value of the private information of i for the prediction of the willingness to
+pay wi, intermediary and consumer i can attain a socially eﬃcient arrangement.
+The result has immediate implications for how equilibrium data sharing policies depend
+on the nature of the product market interaction. In particular, Proposition 8 allows us to
+examine the role of richer pricing instruments. Bergemann, Brooks, and Morris (2015) have
+shown that every feasible combination of consumer and producer surplus is consistent with
+some form of price discrimination. Proposition 8 shows that, if the producer had the ability
+to extract all the expected surplus (given the consumers’ information), then the intermediary
+would ﬁnd it more proﬁtable to collect complete, identifying data.
+A canonical example where this prediction is relevant is the case of unit demand by the
+consumers, where our model would predict the prevalence of perfect price discrimination.
+However, to the extent to which consumers have options to retain some surplus ex post, such
+as by scaling down their purchase level as in our baseline model, then full surplus extraction
+would require the producer to have access to more complex pricing mechanisms.
+5.2 Market Segmentation and Data
+The assumption of ex ante homogeneity among consumers has enabled us to produce some
+of the central implications of social data. A more complete description of consumer de-
+28
+
+=== PAGE 29 / 57 ===
+
+mand should introduce heterogeneity across groups of consumers along characteristics such
+as location, demographics, income, and wealth.
+We now explore how these additional characteristics inﬂuence information policy and
+the proﬁts of the data intermediary. To this end, we augment the description of consumer
+demand by splitting the population into J homogeneous groups:
+wij ∼Fw,j, ei,j ∼Fe,j, i= 1,2,...,N j, j= 1,...,J .
+The intermediary’s data inﬂow policy must now specify whether to anonymize the con-
+sumers’ signals across groups and within each group. However, Proposition 8 establishes
+that it is always more proﬁtable to anonymize all signals within each group, rather than
+revealing the consumers’ identities.
+Corollary 4 (No Discrimination within Groups)
+The data policy that anonymizes all signals within each group j = 1,...,J and only reveals the
+group identity of each consumer i is more proﬁtable than the complete data-sharing policy.
+By further specifying the model, we can identify conditions under which the data in-
+termediary will collect and transmit group characteristics. By collecting information about
+the group characteristics, the intermediary inﬂuences the extent of price discrimination. For
+example, the intermediary could anonymize all signals across groups, thus forcing the pro-
+ducer to oﬀer only a single price. Alternatively, the intermediary could allow the producer
+to discriminate between two groups of consumers by recording and transmitting the group
+identities. As intuition would suggest, enabling price discrimination across groups not only
+allows the intermediary to charge a higher fee to the producer but also increases the com-
+pensation owed to consumers.
+Proposition 9 below sheds light on the optimal resolution of this trade-oﬀ. In this result,
+we restrict attention to the case of symmetric groups ( Nj = N for all j), with the additive
+data structure wi = θ+ θi, and independent noise terms in the consumers’ signals.
+Proposition 9 (Segmentation)
+If N is large enough, inducing group-level pricing is more proﬁtable for the intermediary
+than inducing uniform pricing.
+Whereas Proposition 3 stated that the intermediary will not reveal any information about
+consumer identity, Proposition 9 reﬁnes that result: if the market is suﬃciently large, then
+the intermediary will convey limited identity information, i.e., each consumer’s group iden-
+tity. This policy allows the producer to price discriminate across, but not within, groups.
+29
+
+=== PAGE 30 / 57 ===
+
+Figure 3: Marginal Value of an Additional Consumer
+Conversely, if the producer faces few consumers and their willingness to pay are not highly
+correlated, then pooling all signals reduces the cost of sourcing the data.
+The limited amount of price discrimination, which operates optimally at the group level
+rather than the individual level, can explain the behavior of many platforms. For example,
+Uber and Amazon claim that they do not discriminate at the individual level, but they
+condition prices on location, time, and other dimensions that capture group characteristics.
+The result in Proposition 9 is perhaps the sharpest manifestation of the value of big
+data. By enabling the producer to adopt a richer pricing model, a larger database allows the
+intermediary to extract more surplus. Our result also clariﬁes the appetite of the platforms
+for large datasets: because having more consumers allows the platform to proﬁtably segment
+the market more precisely, the value of the marginal consumer i = N to the intermediary
+remains large even as N grows. In other words, allowing the producer to segment the market
+is akin to paying a ﬁxed cost (i.e., higher compensation to the current consumers) to access a
+better technology (i.e., one that scales more easily with N). Figure 5.2 illustrates this result
+for an example with normally distributed fundamentals and errors.
+The optimality of using a richer pricing model when larger datasets are available is
+reminiscent of model selection criteria under overﬁtting concerns, e.g., the Akaike information
+criterion. In our setting, however, the optimality of inducing segmentation is not driven by
+econometric considerations. Instead, it is entirely driven by the intermediary’s cost-beneﬁt
+analysis in acquiring more precise information from consumers. As the data externality
+grows suﬃciently strong, acquiring the data becomes cheaper as the intermediary exploits
+the richer structure of consumer demand. 11
+Finally, the welfare ranking of the two pricing schemes (group vs. uniform) is a priori
+ambiguous. In particular, group pricing can yield lower total surplus than uniform pricing,
+11Olea, Ortoleva, Pai, and Prat (2019) oﬀer a demand-side explanation of a similar phenomenon: they
+showed that data buyers who employ a richer pricing model are willing to pay more for larger datasets.
+30
+
+=== PAGE 31 / 57 ===
+
+e.g., when consumers know their willingness to pay and group pricing results in ineﬃcient
+price discrimination. In other words, outside of the conditions of Proposition 8 (e.g., with
+heterogeneous consumers), market segmentation can be driven purely by the data externality.
+5.3 Recommender System
+In our baseline model, the data shared by the intermediary are used by the producer to
+set prices and by consumers to learn about their own preferences. The ﬁrst assumption
+is, in a sense, the worst-case scenario for the intermediary: consider the case in which
+consumers’ initial signals are very precise. As price discrimination reduces total surplus, no
+intermediation would be proﬁtable without a strong, negative data externality. Consequently,
+data aggregation is an essential part of the optimal data intermediation policy in this case.
+In practice, however, consumer data can also be used by the producer in surplus-enhancing
+ways, for example, to facilitate targeting quality levels and other product characteristics to
+the consumer’s tastes.
+In this section, we develop a generalization of our framework; this generalization allows
+the producer to charge a unit price pi and to oﬀer a product of characteristic ki to each
+consumer. Consumers diﬀer both in their vertical willingness to pay and in their horizontal
+taste for the product’s characteristics. Consumer i’s utility function is given by
+ui(wi,qi,pi,ki,ℓi) = (wi −(ki −ℓi)2 −pi)qi −q2
+i/2,
+with wi denoting the consumer’s willingness to pay and ℓi denoting the consumer’s ideal
+location or product characteristic. Both the willingness to pay w ∈RN and the locations
+ℓ ∈ RN of diﬀerent consumers are potentially correlated. The producer has a constant
+marginal cost of quantity provision that we normalize to zero and can freely set the product’s
+characteristic. Therefore, the case of a common location ℓi ≡ℓ for all consumers yields the
+baseline model of price discrimination.
+We examine the data intermediary’s optimal data inﬂow policy, which allows for separate
+aggregation policies for willingness to pay and location information. We impose the following
+assumptions: (i) the gains from trade under no information sharing are suﬃciently large;
+(ii) the consumers’ fundamentals have a joint Gaussian distribution; and (iii) consumer i
+perfectly observes ( wi,ℓi). The extension to noisy Gaussian signals is immediate. We then
+obtain another application of Proposition 8.
+Proposition 10 (Optimal Aggregation by a Recommender System)
+The intermediary’s optimal policy collects anonymized data on the vertical component wi and
+31
+
+=== PAGE 32 / 57 ===
+
+complete data on the horizontal component ℓi.
+Therefore, the recommender system enables the producer to oﬀer targeted product char-
+acteristics that match ki to ℓi as closely as possible. However, the system does not allow for
+personalized pricing. The logic is once again given by the intermediary’s sources of proﬁts,
+i.e., the contribution to social welfare ∆ W and the data externality DE. Because the data
+externalities do not depend on the level of data anonymization, the intermediary chooses
+to aggregate the vertical dimension of consumer data, thereby reducing the total surplus if
+transmitted to the producer. Conversely, because the distance between a consumer’s ideal
+product and the ﬁrm’s oﬀer ( ki −ℓi)2 shifts the consumer’s demand function down, the
+intermediary allows for the personalization of product characteristics.
+5.4 Intermediary with Commitment
+We have assumed thus far that the intermediary cannot refrain from selling information
+to the producer and cannot sell any acquired data inﬂow back to the consumers. The
+latter assumption entails no loss: consumers know that the intermediary sells the data to
+the producer, and therefore expect to receive all available information regardless of their
+participation decisions (Proposition 1), because they know that revealing this information
+maximizes the producer’s fee.
+The no commitment assumption reﬂects the substantial control that large online plat-
+forms have over the use of the data and the opacity with which the data outﬂow is linked to
+the data inﬂow. In other words, it is diﬃcult to ascertain how any given data input informs
+an intermediary’s data output. Nonetheless, it is useful to consider the implications of the
+data intermediary’s ability to commit to a certain data policy, especially in light of the wel-
+fare properties of data sharing discussed above. To that end, suppose the data intermediary
+oﬀered the consumers contracts that specify a data inﬂow and a data outﬂow policy.
+Through richer contracts, the data intermediary can oﬀer consumers privacy guarantees.
+In particular, the intermediary can implement the socially eﬃcient data-sharing policy, which
+consists of sharing all signals among all the consumers who accept the contract and not
+sharing any data at all with the producer (Corollary 1). In exchange for this commitment,
+the data intermediary requests compensation from the consumers. In turn, consumers are
+willing to pay a positive price for these data, and hence the socially optimal data sharing is
+always proﬁtable.12
+12This environment with commitment is related to the analysis in Lizzeri (1999) but has a number of
+distinct features. First, in Lizzeri (1999), the private information is held by a single agent, and multiple
+downstream ﬁrms compete for the information and for the object oﬀered by the agent. Second, the privately
+32
+
+=== PAGE 33 / 57 ===
+
+However, the equilibrium outcome under these stronger commitment assumptions fails
+to capture the role of large online platforms. Even though there are examples in which
+consumers pay a positive price to access tailored, non-sponsored recommendations, data in-
+termediaries choose to monetize the producers’ side of their platform much more frequently.
+Moreover, the socially eﬃcient policy need not maximize the intermediary’s proﬁts. For
+example, if fundamentals are perfectly correlated and signals are arbitrarily precise, the
+intermediary’s proﬁts from the ﬁrst-best policy are nil. Under these conditions, an inter-
+mediary with commitment (or even an intermediary who sells its own products) would not
+monetize their information by selling it to consumers .
+It is beyond the scope of this article to characterize the optimal commitment policy
+for any initial data structure, but the data externality clearly remains a key driver of the
+equilibrium allocation of information even under stronger commitment assumptions.
+6 Conclusion
+We have explored the trading of information between data intermediaries with market power
+and multiple consumers with correlated preferences. The data externality that we have
+uncovered strongly suggests that levels of compensation close to zero can induce an individual
+consumer in a large market to relinquish precise information about her preferences. This
+ﬁnding holds even if the consumer’s data are later sold to a ﬁrm that seeks to extract their
+surplus. Thus, giving consumers control rights over their data (a pillar of privacy regulation
+such as the EU General Data Protection Regulation or the California Privacy Rights Act)
+is insuﬃcient to bring about the eﬃcient use of information.
+Our results regarding the aggregation of consumer information further suggest that pri-
+vacy regulations must move away from concerns over personalized prices at the individual
+level. Most often, ﬁrms do not set prices in response to individual-level characteristics. In-
+stead, segmentation of consumers occurs at the group level (e.g., as in the case of Uber)
+or at the temporal and spatial levels (e.g., as in the case of Staples and Amazon). Thus,
+our analysis points to the signiﬁcant welfare eﬀects of group-level and market-level, dynamic
+prices that react in real time to changes in demand.
+A possible mitigator of the consequences of data externalities—echoed in Posner and Weyl
+(2018)—consists of facilitating the formation of consumer groups or unions to internalize
+the data externality when bargaining with powerful intermediaries, such as large online
+informed agent enters the contract after she has observed her private information. The shared insight is
+that the intermediary with commitment power might be able to extract a rent without any inﬂuence on the
+eﬃciency of the allocation.
+33
+
+=== PAGE 34 / 57 ===
+
+platforms.13 A diﬀerent regulatory solution is based on privacy managers, such as internet
+browsers with heterogeneous privacy settings that compete for consumers’ default choice. Yet
+another solution—suggested by Romer (2019)—consists of making the data outﬂow costly
+for the intermediary by, for example, taxing targeted advertising. In our model, taxing
+the data outﬂow will limit eﬃcient and ineﬃcient intermediation alike but will aﬀect the
+intermediary’s choice of data policy under the assumptions of Section 5.4.
+Finally, our data intermediary collected and redistributed the consumer data but played
+no role in the interaction between the consumers and the producer. In contrast, a consumer
+can often access a given producer only through a data platform. 14 Many platforms can then
+be thought of as auctioning access to the consumer. The data platform provides the bidding
+producers with additional information that they can use to tailor their interactions with
+consumers. Social data platforms thus trade individual consumer information for services
+rather than money. In these markets, the data externality manifests itself in the quality of
+the services oﬀered and in the extent of the consumers’ engagement.
+13This result echoes the claim in Zuboﬀ (2019) that “privacy is a public issue.”
+14Product data platforms, such as Amazon, Uber and Lyft, acquire individual data from the consumer
+through the consumers’ purchase of services and products. Social data platforms, such as Google and
+Facebook, oﬀer data services to individual users and sell the information to third parties, who mostly
+purchase the information in the form of targeted advertising space. In terms of our model, a product data
+platform combines the roles of data intermediation and product pricing.
+34
+
+=== PAGE 35 / 57 ===
+
+7 Appendix A
+Proof of Lemma 1. Under an arbitrary data-inﬂow policy X, each consumer i observes
+a noisy signal Si of her own willingness to pay and sends a potentially noisier signal Xi to
+the intermediary.15 Consumer i observes both Si and Xi. Given the data inﬂow X, the
+intermediary chooses an outﬂow policy, namely, the signal Y0 = Y0(X) sent to the producer
+and the signal Yi = Yi(X) sent to each consumer i. The intermediary then chooses a policy
+Y that maximizes the producer’s ex ante expected payoﬀ, which it fully extracts through
+the fee m0. We let the intermediary selects their favorite equilibrium in the ensuing game.
+For any outﬂow policy Y = ( Y0,Yi), denote an induced signaling equilibrium as ¯ γ =
+(¯qi,¯p), where ¯p: Y0 →R+ is the pricing strategy of the producer and ¯qi : Yi×Si×Xi×R+ →
+R+ is the demand function of consumer i. We ﬁrst argue that there exists an equilibrium γ∗
+under the outﬂow policy (¯p◦Y0,(Yi,¯p◦Y0)) that yields a weakly higher ex ante payoﬀ for the
+producer. In this new outﬂow policy, instead of revealingY0 to the producer, the intermediary
+directly recommends the price ¯p(Y) which coincides with the equilibrium pricing strategy in
+¯γ, and reveals to consumer i both Yi and the price recommendation.
+On the equilibrium path of ¯γ, consumer iupdates her posterior µ(Yi,Si,¯pi(Y)) using Yi,
+her own private signalSi, the report Xi, and the observed pricepi. We denote the consumer’s
+demand as a function of her posterior beliefs and the price as
+qi(µ(Yi,Si,Xi,pi),pi).
+The ex ante proﬁt of the producer from consumer i is given by
+E[¯piqi(µ(Yi,Si,Xi,¯pi),¯pi)] .
+Now consider the new outﬂow policy (¯p◦Y0,(Yi,¯p◦Y0)). Under this policy, there exists
+an equilibrium where consumer iforms her demand using the data outﬂow ( Yi,p∗◦Y0) from
+the intermediary as well as her own signal Si and the data inﬂow Xi. Because consumer
+i knows everything that the producer knows, the price charged by the producer no longer
+inﬂuences the consumer’s posterior, which therefore coincides with the on-path beliefs in the
+original equilibrium ¯γ, i.e.,
+µ(Yi,Si,Xi,¯pi(Y0)).
+Knowing this, the producer maximizes his ex ante payoﬀ by choosing a pricing strategy ˆp(·)
+15Under complete data sharing, for example, the consumer either reports Xi = Si or refuses to participate,
+so that Xi has inﬁnite variance (or the corresponding σ-algebra is the empty set).
+35
+
+=== PAGE 36 / 57 ===
+
+as a function of his signal ¯p◦Y0. Thus the producer’s equilibrium proﬁt is given by
+max
+ˆp
+ˆp
+(
+¯p◦Y0
+)
+qi
+(
+µ(Yi,Si,Xi,¯pi(Y0)),ˆp
+(
+¯p◦Y0
+))
+.
+Clearly “following the intermediary’s recommendation,” i.e., setting ˆ p(p) = p is a feasible
+strategy that yields the same payoﬀ as in the old equilibrium ¯γ. Consequently, the producer’s
+equilibrium payoﬀ is weakly higher than in ¯γ.
+Proof of Proposition 1. For any oﬀered price pi, consumer i demands the quantity
+qi = E[wi|(Si,Yi)] −pi.
+The producer ﬁnds it optimal to set the following price
+pi = E[wi|Y0]
+2 .
+Recall that the consumer always has superior information so that Y0 is measurable with
+respect to Yi. The proﬁt of the producer is given by
+Πi((Si,Yi),Y0) = E
+[E[wi|Y0]
+2
+(
+E[wi|(Si,Yi)] −E[wi|Y0]
+2
+)]
+= E[(E[wi|Y0])2]
+4 = var[E[wi|Y0]] + E[wi]2
+4 (19)
+= 1
+4G(Y0) + Πi(Si,∅) ,
+where the outside expectation represents integration over the whole probability space. The
+expected consumer surplus is given by
+Ui((Si,Yi),Y0) = E
+[(
+wi −E[wi|Y0]
+2
+)(
+E[wi|(Si,Yi)] −E[wi|Y0]
+2
+)]
+−1
+2E
+[(
+E[wi|(Si,Yi)] −E[wi|Y0]
+2
+)2]
+(20)
+= 1
+2E[(E[wi|(Si,Yi)])2 −3
+4(E[wi|Y0])2],
+= 1
+2 (G((Si,Yi)) −G(Si)) −3
+8G(Y0) + Ui(Si,∅) (21)
+Finally, the impact on total surplus is given by the sum of the two eﬀects:
+Wi((Si,Yi),Y0) −Wi(Si,∅) = 1
+2 (G((Si,Yi)) −G(Si)) −1
+8G(Y0) ,
+36
+
+=== PAGE 37 / 57 ===
+
+which completes the proof.
+Proof of Proposition 2. By Lemma 1, it is without loss of generality to assume
+the producer receives a signal Y, and the consumer receives a signal ( Yi,Y ). Thus, we can
+focus on equilibria where prices have no signaling eﬀect. These equilibria coincide with those
+described in Proposition 1. As we have shown there, the proﬁt of the producer is:
+E
+[E[wi|Y]
+2
+(
+E[wi|Y ∪Yi,Si,Xi] −E[wi|Y]
+2
+)]
+= E[(E[wi|Y])2]
+4 = var[E[wi|Y]] + E[wi]2
+4 .
+Therefore it is optimal to maximize var[ E[wi|Y]], which is achieved by setting Y = X.
+Hence, the intermediary reveals all information collected (Y = X) both to the producer and
+to consumer i.
+Proof of Corollary 2. When fundamentals wi are perfectly correlated,
+E[wi|S] = E[θ|S] = E[θ|S1,...,S N],
+E[wi|S−i] = E[θ|S−i],
+var[E[θ|S−i]] = var[E[θ|S1,...,S N−1]].
+Under our symmetry assumption, the variance of the posterior expectation of the common
+willingness to pay var[ E[θ|S1,..,N]] can be written as a function of N. Now we argue that
+var[E[θ|S1,..,N]] is increasing in N. We ﬁrst deﬁne g(S1,...,N−1) ≜ E[θ|S1,..,N−1]. Then, accord-
+ing to Lemma 3 below, we have
+var[E[θ|S1,..,N]] = max
+f∈L2
+var[θ] −E[(θ−g(S1,...,N))2],
+≥max
+f∈L2
+var[θ] −E[(θ−g(S1,...,N−1))2],
+= var[E[θ|S1,..,N−1]].
+The sequence var[E[θ|S1,..,N]] is increasing and bounded. Therefore, it converges:
+lim
+N→∞
+G(S) = lim
+N→∞
+G(S−i),
+and intermediation is then proﬁtable:
+lim
+N→∞
+R(S)
+N = 1
+4 lim
+N→∞
+G(S) >0.
+37
+
+=== PAGE 38 / 57 ===
+
+In the limit for N →∞, the data externality and the consumer surplus are given by
+lim
+N→∞
+Ui(S,S) −Ui(Si,∅) = lim
+N→∞
+E[1
+8(E[wi|S])2 −1
+2(E[wi|Si] −E[wi])2 −1
+8E[wi]2]
+= lim
+N→∞
+1
+8 var[E[wi|S]] −1
+2 var[E[wi|Si]],
+lim
+N→∞
+DEi(S) = lim
+N→∞
+1
+2 var[E[wi|S]] −1
+2 var[E[wi|Si]] −3
+8 var[E[wi|S−i]]
+= lim
+N→∞
+1
+8 var[E[wi|S]] −1
+2 var[E[wi|Si]].
+Therefore, when the initial noise is suﬃciently small (i.e., when var[ E[wi|Si]] is close to
+var[wi]), the data externality is negative and data sharing hurts consumers.
+Proof of Corollary 3. Because wi is independent from the other consumers’ signals,
+we have var[ E[wi|S−i]] = 0. Thus, intermediation is always unproﬁtable, and the data
+externality is always positive,
+R(S) = −N
+8 var[E[wi|S]] <0,
+DEi(S) = 1
+2(var[E[wi|S]] −var[E[wi|Si]]) ≥0.
+Finally, for the results on consumer surplus, we turn to Lemma 3. In particular, we know
+var[E[wi|S]] = var[wi] −E[(wi −E[wi|S])2],
+≥var[wi] −E[(wi −(si − 1
+N −1Σj̸=isj))2],
+= var[θi] −E[(θi −(θi + ε− 1
+N −1Σj̸=iθj −ε))2],
+= var[θi] −E[( 1
+N −1Σj̸=iθj)2] = N −2
+N −1 var[θi] →var[wi].
+Thus we obtain
+lim
+N→∞
+Ui(S,S) −Ui(Si,∅) = 1
+8 var[wi] −1
+2 var[E[wi|Si]].
+When σ is suﬃciently large, so that var[ E[wi|Si]] is close to 0, intermediation increases
+consumer surplus.
+The proof of Proposition 2 follows from expressions (15) and (16) in the text.
+Proof of Proposition 3. In the main text, the data inﬂow from consumer iis given by
+Xi = Si (under complete sharing) and we compare it with X∗
+i = δ(Si) (under anonymiza-
+tion). Note that ( Si,Xi)i in this case is symmetrically distributed, i.e., its joint density is
+38
+
+=== PAGE 39 / 57 ===
+
+unchanged under permutations of indices. Here we prove a slightly more general version of
+the result by allowing an arbitrary information inﬂow X such that (Si,Xi)i is symmetrically
+distributed.16 We assume that apart from the private signal Si and information outﬂow
+Yi provided by the intermediary, consumer i also observes her own data inﬂow Xi. This
+assumption is needed because information set ( Si,Xi,X∗
+−i) and ( Si,Xi,X∗) are equivalent
+by construction, but ( Si,X∗
+−i) and ( Si,X∗) maybe not. Note that when we restrict to the
+less general case (when Xi = Si), the latter holds automatically, so we do not need this
+assumption.
+For any ﬁxed inﬂow policy X, we refer to p−i as the oﬀ-path price charged to consumer i
+when she does not accept the intermediary’s contract, and to pi as the on-path price charged
+to consumer i. Now consider another inﬂow policy X∗ identical to X up to a random
+permutation of the consumers’ identities. Under this scheme, we refer to p∗
+−i as the oﬀ-path
+price for consumer i, and to p∗
+i as the on-path price for consumer i.
+We ﬁrst argue that p−i = p∗
+−i for any realization of W,S,X . To do so, let us calculate
+consumer i’s posterior about Wi under each inﬂow policy. Under the non-anonymized scheme,
+the posterior distribution of consumer i’s willingness to pay is given by
+fi(Wi = wi|Si = si,Xi = xi,X = x)
+=
+∫
+f(Wi = wi,W−i = w′
+−i,Si = si,S−i = s′
+−i,Xi = xi,X−i = x−i)ds′
+−idw′
+−i∫
+f(W = w′,Si = si,S−i = s′
+−i,Xi = xi,X−i = x−i)ds′
+−idw′ .
+Recall from Proposition 2 that the intermediary’s optimal data outﬂow policy consists
+of revealing to the consumers all the available information, even if the consumer refuses to
+participate. When the data is anonymized, because consumer iknows her own report Xi, the
+data outﬂow reveals to her the vector of reports X−i without knowing who generated each
+one. We now deﬁne δ ∈Sn−1 as permutation of consumer indices. Consumer i’s posterior
+distribution over her willingness to pay wi is now given by
+fi(Wi = wi|Si = si,Xi = xi,X∗
+−i = x−i).
+For notational simplicity, we use Pr to denote both probability and the proper marginal
+16For example, in Section 7 Xi might be a noisier signal of Si.
+39
+
+=== PAGE 40 / 57 ===
+
+density. Then the posterior can be rewritten as
+Pr(Wi = wi,Si = si,Xi = xi,X∗
+−i = x−i)
+Pr(Si = si,Xi = xi,X∗
+−i = x−i)
+= Σδ∈Sn−1 Pr(δ,Wi = wi,Si = si,Xi = xi,X−i = xδ(−i))
+Σδ∈Sn−1 Pr(δ,Si = si,Xi = xi,X−i = xδ(−i))
+= Σδ∈Sn−1 Pr(δ) Pr(Wi = wi,Si = si,Xi = xi,X−i = xδ(−i))
+Σδ∈Sn−1 Pr(δ)Pr(Si = si,Xi = xi,X−i = xδ(−i)) .
+Because of the symmetry assumption, we know that
+Pr(Wi = wi,Si = si,Xi = xi,X−i = xδ(−i))
+=
+∫
+f(Wi = wi,W−i = w′
+−i,Si = si,S−i = s′
+−i,Xi = xi,X−i = xδ(−i))ds′
+−idw′
+−i
+=
+∫
+f(Wi = wi,W−i = w′
+δ−1(−i),Si = si,S−i = s′
+δ−1(−i),Xi = xi,X−i = x−i)ds′
+−idw′
+−i
+=
+∫
+f(Wi = wi,W−i = w′
+δ−1(−i),Si = si,S−i = s′
+δ−1(−i),Xi = xi,X−i = x−i)ds′
+δ−1(−i)dw′
+δ−1(−i)
+= Pr(Wi = wi,Si = si,Xi = xi,X−i = x−i).
+For the same reason, we also have
+Pr(Si = si,Xi = xi,X−i = xδ(−i)) = Pr(Si = si,Xi = xi,X−i = x−i).
+Thus the posterior of consumer i can be simpliﬁed as:
+fi(Wi = wi|Si = si,Xi = xi,X∗
+−i = x−i)
+= Σδ∈Sn−1 Pr(δ) Pr(Wi = wi,Si = si,Xi = xi,X−i = x−i)
+Σδ∈Sn−1 Pr(δ)Pr(Si = si,Xi = xi,X−i = x−i)
+=
+Σδ∈Sn−1 1
+|Sn−1|Pr(Wi = wi,Si = si,Xi = xi,X−i = x−i)
+Σδ∈Sn−1 1
+|Sn−1|Pr(Si = si,Xi = xi,X−i = x−i)
+= fi(Wi = wi|Si = si,Xi = xi,X−i = x−i).
+We have therefore proved that consumer i has the same posterior about her willingness to
+pay wi for any realization of W,S,X irrespective of whether the data are anonymized of not.
+Furthermore, this holds both on and oﬀ the path of play.
+Next, we show that the producer also has the same posterior about Wi for any realization
+of W,S,X when consumer i refuses to report. Under the non-anonymized scheme, the
+40
+
+=== PAGE 41 / 57 ===
+
+posterior density is given by:
+fi(Wi = wi|X = x) =
+∫
+f(Wi = wi,W−i = w′
+−i,S = s′,Xi = xi,X−i = x−i)ds′dw′
+−i∫
+f(W = w′,S = s′,X = xi,X−i = x−i)ds′dw′ .
+Under the anonymized scheme, the posterior density is given by
+fi(Wi = wi|X∗= x) = Σδ∈Sn−1 Pr(δ) Pr(Wi = wi,X = δ(x))
+Σδ∈Sn−1 Pr(δ) Pr(X = δ(x))
+By the earlier argument, we can simplify it as follows:
+Σδ∈Sn−1 Pr(δ) Pr(Wi = wi,X = x)
+Σδ∈Sn−1 Pr(δ) Pr(X = x) = fi(Wi = wi|X = x)
+Because the posteriors for both parties are the same for any realization, so is the price, and
+hence the welfare impact of information
+The proﬁt of the intermediary from consumer i’s data under inﬂow policy X is given by
+Ri(X) = Π(X,X) −Π(Si,∅) −Ui((Si,X−i),X−i) + Ui((Si,X),X).
+We have argued that consumer surplus oﬀ the path is the same:
+Ui((Si,X−i),X−i) = Ui((Si,X∗
+−i),X∗
+−i).
+We now turn to the last term—the impact on social welfare on the path of play:
+Π((Si,X),X) + Ui((Si,X),X)
+= 1
+2E[(E[wi|Si,Xi,X] −E[wi|X])2 + 1
+4(E[wi|X])2] + var[E[wi|X]]
+4
+= 1
+2 var[E[wi|Si,Xi,X]] −1
+8 var[E[wi|X]].
+Recall that consumer ihas the same on path posterior under two diﬀerent scheme. Therefore,
+the diﬀerence in the intermediary’s proﬁts under the two policies reduces to
+1
+2 var[E[wi|Si,Xi,X]] −1
+8 var[E[wi|X]] −1
+2 var[E[wi|Si,Xi,X∗]] + 1
+8 var[E[wi|X∗]]
+= −1
+8 var[E[wi|X]] + 1
+8 var[E[wi|X∗]] ≤0.
+Therefore, anonymization is more proﬁtable than complete sharing, and strictly so whenever
+anonymization makes the estimation less precise.
+41
+
+=== PAGE 42 / 57 ===
+
+In the remainder of the Appendix, we often make use of the following classical result in
+statistics, which we state as a lemma without proof—the result is an immediate consequence
+of the fact that E[X|Y] is the projection of X on F(Y) in L2 space.
+Lemma 3 Let W and Y be two random variables. Then it holds that
+var[E[W|Y]] = var[W] −E[(W −E[W|Y])2] ≤var[W],
+and
+E[(W −E[W|Y])2] ≤E[(W −f(Y))2], ∀f ∈L2.
+To prove Proposition 4, we ﬁrst state a basic property of anonymized data sharing in our
+symmetric environment.
+Lemma 4 When the data is anonymized, the following holds:
+E[wi|A] = E[wj|A].
+Proof of Lemma 4. Denote the joint distribution of W and S as f(W = w,S = s)
+and the posterior of Wi after observing A as f(Wi = w|A). Denote the permutation in SN
+as ν and especially the swapping between i and j as νij. For notational simplicity, we use
+Pr to denote both probability and the proper marginal density.
+fi(Wi = wi|A= s) = Pr(Wi = wi,A = s)
+Pr(A= s) = Σν∈SN Pr(ν) Pr(Wi = wi,Sν = s))
+Pr(A= s)
+=
+Σν∈SN 1
+|SN |
+∫
+f(Wi = wi,Wj = wj,W−ij = w−ij,Sν = s)dwjdw−ij
+Pr(A= s) .
+Because f is unchanged under permutation, we can apply the following transformation:
+fi(Wi = wi|A= s) =
+Σν∈SN 1
+|SN |
+∫
+f(Wj = wi,Wi = wj,W−ij = w−ij,Sνij◦ν = s)dwjdw−ij
+Pr(A= s) ,
+=
+Σνij◦ν∈SN 1
+|SN |
+∫
+f(Wj = wi,Wi = w′
+i,W−ij = w−ij,Sνij◦ν = s)dw′
+idw−ij
+Pr(A= s) = fj(Wj = wi|A= s).
+Because the posterior distribution is the same, so is the conditional expectation because
+E[wi|A] =
+∫
+wifi(Wi = wi|A)dwi,
+which completes the proof.
+42
+
+=== PAGE 43 / 57 ===
+
+Proof of Proposition 4. Combining Lemmas 3 and 4, we obtain
+E[wi|A] = E[ 1
+NΣiwi|A] = E[θ+ 1
+NΣiθi|A];
+G(A) = var[E[θ+ 1
+NΣiθi|A]] = var[θ+ 1
+NΣiθi] −E[(θ+ 1
+NΣiθi −E[θ+ 1
+NΣiθi|A])2].
+We can simplify the last term as follows:
+E[(θ+ 1
+NΣiθi −E[θ+ 1
+NΣiθi|A])2]
+= E[(θ−E[θ|A])2 + 1
+N2 (Σiθi −ΣiE[θi|A])2 − 2
+N(θ−E[θ|A])(Σiθi −ΣiE[θi|A])]
+≥E[(θ−E[θ|A])2] − 2
+N
+√
+var[θ−E[θ|A]] var[Σiθi −ΣiE[θi|A]]
+≥E[(θ−E[θ|A])2] − 2
+N
+√
+Nvar[θ] var[θi],
+where the last inequality comes from Lemma 3. The intermediary’s proﬁt can be written as
+R= 3G(A−i) −G(A),
+= 3 var[E[θ|A−i]] −var[θ] − 1
+N var[θi] + E[(θ+ 1
+NΣiθi −E[θ+ 1
+NΣiθi|A])2],
+≥3 var[E[θ|A−i]] −var[θ] − 1
+N var[θi] + E[(θ−E[θ|A])2] − 2
+N
+√
+Nvar[θ] var[θi]
+= 3 var[E[θ|A−i]] −var[E[θ|A]] − 1
+N var[θi] − 2√
+N
+√
+var[θ] var[θi].
+Therefore, in the limit we have:
+lim
+N→∞
+R= 2 lim
+N→∞
+var[E[θ|A]] >0,
+which completes the proof.
+Proof of Proposition 5. We ﬁrst prove that the total compensation is bounded from
+above, which immediately implies that the individual compensation goes to 0 as N →∞.
+From Lemma 4, we know that
+G(A) = var[E[wi|A]] = var[E[Σi
+wi
+N|A]],
+≤var[Σi
+wi
+N] = var[θ] + var[θi] + var[εi]
+N .
+43
+
+=== PAGE 44 / 57 ===
+
+On the other hand, we also know
+G(A−i) = var[E[θ|A−i]] = var[θ] −E[(θ−E[θ|A−i])2].
+Because the conditional expectation is the best L2 approximation, we know it leads to a
+smaller error than the “sample average estimator,”
+E
+[
+(θ−E[θ|A−i])2]
+≤E
+[
+θ− 1
+N −1Σj̸=i(θ+ θj + εj)2
+]
+= 1
+N −1(var[θi] + var[εj]).
+Therefore, we have:
+N(G(A) −G(A−i)) ≤N
+(
+var[θ] + var[θi] + var[εi]
+N −var[θ] + 1
+N −1(var[θi] + var[εj])
+)
+,
+= N
+(var[θi] + var[εi]
+N + 1
+N −1(var[θi] + var[εi])
+)
+≤3(var[θi] + var[εi]).
+The total consumer compensation is then given by
+3N
+8 (G(A) −G(A−i)) ≤9
+8(var[θi] + var[εi]).
+Finally, the intermediary’s proﬁt is growing linearly in N because
+R(S) = N
+4 G(A) −3N
+8 (G(A) −G(A−i)),
+lim
+N→∞
+R(S)
+N = 1
+4 lim
+N→∞
+G(A),
+which completes the proof.
+Proof of Proposition 6. When data is not anonymized we have:
+G(S) −G(S−i) = var[E[θ+ θi|S]] −var[E[θ|S−i]].
+Because of symmetry, we have
+cov[E[θ|S],E[θi|S]] = cov[E[θ|S],E[θj|S]] = cov[E[θ|S],ΣN
+j=1E[θj/N|S]].
+44
+
+=== PAGE 45 / 57 ===
+
+Because the correlation coeﬃcient is always greater than −1, we obtain
+cov[E[θ|S],ΣN
+j=1E[θj/N|S]] ≥−
+√
+var[θ] var[ΣN
+j=1E[θj/N|S]],
+≥−
+√
+var[θ] var[ΣN
+j=1θj/N].
+Therefore, according to Lemma 3 we have:
+G(S) −G(S−i) = var[E[θ|S]] + 2 cov[E[θ|S],E[θi|S]] + var[E[θi|S]] −var[E[θ|S−i]]
+≥var[E[θ|S]] −2 1√
+N
+√
+var[θ] var[θi] + var[E[θi|S]] −var[E[θ|S−i]],
+and hence
+lim inf
+N→∞
+G(S) −G(S−i) ≥var[E[θi|S]].
+The last term is strictly positive because
+var[E[θi|S]] = var[θi] −E[(θi −E[θi|S])2]
+≥var[θi] −E[(θi − var[θi]
+var[θi] + var[θ] + var[e]Si)2],
+= var[θi] −(var[θi] − var2[θi]
+var[θi] + var[θ] + var[e]),
+= var2[θi]
+var[θi] + var[θ] + var[e] >0,
+where the ﬁrst inequality again uses Lemma 3.
+Proof of Proposition 7. In the standard “divide and conquer” scheme, the compen-
+sation for the i-th consumer is the marginal loss of revealing her information given that i−1
+consumers reveal their signals:
+3
+8G(S1,...,i) −3
+8G(S1,...,i−1).
+Because in general we do not know whether this marginal loss is decreasing in i, we consider
+the following revised version of divide and conquer, where consumer i receives
+mi = max
+k≥i
+3
+8G(S1,...,k) −3
+8G(S1,...,k−1).
+Under this payment scheme, it is a dominant strategy for consumer 1 to accept the oﬀer.
+Moreover, it is optimal for consumer ito accept the oﬀer, given that the ﬁrst i−1 consumers
+45
+
+=== PAGE 46 / 57 ===
+
+accept. Using an identical proof to Proposition 5, we obtain
+3
+8G(S1,...,i) −3
+8G(S1,...,i−1) ≤3
+8(1
+i + 1
+i−1)(var[θi] + var[εi]),
+≤3
+4
+1
+i−1(var[θi] + var[εi]).
+Therefore, we obtain an upper bound on the compensation paid to consumer i :
+mi ≤max
+k≥i
+3
+4
+1
+k−1(var[θi] + var[εi]) = 3
+4
+1
+i−1(var[θi] + var[εi]).
+Finally, because we have
+Σi
+3
+8(G(S1,...,i) −G(S1,...,i−1)) ≤3
+4(1 + ΣN
+i=3
+1
+i−1)(var[θi] + var[εi]),
+≤3
+4(1 + logN)(var[θi] + var[εi]),
+the total compensation grows at a speed less than log N.
+Proof of Proposition 8. The proof of this proposition is similar to that of Proposi-
+tion 3. By Lemma 1, we know that the intermediary will transmit whatever information it
+collected to all consumers. By homogeneity, we know the consumer’s posterior about their
+own fundamental wij is the same whether the signals are anonymized or not, and the pro-
+ducer’s posterior about any deviating consumer’s fundamental is also the same under the
+two schemes.
+Denote the broker’s revenue under the non-anonymized and anonymized scheme asR(X)
+and R(X∗), respectively. It then holds that
+Ri(X) = Π(X,X) −Π(Si,∅) −Ui((Si,X−i),X−i) + Ui((Si,X),X),
+Ri(X∗) = Π(X∗,X∗) −Π(Si,∅) −Ui((Si,X∗
+−i),X∗
+−i) + Ui((Si,X∗),X∗).
+Our analysis in previous paragraph implies
+Ui((Si,X−i),X−i) = Ui((Si,X∗
+−i),X∗
+−i).
+Therefore the intermediary prefers anonymization if and only if
+Ri(X∗) −Ri(X) = W((Si,X∗),X∗) −W((Si,X),X) ≥0,
+which completes the proof.
+46
+
+=== PAGE 47 / 57 ===
+
+Proof of Proposition 9. We ﬁrst consider the case where the intermediary anonymizes
+all data, including the group identities. Similar to the result in Lemma 4 (A.2 in the latest
+draft), we know that the producer oﬀers one price to all consumers on the path of play,
+E[wij|A] = E[wi′j′|A].
+Denoting N = ΣjNj, we have
+E[wi′j′|A] = 1
+ΣjNj
+ΣjΣiE[wij|A] = 1
+ΣjNj
+ΣjΣiE[θj + θij|A]
+= Σj
+Nj
+N E[θj|A] + 1
+NE[Σjiθij|A].
+Therefore we obtain an upper bound on the revenue per capita
+R(A)
+N = 3
+8G(A−ij) −1
+8G(A) = 3
+8[E[wij]|A−ij] −1
+8 var[E[wij]|A]
+≤1
+4 var[E[wij]|A] = 1
+4 var[Σj
+Nj
+N E[θj|A] + 1
+NE[Σjiθij|A]]
+≤1
+4
+1
+N2 ΣN2
+j var[θj] + 1
+4N var[θij].
+Next, consider the case where the intermediary reveals the group identity. Instead of A we
+use Ag to denote the information that the producer receives. By an argument similar to the
+proof of Lemma 4 (A.2 in the latest draft), we know that (on path) the producer oﬀers one
+price to all consumers in each group:
+E[wij|Ag] = E[wi′j|Ag]
+= 1
+Nj
+Σ
+Nj
+i′=1E[wi′j|Ag] = 1
+Nj
+Σ
+Nj
+i′=1E[wi′j|Ag] = E[θj + 1
+Nj
+Σ
+Nj
+i′=1θi′j|Ag].
+When consumer ij rejects the oﬀer, the intermediary will know the group identity of this
+deviating consumer and use all the available data to estimate the demand:
+E[wij|Ag
+−ij] = E[θj + θij|Ag
+−ij] = E[θj|Ag
+−ij].
+47
+
+=== PAGE 48 / 57 ===
+
+The revenue that the intermediary obtains from consumer ij’s data is then given by
+3
+8 var[E[wij]|Ag
+−ij] −1
+8 var[E[wij]|Ag],
+= 3
+8 var[E[θj|Ag
+−ij]] −1
+8 var[E[θj + 1
+Nj
+Σ
+Nj
+i′=1θi′j|Ag]],
+≥3
+8 var[E[θj|Ag
+−ij]] −1
+8 var[θj] − 1
+8Nj
+var[θij] −1
+4
+√
+1
+Nj
+var[θj]
+√
+var[θij].
+From Lemma 3 (A.1 in the latest draft), we know
+E[(θj −E[θj|Ag
+−ij])2] ≤E[(θj − 1
+Nj −1Σi′̸=isi′j)2],
+= E[( 1
+Nj −1Σi′̸=i −θi′j −εi′j)2] = var[θij] + var[εij]
+Nj −1 ;
+var[E[θj|Ag
+−ij]] = var[θj] −E[(θj −E[θj|Ag
+−ij])2],
+≥var[θj] −var[θij] + var[εij]
+Nj −1 .
+Thus we obtain a lower bound on the revenue from consumer ij:
+1
+4 var[θj] −3
+8
+var[θij] + var[εij]
+Nj −1 − 1
+8Nj
+var[θij] −1
+4
+√
+1
+Nj
+var[θj]
+√
+var[θij].
+Finally we can compute the diﬀerence in the revenues
+R(A) −R(Ag) ≤Σj
+N2
+j
+4N var[θj] + 1
+4 var[θij] + Σj
+3
+8
+Nj(var[θij] + var[εij])
+Nj −1
+−Σj
+(
+Nj
+4 var[θj] −1
+8 var[θij] −
+√
+Nj
+4
+√
+var[θj]
+√
+var[θij]
+)
+.
+As long as Nj <kN where k <1, we know that
+R(A) −R(Ag)
+<Σj
+(
+k−1
+4 Nj var[θj] + 1
+8 var[θij] +
+√
+Nj
+4
+√
+var[θj]
+√
+var[θij]
+)
++ 1
+4 var[θij] + Σj
+3
+8
+Nj(var[θij] + var[εij])
+Nj −1 .
+The dominant linear term is decreasing in Nj, and hence we know that as Nj →∞, revealing
+48
+
+=== PAGE 49 / 57 ===
+
+group identities is more proﬁtable.
+Proof of Proposition 10. Each consumer’s demand function is given by
+qi = wi −(ℓi −xi)2 −pi.
+This means the producer’s proﬁt is given by
+π=
+∑N
+i=1
+pi
+(
+wi −(ℓi −xi)2 −pi
+)
+.
+Therefore, under any information structure S, the producer oﬀers
+pi =
+(
+E[wi |S] −E
+[
+(ℓi −E[ℓi |S])2 |S
+])
+/2,
+=
+(
+E[wi |S] −E
+[
+(ℓi −E[ℓi |S])2])
+/2,
+xi = E[ℓi |S] ,
+where the second line relies on the fact that the underlying random variables are normal so
+that ℓi −E[ℓi|S] is independent of S.
+The consumer’s surplus is then given by
+Ui(S) = 1
+2E
+[(
+wi −(ℓi −E[ℓi |S])2 −E[wi |S] −E[(ℓi −E[ℓi |S])2]
+2
+)2]
+= 1
+2E
+[(
+wi −1
+2E[wi |S]
+)2]
++ 1
+2E
+[(
+(ℓi −E[ℓi |S])2 −1
+2E
+[
+(ℓi −E[ℓi |S])2])2]
+−E
+[(
+wi −1
+2E[wi |S]
+)]
+E
+[
+(ℓi −E[ℓi |S])2 −1
+2E
+[
+(ℓi −E[ℓi |S])2]]
+= 1
+2E
+[
+w2
+i −3
+4E[wi |S]2
+]
++ 1
+2E
+[
+(ℓi −E[ℓi |S])4 −3
+4E
+[
+(ℓi −E[ℓi |S])2]2
+]
+−1
+4E[wi] E
+[
+(ℓi −E[ℓi |S])2]
+.
+Therefore the diﬀerence is:
+Ui(S) −Ui(∅) = −3
+8 var [E[wi |S]] + 1
+4µvar [E[ℓi |S]] + 1
+2E
+[
+(ℓi −E[ℓi |S])4]
+−3
+8E
+[
+(ℓi −E[ℓi |S])2]2
+−1
+2E
+[
+(ℓi −µτ)4]
++ 3
+8E
+[
+(ℓi −µτ)2]2
+.
+Because every random variable is assumed to be normal, ℓi−E[ℓi|S] is also normal with zero
+49
+
+=== PAGE 50 / 57 ===
+
+mean. We can further simplify and obtain
+Ui(S) −Ui(∅) = −3
+8 var [E[wi |S]] + 1
+4µvar [E[ℓi |S]] + 3
+2 ([ℓi] −var [E[ℓi |S]])2
+−3
+8 (var [ℓi] −var [E[ℓi |S]])2 −3
+2 var[ℓi]2 + 3
+8 var[ℓi]2,
+= −3
+8 var [E[wi |S]] + 1
+4µvar [E[ℓi |S]] + 9
+8
+(
+var [E[ℓi |S]]2 −2 var [E[ℓi |S]] (σ2
+τ + σ2
+τi)
+)
+.
+Similarly we have:
+Πi(S) = 1
+4E
+[(
+E[wi |S] −E
+[
+(ℓi −E[ℓi |S])2])]
+= 1
+4E
+[
+E[wi |S]2 −2E[wi |S] E
+[
+(ℓi −E[ℓi |S])2]
++ E
+[
+(ℓi −E[ℓi |S])2]2]
+,
+and hence
+Πi(S) −Πi(∅) = 1
+4 var[E[wi |S]] + 1
+2µvar [E[ℓi |S]]
++1
+4
+(
+var [E[ℓi |S]]2 −2 var [E[ℓi |S]] (σ2
+τ + σ2
+τi)
+)
+.
+To summarize, the impact of data sharing on social surplus is given by
+Wi(S) −Wi(∅) = Ui(S) −Ui(∅) + Πi(S) −Πi(∅),
+= −1
+8 var [E[wi |S]] + 3
+4µvar [E[ℓi |S]] + 11
+8
+(
+var [E[ℓi |S]]2 −2 var [E[ℓi |S]] (σ2
+τ + σ2
+τi)
+)
+.
+Therefore the diﬀerence Wi(S) −Wi(∅) is a quadratic function of the variance of the condi-
+tional expectation x≜ var[E[ℓi|S]]. In particular, we let
+g(x) ≜ 11
+8 x2 +
+(3
+4µ−11
+4 (σ2
+τ + σ2
+τi)
+)
+x.
+As long as 3 µ >11(σ2
+τ + σ2
+τi), this function is positive and increasing in x, which means a
+higher var[E[ℓi|S]] increases consumer surplus.
+Finally, as in the proof of Proposition 3, aggregating wi increases Wi(S) but keeps Π(∅)
+and Ui(S−i) unchanged. Not aggregating ℓi increases Wi(S) while keeping Π(∅) and Ui(S−i)
+unchanged. Therefore it is optimal for the intermediary to aggregate wi but not ℓi.
+50
+
+=== PAGE 51 / 57 ===
+
+Appendix B
+In this Appendix, we explore the data intermediary’s ability to oﬀer privacy guarantees in
+equilibrium by collecting less than perfect information about the consumers’ signals. Speciﬁ-
+cally, we consider the additive data structure in (17)-(18) and again assume that fundamental
+and error terms have a joint Gaussian distribution. We then specify a class of data policies
+that add common and idiosyncratic noise terms ξ and ξi to the consumers’ original (noisy)
+signals si. We then have the following data inﬂow,
+xi = wi + σei  
+=si
++ ξ+ ξi,
+and the intermediary chooses the variance of the additional noise terms ( σ2
+ξ and σ2
+ξi).
+Proposition 11 (Optimal Noise Structure)
+1. The optimal data inﬂow policy adds no idiosyncratic noise; i.e., σ∗
+ξi = 0.
+2. The optimal data inﬂow policy adds (weakly) positive aggregate noise; i.e., σ∗
+ξ ≥0.
+Proof of Proposition 11. Recall the formula in the proof of Proposition 1,
+Πi(Yi,Y ) = var[E[wi|Y]] + µ2
+4 ,
+Ui(Yi,Y ) = 1
+2E[(E[wi|Yi])2 −3
+4(E[wi|Y])2].
+With a noisier report X, consumer i will know Si and X both on path and oﬀ path. The
+producer will know X on path and X−i if consumer i deviates. Thus the revenue of the
+intermediary is:
+R(X)
+N = Πi((Si,X),X) −Πi(Si,∅) + U((Si,X),X) −U((Si,X),X−i),
+= var[E[wi|X]]
+4 −3 var[E[wi|X]]
+8 + 3 var[E[wi|X−i]]
+8 ,
+= −var[E[wi|X]]
+8 + 3 var[E[wi|X−i]]
+8 .
+Recall that
+Xi = wi + σei + ξ+ ξi = θ+ θi + (σεi + ξi) + (σε+ ξ).
+For ease of exposition, we rewrite (σεi+ξi) as εi and (σε+ξ) as ε. Because the intermediary
+can control the variance of ξ,ξi but not the initial precision of the consumers’ signals, we
+51
+
+=== PAGE 52 / 57 ===
+
+eﬀectively have a lower bound of the variance σ2
+i and σ2 on the new pair εi,ε. Denote the
+variance of θ as σ2
+θ and similarly for other variables. It is straightforward to calculate that:
+E[wi|X] = Nσ2
+θ + σ2
+θi
+N2(σ2
+θ + σ2
+ε) + N(σ2
+εi + σ2
+θi)
+∑
+i′
+xi′,
+E[wi|X−i] = Nσ2
+θ
+(N −1)2(σ2
+θ + σ2
+ε) + (N −1)(σ2
+εi + σ2
+θi)
+∑
+i′̸=i
+xi′,
+R(X) = 3(N −1)Nσ4
+θ
+8((N −1)(σ2
+ε + σ2
+θ) + σ2
+εi + σ2
+θi) − (Nσ2
+θ + σ2
+θi)2
+8(N(σ2
+ε + σ2
+θ) + σ2
+εi + σ2
+θi)
+Now we are ready to prove the theorem. We argue it is optimal to set σ2
+εi = σ2
+i (i.e., to
+set σ2
+ξi = 0 ). To show this result, suppose σ2
+εi > σ2
+i. Then there exists δ >0 such that
+augmenting the common noise to ¯σ2
+ε ≜ σ2
+ε + δ2 and diminishing the idiosyncratic noise to
+¯σ2
+εi ≜ σ2
+εi −(N −1)δ2 ≥σ2
+i, the proﬁts of the intermediary will strictly increase. Too see
+this, consider the expression of the revenue
+R(S) = 3(N −1)Nσ4
+θ
+8((N −1)(σ2
+ε + σ2
+θ) + σ2
+εi + σ2
+θi) − (Nσ2
+θ + σ2
+θi)2
+8(N(σ2
+ε + σ2
+θ) + σ2
+εi + σ2
+θi).
+The ﬁrst term is unchanged under the new information structure, whereas the denominator
+of the second term increases; thus, the total proﬁt increases.
+As we establish in Proposition 12, no proﬁtable intermediation is feasible for values of α
+less than a threshold that decreases with N. This threshold is independent of the correlation
+coeﬃcient β of the initial noise terms ( ei,ej). Furthermore, as α approaches this threshold
+from above, the optimal level of common noise grows without bound. Figure 7 shows the
+optimal variance in the additional common noise term.
+Proposition 12 (Proﬁtability of Data Intermediation)
+Under the optimal data policy, the intermediary’s proﬁts are strictly positive if and only if
+α> N(
+√
+3 + 1)−1
+2N(N + 1) −1 ∈(0,1) .
+Proof of Proposition 12. Recall that α is the correlation coeﬃcient between wi and
+wj. Because we have normalized var [wi] = 1, under the additive structure, we have σ2
+θ = α
+and σ2
+θi = 1 −α. To establish the result in the statement, we must then show that the
+intermediary obtains positive proﬁts if and only if
+N
+(√
+3 −1
+)
+σ2
+θ −σ2
+θi >0.
+52
+
+=== PAGE 53 / 57 ===
+
+Figure 4: Optimal Additional Noise ( σ= 1,N = 2)
+When N
+(√
+3 −1
+)
+σ2
+θ <σ2
+θi, we have:
+R= 3Nσ4
+θ
+8(σ2
+θ + σ2
+ε)
+(
+1 − σ2
+θi + σ2
+εi
+(N −1)(σ2
+ε + σ2
+θ) + σ2
+εi + σ2
+θi
+)
+−(Nσ2
+θ + σ2
+θi)2
+8N(σ2
+θ + σ2
+ε)
+(
+1 − σ2
+θi + σ2
+εi
+N(σ2
+ε + σ2
+θ) + σ2
+εi + σ2
+θi
+)
+≤
+( 3Nσ4
+θ
+8(σ2
+θ + σ2
+ε) −(Nσ2
+θ + σ2
+θi)2
+8N(σ2
+θ + σ2
+ε)
+)(
+1 − σ2
+θi + σ2
+εi
+N(σ2
+ε + σ2
+θ) + σ2
+εi + σ2
+θi
+)
+≤0.
+Conversely, when N
+(√
+3 −1
+)
+σ2
+θ >σ2
+θi, we can rewrite R as
+Aσ2
+ε + B
+8(Nσ2
+ε + σ2
+εi + Nσ2
+θ + σ2
+θi)(Nσ2
+ε −σ2
+ε + σ2
+εi + Nσ2
+θ −σ2
+θ + σ2
+θi),
+A= (N −1)
+(
+2N2σ4
+θ −2Nσ2
+θσ2
+θi −σ4
+θi
+)
+>0.
+Therefore the intermediary can obtain a positive proﬁt R by setting σ2
+ε suﬃciently large
+through the addition of correlated noise.
+The optimal level of common noise σ∗
+ξ is strictly positive when the number of consumers
+N or the correlation in their willingness to pay α is suﬃciently small: if the consumers’
+preferences are suﬃciently correlated, or if the market is suﬃciently large, the intermediary
+does not add any noise. If the consumers’ fundamentals are not suﬃciently correlated, the
+53
+
+=== PAGE 54 / 57 ===
+
+intermediary makes their signals more correlated with additional common noise σ∗
+ξ.
+The additional noise reduces the amount of information procured from consumers and
+hence the total compensation owed to them. These cost savings come at the expense of lower
+revenues. In this respect, aggregation and noise serve a common purpose. However, because
+the intermediary optimally anonymizes the consumers’ signals, the correlation in the supple-
+mental noise terms ξ renders signal si less valuable on the margin for estimating the average
+willingness to pay ¯w. In other words, the aggregate demand information without consumer
+i’s signal si is a relatively better predictor of ¯w when the intermediary uses common rather
+than idiosyncratic noise. Therefore, by using common noise exclusively, the intermediary
+can hold the information sold to the producer constant while reducing the cost of acquiring
+that information from consumers.
+Finally, note that these two elements of information design—aggregation and noise—
+interact richly with one another. In particular, the value of common noise is deeply linked to
+that of aggregate data: if the intermediary is restricted to complete (identity-revealing) data
+sharing, one can show that supplemental idiosyncratic noise is optimal when the consumers’
+initial signals si are suﬃciently precise.
+54
+
+=== PAGE 55 / 57 ===
+
+References
+Acquisti, A., C. Taylor,and L. Wagman(2016): “The Economics of Privacy,” Journal
+of Economic Literature, 54, 442–492.
+Ali, S. N., G. Lewis, and S. Vasserman(2019): “Voluntary Disclosure and Personalized
+Pricing,” Discussion Paper 26592, National Bureau of Economic Research.
+Aridor, G., Y.-K. Che, and T. Salz (2020): “The Economic Consequences of Data
+Privacy Regulation: Empirical Evidence from GDPR,” Discussion Paper 26900, National
+Bureau of Economic Research.
+Arrieta-Ibarra, I., L. Goff, D. Jimenez-Hernandez, J. Lanier, and G. Weyl
+(2018): “Should We Treat Data as Labor? Moving beyond ”Free”,” American Economic
+Review Paper and Proceedings, 108, 38–42.
+Athey, S., C. Catalini, and C. Tucker (2017): “The Digital Privacy Paradox: Small
+Money, Small Costs, Small Talk,” Discussion Paper 23488, National Bureau of Economic
+Research.
+Bergemann, D., and A. Bonatti (2011): “Targeting in Advertising Markets: Implica-
+tions for Oﬄine Vs. Online Media,” Rand Journal of Economics , 42(3), 417–443.
+Bergemann, D., and A. Bonatti (2019): “Markets for Information: An Introduction,”
+Annual Review of Economics , 11, 85–107.
+Bergemann, D., B. Brooks, and S. Morris (2015): “The Limits of Price Discrimina-
+tion,” American Economic Review, 105, 921–957.
+Choi, J., D. Jeon, and B. Kim (2019): “Privacy and Personal Data Collection with
+Information Externalities,” Journal of Public Economics , 173, 113–124.
+Committee on the Judiciary(2020): “Investigation of Competition in Digital Markets,”
+Discussion paper, United States House of Representatives.
+Crem`er, J., Y.-A. de Montjoye, and H. Schweitzer (2019): “Competition policy
+for the digital era,” Discussion paper, European Commission.
+Cummings, R., K. Ligett, M. Pai, and A. Roth (2016): “The Strange Case of Privacy
+in Equilibrium Models,” in ACM-EC (Economics and Computation) 2016 .
+55
+
+=== PAGE 56 / 57 ===
+
+Fainmesser, I., A. Galeotti, and R. Momot (2020): “Digital Privacy,” Discussion
+paper, Johns Hopkins University.
+Furman, J., D. Coyle, A. Fletcher, D. McAules, and P. Marsden (2019): “Un-
+locking Digital Competition: Report of the Digital Competition Expert Panel,” HM Trea-
+sury, United Kingdom .
+Gradwohl, R. (2017): “Information Sharing and Privacy in Networks,” in ACM-EC (Eco-
+nomics and Computation) 2017 .
+Ichihashi, S. (2020a): “The Economics of Data Externalities,” Discussion paper, Bank of
+Canada.
+Ichihashi, S. (2020b): “Online Privacy and Information Disclosure by Consumers,” Amer-
+ican Economic Review, 110(2), 569–595.
+Johnson, G., S. Shriver, and S. Goldberg (2020): “Privacy & market concentration:
+Intended & unintended consequences of the GDPR,” Discussion paper, Boston University
+Questrom School of Business.
+Jullien, B., Y. Lefouili, and M. Riordan (2020): “Privacy Protection, Security, and
+Consumer Retention,” Discussion paper, Toulouse School of Economics.
+Liang, A., and E. Madsen (2020): “Data and Incentives,” Discussion paper, Northwestern
+University.
+Lin, T. (2019): “Valuing Intrinsic and Instrumental Preferences for Privacy,” .
+Lizzeri, A. (1999): “Information Revelation and Certiﬁcation Intermediaries,” RAND
+Journal of Economics , 30, 214–231.
+Loertscher, S., and L. M. Marx (2020): “Digital monopolies: Privacy protection or
+price regulation?,” International Journal of Industrial Organization , 71, 1–13.
+Miklos-Thal, J., and G. Shaffer (2016): “Naked Exclusion with Private Oﬀers,”Amer-
+ican Economic Journal: Microeconomics, 8, 174–194.
+Olea, J. L. M., P. Ortoleva, M. Pai, and A. Prat (2019): “Competing Models,”
+arXiv preprint arXiv:1907.03809 .
+Posner, E. A., and E. G. Weyl (2018): Radical markets: Uprooting capitalism and
+democracy for a just society . Princeton University Press.
+56
+
+=== PAGE 57 / 57 ===
+
+Robinson, J. (1933): The Economics of Imperfect Competition . Macmillan, London.
+Romer, P. (2019): “A Tax That Could Fix Big Tech,” The New York Times .
+Schmalensee, R. (1981): “Output and Welfare Implications of Monopolistic Third-Degree
+Price Discrimination,” American Economic Review, 71, 242–247.
+Segal, I. (1999): “Contracting with Externalities,” Quarterly Journal of Economics , 114,
+337–388.
+Segal, I., and M. Whinston (2000): “Naked Exclusion: Comment,” American Economic
+Review, 90, 296–309.
+Stigler Committee on Digital Platforms (2019): “Final Report,” Discussion paper,
+Stigler Center for the Study of the Economy and the State.
+Tang, H. (2019): “The Value of Privacy: Evidence from Online Borrowers,” Discussion
+paper, HEC Paris.
+Taylor, C.(2004): “Consumer Privacy and the Market for Customer Information,” RAND
+Journal of Economics , 35, 631–651.
+Zuboff, S. (2019): The Age of Surveillance Capitalism: The Fight for a Human Future at
+the New Frontier of Power . Public Aﬀairs, New York.
+57
