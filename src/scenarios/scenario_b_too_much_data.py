@@ -154,11 +154,24 @@ def solve_for_S(params: ScenarioBParams, S: Set[int]) -> OutcomeForS:
     welfare = platform_value - total_user_cost
     
     # === 计算支持该集合的最小价格（目标集合支持法）===
-    # 对于 i in S：p_i >= v_i * leak_i(S)（分享者参与约束）
-    # 对于 i not in S：不支付，但承受泄露（假设不会偏离去分享）
+    # 考虑推断外部性：用户不分享也会有基础泄露
+    # 参与约束：p_i - v_i * leak_i(分享) >= -v_i * leak_i(不分享)
+    # 即：p_i >= v_i * [leak_i(分享) - leak_i(不分享)] = v_i * ΔI_i
+    
     min_prices = [0.0] * n
+    
+    # 计算不包含每个用户时的泄露（用于计算边际泄露）
     for i in S:
-        min_prices[i] = v[i] * leakage[i]
+        # 计算不包含i时的泄露
+        S_without_i = S - {i}
+        Sigma_post_without_i = compute_posterior_covariance(Sigma, S_without_i, sigma_noise_sq)
+        leak_i_without = max(0.0, Sigma[i, i] - Sigma_post_without_i[i, i])
+        
+        # 边际泄露 = 总泄露 - 基础泄露
+        marginal_leak_i = leakage[i] - leak_i_without
+        
+        # 最小价格 = v_i × 边际泄露（而非总泄露）
+        min_prices[i] = v[i] * max(0.0, marginal_leak_i)
     
     # 平台利润 = 价值 - 支付给分享者的价格
     platform_profit = platform_value - sum(min_prices)
@@ -324,7 +337,7 @@ def main():
     print("=" * 60)
     
     # 生成实例（小规模便于演示）
-    params = generate_instance(n=8, rho=0.2, seed=42)
+    params = generate_instance(n=8, rho=0.2, seed=13645)
     
     print(f"\n参数设置：")
     print(f"  用户数 n = {params.n}")

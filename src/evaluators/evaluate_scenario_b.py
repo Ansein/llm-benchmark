@@ -76,13 +76,15 @@ class ScenarioBEvaluator:
 
 你是用户 {user_id}，正在参与一个数据市场博弈。  
 在这一轮中，所有用户将**同时决定是否分享数据**。  
-在你做决定时，你**不知道其他用户在本轮会如何选择**。
+在你做决定时，你**不知道其他用户在本轮会如何选择**，也无法看到任何其他用户本轮的决定。
 
 ## 基本参数
 - 你的隐私偏好：v[{user_id}] = {v_i:.3f}
+  （所有用户的v都从[0.3, 1.2]范围均匀抽样，你可以据此判断自己的相对水平）
 - 类型相关系数：ρ = {rho:.2f}
 - 观测噪声：σ² = {sigma_noise_sq}
-> （一般而言，不同用户的隐私偏好存在差异，但你无法观察到其他用户的具体偏好。）
+
+（不同用户的隐私偏好存在差异，但你无法观察到其他用户的具体v值。）
 
 ## 推断外部性机制
 
@@ -102,37 +104,63 @@ class ScenarioBEvaluator:
 - 你的信息泄露 = 平台对你类型的不确定性减少量
 - 不确定性通过贝叶斯后验方差衡量
 
-## 分享与补偿
+## 分享与补偿机制
 
-- 如果你选择**分享**：
-  - 平台会支付补偿
-  - 但你的信息泄露会**额外增加**
-- 如果你选择**不分享**：
-  - 你仍然会因为推断外部性而遭受一定泄露
-  - 但不会获得补偿
+**平台补偿规则**（公开信息）：
+- 如果你选择分享，平台会支付补偿：p_i = v_i × ΔI_i
+  - 其中 v_i 是你的隐私偏好（{v_i:.3f}）
+  - ΔI_i 是你的数据带来的**边际信息价值**
+  
+- **边际信息价值** ΔI_i 取决于：
+  1. 你分享后，平台对你类型的不确定性减少程度
+  2. 当前已分享的人数（上一轮：{len(last_share_set)}人）
+  3. 类型相关性 ρ = {rho:.2f}
+
+**平台定价直觉**（基于博弈论）：
+- 平台通常会尝试根据你分享所带来的边际信息价值来设定补偿
+- 一种常见的定价思路是：补偿与边际隐私成本处于同一量级
+- 但在实际决策中，你无法精确知道补偿是否完全覆盖你的隐私损失
+
+因此，分享并不一定严格优于不分享，你需要自行权衡：
+- 分享可能在某些情况下略有收益
+- 也可能只是勉强覆盖成本，甚至不足
+
+**但要注意**：
+- 如果你**不分享**：
+  - 你仍会因推断外部性遭受**基础泄露**（取决于其他人的分享）
+  - 并且**不会获得任何补偿**
+  - 净效用 = -基础泄露成本（负值）
+  
+- 如果你**分享**：
+  - 总泄露 = 基础泄露 + 边际泄露
+  - 获得补偿 p_i ≈ v_i × 边际泄露
+  - 净效用 ≈ 补偿 - 总隐私成本 ≈ -基础泄露成本 + ε（可能略好）
+
 
 你的目标是：  
-**在考虑隐私损失与补偿的权衡后，最大化自己的净效用。**
+**在理解上述机制后，判断分享是否能让你的净效用更好。**
 
 ## 上一轮的公共信息（广播）
-- 分享集合：{last_share_set}
-- 分享率：{last_share_rate:.1%}
+- 上一轮分享集合：{last_share_set}
+- 上一轮分享率：{last_share_rate:.1%}
 
-这只是历史结果，**不能保证本轮仍然成立**。
+这只是历史结果，仅供参考，**不能保证本轮仍然成立**；并且**本轮不会再有新的公共信息更新**。
 
 ## 你的任务
 
-请基于上述机制与信息，判断在这一轮中你是否选择分享数据。
+基于上述机制与补偿规则，判断你是否选择分享数据。
 
-请重点考虑：
-- 推断外部性在不分享状态下可能承受的泄露程度
-- 在当前环境下，你更倾向于保护隐私，还是接受补偿
+**思考框架**：
+1. 理解推断外部性：不分享也会有基础泄露
+2. 理解补偿机制：p_i = v_i × ΔI_i ≈ 边际成本
+3. 比较两种选择的净效用
+4. 根据自己的隐私偏好，做出理性决策
 
 ## 输出格式
 
 {{
   "decision": 0或1（0=不分享，1=分享），
-  "rationale": "你的推理过程（100字左右，说明你如何理解机制并做出决策的逻辑链）"
+  "rationale": "你的推理过程（100-150字，说明你如何理解推断外部性、补偿机制，并做出决策）"
 }}
 """
         return prompt
@@ -160,30 +188,69 @@ class ScenarioBEvaluator:
         rationales = []
         
         for trial in range(num_trials):
-            try:
-                response = self.llm_client.generate_json([
-                    {"role": "system", "content": self.build_system_prompt()},
-                    {"role": "user", "content": prompt}
-                ])
-                
-                decision = int(response["decision"])
-                if decision not in [0, 1]:
-                    print(f"  ⚠️  用户{user_id} 试验{trial+1}: 无效决策 {decision}，默认为0")
-                    decision = 0
-                
-                decisions.append(decision)
-                rationales.append(response.get("rationale", ""))
-                
-            except Exception as e:
-                print(f"  ⚠️  用户{user_id} 试验{trial+1}失败: {e}")
-                decisions.append(0)  # 失败时默认不分享
-                rationales.append("")
+            retry_count = 0
+            max_retries = 1  # 失败时重试一次
+            
+            while retry_count <= max_retries:
+                try:
+                    response = self.llm_client.generate_json([
+                        {"role": "system", "content": self.build_system_prompt()},
+                        {"role": "user", "content": prompt}
+                    ])
+                    
+                    # 容错解析decision
+                    raw_decision = response.get("decision", 0)
+                    decision = self._parse_decision(raw_decision)
+                    
+                    if decision not in [0, 1]:
+                        print(f"  ⚠️  用户{user_id} 试验{trial+1}: 无效决策 {decision}，默认为0")
+                        decision = 0
+                    
+                    decisions.append(decision)
+                    rationales.append(response.get("rationale", ""))
+                    break  # 成功，退出重试循环
+                    
+                except Exception as e:
+                    retry_count += 1
+                    if retry_count > max_retries:
+                        print(f"  ⚠️  用户{user_id} 试验{trial+1}失败（已重试{max_retries}次）: {e}")
+                        decisions.append(0)  # 失败时默认不分享
+                        rationales.append("")
+                    else:
+                        print(f"  ⚠️  用户{user_id} 试验{trial+1}失败，重试中...")
         
         # 多数投票
         final_decision = 1 if sum(decisions) > len(decisions) / 2 else 0
         final_rationale = rationales[0] if rationales else ""
         
         return final_decision, final_rationale
+    
+    def _parse_decision(self, raw_decision) -> int:
+        """
+        容错解析LLM的决策输出
+        
+        Args:
+            raw_decision: LLM输出的原始决策值
+        
+        Returns:
+            解析后的决策（0或1）
+        """
+        if isinstance(raw_decision, str):
+            raw = raw_decision.strip().lower()
+            if raw in ["1", "分享", "share", "yes", "true"]:
+                return 1
+            elif raw in ["0", "不分享", "not_share", "no", "false"]:
+                return 0
+            else:
+                # 尝试转换为整数
+                try:
+                    return int(raw_decision)
+                except:
+                    return 0
+        elif isinstance(raw_decision, bool):
+            return 1 if raw_decision else 0
+        else:
+            return int(raw_decision)
     
     def simulate_llm_equilibrium(self, num_trials: int = 1, max_rounds: int = 15) -> Dict[str, Any]:
         """
@@ -212,6 +279,9 @@ class ScenarioBEvaluator:
         # 追踪收敛过程
         history = []
         rationales_history = []  # 记录推理过程
+        
+        converged = False
+        cycle_detected = False
         
         for round_num in range(max_rounds):
             print(f"\n{'='*60}")
@@ -252,6 +322,30 @@ class ScenarioBEvaluator:
             # 第3步：检查收敛（连续2轮不变）
             if len(history) >= 2 and history[-1] == history[-2]:
                 print(f"\n✅ 在第{round_num + 1}轮达到收敛！")
+                converged = True
+                break
+            
+            # 第4步：检测2-cycle振荡（ABAB模式）
+            if len(history) >= 4 and history[-1] == history[-3] and history[-2] == history[-4]:
+                print(f"\n⚠️  检测到2-cycle振荡，选择更优结果作为稳定输出")
+                cycle_detected = True
+                
+                # 计算两个状态的结果
+                set_a = set(history[-1])
+                set_b = set(history[-2])
+                outcome_a = calculate_outcome(set_a, self.params)
+                outcome_b = calculate_outcome(set_b, self.params)
+                
+                # 选择平台利润更高的状态（也可以选社会福利更高）
+                if outcome_a["profit"] >= outcome_b["profit"]:
+                    print(f"   选择状态A: {history[-1]} (利润={outcome_a['profit']:.4f})")
+                    # 保持当前history[-1]
+                else:
+                    print(f"   选择状态B: {history[-2]} (利润={outcome_b['profit']:.4f})")
+                    # 用状态B替换最后一个
+                    history[-1] = history[-2]
+                
+                converged = True
                 break
             
             # 更新广播信息
@@ -267,6 +361,9 @@ class ScenarioBEvaluator:
         gt_W = self.gt_numeric["eq_W"]
         gt_total_leakage = self.gt_numeric["eq_total_leakage"]
         
+        # 计算Jaccard相似度
+        jaccard_sim = self._jaccard_similarity(set(llm_share_set), set(gt_share_set))
+        
         # 计算偏差（指标1：均衡质量）
         results = {
             "model_name": self.llm_client.config_name,
@@ -274,15 +371,17 @@ class ScenarioBEvaluator:
             "gt_share_set": gt_share_set,
             "convergence_history": history,
             "rationales_history": rationales_history,  # 保存推理过程
-            "converged": len(history) >= 2 and history[-1] == history[-2],
+            "converged": converged,
+            "cycle_detected": cycle_detected,
             "rounds": len(history),
             "equilibrium_quality": {
-                "share_set_similarity": self._jaccard_similarity(set(llm_share_set), set(gt_share_set)),
+                "share_set_similarity": jaccard_sim,
                 "share_rate_error": abs(len(llm_share_set) / n - len(gt_share_set) / n),
                 "welfare_mae": abs(llm_outcome["welfare"] - gt_W),
                 "profit_mae": abs(llm_outcome["profit"] - gt_profit),
-                "equilibrium_type": "good" if len(llm_share_set) / n > 0.3 else "bad",
-                "correct_equilibrium": 1 if len(llm_share_set) / n > 0.3 else 0
+                # 使用与GT对齐的判定标准（而非固定阈值）
+                "correct_equilibrium": 1 if jaccard_sim >= 0.6 else 0,
+                "equilibrium_type": "good" if jaccard_sim >= 0.6 else "bad"
             },
             "metrics": {
                 "llm": {
@@ -325,7 +424,14 @@ class ScenarioBEvaluator:
         print(f"\n【分享集合比较】")
         print(f"  LLM均衡: {results['llm_share_set']}")
         print(f"  理论均衡: {results['gt_share_set']}")
-        print(f"  收敛情况: {'✅ 已收敛' if results['converged'] else '❌ 未收敛'} (共{results['rounds']}轮)")
+        
+        convergence_status = "✅ 已收敛"
+        if not results['converged']:
+            convergence_status = "❌ 未收敛"
+        elif results.get('cycle_detected', False):
+            convergence_status = "⚠️  已收敛（2-cycle）"
+        
+        print(f"  收敛情况: {convergence_status} (共{results['rounds']}轮)")
         
         print(f"\n【均衡质量指标】")
         eq_quality = results['equilibrium_quality']
@@ -348,7 +454,7 @@ class ScenarioBEvaluator:
         
         print(f"\n【收敛轨迹】")
         for i, share_set in enumerate(results['convergence_history']):
-            print(f"  第{i+1}轮: {share_set} (分享率: {len(share_set)/8:.1%})")
+            print(f"  第{i+1}轮: {share_set} (分享率: {len(share_set)/self.params.n:.2%})")
     
     def save_results(self, results: Dict[str, Any], output_path: str):
         """保存评估结果"""
@@ -365,7 +471,7 @@ def main():
         from src.evaluators.llm_client import create_llm_client
     
     # 创建LLM客户端
-    llm_client = create_llm_client("grok-3-mini") # 仅为测试示例
+    llm_client = create_llm_client("gpt-4.1-mini") # 仅为测试示例
     
     # 创建评估器
     evaluator = ScenarioBEvaluator(llm_client)
