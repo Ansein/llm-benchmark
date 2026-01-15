@@ -71,6 +71,27 @@ class ScenarioBEvaluator:
         last_share_set = last_round_broadcast.get("share_set", [])
         last_share_rate = last_round_broadcast.get("share_rate", 0.0)
         
+        # === 计算本轮如果用户分享，平台会支付的补偿价格 p_i ===
+        # 假设其他用户保持上一轮的分享决策
+        current_S = set(last_share_set)
+        
+        # 计算用户i分享后的泄露
+        S_with_i = current_S | {user_id}
+        from src.scenarios.scenario_b_too_much_data import calculate_leakage
+        leakage_with_i = calculate_leakage(S_with_i, self.params.Sigma, sigma_noise_sq)
+        leak_i_with = leakage_with_i[user_id]
+        
+        # 计算用户i不分享时的泄露（基础泄露）
+        S_without_i = current_S - {user_id}
+        leakage_without_i = calculate_leakage(S_without_i, self.params.Sigma, sigma_noise_sq)
+        leak_i_without = leakage_without_i[user_id]
+        
+        # 边际信息价值 ΔI_i
+        marginal_info_value = max(0.0, leak_i_with - leak_i_without)
+        
+        # 补偿价格 p_i = v_i × ΔI_i
+        compensation_price = v_i * marginal_info_value
+        
         prompt = f"""
 # 场景：数据市场与推断外部性
 
@@ -106,55 +127,105 @@ class ScenarioBEvaluator:
 
 ## 分享与补偿机制
 
-**平台补偿规则**（公开信息）：
-- 如果你选择分享，平台会支付补偿：p_i = v_i × ΔI_i
-  - 其中 v_i 是你的隐私偏好（{v_i:.3f}）
-  - ΔI_i 是你的数据带来的**边际信息价值**
+**本轮补偿价格**（基于上一轮情况）：
+- 如果你选择分享，平台将支付补偿：**p_i = {compensation_price:.4f}**
   
-- **边际信息价值** ΔI_i 取决于：
-  1. 你分享后，平台对你类型的不确定性减少程度
-  2. 当前已分享的人数（上一轮：{len(last_share_set)}人）
-  3. 类型相关性 ρ = {rho:.2f}
+- 这个价格是根据以下公式计算的：
+  - p_i = v_i × ΔI_i
+  - v_i = {v_i:.3f}（你的隐私偏好）
+  - ΔI_i = {marginal_info_value:.4f}（边际信息价值）
+  
+- **边际信息价值** ΔI_i 是你分享数据带来的额外信息：
+  - 基于上一轮分享集合 {last_share_set}（这些用户选择了分享）
+  - 衡量你的数据在当前情况下的边际贡献
+  - 如果已有很多人分享，你的边际贡献会减少（次模性）
 
-**平台定价直觉**（基于博弈论）：
-- 平台通常会尝试根据你分享所带来的边际信息价值来设定补偿
-- 一种常见的定价思路是：补偿与边际隐私成本处于同一量级
-- 但在实际决策中，你无法精确知道补偿是否完全覆盖你的隐私损失
+**决策权衡（基于上一轮状态的估算）**：
 
-因此，分享并不一定严格优于不分享，你需要自行权衡：
-- 分享可能在某些情况下略有收益
-- 也可能只是勉强覆盖成本，甚至不足
+如果**假设其他用户保持上一轮的决策不变**：
 
-**但要注意**：
 - 如果你**不分享**：
-  - 你仍会因推断外部性遭受**基础泄露**（取决于其他人的分享）
-  - 并且**不会获得任何补偿**
-  - 净效用 = -基础泄露成本（负值）
+  - 基础泄露：{leak_i_without:.4f}
+  - 获得补偿：0
+  - 估算净效用：-{v_i * leak_i_without:.4f}
   
 - 如果你**分享**：
-  - 总泄露 = 基础泄露 + 边际泄露
-  - 获得补偿 p_i ≈ v_i × 边际泄露
-  - 净效用 ≈ 补偿 - 总隐私成本 ≈ -基础泄露成本 + ε（可能略好）
+  - 总泄露：{leak_i_with:.4f}
+  - 获得补偿：{compensation_price:.4f}
+  - 估算净效用：{compensation_price - v_i * leak_i_with:.4f}
+
+**重要警告 - 这只是静态估算！**
+
+⚠️ **实际情况会更复杂**：
+1. **其他用户也在做决策**：他们可能同时改变选择，导致实际的分享集合与上轮不同
+2. **补偿价格会动态变化**：
+   - 如果更多人分享 → 你的边际价值↓ → 补偿↓
+   - 如果更少人分享 → 你的边际价值↑ → 补偿↑
+3. **次模性效应**：已经有很多人分享时，额外分享的边际价值会递减
+4. **需要战略思考**：不要只看当前数值，要考虑这是一个动态博弈
+
+**理性决策建议**：
+- 不要机械地比较两个数值就决定
+- 考虑其他用户的可能反应
+- 思考分享集合的稳定性（是否接近均衡）
+- 评估自己的隐私偏好在群体中的相对位置
 
 
 你的目标是：  
-**在理解上述机制后，判断分享是否能让你的净效用更好。**
+**在理解推断外部性和补偿机制的基础上，做出战略性决策，使你的长期净效用最大化。**
+
+这不是简单的一次性决策，而是一个会收敛到均衡的动态过程。你需要思考：
+- 什么样的分享集合是稳定的（均衡）？
+- 在那个均衡中，你是否应该分享？
+- 你的决策应该帮助系统收敛，而不是制造震荡
 
 ## 上一轮的公共信息（广播）
-- 上一轮分享集合：{last_share_set}
-- 上一轮分享率：{last_share_rate:.1%}
 
-这只是历史结果，仅供参考，**不能保证本轮仍然成立**；并且**本轮不会再有新的公共信息更新**。
+平台在上一轮结束后公布了以下信息：
+
+- **上一轮分享集合**：{last_share_set}
+  - 这是一个用户ID列表，表示上一轮**选择分享数据的用户**
+  - 例如 [0, 2, 5] 表示用户0、用户2、用户5选择了分享
+  - 集合中有 {len(last_share_set)} 个用户选择了分享
+  
+- **上一轮分享率**：{last_share_rate:.1%}
+  - 这是分享用户占总用户数的比例
+  
+**重要说明**：
+- 这只是上一轮的历史结果，仅供参考
+- **本轮其他用户可能会改变决策**，你无法预知
+- 本轮结束前不会有新的公共信息更新
+- 但你可以基于这个历史信息推测大致的市场状态
 
 ## 你的任务
 
-基于上述机制与补偿规则，判断你是否选择分享数据。
+基于上述机制与补偿规则，进行**战略性思考**并判断是否分享数据。
 
 **思考框架**：
-1. 理解推断外部性：不分享也会有基础泄露
-2. 理解补偿机制：p_i = v_i × ΔI_i ≈ 边际成本
-3. 比较两种选择的净效用
-4. 根据自己的隐私偏好，做出理性决策
+
+1. **评估市场状态**：
+   - 当前有多少人在分享？分享率是高是低？
+   - 这个状态看起来稳定吗，还是可能大幅变化？
+
+2. **理解推断外部性的核心**：
+   - 不分享也会有基础泄露（这是关键！）
+   - 分享的真正成本是**边际泄露**（总泄露 - 基础泄露）
+   - 补偿应该覆盖的是边际成本，而非总成本
+
+3. **考虑动态效应**：
+   - 如果很多人都这样想，会发生什么？
+   - 分享集合会如何演化？
+   - 你的决策应该指向一个稳定的均衡
+
+4. **评估自己的位置**：
+   - 你的隐私偏好 v = {v_i:.3f} 在 [0.3, 1.2] 范围内处于什么水平？
+   - 隐私偏好较低的用户更可能从分享中获益
+   - 隐私偏好较高的用户更谨慎
+
+5. **参考但不盲从数值**：
+   - 上述净效用估算提供了**一个参考方向**
+   - 但它基于"其他人不变"的假设，这在动态博弈中不成立
+   - 真正重要的是理解机制，而非机械比较数值
 
 ## 输出格式
 
@@ -374,6 +445,7 @@ class ScenarioBEvaluator:
             "converged": converged,
             "cycle_detected": cycle_detected,
             "rounds": len(history),
+            "iterations": len(history),  # 为兼容性添加，与rounds相同
             "equilibrium_quality": {
                 "share_set_similarity": jaccard_sim,
                 "share_rate_error": abs(len(llm_share_set) / n - len(gt_share_set) / n),
@@ -402,6 +474,12 @@ class ScenarioBEvaluator:
                     "total_leakage_mae": abs(llm_outcome["total_leakage"] - gt_total_leakage),
                     "share_rate_mae": abs(len(llm_share_set) / n - len(gt_share_set) / n)
                 }
+            },
+            "labels": {
+                "llm_leakage_bucket": self._bucket_share_rate(len(llm_share_set) / n),
+                "gt_leakage_bucket": self.gt_labels.get("leakage_bucket", "unknown"),
+                "llm_over_sharing": 1 if len(llm_share_set) > len(gt_share_set) else 0,
+                "gt_over_sharing": self.gt_labels.get("over_sharing", 0)
             }
         }
         
@@ -414,6 +492,15 @@ class ScenarioBEvaluator:
         intersection = len(set1 & set2)
         union = len(set1 | set2)
         return intersection / union if union > 0 else 0.0
+    
+    def _bucket_share_rate(self, rate: float) -> str:
+        """将分享率分桶"""
+        if rate < 0.3:
+            return "low"
+        elif rate < 0.7:
+            return "medium"
+        else:
+            return "high"
     
     def print_evaluation_summary(self, results: Dict[str, Any]):
         """打印评估摘要"""
