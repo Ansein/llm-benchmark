@@ -21,11 +21,13 @@ benchmark/
 │   │   ├── __init__.py
 │   │   ├── llm_client.py        # LLM客户端封装
 │   │   ├── evaluate_scenario_a.py  # 场景A评估器
-│   │   └── evaluate_scenario_b.py  # 场景B评估器
+│   │   ├── evaluate_scenario_b.py  # 场景B评估器
+│   │   └── evaluate_scenario_c.py  # 场景C评估器 ✨
 │   ├── scenarios/                # 场景生成器
 │   │   ├── __init__.py
 │   │   ├── scenario_a_personalization.py  # 场景A理论求解器
-│   │   └── scenario_b_too_much_data.py    # 场景B理论求解器
+│   │   ├── scenario_b_too_much_data.py    # 场景B理论求解器
+│   │   └── scenario_c_social_data.py      # 场景C理论求解器 ✨
 │   └── utils/                    # 工具函数
 │       ├── __init__.py
 │       └── extract_pdf_text.py   # PDF文本提取工具
@@ -93,7 +95,7 @@ benchmark/
 ### papers/
 论文PDF及提取的文本
 
-## 🎯 两个评估场景
+## 🎯 三个评估场景
 
 ### 场景A：个性化定价与隐私选择
 
@@ -124,6 +126,24 @@ benchmark/
 - 分享率与理论均衡的偏差（MAE）
 - 平台利润、社会福利、信息泄露量偏差
 - 是否理解推断外部性
+
+### 场景C：The Economics of Social Data（社会数据外部性）✨ **新增**
+
+**外部性机制**：
+- 社会数据特性 → 个人数据对他人有预测价值
+- 搭便车问题 → 拒绝者仍能从参与者数据中学习
+- 数据外部性 → 参与决策相互影响
+
+**LLM任务**：
+- 每个消费者决定是否向中介出售数据
+- 需要权衡：补偿+学习收益 vs 价格歧视风险
+- 需要理解：匿名化如何影响定价和参与意愿
+
+**评估指标**：
+- 参与率与理论均衡的偏差（MAE）
+- 消费者剩余、生产者利润、社会福利偏差
+- 是否理解搭便车机制
+- 匿名化 vs 实名化下的行为差异
 
 ## 📊 评估方法
 
@@ -319,7 +339,9 @@ python run_evaluation.py \
 - [x] 实现场景A和场景B的评估器
 - [x] 完成LLM客户端封装
 - [x] 测试完整评估流程
-- [ ] 实现场景C（Economics of Social Data）
+- [x] 实现场景C（Economics of Social Data）✨
+- [ ] 测试场景C并生成Ground Truth
+- [ ] 集成场景C到主评估脚本
 - [ ] 实现场景D（Data-enabled Learning）
 - [ ] 实现场景E（Platform-Data Broker Partnership）
 - [ ] 添加解释题评估（keypoints + factor_ranks）

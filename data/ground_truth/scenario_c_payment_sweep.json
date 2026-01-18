@@ -1,0 +1,37 @@
+[
+  {
+    "m": 0.0,
+    "participation_rate": 0.04092464966861325,
+    "consumer_surplus": 87.33570765056163,
+    "producer_profit": 125.0,
+    "social_welfare": 212.33570765056163
+  },
+  {
+    "m": 0.5,
+    "participation_rate": 1.0,
+    "consumer_surplus": 89.25198401215019,
+    "producer_profit": 143.43685905177213,
+    "social_welfare": 222.68884306392232
+  },
+  {
+    "m": 1.0,
+    "participation_rate": 1.0,
+    "consumer_surplus": 99.25198401215019,
+    "producer_profit": 143.43685905177213,
+    "social_welfare": 222.68884306392232
+  },
+  {
+    "m": 2.0,
+    "participation_rate": 1.0,
+    "consumer_surplus": 119.25198401215019,
+    "producer_profit": 143.43685905177213,
+    "social_welfare": 222.68884306392232
+  },
+  {
+    "m": 3.0,
+    "participation_rate": 1.0,
+    "consumer_surplus": 139.2519840121502,
+    "producer_profit": 143.43685905177213,
+    "social_welfare": 222.68884306392232
+  }
+]

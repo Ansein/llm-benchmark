@@ -1,0 +1,381 @@
+{
+  "model_name": "gpt-4.1-mini-2025-04-14",
+  "scenario": "C",
+  "converged": true,
+  "iterations": 1,
+  "llm_participation": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "llm_participation_rate": 0.0,
+  "gt_participation_rate": 1.0,
+  "participation_history": [
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  ],
+  "decision_logs": {
+    "0": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "参与虽有1元补偿和更准判断，但被个性化定价的风险较大，且可搭便车获取部分信息，综合收益偏向拒绝。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "1": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "我信号较高，参与会暴露给生产者导致更高价格，且我可以搭便车获得部分信息，补偿不足以抵消潜在的价格歧视损失。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "2": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "参与虽有1元补偿和更准信号，但被精准定价风险大且其他人参与时我可搭便车获益，故拒绝更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "3": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "我信号为5.26，接近中间值，参与虽得1元补偿但会暴露信号导致个性化定价风险，且可搭便车获取他人数据提升判断，故拒绝参与。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "4": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制下的个性化定价可能导致我支付更高价格，且我可以搭便车获取部分信息，风险大于收益。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "5": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "参与虽有1元补偿和更准信号，但实名个性化定价风险较大，且可搭便车获取部分信息，综合考虑拒绝更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "6": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确信息，但实名个性化定价可能导致我支付更高价格，且我可通过他人数据搭便车获得部分信息，故拒绝参与更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "7": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制导致的个性化定价风险可能使我支付更高价格，且我可通过搭便车获得部分信息，故选择拒绝。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "8": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "我获得1元补偿的收益有限，而参与会暴露我的信号导致可能的价格歧视，且我仍能通过他人数据搭便车提升判断准确性，故选择拒绝。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "9": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制带来的个性化定价风险可能导致我支付更高价格，且我仍能搭便车获得部分信息，故选择拒绝。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "10": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确信号，但实名且个性化定价可能导致我支付更高价格，且我可通过他人数据搭便车获得部分信息，故拒绝参与。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "11": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "参与虽有1元补偿和更准确信息，但被个性化定价的风险较大，且不参与仍能搭便车获益，综合考虑拒绝更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "12": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制导致的个性化定价风险较大，且我可以搭便车获取部分信息，避免被精准价格歧视。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "13": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "参与虽有1元补偿和更准信号，但被个性化定价的风险较大，且不参与仍能搭便车获益，综合考虑拒绝更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "14": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "参与虽有1元补偿和更准信号，但被精准定价风险大且其他人参与时我可搭便车获益，故拒绝以避免价格歧视。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "15": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "我初步评估较高且能搭便车获取数据，避免被个性化定价，拒绝参与更有利。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "16": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名个性化定价可能导致我支付更高价格，且我可以搭便车获取部分信息，风险较大。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "17": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "我获得1元补偿，但被生产者精准定价的风险可能导致支付更高价格，且我仍能搭便车获得部分信息，综合来看拒绝更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "18": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但被生产者精准定价可能导致支付更高价格，且我可通过搭便车获得部分信息，故拒绝参与更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ],
+    "19": [
+      {
+        "iteration": 1,
+        "decision": false,
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名且个性化定价可能导致我支付更高价格，且我可通过他人数据搭便车获得部分信息，故拒绝参与更优。",
+        "all_trials": [
+          "reject",
+          "reject",
+          "reject"
+        ]
+      }
+    ]
+  },
+  "metrics": {
+    "llm": {
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "consumer_surplus": 87.33570765056163,
+      "producer_profit": 125.0,
+      "social_welfare": 212.33570765056163,
+      "gini_coefficient": 2.220446049250313e-16,
+      "price_variance": 0.0,
+      "price_discrimination_index": 0.0,
+      "acceptor_avg_utility": 0.0,
+      "rejecter_avg_utility": 4.366785382528081,
+      "learning_quality_participants": 0.4967141530112329,
+      "learning_quality_rejecters": 0.4967141530112329
+    },
+    "ground_truth": {
+      "participation_rate": 1.0,
+      "num_participants": 20,
+      "consumer_surplus": 99.25198401215019,
+      "producer_profit": 143.43685905177213,
+      "intermediary_profit": -20.0,
+      "social_welfare": 222.68884306392232,
+      "gini_coefficient": 0.0,
+      "price_variance": 1.9721522630525295e-31,
+      "price_discrimination_index": 0.0,
+      "acceptor_avg_utility": 4.962599200607509,
+      "rejecter_avg_utility": 0.0,
+      "learning_quality_participants": 0.1406547983779758,
+      "learning_quality_rejecters": 0.0
+    },
+    "deviations": {
+      "participation_rate_mae": 1.0,
+      "consumer_surplus_mae": 11.916276361588558,
+      "producer_profit_mae": 18.43685905177213,
+      "social_welfare_mae": 10.35313541336069,
+      "gini_mae": 2.220446049250313e-16,
+      "price_discrimination_mae": 0.0
+    }
+  },
+  "labels": {
+    "llm_participation_bucket": "low",
+    "gt_participation_bucket": "high",
+    "bucket_match": false,
+    "direction": "under_participation",
+    "rate_difference": -1.0
+  },
+  "params": {
+    "N": 20,
+    "data_structure": "common_preferences",
+    "anonymization": "identified",
+    "mu_theta": 5.0,
+    "sigma_theta": 1.0,
+    "sigma": 1.0,
+    "m": 1.0,
+    "m_0": 0.0,
+    "c": 0.0,
+    "tau_mean": 0.5,
+    "tau_std": 0.3,
+    "tau_dist": "none",
+    "participation_timing": "ex_ante",
+    "posterior_method": "approx",
+    "seed": 42
+  }
+}

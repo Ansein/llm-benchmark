@@ -1,81 +1,206 @@
 {
   "model_name": "grok-3-mini",
+  "platform": {
+    "solver_mode": "exact",
+    "theory_share_set": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "theory_profit": 7.791744669144217,
+    "prices": [
+      0.48209767944013615,
+      0.0,
+      0.7255418402955733,
+      0.6347336393311902,
+      0.3332734830780576,
+      0.33325705606386796,
+      0.2665747677618319,
+      0.0,
+      0.6364066590296155,
+      0.7092501796246996,
+      0.24103596891064982,
+      0.0,
+      0.0,
+      0.37163057631559904,
+      0.3508488988671248,
+      0.35192464742363316,
+      0.434221264904901,
+      0.5844025979033814,
+      0.5211933241408782,
+      0.42535868272399474
+    ],
+    "diagnostics": {},
+    "source": "precomputed_ground_truth"
+  },
+  "users": {
+    "decisions": {
+      "0": 0,
+      "1": 0,
+      "2": 1,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "7": 0,
+      "8": 1,
+      "9": 0,
+      "10": 0,
+      "11": 0,
+      "12": 0,
+      "13": 0,
+      "14": 0,
+      "15": 0,
+      "16": 0,
+      "17": 0,
+      "18": 0,
+      "19": 0
+    },
+    "beliefs": {
+      "0": 0.5,
+      "1": 0.5,
+      "2": 0.7,
+      "3": 0.9,
+      "4": 0.95,
+      "5": 0.8,
+      "6": 1.0,
+      "7": 0.5,
+      "8": 0.7,
+      "9": 0.5,
+      "10": 0.5,
+      "11": 0.5,
+      "12": 0.5,
+      "13": 0.5,
+      "14": 0.5,
+      "15": 0.5,
+      "16": 0.5,
+      "17": 0.5,
+      "18": 0.5,
+      "19": 0.5
+    },
+    "reasons": {
+      "0": "",
+      "1": "",
+      "2": "High payment p=0.7255 exceeds maximum marginal privacy cost v*σ²=0.0959, ensuring positive utility from sharing. With v=0.959 above average and low correlation ρ=0.20, I expect about 70% of others with lower privacy preferences to share, reducing my conditional variance.",
+      "3": "With v=0.839 and p=0.6347, sharing yields positive utility (0.5508) while not sharing has negative or zero expected utility due to low marginal leakage from correlation and others' likely sharing. I expect high share rate as most users face similar incentives with personalized prices covering privacy costs.",
+      "4": "Low privacy preference v=0.440 and high price p=0.3333 make sharing beneficial as expected leakage cost is covered. I believe most users share due to similar incentives and v distribution.",
+      "5": "With low privacy preference (v=0.440), the payment (p=0.3333) exceeds the full privacy loss (0.1), making sharing beneficial. Even with expected inference from others (belief share rate 0.8 due to low average v), the marginal cost of sharing is low, maximizing expected utility.",
+      "6": "My low privacy preference v=0.352 and high payment p=0.2666 exceed the maximum possible privacy cost (v * marginal leakage ≤ 0.12), so sharing is beneficial. I expect all users to share, as the payment likely covers their costs given the uniform v distribution and correlation effects.",
+      "7": "High privacy cost v=1.080 with zero price makes sharing unprofitable. Expected leakage if not sharing is low due to correlation and assumed moderate sharing by others with lower average v.",
+      "8": "With price 0.6364 exceeding sharing privacy cost 0.0841, expected utility from sharing is positive. Not sharing yields non-positive utility due to potential inference from others. I believe 70% of others share based on average privacy preferences and incentives.",
+      "9": "",
+      "10": "",
+      "11": "",
+      "12": "With zero price and high privacy preference (v=1.049), sharing increases privacy loss without compensation, reducing utility. I expect others to share at 0.5 rate based on uniform v distribution mean.",
+      "13": "",
+      "14": "",
+      "15": "",
+      "16": "",
+      "17": "",
+      "18": "",
+      "19": ""
+    },
+    "v_values": [
+      0.6370861069626261,
+      1.1556428757689245,
+      0.9587945476302646,
+      0.838792635777333,
+      0.4404167763981929,
+      0.44039506830258235,
+      0.3522752509513795,
+      1.0795585311974416,
+      0.8410035105688878,
+      0.9372653200164409,
+      0.3185260448662222,
+      1.1729188669457948,
+      1.0491983767203794,
+      0.4911051996104485,
+      0.4636424704863905,
+      0.46506405886809044,
+      0.573818018663584,
+      0.7722807884690139,
+      0.6887505167779042,
+      0.5621062261782377
+    ]
+  },
   "llm_share_set": [
-    0,
-    1,
-    6
+    2,
+    3,
+    4,
+    5,
+    6,
+    8
   ],
   "gt_share_set": [
     0,
-    1,
     2,
+    3,
     4,
     5,
-    6
+    6,
+    8,
+    9,
+    10,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
   ],
-  "convergence_history": [
-    [
-      0,
-      1,
-      6
-    ],
-    [
-      0,
-      1,
-      6
-    ]
-  ],
-  "rationales_history": [
-    {
-      "0": "我的隐私偏好v=0.564低于[0.3,1.2]范围的平均值0.75，表明我对隐私的重视较低，更可能从分享中获益。推断外部性意味着即使不分享，ρ=0.20的类型相关性和σ²=0.1的低噪声可能导致基础泄露，但当前分享率为0%，泄露最小。补偿p_i=0.5127基于边际信息价值ΔI_i=0.9091，覆盖分享成本，净效用中性。在动态博弈中，分享可能推动系统向稳定均衡收敛，避免低分享率的潜在不稳定性。我选择分享以最大化长期净效用。",
-      "1": "推断外部性意味着即使我不分享数据，平台可通过ρ=0.20的相关性和他人数据推断我的信息，但当前分享率0%，基础泄露低，风险较小。补偿机制基于p_i = v_i × ΔI_i，我v=0.417较低，隐私敏感度低，分享可获0.3788补偿，覆盖ΔI_i=0.9091的泄露成本，净效用非负。战略上，上一轮无人分享状态可能不稳定，我分享有助于系统向均衡收敛，可能更多低v用户分享。我选择分享以最大化长期净效用。",
-      "2": "在推断外部性下，即使我不分享数据，平台可能通过他人数据推断我的信息，但当前分享率0%和ρ=0.20表明外部性弱，基础泄露几乎为零。补偿机制显示分享时净效用为零，但我的隐私偏好v=0.790略高于平均[0.3,1.2]，表示我更注重隐私。动态博弈中，系统可能稳定在低分享均衡；分享可能触发连锁反应降低未来补偿价值。我选择不分享以最小化长期风险和潜在推断，等待更优机会。",
-      "3": "作为隐私偏好较高的用户（v=1.144，接近[0.3,1.2]范围上限），我优先考虑推断外部性风险。尽管当前分享率0%，基础泄露为0，但ρ=0.20表明他人分享会增加我的信息泄露。补偿p_i=1.0399基于高边际价值，但动态博弈中，更多分享可能降低未来补偿并放大泄露。我选择不分享以最小化长期风险，目标是收敛到低分享率均衡，避免战略性连锁反应。",
-      "4": "作为用户4，v=1.005处于隐私偏好高位，我优先考虑推断外部性：即使不分享，ρ=0.20的类型相关性意味着他人分享会增加我的信息泄露。当前分享率0%，基础泄露极低（0.0000），分享会带来高总泄露（0.9091）但补偿（0.9137）仅略覆盖静态净效用。在动态博弈中，分享可能触发他人决策变化，降低未来补偿并加剧泄露次模性效应。我战略性选择不分享，以维持低分享率均衡，最大化长期净效用，避免震荡。",
-      "5": "作为用户5，v=1.010高于平均值，表明较高隐私偏好。在推断外部性下，ρ=0.20和σ²=0.1意味着不分享时泄露低，尤其上一轮分享率0%，基础泄露为0。补偿p_i=0.9183基于ΔI_i=0.9091，刚好覆盖分享成本，但动态博弈中，如果其他人保持低分享，系统可能稳定在低泄露均衡。我选择不分享以最小化风险和保持潜在稳定，避免因集体行动变化导致补偿下降或泄露增加。",
-      "6": "基于推断外部性，我理解即使不分享，平台可通过相关类型（ρ=0.20）推断我的信息，但当前分享率0%，基础泄露低。补偿机制提供p_i=0.5762，精确覆盖我的边际成本（v=0.634 * ΔI_i=0.9091），净效用中性。考虑动态博弈，我的v=0.634低于均值0.75，表明隐私偏好较低，更适合分享。战略上，分享可推动系统向稳定均衡收敛，避免震荡；若无人分享，机会成本高。总体，我选择分享以最大化长期净效用。",
-      "7": "作为隐私偏好较高的用户（v=1.102），我理解推断外部性：即使不分享，ρ=0.20的相关性允许平台通过他人数据推断我的信息，尤其当分享率增加时。当前分享率0%，基础泄露低，补偿p_i=1.0020基于高边际价值ΔI_i=0.9091。但动态博弈中，分享可能引发更多参与，降低未来补偿并放大泄露。我选择不分享，以保护隐私、避免连锁反应，并帮助系统向稳定均衡收敛，其中低分享率可能更适合高v用户。"
-    },
-    {
-      "0": "我理解推断外部性：即使不分享数据，平台可通过其他用户的数据（受ρ=0.20和σ²=0.1影响）推断我的信息，导致基础泄露。我的隐私偏好v=0.564低于平均值[0.3,1.2]的中位数，表明我较容忍隐私损失。补偿p_i=0.4783基于ΔI_i=0.8481，覆盖分享的边际成本，使净效用估算无差异。战略上，选择分享延续上一轮决策（我曾分享），有助于系统向均衡收敛，避免震荡，并利用动态效应最大化长期净效用。",
-      "1": "我的隐私偏好v=0.417较低，在[0.3,1.2]范围内偏低，表明我对隐私的重视较小，容忍更高的泄露。推断外部性意味着即使不分享，基础泄露为0.0615会因类型相关性ρ=0.20和他人数据而增加。静态估算显示分享和不分享净效用相同，但动态博弈中，分享可获得补偿0.3534，覆盖边际泄露成本0.8481，并可能推动系统向稳定均衡收敛，避免震荡。战略性分享考虑次模性和市场状态（上一轮分享率37.5%），有助于长期最大化净效用。",
-      "2": "Given inference externality, even without sharing, there's baseline leakage due to correlated types (ρ=0.20) and previous 37.5% share rate, estimated at 0.0800. My privacy value v=0.790, slightly above the average in [0.3, 1.2], makes me more cautious. Static net utilities are equal (-0.0632), but strategically, not sharing helps maintain a potentially stable equilibrium with moderate sharing, reducing long-term inference accuracy and leakage. Sharing might increase data availability, raising future costs and compensation volatility, so I opt for caution to aid convergence.",
-      "3": "作为隐私偏好较高的用户（v=1.144），我理解推断外部性：即使不分享数据，平台可通过其他用户的数据（ρ=0.20相关性）减少对我类型的后验不确定性，导致基础泄露（如0.0800）。上一轮分享率37.5%表明中等风险。补偿机制提供p_i=0.9492基于边际信息价值ΔI_i=0.8298，但动态博弈中，如果更多用户分享，补偿可能下降。静态估算净效用相同，但我选择不分享以优先保护隐私、避免额外泄露风险，并促进系统向稳定均衡收敛，其中高隐私偏好用户倾向不分享。",
-      "4": "As user 4 with privacy preference v=1.005 slightly above the mean of 0.75 in [0.3, 1.2], I have a higher sensitivity to leakage. Inference externality means that even without sharing, my data can be inferred from others due to ρ=0.20, as seen in the base leakage of 0.0800. The static estimate shows zero net utility for both choices, but dynamically, if more users share, inference accuracy rises, increasing my non-sharing leakage while compensation remains fixed at 0.8340 based on last round's 37.5% share rate. Strategically, not sharing minimizes risk and helps converge to a stable equilibrium where privacy costs balance compensation, avoiding potential oscillations.",
-      "5": "我的隐私偏好v=1.010略高于平均值[0.3,1.2]，表示我更重视隐私。推断外部性意味着即使不分享，平台可通过ρ=0.20的相关性和他人数据推断我的信息，导致基础泄露0.0800。静态估算显示分享与不分享净效用相同-0.0808，但动态博弈中，其他用户可能改变决策，增加不确定性。如果更多人分享，推断更准确，补偿减少，我选择不分享以减少风险并推动系统向更低分享率均衡收敛，长期最大化净效用。",
-      "6": "作为经济学专家，我理解推断外部性：即使不分享数据，平台可通过其他用户数据（ρ=0.20）推断我的信息，导致基础泄露0.0615。静态估算显示分享与不分享净效用均为-0.0390，但这基于他人决策不变的假设。动态博弈中，补偿p_i=0.5376基于边际信息价值，可能随分享率变化。我的隐私偏好v=0.634低于[0.3,1.2]均值0.75，表明较不敏感隐私。上一轮分享率37.5%可能不稳定，选择分享可获得补偿，覆盖边际成本，并促进系统向均衡收敛以最大化长期净效用。",
-      "7": "作为用户7，v=1.102高于中位数，表明我更重视隐私。推断外部性意味着不分享时已有基础泄露0.0800，由于类型相关性ρ=0.20和噪声σ²=0.1，平台可通过他人数据推断我的信息。分享带来边际泄露0.8298，但补偿p_i=0.9146基于静态假设。考虑动态博弈，上一轮分享率37.5%可能不稳定；如果更多人分享，补偿下降，增加我的相对成本。战略性选择不分享，减少额外风险，帮助系统向均衡收敛，其中高v用户倾向不分享。"
-    }
-  ],
-  "converged": true,
-  "cycle_detected": false,
-  "rounds": 2,
   "equilibrium_quality": {
-    "share_set_similarity": 0.5,
-    "share_rate_error": 0.375,
-    "welfare_mae": 0.15365889903828034,
-    "profit_mae": 0.37214073956270677,
+    "share_set_similarity": 0.375,
+    "share_rate_error": 0.5,
+    "welfare_mae": 3.2390592431397067,
+    "profit_mae": 3.6612146543868933,
     "correct_equilibrium": 0,
     "equilibrium_type": "bad"
   },
   "metrics": {
     "llm": {
-      "profit": 1.7595938859019868,
-      "welfare": 1.2561083288844213,
-      "total_leakage": 3.1288888888888886,
-      "share_rate": 0.375
+      "profit": 4.130530014757324,
+      "welfare": 2.3520900037608126,
+      "total_leakage": 7.06031746031746,
+      "share_rate": 0.3
     },
     "ground_truth": {
-      "profit": 2.1317346254646936,
-      "welfare": 1.4097672279227016,
-      "total_leakage": 5.688888888888888,
-      "share_rate": 0.75
+      "profit": 7.791744669144217,
+      "welfare": 5.591149246900519,
+      "total_leakage": 15.193495934959351,
+      "share_rate": 0.8
     },
     "deviations": {
-      "profit_mae": 0.37214073956270677,
-      "welfare_mae": 0.15365889903828034,
-      "total_leakage_mae": 2.5599999999999996,
-      "share_rate_mae": 0.375
+      "profit_mae": 3.6612146543868933,
+      "welfare_mae": 3.2390592431397067,
+      "total_leakage_mae": 8.133178474641891,
+      "share_rate_mae": 0.5
     }
+  },
+  "labels": {
+    "llm_leakage_bucket": "medium",
+    "gt_leakage_bucket": "high",
+    "llm_over_sharing": 0,
+    "gt_over_sharing": 0
+  },
+  "belief_consistency": {
+    "actual_share_rate": 0.3,
+    "mean_belief": 0.6025,
+    "mean_belief_error": 0.30250000000000005,
+    "max_belief_error": 0.7,
+    "belief_std": 0.1691707717071717
   }
 }

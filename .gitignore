@@ -45,3 +45,6 @@ Thumbs.db
 
 # 评估结果（可选，如果不想上传结果文件）
 # evaluation_results/
+
+# 大型Ground Truth文件（超过100MB）
+data/ground_truth/scenario_b_result.json

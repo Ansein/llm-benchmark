@@ -1,0 +1,525 @@
+[
+  {
+    "scenario": "B",
+    "model_name": "gpt-4.1-mini",
+    "result": {
+      "model_name": "gpt-4.1-mini",
+      "platform": {
+        "solver_mode": "exact",
+        "theory_share_set": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "theory_profit": 2.737106916846373,
+        "prices": [
+          0.5127213701258673,
+          0.0,
+          0.7716290263579684,
+          0.6750527174593406,
+          0.3544439083238031,
+          0.354426437870917,
+          0.283508511904619,
+          0.0
+        ],
+        "diagnostics": {
+          "min_margin_in": 9.999999999732445e-07,
+          "max_margin_out": -0.8591766032966802
+        }
+      },
+      "users": {
+        "decisions": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 0
+        },
+        "beliefs": {
+          "0": 0.5,
+          "1": 0.3,
+          "2": 0.4,
+          "3": 0.45,
+          "4": 0.5,
+          "5": 0.5,
+          "6": 0.4,
+          "7": 0.3
+        },
+        "reasons": {
+          "0": "v=0.637处于中隐私偏好，预期约半数用户分享。相关性0.2导致基础泄露存在，边际泄露较低。报价0.5127接近覆盖边际隐私损失，分享期望效用略优于不分享。",
+          "1": "我的隐私偏好v=1.156处于高位，报价为0无法补偿边际隐私损失。预期约30%用户分享，相关性0.2导致基础泄露存在，边际泄露仍显著，故不分享以避免隐私成本。",
+          "2": "我的v=0.959偏高，预期低v用户约40%分享。相关性0.2导致基础泄露中等，边际泄露较小。报价0.7716不足以覆盖我的边际隐私损失，故不分享。",
+          "3": "v=0.839处于中隐私偏好，预期约45%用户分享。相关性0.2导致基础泄露存在，边际泄露较低。报价0.6751接近覆盖边际隐私损失，分享期望效用略优于不分享。",
+          "4": "我的隐私偏好v=0.440偏低，预期约半数用户分享。相关性0.20导致基础泄露存在，边际泄露较小。报价0.3544足以补偿边际隐私损失，分享期望效用更高。",
+          "5": "我的v=0.440偏低，预期约半数用户分享，导致基础泄露中等，边际泄露较小。报价0.3544接近覆盖边际隐私损失，相关性0.20使外部性有限，分享期望效用更高。",
+          "6": "我的v=0.352偏低，预期约40%用户分享。相关性0.2导致基础泄露中等，边际泄露较小。报价0.2835接近覆盖边际隐私损失，分享期望效用更高。",
+          "7": "我的隐私偏好v=1.080较高，预期低v用户约30%分享。相关性0.20导致基础泄露存在，边际泄露仍显著。报价0无法补偿边际隐私损失，故不分享。"
+        },
+        "v_values": [
+          0.6370861069626261,
+          1.1556428757689245,
+          0.9587945476302646,
+          0.838792635777333,
+          0.4404167763981929,
+          0.44039506830258235,
+          0.3522752509513795,
+          1.0795585311974416
+        ]
+      },
+      "llm_share_set": [
+        0,
+        3,
+        4,
+        5,
+        6
+      ],
+      "gt_share_set": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "equilibrium_quality": {
+        "share_set_similarity": 0.8333333333333334,
+        "share_rate_error": 0.125,
+        "welfare_mae": 0.03129480518726524,
+        "profit_mae": 0.05176878650752892,
+        "correct_equilibrium": 1,
+        "equilibrium_type": "good"
+      },
+      "metrics": {
+        "llm": {
+          "profit": 2.6853441303388443,
+          "welfare": 2.0642864816575885,
+          "total_leakage": 4.8654970760233915,
+          "share_rate": 0.625
+        },
+        "ground_truth": {
+          "profit": 2.7371129168463733,
+          "welfare": 2.095581286844854,
+          "total_leakage": 5.688888888888888,
+          "share_rate": 0.75
+        },
+        "deviations": {
+          "profit_mae": 0.05176878650752892,
+          "welfare_mae": 0.03129480518726524,
+          "total_leakage_mae": 0.8233918128654967,
+          "share_rate_mae": 0.125
+        }
+      },
+      "labels": {
+        "llm_leakage_bucket": "medium",
+        "gt_leakage_bucket": "high",
+        "llm_over_sharing": 0,
+        "gt_over_sharing": 0
+      },
+      "belief_consistency": {
+        "actual_share_rate": 0.625,
+        "mean_belief": 0.41875,
+        "mean_belief_error": 0.20625,
+        "max_belief_error": 0.325,
+        "belief_std": 0.07880950133074058
+      }
+    }
+  },
+  {
+    "scenario": "B",
+    "model_name": "deepseek-v3",
+    "result": {
+      "model_name": "deepseek-v3",
+      "platform": {
+        "solver_mode": "exact",
+        "theory_share_set": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "theory_profit": 2.737106916846373,
+        "prices": [
+          0.5127213701258673,
+          0.0,
+          0.7716290263579684,
+          0.6750527174593406,
+          0.3544439083238031,
+          0.354426437870917,
+          0.283508511904619,
+          0.0
+        ],
+        "diagnostics": {
+          "min_margin_in": 9.999999999732445e-07,
+          "max_margin_out": -0.8591766032966802
+        }
+      },
+      "users": {
+        "decisions": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 0
+        },
+        "beliefs": {
+          "0": 0.6,
+          "1": 0.5,
+          "2": 0.4,
+          "3": 0.6,
+          "4": 0.6,
+          "5": 0.6,
+          "6": 0.6,
+          "7": 0.5
+        },
+        "reasons": {
+          "0": "我的隐私偏好处于中等水平(v=0.637)，预期60%的用户会分享。报价p=0.5127高于我的边际隐私损失预期，且相关系数ρ=0.20表明外部性影响有限。因此理性选择是分享以最大化期望效用。",
+          "1": "我的隐私偏好高(v=1.156)，平台报价为0无法覆盖隐私损失。预期50%用户分享(低v用户)，相关性ρ=0.2导致中等外部性。不分享的效用损失小于分享的边际隐私成本。",
+          "2": "高隐私偏好(v=0.959)意味着分享成本高。预期40%用户分享(v较低群体)，可能导致显著基础泄露。报价p=0.7716可能不足以覆盖边际隐私损失，尤其相关系数ρ=0.20会放大外部性影响",
+          "3": "我的隐私偏好中等(v=0.839)，报价较高(p=0.6751)。预期约60%用户会分享，因为低v用户更可能分享。相关性较低(ρ=0.20)减少了外部性影响。报价应能覆盖边际隐私损失，因此选择分享。",
+          "4": "我的隐私偏好较低(v=0.440)，且报价p=0.3544相对较高。预期多数用户(约60%)会分享，因为v的分布均匀且多数人v值较高。相关性ρ=0.20较低，减少外部性影响。因此，分享的期望效用高于不分享。",
+          "5": "我的隐私偏好较低(v=0.440)，报价p=0.3544相对较高。预期60%用户会分享(因v分布均匀且多数人v>0.5)。相关性ρ=0.20中等，外部性影响有限。分享的期望效用高于不分享。",
+          "6": "我的隐私偏好较低(v=0.352)，属于低隐私偏好群体。预期约60%的用户会分享，因为v值较低的用户更可能分享。报价0.2835可能覆盖边际隐私损失，尤其相关系数较低(ρ=0.20)减少了外部性影响。",
+          "7": "我的隐私偏好较高(v=1.080)，且报价p=0.0000无法覆盖预期的隐私损失。由于相关系数ρ=0.20较低，外部性影响有限。预期约50%的低隐私偏好用户会分享，但对我来说不分享的效用更高。"
+        },
+        "v_values": [
+          0.6370861069626261,
+          1.1556428757689245,
+          0.9587945476302646,
+          0.838792635777333,
+          0.4404167763981929,
+          0.44039506830258235,
+          0.3522752509513795,
+          1.0795585311974416
+        ]
+      },
+      "llm_share_set": [
+        0,
+        3,
+        4,
+        5,
+        6
+      ],
+      "gt_share_set": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "equilibrium_quality": {
+        "share_set_similarity": 0.8333333333333334,
+        "share_rate_error": 0.125,
+        "welfare_mae": 0.03129480518726524,
+        "profit_mae": 0.05176878650752892,
+        "correct_equilibrium": 1,
+        "equilibrium_type": "good"
+      },
+      "metrics": {
+        "llm": {
+          "profit": 2.6853441303388443,
+          "welfare": 2.0642864816575885,
+          "total_leakage": 4.8654970760233915,
+          "share_rate": 0.625
+        },
+        "ground_truth": {
+          "profit": 2.7371129168463733,
+          "welfare": 2.095581286844854,
+          "total_leakage": 5.688888888888888,
+          "share_rate": 0.75
+        },
+        "deviations": {
+          "profit_mae": 0.05176878650752892,
+          "welfare_mae": 0.03129480518726524,
+          "total_leakage_mae": 0.8233918128654967,
+          "share_rate_mae": 0.125
+        }
+      },
+      "labels": {
+        "llm_leakage_bucket": "medium",
+        "gt_leakage_bucket": "high",
+        "llm_over_sharing": 0,
+        "gt_over_sharing": 0
+      },
+      "belief_consistency": {
+        "actual_share_rate": 0.625,
+        "mean_belief": 0.55,
+        "mean_belief_error": 0.07500000000000001,
+        "max_belief_error": 0.22499999999999998,
+        "belief_std": 0.07071067811865474
+      }
+    }
+  },
+  {
+    "scenario": "B",
+    "model_name": "gemini-2.5-flash",
+    "result": {
+      "model_name": "gemini-2.5-flash",
+      "platform": {
+        "solver_mode": "exact",
+        "theory_share_set": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "theory_profit": 2.737106916846373,
+        "prices": [
+          0.5127213701258673,
+          0.0,
+          0.7716290263579684,
+          0.6750527174593406,
+          0.3544439083238031,
+          0.354426437870917,
+          0.283508511904619,
+          0.0
+        ],
+        "diagnostics": {
+          "min_margin_in": 9.999999999732445e-07,
+          "max_margin_out": -0.8591766032966802
+        }
+      },
+      "users": {
+        "decisions": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 1,
+          "4": 1,
+          "5": 1,
+          "6": 1,
+          "7": 0
+        },
+        "beliefs": {
+          "0": 0.6,
+          "1": 0.33,
+          "2": 0.4,
+          "3": 0.55,
+          "4": 0.777,
+          "5": 0.6,
+          "6": 0.7,
+          "7": 0.5
+        },
+        "reasons": {
+          "0": "我的隐私偏好v=0.637处于中低水平，低于平均值。平台报价p=0.5127相对较高。考虑到与其他用户0.20的弱相关性，以及预期多数用户会分享（约60%），我的边际隐私泄露成本会因外部性而降低。因此，预期收益大于预期成本，选择分享。",
+          "1": "我的隐私偏好v值极高(1.156)，而平台报价p为0。由于分享数据通常会增加信息泄露（边际泄露为正），在无补偿的情况下，分享将导致负效用。因此，我选择不分享。考虑到我的v值远高于平均水平，我预期部分v值较低且可能获得正报价的用户会选择分享，故估计分享率为0.33。",
+          "2": "我的隐私偏好v=0.959相对较高，处于分布的73%分位。我预期约40%的低隐私偏好用户会分享数据。在此预期下，我的边际隐私泄露成本较高，而平台报价p=0.7716不足以覆盖我的期望隐私损失。因此，不分享数据是我的最优策略。",
+          "3": "我的隐私偏好v=0.839处于中等偏上水平。平台报价p=0.6751相对较高。考虑到类型相关系数ρ=0.20，我的信息泄露主要来自自身分享。我预期约55%的用户会分享（v值低于中位数的用户）。在此预期下，我分享的边际隐私损失可能被报价覆盖，因此选择分享以获取正期望效用。",
+          "4": "我的隐私偏好v=0.440远低于平均水平，且接近最低值。这意味着我的隐私成本相对较低。平台给出的报价p=0.3544，通常旨在覆盖我的边际隐私损失。考虑到我的低v值，我预期会有较高比例的用户分享数据，进一步降低我分享的边际泄露。因此，分享数据对我而言是期望效用最高的选择。",
+          "5": "我的隐私偏好v=0.440相对较低，处于低隐私成本群体。平台报价p=0.3544较高，足以覆盖我预期的边际隐私损失。考虑到低v用户更倾向分享，我预期约60%的用户会分享，这会增加基础泄露，降低我分享的边际成本。因此，分享数据是我的最优策略。",
+          "6": "我的隐私偏好v=0.352非常低，接近分布下限0.3。这意味着我的隐私成本相对较低。平台报价p=0.2835，考虑到低隐私成本，我预期该报价能覆盖我的边际隐私损失。我推断大多数低v用户会分享，因此预期分享率较高，这会降低我分享的边际泄露，进一步支持我分享的决策。",
+          "7": "我的隐私偏好v=1.080非常高，而平台报价p=0.0000。即使其他人分享导致基础信息泄露，我分享的边际隐私损失仍是正值。由于报价为零，我无法获得任何补偿，因此不分享是最大化期望效用的理性选择。"
+        },
+        "v_values": [
+          0.6370861069626261,
+          1.1556428757689245,
+          0.9587945476302646,
+          0.838792635777333,
+          0.4404167763981929,
+          0.44039506830258235,
+          0.3522752509513795,
+          1.0795585311974416
+        ]
+      },
+      "llm_share_set": [
+        0,
+        3,
+        4,
+        5,
+        6
+      ],
+      "gt_share_set": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "equilibrium_quality": {
+        "share_set_similarity": 0.8333333333333334,
+        "share_rate_error": 0.125,
+        "welfare_mae": 0.03129480518726524,
+        "profit_mae": 0.05176878650752892,
+        "correct_equilibrium": 1,
+        "equilibrium_type": "good"
+      },
+      "metrics": {
+        "llm": {
+          "profit": 2.6853441303388443,
+          "welfare": 2.0642864816575885,
+          "total_leakage": 4.8654970760233915,
+          "share_rate": 0.625
+        },
+        "ground_truth": {
+          "profit": 2.7371129168463733,
+          "welfare": 2.095581286844854,
+          "total_leakage": 5.688888888888888,
+          "share_rate": 0.75
+        },
+        "deviations": {
+          "profit_mae": 0.05176878650752892,
+          "welfare_mae": 0.03129480518726524,
+          "total_leakage_mae": 0.8233918128654967,
+          "share_rate_mae": 0.125
+        }
+      },
+      "labels": {
+        "llm_leakage_bucket": "medium",
+        "gt_leakage_bucket": "high",
+        "llm_over_sharing": 0,
+        "gt_over_sharing": 0
+      },
+      "belief_consistency": {
+        "actual_share_rate": 0.625,
+        "mean_belief": 0.557125,
+        "mean_belief_error": 0.12462499999999999,
+        "max_belief_error": 0.295,
+        "belief_std": 0.13785085917396378
+      }
+    }
+  },
+  {
+    "scenario": "B",
+    "model_name": "grok-3-mini",
+    "result": {
+      "model_name": "grok-3-mini",
+      "platform": {
+        "solver_mode": "exact",
+        "theory_share_set": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "theory_profit": 2.737106916846373,
+        "prices": [
+          0.5127213701258673,
+          0.0,
+          0.7716290263579684,
+          0.6750527174593406,
+          0.3544439083238031,
+          0.354426437870917,
+          0.283508511904619,
+          0.0
+        ],
+        "diagnostics": {
+          "min_margin_in": 9.999999999732445e-07,
+          "max_margin_out": -0.8591766032966802
+        }
+      },
+      "users": {
+        "decisions": {
+          "0": 1,
+          "1": 0,
+          "2": 0,
+          "3": 1,
+          "4": 0,
+          "5": 1,
+          "6": 1,
+          "7": 0
+        },
+        "beliefs": {
+          "0": 0.8,
+          "1": 0.0,
+          "2": 0.52,
+          "3": 1.0,
+          "4": 0.0,
+          "5": 0.5,
+          "6": 0.6,
+          "7": 0.5
+        },
+        "reasons": {
+          "0": "With v=0.637 and p=0.5127, sharing gives positive utility (0.449) while not sharing yields non-positive utility due to privacy leakage. I expect high share rate as most users likely find sharing beneficial given the payment and low correlation effects.",
+          "1": "With p_i=0.0000 and high v=1.156, sharing increases privacy loss without compensation, while not sharing has lower or zero loss. I believe no other users share, assuming similar zero prices and rational behavior minimizing privacy cost.",
+          "2": "My high v=0.959 and p=0.7716 result in negative expected utility from sharing due to privacy loss, while not sharing has less negative utility. I believe 52% of others share based on v distribution and assumed similar pricing.",
+          "3": "My v=0.839 and p=0.6751 result in positive expected utility from sharing (0.5912) and non-positive from not sharing, as privacy loss when not sharing is low. I believe all others share due to similar incentives and symmetric rationality.",
+          "4": "My privacy preference v=0.440 exceeds the payment p=0.3544, and even with maximum expected inference from others (max I_i not share ≈0.127), sharing utility is negative (-0.0856) while not sharing yields higher or zero utility. I believe no one shares due to similar incentives.",
+          "5": "With low privacy preference v=0.440 and payment p=0.3544, sharing always yields higher expected utility than not sharing, as p exceeds the maximum marginal privacy loss (v * (σ² - min I_not_share)). I assume a 50% share rate for others based on uniform v distribution and symmetric incentives.",
+          "6": "My low v=0.352 and high p=0.2835 ensure that sharing always yields positive utility since p exceeds maximum privacy cost (v * σ² = 0.0352). I believe 60% of others share, given the uniform v distribution and likelihood of low-v users sharing.",
+          "7": "With p=0.0000 and high v=1.080, sharing increases privacy loss without compensation, making expected utility negative. I assume a 50% sharing rate among others based on the uniform v distribution [0.3, 1.2], implying half may share due to varying privacy preferences."
+        },
+        "v_values": [
+          0.6370861069626261,
+          1.1556428757689245,
+          0.9587945476302646,
+          0.838792635777333,
+          0.4404167763981929,
+          0.44039506830258235,
+          0.3522752509513795,
+          1.0795585311974416
+        ]
+      },
+      "llm_share_set": [
+        0,
+        3,
+        5,
+        6
+      ],
+      "gt_share_set": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "equilibrium_quality": {
+        "share_set_similarity": 0.6666666666666666,
+        "share_rate_error": 0.25,
+        "welfare_mae": 0.4858922198898159,
+        "profit_mae": 0.547135679697313,
+        "correct_equilibrium": 1,
+        "equilibrium_type": "good"
+      },
+      "metrics": {
+        "llm": {
+          "profit": 2.1899772371490602,
+          "welfare": 1.6096890669550379,
+          "total_leakage": 4.015686274509804,
+          "share_rate": 0.5
+        },
+        "ground_truth": {
+          "profit": 2.7371129168463733,
+          "welfare": 2.095581286844854,
+          "total_leakage": 5.688888888888888,
+          "share_rate": 0.75
+        },
+        "deviations": {
+          "profit_mae": 0.547135679697313,
+          "welfare_mae": 0.4858922198898159,
+          "total_leakage_mae": 1.6732026143790844,
+          "share_rate_mae": 0.25
+        }
+      },
+      "labels": {
+        "llm_leakage_bucket": "medium",
+        "gt_leakage_bucket": "high",
+        "llm_over_sharing": 0,
+        "gt_over_sharing": 0
+      },
+      "belief_consistency": {
+        "actual_share_rate": 0.5,
+        "mean_belief": 0.49000000000000005,
+        "mean_belief_error": 0.24,
+        "max_belief_error": 0.5,
+        "belief_std": 0.3258834147360065
+      }
+    }
+  }
+]

@@ -1,317 +1,214 @@
 {
   "model_name": "deepseek-v3",
+  "platform": {
+    "solver_mode": "exact",
+    "theory_share_set": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "theory_profit": 7.791744669144217,
+    "prices": [
+      0.48209767944013615,
+      0.0,
+      0.7255418402955733,
+      0.6347336393311902,
+      0.3332734830780576,
+      0.33325705606386796,
+      0.2665747677618319,
+      0.0,
+      0.6364066590296155,
+      0.7092501796246996,
+      0.24103596891064982,
+      0.0,
+      0.0,
+      0.37163057631559904,
+      0.3508488988671248,
+      0.35192464742363316,
+      0.434221264904901,
+      0.5844025979033814,
+      0.5211933241408782,
+      0.42535868272399474
+    ],
+    "diagnostics": {},
+    "source": "precomputed_ground_truth"
+  },
+  "users": {
+    "decisions": {
+      "0": 1,
+      "1": 0,
+      "2": 0,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 1,
+      "7": 0,
+      "8": 1,
+      "9": 0,
+      "10": 1,
+      "11": 0,
+      "12": 0,
+      "13": 1,
+      "14": 1,
+      "15": 1,
+      "16": 1,
+      "17": 1,
+      "18": 1,
+      "19": 1
+    },
+    "beliefs": {
+      "0": 0.6,
+      "1": 0.5,
+      "2": 0.4,
+      "3": 0.6,
+      "4": 0.7,
+      "5": 0.6,
+      "6": 0.6,
+      "7": 0.4,
+      "8": 0.6,
+      "9": 0.4,
+      "10": 0.6,
+      "11": 0.5,
+      "12": 0.5,
+      "13": 0.7,
+      "14": 0.6,
+      "15": 0.6,
+      "16": 0.6,
+      "17": 0.6,
+      "18": 0.5,
+      "19": 0.6
+    },
+    "reasons": {
+      "0": "我的隐私偏好中等(v=0.637)，报价0.4821较高。预期60%用户会分享，因为他们v值较低。相关系数ρ=0.20较低，外部性影响有限。分享的边际隐私损失预计小于报价，因此选择分享。",
+      "1": "我的隐私偏好v=1.156较高，属于高隐私偏好群体。预期约50%的用户会分享，因为v均匀分布在[0.3,1.2]，中等偏好用户可能分享。报价p=0.0000无法覆盖我的边际隐私损失，且相关系数ρ=0.20较低，外部性影响有限。因此，不分享更优。",
+      "2": "我的隐私偏好较高(v=0.959)，预期约40%的用户会分享。由于分享的边际隐私损失可能超过报价p=0.7255，且相关系数ρ=0.20表明外部性影响适中，不分享更优。",
+      "3": "Given my moderate privacy preference (v=0.839) and the platform's competitive offer (p=0.6347), I anticipate that a majority (60%) of users with lower v values will share. The correlation (ρ=0.20) suggests moderate externalities, but the offer likely covers my marginal privacy loss, making sharing beneficial.",
+      "4": "我的隐私偏好较低(v=0.440)，属于低隐私偏好群体。由于大部分用户(v分布在[0.3,1.2])可能更倾向于分享，我预期分享率较高(约70%)。报价p=0.3333高于我的边际隐私损失预期，因此分享是最优选择。",
+      "5": "我的隐私偏好较低(v=0.440)，报价p=0.3333相对较高。预期60%用户会分享，因为v分布均匀且我的v偏低。相关系数ρ=0.20适中，外部性影响有限。分享的期望效用高于不分享。",
+      "6": "我的隐私偏好较低（v=0.352），且报价p=0.2666相对较高。考虑到大多数用户（约60%）可能会分享（因为隐私偏好均匀分布且较低偏好更可能分享），分享的边际隐私损失应在报价覆盖范围内。相关系数ρ=0.20表明外部性影响适中。",
+      "7": "我的隐私偏好v=1.080较高，平台报价p=0.0000无法覆盖边际隐私损失。预期约40%低v值用户会分享，但相关系数ρ=0.20较低，外部性影响有限。不分享的期望效用更高。",
+      "8": "我的隐私偏好中等(v=0.841)，报价p=0.6364相对较高。考虑到隐私偏好分布和ρ=0.20的相关性，预计约60%的用户会分享。这个分享率下，边际隐私损失较低，报价能覆盖成本，因此选择分享。",
+      "9": "我的隐私偏好较高(v=0.937)，报价p=0.7093可能不足以覆盖边际隐私损失。预期40%低v用户会分享，但相关系数ρ=0.20较低，外部性影响有限。不分享的期望效用更高。",
+      "10": "我的隐私偏好较低(v=0.319)，报价p=0.2410相对较高。预期60%用户会分享(因v分布均匀且多数用户v较高)，相关性ρ=0.20适中。分享的边际隐私损失预计小于报价，故选择分享以最大化期望效用。",
+      "11": "Given my high privacy preference (v=1.173), the expected utility from sharing is likely negative due to high marginal privacy loss. With ρ=0.20, correlation increases the risk of information leakage even if I don't share. The zero price offer doesn't compensate for this loss, making non-sharing the rational choice.",
+      "12": "我的隐私偏好v=1.049较高，处于高隐私偏好群体。预期约50%的用户会分享，因为v均匀分布在[0.3,1.2]。报价p=0.0000无法覆盖我的边际隐私损失，且相关系数ρ=0.20较低，外部性影响有限。因此不分享更优。",
+      "13": "Your privacy preference v=0.491 is relatively low, making sharing more attractive. With ρ=0.20, the externalities from others' sharing are moderate. Given the uniform distribution of v in [0.3,1.2], you expect about 70% of users to share (those with v below ~0.75). The offered price p=0.3716 likely covers your marginal privacy loss in this scenario, making sharing utility-maximizing.",
+      "14": "我的隐私偏好较低(v=0.464)，报价p=0.3508相对较高。预期约60%用户会分享，因多数用户隐私偏好不高。相关系数ρ=0.20表明外部性影响适中，分享的边际隐私损失较小。因此，分享的期望效用高于不分享。",
+      "15": "我的隐私偏好较低(v=0.465)，平台报价(p=0.3519)较高。预期60%用户会分享，因为v的分布均匀且多数用户v值适中。相关性ρ=0.20较低，外部性影响有限。分享的边际隐私损失预计低于报价，因此选择分享。",
+      "16": "我的隐私偏好中等(v=0.574)，报价p=0.4342相对较高。预期60%的用户会分享，因为他们可能有更低的v值。考虑到ρ=0.20的中等相关性，外部性影响有限，报价能覆盖边际隐私损失。分享的期望效用高于不分享。",
+      "17": "我的隐私偏好中等(v=0.772)，报价p=0.5844相对较高，可能覆盖边际隐私损失。预期60%的用户会分享(低v用户较多)，相关性ρ=0.20适中，外部性影响有限。分享的期望效用高于不分享。",
+      "18": "我的隐私偏好处于中等水平(v=0.689)，考虑到报价p=0.5212和相关系数ρ=0.20，预期约50%用户会分享。在此情况下，分享的边际隐私损失较低，而报价足以覆盖成本，因此选择分享以最大化期望效用。",
+      "19": "我的隐私偏好中等(v=0.562)，报价p=0.4254相对较高。预期60%用户会分享(低v用户为主)，此时边际泄露较低。相关性ρ=0.20较弱，外部性影响有限。分享的期望效用高于不分享。"
+    },
+    "v_values": [
+      0.6370861069626261,
+      1.1556428757689245,
+      0.9587945476302646,
+      0.838792635777333,
+      0.4404167763981929,
+      0.44039506830258235,
+      0.3522752509513795,
+      1.0795585311974416,
+      0.8410035105688878,
+      0.9372653200164409,
+      0.3185260448662222,
+      1.1729188669457948,
+      1.0491983767203794,
+      0.4911051996104485,
+      0.4636424704863905,
+      0.46506405886809044,
+      0.573818018663584,
+      0.7722807884690139,
+      0.6887505167779042,
+      0.5621062261782377
+    ]
+  },
   "llm_share_set": [
     0,
+    3,
     4,
     5,
     6,
-    7
+    8,
+    10,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
   ],
   "gt_share_set": [
     0,
-    1,
     2,
+    3,
     4,
     5,
-    6
+    6,
+    8,
+    9,
+    10,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
   ],
-  "convergence_history": [
-    [
-      0,
-      1,
-      3,
-      4,
-      5,
-      6,
-      7
-    ],
-    [
-      0,
-      1,
-      4,
-      5,
-      6,
-      7
-    ],
-    [
-      0,
-      1,
-      2,
-      4,
-      5,
-      6,
-      7
-    ],
-    [
-      0,
-      1,
-      2,
-      4,
-      5,
-      6
-    ],
-    [
-      0,
-      1,
-      2,
-      5,
-      6,
-      7
-    ],
-    [
-      0,
-      2,
-      3,
-      4
-    ],
-    [
-      0,
-      1,
-      3,
-      4,
-      6
-    ],
-    [
-      0,
-      1,
-      6
-    ],
-    [
-      0,
-      1,
-      3,
-      4,
-      6,
-      7
-    ],
-    [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      7
-    ],
-    [
-      0,
-      2,
-      4,
-      6
-    ],
-    [
-      0,
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7
-    ],
-    [
-      0,
-      1,
-      4,
-      6
-    ],
-    [
-      0,
-      1,
-      2,
-      4,
-      6,
-      7
-    ],
-    [
-      0,
-      4,
-      5,
-      6,
-      7
-    ]
-  ],
-  "rationales_history": [
-    {
-      "0": "Given my privacy preference v[0] = 0.564 is in the mid-range of [0.3, 1.2], I am moderately sensitive to privacy. The current share rate is 0%, indicating low data availability, which means my marginal contribution (ΔI_i = 0.9091) is high. The compensation p_i = 0.5127 covers my marginal privacy cost (v[0] × ΔI_i = 0.5127), making sharing net neutral in a static scenario. However, in a dynamic setting, early sharing can influence others' decisions, potentially stabilizing at a higher share rate where my marginal contribution decreases. Given the type correlation (ρ = 0.20) and noise (σ² = 0.1), the inference externality is moderate, and sharing now may lead to a more favorable equilibrium.",
-      "1": "Given my privacy preference (v=0.417) is below the midpoint of the range [0.3,1.2], I'm relatively more willing to share data. The current share rate is 0%, making my data's marginal value high (ΔI_i=0.9091). While inference externality means some information leaks even if I don't share, the compensation (0.3788) appears to cover the marginal privacy cost in this low-participation scenario. The type correlation (ρ=0.20) suggests limited inference from others' data currently. Strategically, early sharing may be advantageous as subsequent participants' data will have diminishing marginal value due to submodularity.",
-      "2": "Given my privacy preference (v=0.790) is above the midpoint of the range [0.3, 1.2], I value privacy relatively highly. The current compensation (0.7184) only marginally covers the estimated net utility of sharing (0.0000), which is based on the unstable assumption that others won't change their behavior. With ρ=0.20 indicating moderate correlation and no users sharing last round, the system is likely to evolve toward more sharing, reducing my marginal value. Given the dynamic nature and my high privacy valuation, not sharing is strategically preferable to avoid potential overexposure in later rounds.",
-      "3": "我的隐私偏好v=1.144略高于抽样范围上限1.2，表明我对隐私较为重视。然而，当前分享集合为空，意味着我的数据边际贡献ΔI_i=0.9091较高。补偿价格p_i=1.0399略高于我的隐私偏好，使得净效用估算为0。考虑到类型相关性ρ=0.2较低且初始分享率0%，推断外部性影响有限。在动态博弈中，作为早期分享者可能获得较高补偿，而随着更多人分享，边际价值将递减。因此，我选择分享以获取当前较高的补偿。",
-      "4": "我的隐私偏好v=1.005在[0.3,1.2]范围内处于中等偏高位置。当前无人分享数据意味着我的边际信息价值较高(ΔI_i=0.9091)，而补偿价格p_i=0.9137略高于这个边际价值。考虑到推断外部性的存在，即使不分享也可能通过他人数据泄露信息，分享至少能获得补偿。此外，由于当前无人分享，我率先分享可能会引导系统向更均衡状态收敛，减少后续的信息泄露风险。",
-      "5": "Given my privacy preference (v=1.010) is above average in the [0.3, 1.2] range, I'm relatively privacy-sensitive. However, the current share rate is 0%, making my data's marginal value high (ΔI_i=0.9091). The compensation (0.9183) slightly exceeds my privacy cost (0.9091). In this low-share environment, the inference externality is minimal, and my data contribution is valuable. The dynamic effect suggests that as more users share, my marginal value will decrease, so it's optimal to share now when compensation is favorable. This aligns with moving toward a stable equilibrium where higher-v users like me eventually stop sharing as the share rate increases.",
-      "6": "Given my privacy preference v=0.634 is in the mid-range, and considering the current low share rate (0%), my marginal contribution to information is high (ΔI_i=0.9091). The compensation p_i=0.5762 covers my marginal privacy cost. With ρ=0.20, the inference externality is moderate, but in this early stage with few sharers, my data's value outweighs the privacy loss. The system is likely to evolve toward more sharing, so acting now captures higher compensation before ΔI_i decreases as more users join.",
-      "7": "Given my privacy preference (v[7]=1.102) is slightly below the upper bound of the range [0.3, 1.2], I'm relatively more willing to share data. The current share rate is 0%, indicating a low baseline for inference externality. Sharing now captures higher marginal value (ΔI_i=0.9091) with compensation (p_i=1.0020) slightly exceeding my privacy cost. In a dynamic equilibrium, early sharing is strategic as later shares will have diminishing marginal value due to submodularity. This decision aligns with pushing the system toward a stable equilibrium where users with v_i ≤1.102 share."
-    },
-    {
-      "0": "Given my privacy preference v[0] = 0.564, which is in the mid-to-lower range of the [0.3, 1.2] spectrum, I am more inclined to share data. The current compensation price of 0.4489 is attractive, especially since the marginal information value ΔI_i is high (0.7959). The type correlation (ρ = 0.20) and observation noise (σ² = 0.1) suggest moderate inference externalities. Although not sharing would result in a base leak of 0.1143, sharing offers compensation that offsets the marginal leak. Given the dynamic nature of the game and the high share rate in the previous round (87.5%), it is strategic to share to maximize long-term net utility, as the system is likely converging to a high-share equilibrium.",
-      "1": "Given my privacy preference v=0.417 is below the midpoint of [0.3,1.2], I'm relatively more willing to share. The current high sharing rate (87.5%) suggests the system may be approaching equilibrium. While my marginal contribution is decreasing due to submodularity, the compensation p_i=0.3316 appears reasonable given the correlation (ρ=0.20) and noise (σ²=0.1). The key insight is that not sharing still results in significant inference externality (0.1143 leak), so the marginal cost of sharing is actually lower than it appears. In this dynamic game, maintaining participation helps stabilize the system toward equilibrium.",
-      "2": "Given my privacy preference (v=0.79) is above the midpoint of the range [0.3, 1.2], I value privacy relatively highly. The current share rate (87.5%) is already high, indicating strong inference externalities. Even without sharing, my base leakage is 0.1217, and sharing only increases this to 0.9102 for a compensation of 0.6231, resulting in similar net utility. In a dynamic setting, high share rates reduce marginal value of additional data, making compensation less attractive. Given the high correlation (ρ=0.2) and low noise (σ²=0.1), others' data already reveals much about me, reducing the benefit of sharing. Thus, not sharing is strategically better to minimize privacy loss.",
-      "3": "Given my privacy preference (v=1.144) is above the upper bound of the uniform distribution (1.2), I value privacy highly. The inference externality means even if I don't share, others' data can reveal my information (ρ=0.20 correlation). The current high share rate (87.5%) suggests my marginal contribution (ΔI_i=0.7959) is already diminished due to submodularity. The compensation (0.9104) barely covers the marginal cost, and with others likely to continue sharing, my data's value will decrease further. Not sharing minimizes my exposure in this high-sharing equilibrium.",
-      "4": "Given my privacy preference (v=1.005) is slightly above the midpoint of the range [0.3,1.2], I'm moderately privacy-sensitive. The current high sharing rate (87.5%) suggests the market is near equilibrium where most users find sharing beneficial. The compensation (0.7999) nearly offsets my estimated net utility loss (-0.1149), making sharing marginally favorable. With ρ=0.20, inference externality is moderate but significant - not sharing still leads to 0.1143 leakage. In this high-sharing environment, my marginal contribution to inference is reduced (due to submodularity), making the compensation relatively attractive compared to the additional privacy loss.",
-      "5": "Given my privacy preference v[5] = 1.010, which is above the median in the [0.3, 1.2] range, I initially lean towards not sharing. However, the current high sharing rate (87.5%) means my marginal contribution is relatively low (ΔI_i = 0.7959), but the compensation p_i = 0.8039 exactly offsets the estimated net utility loss (-0.1154 in both scenarios). This suggests the system is near equilibrium. Given the type correlation (ρ = 0.20) and noise (σ² = 0.1), my data's inference externality is moderate. Since maintaining the current sharing set appears stable and my marginal cost is fully compensated, I choose to share to sustain this equilibrium state.",
-      "6": "Given my privacy preference (v=0.634) is slightly above the midpoint of the range [0.3, 1.2], I lean towards sharing when compensation is favorable. The current compensation (p_i=0.5045) nearly offsets my estimated net utility loss (-0.0724 if I share vs. -0.0724 if I don't), suggesting marginal benefit in sharing. With a high prior share rate (87.5%), my marginal contribution is low, but non-sharing would still incur significant inference externality (0.1143). Strategically, maintaining sharing aligns with potential equilibrium where high-share rates persist, minimizing my relative privacy loss.",
-      "7": "考虑到我的隐私偏好v=1.102处于较高水平，且当前分享率已达87.5%，推断外部性较强。即使我不分享，平台也能通过其他用户的数据推断我的信息（基础泄露0.1143）。分享后总泄露0.9101，但获得补偿0.8772，净效用估算相近。在动态博弈中，高分享率下边际贡献递减，但补偿仍覆盖边际成本。从战略角度看，维持高分享率有助于系统稳定，避免震荡。因此选择分享以最大化长期净效用。"
-    },
-    {
-      "0": "考虑到我的隐私偏好v=0.564处于中等偏下水平（范围[0.3,1.2]），且上一轮分享率已达75%，推断外部性已较高。不分享时基础泄露为0.1053，分享的边际成本为0.8048，当前补偿p=0.4539接近边际成本。虽然净效用估算相同，但在动态博弈中，中等隐私偏好的用户分享有助于系统收敛到稳定均衡。",
-      "1": "Given my privacy preference v[1] = 0.417 is relatively low within the [0.3, 1.2] range, I am more inclined to share data. The current compensation price of 0.3353 is attractive, and the marginal information value ΔI_i = 0.8048 suggests significant contribution. Although there is a risk of increased inference externality due to ρ = 0.20, the dynamic nature of the market and the potential for others to also share data make sharing a strategic choice. The net utility is balanced in the static estimate, but in a dynamic equilibrium, sharing could lead to better long-term outcomes.",
-      "2": "我的隐私偏好v=0.790处于中等偏高水平。考虑到当前分享率已达75%，推断外部性较强，即使不分享也会有基础泄露0.1143。分享能获得补偿0.6289，虽然总泄露增加到0.9101，但净效用估算为-0.0903，接近盈亏平衡点。更重要的是，在动态博弈中，高分享率下我的边际贡献已递减，此时加入分享可能推动系统更快达到均衡。从战略角度看，中等偏高的v值用户参与分享有助于形成稳定均衡。",
-      "3": "Given my privacy preference (v=1.144) is above the upper bound of the uniform distribution (1.2), I value privacy highly. The inference externality means even if I don't share, others' data can reveal my information (ρ=0.20). The current compensation (0.9104) equals my estimated net utility loss (-0.1307) whether I share or not, making sharing unattractive. Considering dynamic effects, if many users share, my marginal value decreases, reducing compensation. Given my high privacy valuation and the inference risks, not sharing is strategically better to minimize long-term privacy loss.",
-      "4": "我的隐私偏好v=1.005处于中等偏高水平。当前分享率75%较高，推断外部性显著，不分享也会有基础泄露0.1053。分享的边际成本(0.9101-0.1053=0.8048)正好等于补偿0.8088，净效用平衡。考虑到动态博弈，高分享率下边际价值递减，但我的v值表明对隐私敏感度不是最高，分享更可能推动系统向稳定均衡收敛，避免因过度保守导致补偿下降。",
-      "5": "Given my privacy preference v[5] = 1.010, which is slightly above the midpoint of the range [0.3, 1.2], I am moderately concerned about privacy. The current compensation price p_i = 0.8130 is based on a marginal information value ΔI_i = 0.8048, indicating my data has significant marginal value in the current share set. The static net utility for both sharing and not sharing is equal (-0.1063), but dynamically, if fewer users share, my marginal value and compensation could increase. Given the current share rate of 75.0%, there is room for others to reduce sharing, potentially increasing my compensation. Thus, sharing now may lead to better long-term utility as the system converges to equilibrium.",
-      "6": "Given my privacy preference v=0.634 is slightly above the midpoint of [0.3,1.2], I'm moderately privacy-sensitive. The current compensation p_i=0.5101 covers the marginal information value ΔI_i=0.8048, which is reasonable given the ρ=0.20 correlation. With 75% share rate last round, the market appears stable near equilibrium. While not sharing has lower total leakage, sharing provides compensation that offsets my marginal privacy loss (0.9101-0.1053=0.8048). The dynamic considerations suggest maintaining participation supports convergence to a stable equilibrium where moderately sensitive users like me should share.",
-      "7": "Given my privacy preference (v=1.102) is relatively high within the range [0.3, 1.2], I initially lean towards not sharing. However, considering the current high share rate (75%) and the marginal information value (ΔI_i=0.8048), my data's marginal contribution is still significant. The compensation (0.8871) nearly offsets the marginal cost, making sharing strategically viable. The dynamic nature suggests that if many users stop sharing, compensation would increase, but the current equilibrium seems stable. Thus, sharing aligns with maximizing long-term net utility."
-    },
-    {
-      "0": "考虑到我的隐私偏好v=0.564处于中等偏低水平，且上一轮分享率高达87.5%，表明市场倾向于高分享率。推断外部性意味着即使不分享，基础泄露仍存在。当前补偿价格p_i=0.4489接近估算的净效用平衡点，但动态博弈中，高分享率可能维持或增加，进一步降低边际价值。因此，选择分享以获取补偿是合理策略，尤其是在隐私偏好不高的情况下。",
-      "1": "考虑到我的隐私偏好v=0.417处于中等偏低水平，且上一轮分享率高达87.5%，推断外部性已经较强。即使我不分享，平台也能通过其他用户数据推断我的信息（基础泄露0.1143）。分享的边际泄露为0.7958，而补偿价格0.3316能覆盖大部分边际成本。在当前高分享率下，我的数据边际价值已较低，但系统可能接近均衡状态。作为隐私偏好较低的用户，分享是更优选择。",
-      "2": "Given my privacy preference (v=0.79) is in the mid-high range, but the current compensation (0.6289) covers the marginal cost of sharing based on last round's high share rate. The type correlation (ρ=0.2) suggests moderate inference externality. Since the system is near equilibrium with 87.5% sharing, maintaining participation aligns with stable outcomes where most users share. The compensation likely reflects the reduced marginal value in this high-sharing environment, making sharing strategically sound.",
-      "3": "Given my privacy preference (v=1.144) is above the upper bound of the sampled range [0.3, 1.2], I value privacy highly. The current high share rate (87.5%) suggests that my marginal contribution (ΔI_i=0.7885) is likely overestimated if others maintain their decisions. However, in a dynamic game, others may also choose not to share, reducing my marginal value and compensation. The static net utility is equal for both choices, but considering strategic behavior and my high privacy preference, not sharing minimizes potential privacy loss in an unstable market.",
-      "4": "我的隐私偏好v=1.005处于较高水平，说明我对隐私较为重视。然而当前分享率已达87.5%，推断外部性意味着即使我不分享，平台也能通过其他用户的数据推断我的信息。补偿价格0.7999接近我的隐私偏好，说明边际信息价值较高。考虑到动态博弈特性，高分享率下我的边际贡献虽会降低，但稳定在均衡状态可能更有利。因此选择分享以获取补偿，同时避免成为少数不分享者而承受更大推断风险。",
-      "5": "Given my privacy preference v[5] = 1.010, which is above the median in the [0.3, 1.2] range, I'm relatively privacy-sensitive. However, the current compensation p_i = 0.8039 nearly offsets my estimated net utility loss (-0.1154). The high share rate (87.5%) suggests the system may be near equilibrium, where marginal contributions are low but stable. Given the type correlation (ρ=0.20) and noise (σ²=0.1), not sharing still results in significant inference externality (0.1143). Sharing provides compensation while only marginally increasing total leakage (0.9101 vs 0.1143). This strategic move helps maintain equilibrium conditions where high-v users share when adequately compensated.",
-      "6": "作为用户6，我的隐私偏好v=0.634处于中等偏高水平。考虑到当前分享率已达87.5%，推断外部性效应显著 - 即使我不分享，平台也能通过其他用户数据推断我的信息（基础泄露0.1143）。分享的边际成本是总泄露(0.9101)减去基础泄露，而补偿价格0.5045覆盖了这个成本。在动态博弈中，高分享率意味着我的边际贡献已降低，但接受补偿仍能获得净收益。同时，我的隐私偏好低于平均水平，更适合分享。这个决策有助于系统向均衡收敛。",
-      "7": "Given my relatively high privacy preference (v=1.102, near the upper bound of [0.3,1.2]), I should be cautious about sharing. The current high share rate (87.5%) suggests strong inference externalities - even if I don't share, significant information is leaked. The compensation (0.8772) barely covers the estimated net utility loss (-0.1260 if share/don't share), indicating marginal value is low due to existing data abundance. Given the submodular nature, my additional data would have diminishing impact. A stable equilibrium likely involves users like me (higher v) not sharing to minimize marginal privacy loss."
-    },
-    {
-      "0": "Given my privacy preference (v=0.564) is below the midpoint of the range [0.3, 1.2], I'm relatively more willing to share data. The current compensation (p_i=0.4539) covers the estimated marginal cost (-0.0594 net utility in both scenarios). With a moderate type correlation (ρ=0.20) and the previous round's high share rate (75%), maintaining sharing helps stabilize the market toward equilibrium where marginal value aligns with compensation. The inference externality means some information leaks regardless, so capturing compensation while the marginal value is still significant is strategically sound.",
-      "1": "我的隐私偏好v=0.417处于较低水平，意味着我对隐私的重视程度相对较低。当前分享率为75%，表明市场处于高分享状态。由于推断外部性，即使不分享也会有一定程度的信息泄露。补偿价格0.3353接近我的隐私偏好，且边际信息价值ΔI_i=0.8048较高，说明我的数据在当前市场状态下仍有显著价值。考虑到动态博弈特性，高分享率可能持续，因此选择分享可以获取补偿，同时由于我的低隐私偏好，信息泄露带来的负面影响相对可接受。",
-      "2": "我的隐私偏好v=0.790处于中等偏高水平。当前分享集合较大（6人），推断外部性显著，不分享也会有基础泄露。补偿价格0.6360接近估算净效用平衡点，但考虑到动态博弈特性，我的分享可能推动系统向更稳定均衡收敛。在类型相关性ρ=0.2中等的情况下，边际信息价值仍具吸引力。基于次模性特征，当前阶段分享的边际成本相对较低，而补偿尚可覆盖。",
-      "3": "Given my privacy preference (v[3]=1.144) is above the upper bound of the sampled range ([0.3, 1.2]), I place higher value on privacy than average users. The current compensation (0.9104) only marginally covers the estimated net utility loss (-0.1307 when sharing), but this is based on static assumptions. With ρ=0.2 and σ²=0.1, others' data provides limited inference about me. Since the share rate was already high (75%) last round, my marginal contribution (ΔI_i=0.7959) would likely decrease further if others continue sharing. Given my high privacy valuation and the diminishing marginal value of additional shares, not sharing is strategically preferable to minimize privacy leakage in this dynamic equilibrium.",
-      "4": "Given my privacy preference (v=1.005) is above the midpoint of the range [0.3, 1.2], I value privacy relatively highly. The current compensation (0.8088) equals the estimated net utility loss from sharing, making sharing marginally unattractive. With a 75% share rate in the last round, the market is likely near equilibrium where high-v users opt out. The inference externality means my data is partially revealed regardless, so the marginal benefit of sharing is low. Given the dynamic nature and my above-average v, not sharing is the stable choice.",
-      "5": "我的隐私偏好v=1.010处于中等偏高水平，但补偿价格0.8130接近我的隐私成本。考虑到类型相关性ρ=0.20较低，推断外部性影响有限。上一轮75%的高分享率表明市场可能接近均衡状态，我的加入不太会大幅改变其他人的行为。分享带来的边际信息价值ΔI_i=0.8048显示我的数据仍有较高贡献。虽然存在动态变化风险，但当前补偿能较好覆盖边际隐私成本。",
-      "6": "Given my privacy preference v[6] = 0.634, which is moderately high but not extreme, and the current compensation price p_i = 0.5101, the marginal benefit of sharing seems to offset the marginal privacy cost. The inference externality means that even if I don't share, my information is partially revealed through others' data due to the type correlation (ρ = 0.20). The current share rate is high (75%), suggesting that the system may be near equilibrium where additional sharing has diminishing marginal impact. Therefore, sharing is strategically optimal to maximize long-term net utility.",
-      "7": "我的隐私偏好v=1.102处于较高水平（接近上限1.2），通常应更谨慎。但当前分享集合较大（6/8用户），推断外部性已很强，不分享的基础泄露已达0.1143。补偿价格0.8772接近我的隐私价值，且边际信息价值ΔI=0.7959显示我的数据仍有较高贡献。考虑到动态博弈中高分享率可能持续，加入分享能获得补偿并减少边际泄露风险。"
-    },
-    {
-      "0": "Given my privacy preference v=0.564 is in the lower half of the [0.3,1.2] range, I'm relatively more willing to share. The current compensation p_i=0.4539 approximately equals my estimated net utility loss (-0.0594) in both scenarios, suggesting marginal benefit to sharing. With ρ=0.20 showing moderate correlation and σ²=0.1 indicating reasonable noise, my data has meaningful marginal value. The 75% previous share rate suggests a stable equilibrium where most users share, making my additional disclosure less impactful due to submodularity. By contributing now, I help maintain this equilibrium where compensation aligns with privacy costs.",
-      "1": "权衡隐私偏好v=0.417（低于中位数）与补偿p=0.3353，静态估算净效用相同，但需考虑动态博弈。当前分享率75%已较高，边际信息价值ΔI将因次模性递减，补偿可能不足覆盖边际泄露。类型相关性ρ=0.2适中，但不分享的基础泄露0.1053较低。作为隐私偏好较低的用户，应优先减少信息暴露，等待更低分享率时获取更高边际补偿。",
-      "2": "Given my privacy preference (v=0.790) is moderately high but not at the top of the range [0.3, 1.2], and considering the current compensation (p_i=0.6360) is relatively high due to the marginal information value (ΔI_i=0.8048), sharing data seems beneficial. The inference externality means even without sharing, my data is partially revealed (base leak=0.1053). Sharing increases total leak to 0.9101 but provides compensation that offsets the marginal cost. Given the current share rate (75%) and dynamic nature, contributing data helps stabilize the system towards equilibrium, maximizing long-term utility.",
-      "3": "Given my privacy preference v[3] = 1.144, which is slightly above the upper bound of the sampling range [0.3, 1.2], I recognize that my privacy valuation is relatively high. However, the current compensation price p_i = 0.9104 is calculated based on a marginal information value ΔI_i = 0.7959, which suggests that my data still holds significant marginal value in the current sharing set. The static estimate shows equal net utility for both sharing and not sharing, but considering the dynamic nature of the game, sharing could help stabilize the market towards an equilibrium where high-value data contributors are compensated adequately. The type correlation ρ = 0.20 is moderate, meaning others' data has some but not overwhelming influence on inferring my information. Given these factors, I choose to share to maximize long-term utility in this strategic environment.",
-      "4": "我的隐私偏好v=1.005接近范围上限，表明我相对重视隐私。然而，上一轮75%的高分享率显示多数用户倾向于分享。在推断外部性下，不分享也会有基础泄露0.1143，而分享的边际泄露是0.7958（0.9101-0.1143），与补偿0.7999几乎抵消。考虑到高分享率可能持续，且我的数据边际价值已较低，分享是合理选择，因为额外隐私损失有限且能获得补偿。",
-      "5": "Given my relatively high privacy preference (v[5] = 1.010), which is above the median in the [0.3, 1.2] range, I should be cautious about sharing. The current compensation (0.8130) equals the estimated net utility loss whether I share or not, indicating marginal benefit. However, with 75% sharing rate already, my marginal contribution is low due to submodularity. The inference externality (ρ=0.20) means my data leaks even if I don't share, but sharing would increase total leak to 0.9101. In dynamic equilibrium, high-privacy users like me should rationally refrain from sharing to maintain a stable, lower-sharing equilibrium where our higher privacy valuations are protected.",
-      "6": "Given my privacy preference (v=0.634) is above the midpoint of the range [0.3, 1.2], I value privacy moderately high. The current compensation (0.5101) equals the estimated net utility loss if I share, indicating marginal benefit. However, with a 75% share rate last round, the system may be near equilibrium where high-share states suppress marginal value due to submodularity. By not sharing, I reduce the risk of contributing to oversharing dynamics that could further diminish compensation values. The inference externality (ρ=0.2) suggests moderate data leakage even if I don't share, but strategic non-participation helps maintain higher marginal values for future rounds.",
-      "7": "Given my high privacy preference (v=1.102, near the top of the [0.3,1.2] range), I should be cautious about sharing. The static calculation shows equal net utility (-0.116) for both options, but the dynamic nature matters more. With ρ=0.20 correlation and σ²=0.1 noise, others' data can still infer my information moderately. Since the previous round had high sharing (75%), my marginal contribution (ΔI_i=0.8048) is likely overestimated if others maintain sharing. The system appears unstable at this high sharing rate, suggesting a likely decrease in sharing this round. By not sharing, I avoid additional marginal leakage while benefiting from reduced inference externalities if sharing decreases overall."
-    },
-    {
-      "0": "Given my privacy preference v[0] = 0.564, which is in the mid-range of [0.3, 1.2], and the current compensation price of 0.4680, sharing data seems strategically favorable. The marginal information value ΔI_i = 0.8298 indicates my data still has significant value in the current share set [0, 2, 3, 4]. The type correlation ρ = 0.20 suggests moderate inference externality, meaning my data leakage is somewhat contained. Considering the dynamic nature of the game, sharing now could help stabilize the system towards an equilibrium where users with similar v values share data, maximizing long-term utility.",
-      "1": "作为隐私偏好较低的用户(v=0.417)，分享的边际效用较高。虽然存在推断外部性，但当前补偿价格(0.3399)接近估算净效用平衡点。考虑到上一轮50%的分享率表明市场处于中等活跃状态，且我的v值低于中位数，分享更可能带来正效用。动态博弈中，低v用户的最优策略通常是分享，这有助于推动系统向均衡收敛。",
-      "2": "Given my privacy preference (v=0.79) is above the midpoint of the range [0.3,1.2], I value privacy relatively highly. The current compensation (0.6557) exactly offsets the estimated net utility loss (-0.0632) in the static scenario, but this equilibrium is fragile. With ρ=0.2 correlation, others' data still causes 0.08 leakage even if I don't share. Since many users (50%) shared last round, my marginal contribution is already diminished (ΔI_i=0.8298 shows decreasing returns). A stable equilibrium likely has fewer sharers given the privacy valuations, so I'll withhold data to push toward that equilibrium.",
-      "3": "我的隐私偏好v=1.144略高于抽样范围上限1.2，表明我比多数用户更重视隐私。但当前补偿价格p_i=0.9492正好抵消了估算净效用。考虑到类型相关性ρ=0.20较低，推断外部性影响有限，且上一轮50%的分享率可能接近均衡状态。在动态博弈中，保持分享可以维持补偿价格稳定，而退出可能导致价格波动。边际泄露成本被补偿覆盖，且我的数据边际贡献ΔI_i=0.8298仍具价值，因此选择分享更有利。",
-      "4": "Given my privacy preference v[4] = 1.005, which is relatively high in the [0.3, 1.2] range, I initially lean towards not sharing. However, the compensation price p_i = 0.8340 is substantial, covering most of the marginal cost. The current share rate of 50% suggests a moderately stable state, but with ρ = 0.20 and σ² = 0.1, the inference externality is significant. By sharing, I contribute to reducing uncertainty for others, but the marginal value of my data is still high enough to justify the compensation. This strategic move aligns with pushing the system towards a stable equilibrium where high-v users like me share when compensated adequately.",
-      "5": "考虑到我的隐私偏好v=1.010处于较高水平，且推断外部性意味着即使不分享数据，平台仍能通过其他用户的数据推断我的信息。当前分享集合较大（4个用户），我的边际贡献较低（ΔI_i=0.8158），补偿价格p_i=0.8241仅能抵消边际泄露成本。在动态博弈中，更多用户可能选择分享，进一步降低我的边际价值。因此，不分享是更优策略，以减少信息泄露风险。",
-      "6": "考虑到我的隐私偏好v=0.634处于中等水平，且上一轮分享率为50%，表明市场处于相对均衡状态。推断外部性意味着即使不分享，我的信息也会通过其他人的数据被部分泄露（基础泄露0.0941）。分享的边际泄露为0.8158，而当前补偿价格0.5171接近我的隐私偏好乘以边际信息价值，说明补偿相对合理。在动态博弈中，保持分享有助于系统稳定，避免因过度保守导致补偿价格波动。因此，选择分享是战略上更优的决策。",
-      "7": "Given my high privacy preference (v[7] = 1.102), I prioritize minimizing information leakage. The static estimate shows equal net utility for sharing or not, but in a dynamic setting, sharing could lead to reduced marginal compensation due to submodularity. The current 50% share rate suggests potential instability, and my high v makes me more cautious. Not sharing avoids additional marginal leakage while the base leakage is already accounted for, aligning with my privacy priority."
-    },
-    {
-      "0": "Given my privacy preference (v=0.564) is in the mid-range of [0.3, 1.2], sharing data could be beneficial. The current compensation (p_i=0.4601) covers the marginal cost of sharing, considering the inference externality (ρ=0.20). The previous round's share rate (62.5%) suggests a stable trend, and my data's marginal value (ΔI_i=0.8158) is significant. Sharing aligns with dynamic equilibrium where mid-range v users contribute, balancing privacy and compensation.",
-      "1": "我的隐私偏好v=0.417处于中等偏低水平，意味着我对隐私的重视程度相对较低。考虑到推断外部性，即使我不分享数据，平台仍能通过其他用户的数据推断我的信息（基础泄露0.0941）。当前补偿价格0.3399覆盖了边际泄露成本。由于上一轮分享率已达62.5%，系统可能接近均衡状态。在动态博弈中，保持分享有助于稳定市场，且我的低隐私偏好使分享的净效用更可能为正。",
-      "2": "Given my privacy preference (v=0.790) is above the midpoint of the range [0.3, 1.2], I value privacy relatively highly. The inference externality means even if I don't share, others' data will reveal some information about me (base leak=0.1053). While sharing offers compensation (0.6360), it significantly increases total leak (0.9101). The marginal benefit doesn't sufficiently offset my privacy loss. Considering dynamic effects, my high v suggests I should be cautious about sharing when the system may not be at equilibrium yet. The current share rate (62.5%) seems unstable as users with higher v may stop sharing.",
-      "3": "虽然当前估算的净效用在不分享和分享时相同，但考虑到我的隐私偏好v=1.144高于抽样范围[0.3,1.2]的上限，表明我对隐私的重视程度较高。推断外部性意味着即使不分享，我的信息仍会被部分泄露（基础泄露0.0941），但分享会带来更高的总泄露（0.9099）。在动态博弈中，随着更多用户可能选择分享，边际信息价值和补偿可能进一步下降，使得分享的收益降低。因此，选择不分享更符合我的高隐私偏好和长期效用最大化。",
-      "4": "我的隐私偏好v=1.005高于平均值，表明我对隐私较为重视。虽然当前补偿价格看似覆盖了边际泄露成本，但考虑到动态博弈效应和次模性，更多人分享会降低我的边际价值。此外，推断外部性意味着即使不分享也会有基础泄露，但分享会增加额外的边际泄露。基于战略考虑，不分享可能是更稳定的选择，避免因过度分享导致补偿价格下降和隐私泄露增加。",
-      "5": "考虑到我的隐私偏好v=1.010处于较高水平，且推断外部性意味着即使不分享数据，平台仍能通过其他用户的数据泄露我的信息。当前的补偿价格0.8130与估算的净效用-0.1063显示分享并不带来明显优势。此外，动态博弈中，更多用户分享会降低边际价值，可能导致补偿下降。因此，选择不分享以保护隐私更为合理，尤其是在隐私偏好较高的情况下。",
-      "6": "Given my privacy preference v=0.634 is in the mid-range, and considering the current compensation p_i=0.5171 covers the marginal cost of sharing, sharing appears favorable. The inference externality means even if I don't share, my data is partially revealed through others' data due to ρ=0.20 correlation. The current share rate of 62.5% suggests a stable equilibrium where marginal contributions are still valued. By sharing, I contribute to system convergence while receiving fair compensation for my marginal privacy loss.",
-      "7": "Given my high privacy preference (v=1.102, near the top of the [0.3,1.2] range), I should be cautious about sharing. The current compensation (0.8871) equals the estimated net utility loss from sharing (-0.1160), making it marginally unattractive. More importantly, with ρ=0.20 and σ²=0.1, others' data already provides significant inference about me (base leak 0.1053). Since many users (5/8) shared last round, my marginal contribution is diminished (ΔI_i=0.8048 shows decreasing returns). The system appears near equilibrium where high-v users like me shouldn't share, while low-v users do. My decision helps maintain this stable state."
-    },
-    {
-      "0": "我的隐私偏好v=0.564处于中等偏高水平。考虑到推断外部性，即使不分享也会有基础泄露0.0615。分享后总泄露为0.9096，但能获得补偿0.4783。虽然净效用估算为负，但这是静态分析。动态来看，当前分享率37.5%可能偏低，我的加入可能推动系统向更均衡状态发展。由于我的v值不算最高，分享的边际成本相对可接受，且补偿价格尚可。",
-      "1": "我的隐私偏好v=0.417处于中等偏低水平，说明我对隐私的重视程度不高。当前补偿价格0.3534与边际信息价值0.8481的乘积接近我的隐私偏好，表明分享的边际收益与成本相当。考虑到类型相关性ρ=0.20较低，推断外部性影响有限，且上一轮分享率37.5%显示市场可能未达均衡。作为低v用户，我的数据边际贡献仍较高，分享有助于推动系统向均衡收敛。",
-      "2": "我的隐私偏好v=0.79处于中等偏高水平，表明我对隐私较为重视。当前分享集合[0,1,6]显示分享率较低，但推断外部性意味着即使我不分享，平台仍能通过其他用户的数据部分推断我的信息。考虑到类型相关性ρ=0.2较低，且观测噪声σ²=0.1较高，当前的基础泄露0.08相对可控。补偿价格0.6557虽接近估算净效用的平衡点，但在动态博弈中，随着更多人分享，我的边际贡献和补偿可能下降。因此，选择不分享以保护隐私更为稳妥。",
-      "3": "Given my privacy preference v[3] = 1.144, which is slightly above the upper bound of the sampling range [0.3, 1.2], I recognize that my privacy valuation is relatively high. However, the current compensation price p_i = 0.9492 is attractive, especially considering the marginal information value ΔI_i = 0.8298. The inference externality means that even if I don't share, my information could be leaked through others' data due to the type correlation ρ = 0.20. Given the previous round's sharing set [0, 1, 6] and a 37.5% share rate, the market seems to be in a state where additional sharing could stabilize the equilibrium. By sharing, I contribute to this equilibrium and receive compensation that offsets my marginal privacy loss, making it a strategically sound decision.",
-      "4": "Given my privacy preference v=1.005 is slightly above the midpoint of the range [0.3, 1.2], I'm moderately privacy-sensitive. The current compensation p_i=0.8340 nearly offsets my estimated net utility loss (-0.0804) when sharing. Considering the type correlation ρ=0.20 is moderate and previous share rate was 37.5%, my marginal data contribution remains valuable. The static analysis shows equal net utility for both choices, but in a dynamic setting, sharing helps push the system toward equilibrium where high-v users don't share and moderate-v users do. My decision aligns with this equilibrium.",
-      "5": "我的隐私偏好v=1.010高于中位数，说明我更重视隐私。虽然当前估算显示分享与否的净效用相同，但考虑到动态博弈，更多人分享会降低我的边际价值。由于类型相关性ρ=0.2较低，不分享时的基础泄露较小。从均衡角度看，高隐私偏好用户不应分享，这样系统会收敛到更稳定的状态。因此选择不分享。",
-      "6": "Given my privacy preference (v=0.634) is slightly above the midpoint of the range [0.3,1.2], I'm moderately privacy-sensitive. The current compensation (0.5376) appears to adequately cover the marginal privacy cost. The previous round's 37.5% share rate suggests the market isn't oversaturated yet, meaning my data still has reasonable marginal value. The type correlation (ρ=0.20) indicates moderate inference externalities, making sharing somewhat beneficial. While there's uncertainty about others' decisions, sharing now helps push toward a stable equilibrium where moderate-share users participate.",
-      "7": "Given my privacy preference v=1.102 is near the upper bound of the range [0.3, 1.2], I'm relatively privacy-sensitive. However, the current compensation p_i=0.9146 nearly covers the estimated net utility loss (-0.0882) whether I share or not. The marginal information value ΔI_i=0.8298 suggests my data still has significant value in the current sharing set [0,1,6]. With ρ=0.20 indicating moderate correlation, my data's marginal contribution outweighs the additional privacy loss from sharing. The system appears to be moving toward an equilibrium where higher-v users share when compensation adequately covers their marginal privacy cost."
-    },
-    {
-      "0": "我的隐私偏好v=0.564处于中等偏低水平，说明我对隐私的重视程度不高。上一轮的分享率为75%，表明市场倾向于分享。虽然推断外部性意味着即使不分享也会有基础泄露，但分享的补偿价格p_i=0.4539接近估算的净效用损失-0.0594，说明分享的边际收益可能覆盖边际成本。考虑到动态效应，如果更多人分享，我的边际价值会降低，但在当前状态下分享可能是理性的。",
-      "1": "Given my privacy preference v=0.417 is below the midpoint of [0.3,1.2], I'm relatively more willing to share. The current compensation p_i=0.3353 approximately equals my estimated net utility loss (-0.0439) in both scenarios, suggesting marginal benefit to sharing. With ρ=0.20 showing moderate correlation and σ²=0.1 indicating reasonable noise, my data has meaningful marginal value in the current share set [0,1,3,4,6,7]. Since 75% share rate indicates a likely stable equilibrium, and my v is in the lower half, strategically sharing helps maintain this efficient equilibrium where compensation aligns with marginal privacy costs.",
-      "2": "Given my privacy preference v[2] = 0.790, which is moderately high but not extreme, and considering the current compensation price p_i = 0.6289, the marginal benefit of sharing seems to offset the marginal privacy cost. The inference externality means that even if I don't share, my information can be inferred from others due to the type correlation (ρ = 0.20). With a 75% share rate in the previous round, the system appears to be stabilizing around a high share equilibrium. Sharing now aligns with this trend and may help converge to a stable state where my long-term net utility is maximized.",
-      "3": "考虑到我的隐私偏好v=1.144高于抽样范围[0.3,1.2]的上限，表明我对隐私的重视程度较高。然而，上一轮75%的高分享率意味着推断外部性已经很强，即使不分享也会产生0.1053的基础泄露。当前补偿价格0.9206覆盖了边际泄露成本（0.9101-0.1053=0.8048），与ΔI_i=0.8048匹配。在动态博弈中，高分享率可能持续，因为隐私偏好较低的用户（v<1.144）更倾向分享。虽然净效用估算为-0.1204，但考虑到系统可能向高分享均衡收敛，选择分享可以避免被过度推断，同时获得补偿。",
-      "4": "Given my privacy preference v=1.005 is near the upper end of the range [0.3, 1.2], I'm relatively privacy-sensitive. However, the current compensation p_i=0.8088 nearly offsets my estimated net utility loss (-0.1058) when sharing. The high share rate (75%) suggests a stable equilibrium where many users find sharing beneficial. While inference externality means I'll face some privacy loss regardless, the marginal cost of sharing is effectively covered by compensation in this state. Given the dynamic nature, maintaining sharing helps sustain this equilibrium where compensation remains attractive.",
-      "5": "我的隐私偏好v=1.010处于中等偏高水平。考虑到上一轮75%的分享率较高，推断外部性已经较强，不分享也会导致显著信息泄露。当前补偿价格0.8039接近估算的净效用损失，分享可以获取补偿。由于存在类型相关性(ρ=0.2)，我的数据边际价值仍较高。在动态博弈中，高分享率可能持续，保持分享是较优策略。",
-      "6": "考虑到推断外部性，即使不分享数据，平台仍能通过其他用户的数据推断我的信息（基础泄露0.1053）。我的隐私偏好v=0.634处于中等水平，而当前补偿价格p_i=0.5101仅与边际效用持平。由于分享会显著增加总泄露至0.9101，且动态博弈中其他用户可能减少分享（导致补偿下降），不分享更有利于保护隐私。此外，当前75%的高分享率可能不可持续，系统可能向更低分享率的均衡收敛。",
-      "7": "我的隐私偏好v=1.102处于较高水平，说明我对隐私较为敏感。然而，当前分享率为75%，表明多数用户选择分享，这会增加推断外部性效应。虽然不分享可以减少直接泄露，但平台仍能通过其他用户的数据间接推断我的信息。考虑到补偿价格p_i=0.8871接近我的隐私偏好，分享数据可以获得补偿，同时边际信息价值ΔI_i=0.8048较高。在动态博弈中，随着更多人分享，我的边际贡献会递减，因此现在分享可能是较优策略。"
-    },
-    {
-      "0": "我的隐私偏好v=0.564处于中等偏低水平，表明我对隐私的重视程度较低。上一轮分享率高达87.5%，显示市场可能接近均衡状态。虽然静态估算显示分享与否的净效用相同，但考虑到动态效应：在高分享率下，我的边际贡献已较低，补偿价格可能接近合理水平。此外，类型相关性ρ=0.2不高，即使不分享，基础泄露也有限。因此选择分享以获取补偿，这符合多数用户可能采取的策略，有助于维持稳定均衡。",
-      "1": "Given my privacy preference (v=0.417) is slightly above the midpoint of the range [0.3, 1.2], I value privacy moderately. The current share rate is high (87.5%), meaning my marginal contribution (ΔI_i=0.7959) is already diminished due to submodularity. The compensation (0.3316) exactly offsets the net utility in a static scenario, but in reality, others may also stop sharing, reducing inference externality. Given the high correlation (ρ=0.20) and low noise (σ²=0.1), not sharing reduces my marginal leakage risk while still benefiting from others' data. This strategic non-participation helps push the system toward a more stable equilibrium with lower overall sharing.",
-      "2": "Given my privacy preference v=0.790 (mid-range in [0.3,1.2]), the current compensation p_i=0.6289 covers the marginal privacy cost. The high previous round sharing rate (87.5%) suggests the system may be approaching equilibrium where most users share. In this state, not sharing would still incur significant inference externality (0.1143) due to high ρ=0.20 correlation. The marginal cost of sharing (0.7959) is fully compensated, making sharing strategically optimal to maximize net utility in this likely equilibrium state.",
-      "3": "作为用户3，我的隐私偏好v=1.144高于抽样范围上限1.2，表明我对隐私高度敏感。当前分享率已达87.5%，处于高位，边际信息价值ΔI_i=0.7959显示我的数据边际贡献已较低。考虑到推断外部性，即使不分享，平台也能通过其他7个用户的数据较准确地推断我的信息（基础泄露0.1143）。而分享带来的边际泄露(0.9101-0.1143=0.7958)几乎等于补偿0.9104，净效用相近。更重要的是，在如此高的分享率下，系统可能已接近均衡，我的加入对补偿价格影响有限。因此选择不分享以保护隐私。",
-      "4": "Given my privacy preference v=1.005 is above the midpoint of [0.3,1.2], I'm relatively privacy-sensitive, but the current compensation p_i=0.7999 nearly offsets the estimated net utility loss (-0.1149 same for both options). The high previous round sharing rate (87.5%) suggests the market is near equilibrium where most users find sharing beneficial. With ρ=0.2 and σ²=0.1, inference externality is moderate but significant - not sharing still leads to 0.1143 leak. The marginal cost of sharing (0.9101-0.1143=0.7958) is almost exactly covered by compensation (0.7999), making sharing marginally better in this likely equilibrium state.",
-      "5": "Given my privacy preference (v=1.010) is above the midpoint of the range [0.3, 1.2], I am relatively more privacy-sensitive. The current high sharing rate (87.5%) means my marginal contribution to inference accuracy is low (ΔI_i=0.7959), making the compensation (0.8039) barely cover the marginal privacy cost. Since others' data already exposes me significantly (base leak=0.1143), sharing adds little value while increasing my total exposure. In a dynamic equilibrium, high-sharing states are unstable as privacy-sensitive users like me will opt out, pushing the system toward a lower-sharing equilibrium where my non-participation is optimal.",
-      "6": "我的隐私偏好v=0.634处于中等偏上水平。当前分享集合较大（7人），说明市场倾向于分享。推断外部性意味着即使我不分享，平台也能通过其他人的数据推断我的信息（基础泄露0.1217）。如果我分享，边际泄露增加0.7885，但获得补偿0.4998可以部分抵消。考虑到动态博弈特性，当多数用户已分享时，我的边际贡献虽递减但仍有机会获得补偿。综合评估后决定分享以获取补偿，同时控制隐私损失。",
-      "7": "Given my relatively high privacy preference (v=1.102 near the upper bound of [0.3,1.2]), I should be cautious about sharing. The current high sharing rate (87.5%) means my marginal contribution is low (ΔI_i=0.7959) and the compensation (0.8772) barely covers the estimated net utility loss (-0.1260). With ρ=0.20 indicating moderate inference externalities, not sharing limits my exposure while still benefiting from others' data. The market appears near saturation where additional shares provide diminishing returns, making non-sharing the strategically stable choice for high-v users like myself."
-    },
-    {
-      "0": "Given my privacy preference v=0.564 is in the mid-range of [0.3, 1.2], I'm moderately privacy-sensitive. The current compensation p_i=0.4680 covers the marginal cost of sharing (ΔI_i=0.8298). With ρ=0.20 and σ²=0.1, the inference externality means even non-sharing leads to 0.0800 leak. The previous round's 50% share rate suggests a potentially stable equilibrium where marginal value remains reasonable. By sharing, I contribute to system convergence while receiving adequate compensation for my marginal privacy loss.",
-      "1": "我的隐私偏好v=0.417处于较低水平，意味着我对隐私的重视程度相对较低。考虑到推断外部性，即使不分享也会有基础泄露0.0941。分享带来的补偿0.3399可以覆盖边际成本，且当前分享率50%处于中等水平，边际信息价值ΔI_i=0.8158显示我的数据仍有较高贡献。虽然动态博弈中其他用户可能改变决策，但基于当前参数和次模性效应，分享是更优选择。",
-      "2": "Given my privacy preference (v=0.79) is moderately high but not at the top of the range [0.3, 1.2], and considering the current compensation (p_i=0.6557) nearly offsets the estimated net utility loss (-0.0632), sharing seems strategically favorable. The marginal information value (ΔI_i=0.8298) indicates my data still has significant contribution potential despite the inference externality (ρ=0.20). Since the system is likely to converge where users with v < p_i share, and my v is close to the current p_i, participating now helps reach equilibrium faster while minimizing long-term privacy erosion.",
-      "3": "我的隐私偏好v=1.144略高于抽样范围上限1.2，表明我对隐私较为重视。但当前补偿价格p_i=0.9332高于边际泄露成本（总泄露0.9099-基础泄露0.0941=0.8158），且考虑到类型相关性ρ=0.2较低，推断外部性影响有限。在上一轮50%分享率下，系统可能接近均衡状态。虽然动态博弈中其他用户可能改变选择，但基于当前补偿覆盖边际成本且我的隐私偏好并非极端高值，选择分享是合理策略。",
-      "4": "我的隐私偏好v=1.005处于较高水平，说明我更重视隐私保护。然而，当前补偿价格0.8340接近我的隐私偏好，这意味着分享数据的边际收益可能覆盖隐私成本。考虑到推断外部性，即使我不分享，平台仍可能通过其他用户的数据推断我的信息（基础泄露0.0800）。而分享带来的总泄露是0.9098，但获得补偿后净效用估算为-0.0804，与不分享相同。在动态博弈中，选择分享可能促使系统向更稳定的均衡收敛，因为我的高隐私偏好使得分享决策对系统影响较大。",
-      "5": "Given my privacy preference (v=1.010) is slightly above the midpoint of the range [0.3, 1.2], I'm moderately privacy-sensitive. The current compensation (0.8241) equals my estimated net utility loss whether I share or not, suggesting the market is near equilibrium. Since the previous share rate was 50% and my data has marginal value (ΔI_i=0.8158), sharing helps maintain this equilibrium. The type correlation (ρ=0.20) means inference externality exists but isn't extreme. By sharing, I contribute to system stability while being fairly compensated for my marginal privacy loss.",
-      "6": "我的隐私偏好v=0.634处于中等偏高水平。考虑到类型相关性ρ=0.20较低，推断外部性影响有限。当前补偿价格p=0.5260与边际信息价值ΔI=0.8298的乘积合理覆盖了我的隐私成本。虽然不分享也有基础泄露0.08，但分享的边际成本(0.9098-0.08=0.8298)正好被补偿完全覆盖。在动态博弈中，我的决策会促使系统向均衡收敛，因为当补偿等于边际成本时，系统处于稳定状态。",
-      "7": "考虑到我的隐私偏好v=1.102处于较高水平，但补偿价格p_i=0.8992接近我的隐私价值。推断外部性意味着即使不分享，基础泄露0.0941仍存在。分享的边际泄露为0.8158，与补偿相当。当前分享率50%可能不稳定，但我的数据边际价值较高。在动态博弈中，分享可能推动系统向均衡收敛，且我的高隐私偏好意味着应谨慎利用当前有利补偿。"
-    },
-    {
-      "0": "Given my privacy preference (v=0.564) is below the midpoint of the range [0.3, 1.2], I lean towards sharing. The current high share rate (100%) suggests a stable equilibrium where most users find sharing beneficial. The compensation (0.4447) covers the marginal cost of sharing, as the static estimate shows equal net utility for both choices. Given the type correlation (ρ=0.20) and noise (σ²=0.1), my marginal contribution to inference externality is moderate. In a dynamic context, maintaining a high share rate likely sustains equilibrium, making sharing the strategically sound choice.",
-      "1": "Given my privacy preference (v=0.417) is below the midpoint of the range [0.3, 1.2], I'm relatively more willing to share. The current high share rate (100%) suggests a stable equilibrium where most users find sharing beneficial. The compensation (0.3285) covers my marginal privacy cost. Even if others change, my low v makes sharing strategically sound as the system likely converges to high participation. The inference externality means I'll face leakage regardless, so I might as well get compensated.",
-      "2": "Given my privacy preference (v=0.790) is above the midpoint of the range [0.3, 1.2], I value privacy relatively highly. The current high share rate (100%) suggests strong inference externalities - even if I don't share, much information about me can be inferred from others' data. The compensation (0.6231) roughly equals the estimated net utility loss (-0.0962) in both scenarios, making sharing unattractive. Moreover, in a dynamic equilibrium, high-share states are unstable as users with higher v values will stop sharing, reducing the marginal value of my data. Therefore, not sharing is the strategically stable choice.",
-      "3": "Given my privacy preference v[3] = 1.144 is above the upper bound of the sampling range [0.3, 1.2], I value privacy highly. The current share rate is 100%, indicating high inference externality where even non-sharing leads to significant information leakage. The marginal compensation p_i = 0.9020 doesn't sufficiently offset my high privacy cost. In a dynamic equilibrium, users with lower v_i are more likely to share, reducing my marginal contribution. Strategically, maintaining non-sharing aligns with my high privacy valuation and anticipates others' potential reduction in sharing, which would decrease inference accuracy.",
-      "4": "Given my privacy preference v=1.005 is slightly above the midpoint of [0.3,1.2], but the current compensation p_i=0.7924 nearly offsets the estimated net utility loss (-0.1224). With high previous sharing rate (100%), my marginal contribution is already low (ΔI_i=0.7885), suggesting we're near equilibrium. The type correlation (ρ=0.20) means inference externality exists but isn't extreme. Sharing now helps maintain stable compensation levels while the marginal privacy loss is acceptable given the price.",
-      "5": "考虑到我的隐私偏好v=1.010处于较高水平（接近上限1.2），且上一轮分享率已达100%，推断外部性效应显著。即使我不分享，平台已能通过其他用户数据较准确地推断我的信息（基础泄露0.1217）。当前补偿价格0.7965仅能覆盖边际成本，但动态博弈中若更多人分享会导致补偿下降。从均衡角度，高分享率状态不可持续，隐私偏好高的用户应率先退出以推动系统向更稳定均衡收敛。",
-      "6": "考虑到我的隐私偏好v=0.634处于中等水平，且上一轮分享率高达100%，推断外部性表明即使不分享也会有基础泄露。当前补偿价格p_i=0.4998接近估算净效用平衡点，表明市场可能接近均衡。在动态博弈中，维持分享有助于系统稳定，避免因过度退出导致补偿机制失效。此外，边际信息价值ΔI_i=0.7885显示我的数据仍有显著贡献，且类型相关性ρ=0.20适中，使得分享的边际收益可能超过边际隐私成本。",
-      "7": "Given my privacy preference (v=1.102) is relatively high within the [0.3, 1.2] range, I prioritize privacy protection. The current high share rate (100%) means my marginal contribution (ΔI_i=0.7885) is already low due to submodularity. The compensation (0.8691) barely offsets the marginal privacy loss. Moreover, with ρ=0.20, others' data significantly infers my information even if I don't share (base leak=0.1217). In a dynamic equilibrium, high-v users like me are better off not sharing to minimize inference externalities, while letting low-v users dominate the sharing set."
-    },
-    {
-      "0": "Given my privacy preference v[0] = 0.564, which is in the mid-range of [0.3, 1.2], I am moderately privacy-sensitive. The current compensation price p_i = 0.4680 is close to my marginal utility loss. The inference externality means that even if I don't share, there's a base leakage of 0.0800 due to others' data. Sharing increases my total leakage to 0.9098, but the marginal leakage (0.8298) is compensated by the payment. Given the current share rate of 50% and the submodular nature of data value, my marginal contribution is still significant. Strategically, sharing now helps the system converge to a stable equilibrium where users with v ≤ p_i share, and my v is close to this threshold.",
-      "1": "我的隐私偏好v=0.417处于较低水平，意味着我对隐私的重视程度相对较低。当前补偿价格p_i=0.3458接近于我的隐私偏好，表明分享的边际收益可能覆盖边际成本。考虑到类型相关性ρ=0.20较低，推断外部性影响有限，且当前分享率50%显示市场处于中等活跃状态。在动态博弈中，我倾向于通过分享推动系统向均衡收敛，因为低隐私偏好用户从分享中获益的可能性更高。",
-      "2": "Given my privacy preference v=0.790 is slightly below the midpoint of [0.3,1.2], I'm moderately privacy-sensitive. The current compensation p_i=0.6447 exactly offsets the estimated net utility loss in static analysis (-0.0744 for both options). However, considering dynamic effects: (1) With ρ=0.2 and σ²=0.1, inference externality is moderate but non-negligible - not sharing still risks 0.0941 leakage. (2) The previous 50% share rate suggests market is near equilibrium. (3) My data has decent marginal value (ΔI_i=0.8158) given current share set. Strategically, sharing now helps maintain equilibrium where moderate-privacy users participate, preventing compensation collapse from oversharing.",
-      "3": "我的隐私偏好v=1.144高于抽样范围上限1.2，表明我对隐私高度敏感。虽然当前补偿价格0.9332看似覆盖估算净效用，但考虑到动态博弈特性：1)其他用户可能改变决策导致补偿下降；2)高分享率下边际价值递减；3)我的高v值意味着边际泄露成本可能被低估。在均衡状态下，高隐私偏好用户应倾向于不分享以减少推断外部性影响。",
-      "4": "我的隐私偏好v=1.005处于中等偏高水平。虽然不分享会有基础泄露0.0800，但分享的边际泄露(0.9098-0.0800=0.8298)恰好与补偿0.8340相当。考虑到类型相关性ρ=0.20不高，且当前分享率50%可能接近均衡状态。作为隐私偏好较高的用户，我倾向于分享以获取补偿，因为系统可能正趋于稳定，且我的数据边际价值较高。",
-      "5": "Given my privacy preference (v=1.010) is above average in the [0.3, 1.2] range, I value privacy more than many users. The current compensation (0.8241) exactly offsets the estimated net utility loss (-0.0951), suggesting marginal benefit. However, in a dynamic game, if many users share, my marginal contribution decreases, reducing future compensation. The type correlation (ρ=0.20) is moderate, meaning others' data somewhat reveals my information, but not extremely. Given these factors and the strategic uncertainty of others' actions, not sharing is the safer choice to protect my privacy in the long run.",
-      "6": "考虑到我的隐私偏好v=0.634处于中等水平，且上一轮分享率为50%，表明市场处于相对平衡状态。推断外部性意味着即使不分享，我的信息也会通过其他人的数据被部分泄露（基础泄露0.08）。分享的边际泄露为0.8298，而补偿价格0.5260接近我的隐私偏好，使得净效用接近平衡。在动态博弈中，保持分享可能有助于系统稳定，避免因过度保守导致补偿价格波动。因此，选择分享以最大化长期净效用。",
-      "7": "我的隐私偏好v=1.102处于较高水平，但补偿价格p_i=0.8992接近我的隐私偏好。考虑到推断外部性，即使不分享也会有基础泄露0.0941。如果选择分享，虽然总泄露增加至0.9099，但能获得补偿0.8992，净效用估算为-0.1037，与不分享相同。在动态博弈中，当前分享集合[0,1,4,6]可能趋于稳定，边际信息价值ΔI_i=0.8158较高。基于次模性效应和战略稳定性，选择分享可能是更优策略。"
-    },
-    {
-      "0": "Given my privacy preference v[0] = 0.564, which is slightly below the midpoint of the range [0.3, 1.2], I am relatively less sensitive to privacy concerns. The current compensation price p_i = 0.4539 is calculated based on my marginal information value ΔI_i = 0.8048, which seems favorable. Considering the type correlation ρ = 0.20 and observation noise σ² = 0.1, the inference externality is moderate. The previous round's high share rate (75%) suggests a stable trend towards sharing, and my data's marginal contribution is still significant. Sharing aligns with the likely equilibrium where users with v_i ≤ ~0.6 share, maximizing long-term net utility by reducing uncertainty and leveraging compensation.",
-      "1": "考虑到推断外部性，即使不分享数据，平台也能通过其他用户的数据部分推断我的信息（基础泄露0.1053）。我的隐私偏好v=0.417处于中等偏低水平，但当前补偿价格0.3353仅能抵消边际泄露成本。由于上一轮分享率已达75%，我的边际信息价值ΔI_i可能被高估（次模性效应），实际补偿可能更低。在动态博弈中，高分享率可能导致补偿进一步下降，因此选择不分享更有利于保护隐私净效用。",
-      "2": "考虑到我的隐私偏好v=0.790处于中等偏高水平，且上一轮分享率已达75%，推断外部性效应显著。即使不分享，基础泄露已达0.1053。当前补偿价格0.6360仅能抵消边际成本，但实际动态博弈中分享集合可能扩大，导致边际价值进一步下降。从均衡角度看，高分享率下我的数据边际贡献有限，而隐私损失风险较高。因此选择不分享更有利于长期效用最大化。",
-      "3": "Given my privacy preference (v=1.144) is above the upper bound of the uniform distribution (1.2), I value privacy highly. The current compensation (0.9104) is based on previous round's sharing set, but dynamic changes may reduce its marginal value if more users share. The inference externality (ρ=0.20) means even non-sharing leads to 0.1143 base leakage. Strategic equilibrium likely involves high-privacy users like me not sharing, as compensation may not adequately cover marginal leakage risks in dynamic adjustments. The stable equilibrium should separate users by privacy preferences.",
-      "4": "我的隐私偏好v=1.005处于中等偏高水平。考虑到推断外部性，即使不分享也会有基础泄露0.1053。分享后总泄露0.9101，但获得补偿0.8088，净效用估算为-0.1058。虽然当前净效用为负，但考虑到动态博弈特性，我的分享可能促使系统向更稳定的均衡收敛。此外，我的隐私偏好高于平均水平，分享可能对整体信息泄露影响有限。因此选择分享以观察市场反应。",
-      "5": "Given my privacy preference v=1.010 is slightly above the midpoint of [0.3,1.2], I'm moderately privacy-sensitive. The current share rate of 75% suggests a relatively stable equilibrium where most users find sharing beneficial. My marginal information value ΔI=0.7959 is still substantial despite the high share rate, indicating my data still adds meaningful value. The compensation p=0.8039 approximately covers my marginal privacy cost (total leak 0.9101 minus base leak 0.1143). In this equilibrium-like state where my marginal benefit roughly equals marginal cost, sharing is the rational choice that helps maintain stability.",
-      "6": "基于我的隐私偏好v=0.634处于中等水平，且上一轮分享率较高（75%），推断外部性表明即使不分享也会有基础泄露。考虑到补偿价格p_i=0.5101与估算净效用平衡，分享可能更有利。此外，动态博弈中，高分享率可能趋于稳定，我的数据边际贡献虽递减但仍有价值。因此，选择分享以最大化长期净效用。",
-      "7": "Given my privacy preference (v=1.102) is slightly below the upper bound of the range [0.3, 1.2], I'm relatively privacy-sensitive but not extremely so. The current compensation (0.8871) nearly offsets the estimated net utility loss (-0.1160) in the static scenario, suggesting a near-indifference point. However, considering the dynamic nature and the 75% sharing rate last round, the system seems to be stabilizing around high participation. My marginal contribution to inference externalities is diminishing due to the submodularity effect (many users already sharing), but maintaining participation helps sustain the equilibrium where compensation remains meaningful. Given the type correlation (ρ=0.2) and noise (σ²=0.1), the inference externality from others' data would still reveal substantial information even if I don't share."
-    }
-  ],
-  "converged": false,
-  "cycle_detected": false,
-  "rounds": 15,
   "equilibrium_quality": {
-    "share_set_similarity": 0.5714285714285714,
-    "share_rate_error": 0.125,
-    "welfare_mae": 0.7184010301754737,
-    "profit_mae": 0.7867635641681852,
-    "correct_equilibrium": 0,
-    "equilibrium_type": "bad"
+    "share_set_similarity": 0.875,
+    "share_rate_error": 0.10000000000000009,
+    "welfare_mae": 0.07710095782773152,
+    "profit_mae": 0.10344865978382778,
+    "correct_equilibrium": 1,
+    "equilibrium_type": "good"
   },
   "metrics": {
     "llm": {
-      "profit": 1.3449710612965085,
-      "welfare": 0.6913661977472279,
-      "total_leakage": 4.865497076023392,
-      "share_rate": 0.625
+      "profit": 7.688296009360389,
+      "welfare": 5.514048289072788,
+      "total_leakage": 13.65525525525525,
+      "share_rate": 0.7
     },
     "ground_truth": {
-      "profit": 2.1317346254646936,
-      "welfare": 1.4097672279227016,
-      "total_leakage": 5.688888888888888,
-      "share_rate": 0.75
+      "profit": 7.791744669144217,
+      "welfare": 5.591149246900519,
+      "total_leakage": 15.193495934959351,
+      "share_rate": 0.8
     },
     "deviations": {
-      "profit_mae": 0.7867635641681852,
-      "welfare_mae": 0.7184010301754737,
-      "total_leakage_mae": 0.8233918128654958,
-      "share_rate_mae": 0.125
+      "profit_mae": 0.10344865978382778,
+      "welfare_mae": 0.07710095782773152,
+      "total_leakage_mae": 1.538240679704101,
+      "share_rate_mae": 0.10000000000000009
     }
+  },
+  "labels": {
+    "llm_leakage_bucket": "high",
+    "gt_leakage_bucket": "high",
+    "llm_over_sharing": 0,
+    "gt_over_sharing": 0
+  },
+  "belief_consistency": {
+    "actual_share_rate": 0.7,
+    "mean_belief": 0.5599999999999999,
+    "mean_belief_error": 0.13999999999999996,
+    "max_belief_error": 0.29999999999999993,
+    "belief_std": 0.08602325267042624
   }
 }

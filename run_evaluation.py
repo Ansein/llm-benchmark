@@ -2,7 +2,30 @@
 主评估脚本
 批量运行多个模型在不同场景下的评估
 
-# python run_evaluation.py --scenarios B --models grok-3-mini gpt-4.1-mini deepseek-v3 deepseek-r1 --num-trials 1 --max-iterations 15
+使用示例：
+
+1. 场景B批量评估（多个模型）：
+   python run_evaluation.py --scenarios B --models gpt-4.1-mini deepseek-v3 gemini-2.5-flash grok-3-mini --num-trials 1
+
+2. 场景A批量评估（需指定最大迭代次数）：
+   python run_evaluation.py --scenarios A --models gpt-4.1-mini --num-trials 3 --max-iterations 15
+
+3. 场景C批量评估（社会数据外部性）：
+   python run_evaluation.py --scenarios C --models gpt-4.1-mini --num-trials 3 --max-iterations 10
+
+4. 同时评估多个场景：
+   python run_evaluation.py --scenarios A B C --models gpt-4.1-mini --num-trials 1 --max-iterations 15
+
+5. 单次评估模式（用于快速测试）：
+   python run_evaluation.py --single --scenarios C --models gpt-4.1-mini --num-trials 1
+
+6. 仅生成汇总报告（使用已有结果，不重新运行）：
+   python run_evaluation.py --summary-only
+
+注意：
+- 场景A、C（迭代博弈）需要 --max-iterations 参数（默认10轮）
+- 场景B（静态博弈）不需要 --max-iterations 参数
+- 结果保存在 evaluation_results/ 目录
 """
 
 import argparse
@@ -13,6 +36,7 @@ from typing import List, Dict, Any
 import pandas as pd
 
 from src.evaluators import create_llm_client, ScenarioAEvaluator, ScenarioBEvaluator
+from src.evaluators.evaluate_scenario_c import ScenarioCEvaluator
 
 
 def load_existing_results(output_dir: str = "evaluation_results") -> List[Dict[str, Any]]:
@@ -48,12 +72,12 @@ def load_existing_results(output_dir: str = "evaluation_results") -> List[Dict[s
     for result_file in result_files:
         try:
             # 从文件名解析场景和模型
-            # 文件名格式: eval_scenario_A_model-name.json 或 eval_scenario_B_model-name.json
+            # 文件名格式: eval_scenario_A_model-name.json, eval_scenario_B_model-name.json, eval_scenario_C_model-name.json
             filename = result_file.stem  # 去掉 .json
             parts = filename.split("_")
             
             if len(parts) >= 3:
-                scenario = parts[2]  # "A" 或 "B"
+                scenario = parts[2]  # "A", "B", 或 "C"
                 model_name = "_".join(parts[3:])  # 剩余部分是模型名
                 
                 # 加载结果
@@ -88,7 +112,7 @@ def run_single_evaluation(
     运行单个场景的评估
     
     Args:
-        scenario: 场景名称 ("A" 或 "B")
+        scenario: 场景名称 ("A", "B", 或 "C")
         model_name: 模型配置名称
         num_trials: 每个决策的重复次数
         max_iterations: 最大迭代次数
@@ -113,23 +137,40 @@ def run_single_evaluation(
                 num_trials=num_trials,
                 max_iterations=max_iterations
             )
+            # 打印摘要
+            evaluator.print_evaluation_summary(results)
+            
         elif scenario == "B":
             evaluator = ScenarioBEvaluator(llm_client)
-            # 运行评估（并行博弈模式，参数名为max_rounds）
-            results = evaluator.simulate_llm_equilibrium(
-                num_trials=num_trials,
-                max_rounds=max_iterations
+            # 运行评估（静态博弈模式，平台使用理论求解器）
+            # 注意：max_iterations参数在静态博弈中不再使用
+            results = evaluator.simulate_static_game(num_trials=num_trials)
+            # 打印摘要
+            evaluator.print_evaluation_summary(results)
+            
+        elif scenario == "C":
+            evaluator = ScenarioCEvaluator(llm_client)
+            # 运行评估（固定点迭代）
+            results = evaluator.evaluate(
+                max_iterations=max_iterations,
+                num_trials=num_trials
             )
+            # 结果已在evaluate()内部打印
+            
         else:
             raise ValueError(f"不支持的场景: {scenario}")
-        
-        # 打印摘要
-        evaluator.print_evaluation_summary(results)
         
         # 保存结果
         output_path = Path(output_dir) / f"eval_scenario_{scenario}_{model_name}.json"
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # 场景A和B使用evaluator.save_results，场景C直接保存
+        if scenario in ["A", "B"]:
         evaluator.save_results(results, str(output_path))
+        else:  # 场景C
+            with open(output_path, 'w', encoding='utf-8') as f:
+                json.dump(results, f, indent=2, ensure_ascii=False)
+            print(f"\n✅ 结果已保存到: {output_path}")
         
         return results
     
@@ -151,7 +192,7 @@ def run_batch_evaluation(
     批量运行评估
     
     Args:
-        scenarios: 场景列表 (["A", "B"])
+        scenarios: 场景列表 (["A", "B", "C"])
         model_names: 模型名称列表
         num_trials: 每个决策的重复次数
         max_iterations: 最大迭代次数
@@ -194,17 +235,22 @@ def run_batch_evaluation(
     print(f"{'#'*80}")
 
 
-def generate_summary_report(all_results: List[Dict[str, Any]], output_dir: str):
+def generate_summary_report(all_results: List[Dict[str, Any]], output_dir: str = None):
     """
     生成汇总报告
     
     Args:
         all_results: 所有评估结果
-        output_dir: 输出目录
+        output_dir: 输出目录（默认根据场景自动选择）
     """
     print(f"\n{'='*80}")
     print(f"[汇总报告] 生成中")
     print(f"{'='*80}")
+    
+    # 如果没有指定输出目录，使用第一个场景的results目录
+    if output_dir is None and all_results:
+        first_scenario = all_results[0]["scenario"]
+        output_dir = f"scenario_{first_scenario.lower()}/results"
     
     # 准备表格数据
     summary_data = []
@@ -223,12 +269,21 @@ def generate_summary_report(all_results: List[Dict[str, Any]], output_dir: str):
         labels = result.get("labels", {})  # 使用get，如果没有则为空字典
         iterations = result.get("iterations", result.get("rounds", "N/A"))  # 兼容旧版本
         
-        row = {
-            "场景": scenario,
-            "模型": model_name,
-            "收敛": "[是]" if result.get("converged", False) else "[否]",
-            "迭代次数": iterations,
-        }
+        # 场景B的静态博弈不需要收敛和迭代次数
+        if scenario == "B":
+            row = {
+                "场景": scenario,
+                "模型": model_name,
+                "求解器": result.get("platform", {}).get("solver_mode", "exact"),
+            }
+        else:
+            # 场景A、C或旧版本场景B（需要收敛信息）
+            row = {
+                "场景": scenario,
+                "模型": model_name,
+                "收敛": "[是]" if result.get("converged", False) else "[否]",
+                "迭代次数": iterations,
+            }
         
         # 场景A的指标
         if scenario == "A":
@@ -244,14 +299,35 @@ def generate_summary_report(all_results: List[Dict[str, Any]], output_dir: str):
         
         # 场景B的指标
         elif scenario == "B":
+            # 获取分享集合
+            llm_share_set = result.get("llm_share_set", [])
+            gt_share_set = result.get("gt_share_set", [])
+            
             row.update({
                 "分享率_LLM": f"{metrics['llm']['share_rate']:.2%}",
                 "分享率_GT": f"{metrics['ground_truth']['share_rate']:.2%}",
+                "LLM分享集合": str(llm_share_set),
+                "理论分享集合": str(gt_share_set),
+                "集合相似度": f"{result.get('equilibrium_quality', {}).get('share_set_similarity', 0):.3f}",
                 "利润MAE": f"{metrics['deviations']['profit_mae']:.4f}",
                 "福利MAE": f"{metrics['deviations']['welfare_mae']:.4f}",
                 "泄露MAE": f"{metrics['deviations']['total_leakage_mae']:.4f}",
                 "泄露分桶匹配": "[是]" if labels.get("llm_leakage_bucket") == labels.get("gt_leakage_bucket") else "[否]" if labels else "N/A",
                 "过度分享匹配": "[是]" if labels.get("llm_over_sharing") == labels.get("gt_over_sharing") else "[否]" if labels else "N/A"
+            })
+        
+        # 场景C的指标
+        elif scenario == "C":
+            row.update({
+                "参与率_LLM": f"{metrics['llm']['participation_rate']:.2%}",
+                "参与率_GT": f"{metrics['ground_truth']['participation_rate']:.2%}",
+                "参与人数_LLM": f"{metrics['llm']['num_participants']}",
+                "CS_MAE": f"{metrics['deviations']['consumer_surplus_mae']:.4f}",
+                "利润MAE": f"{metrics['deviations']['producer_profit_mae']:.4f}",
+                "福利MAE": f"{metrics['deviations']['social_welfare_mae']:.4f}",
+                "Gini_MAE": f"{metrics['deviations']['gini_mae']:.4f}",
+                "参与率分桶匹配": "[是]" if labels.get("bucket_match") else "[否]" if labels else "N/A",
+                "方向标签": labels.get("direction", "N/A")
             })
         
         summary_data.append(row)
@@ -283,8 +359,8 @@ def main():
         type=str,
         nargs="+",
         default=["A", "B"],
-        choices=["A", "B"],
-        help="要评估的场景列表"
+        choices=["A", "B", "C"],
+        help="要评估的场景列表 (A=个性化定价, B=推断外部性, C=社会数据)"
     )
     
     parser.add_argument(

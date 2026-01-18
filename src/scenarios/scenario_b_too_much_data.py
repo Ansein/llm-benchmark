@@ -115,9 +115,9 @@ def compute_posterior_covariance(Sigma: np.ndarray, S: Set[int],
     # Sigma_post = Sigma - Sigma @ H.T @ inv(H @ Sigma @ H.T + R) @ H @ Sigma
     HSigma = H @ Sigma
     HSigmaHT_R = HSigma @ H.T + R
-    inv_term = np.linalg.inv(HSigmaHT_R)
-    
-    Sigma_post = Sigma - Sigma @ H.T @ inv_term @ HSigma
+    solve_term = np.linalg.solve(HSigmaHT_R, HSigma)
+
+    Sigma_post = Sigma - Sigma @ H.T @ solve_term
     
     return Sigma_post
 
@@ -330,6 +330,232 @@ def solve_scenario_b(params: ScenarioBParams) -> Dict:
     }
 
 
+
+def solve_for_S_with_prices(params: ScenarioBParams, S: Set[int], prices: List[float]) -> Dict:
+    """给定分享集合S与实际支付价格向量prices，计算泄露、平台利润与福利（TMD机制一致）。
+
+    说明：
+    - 泄露与隐私成本由统计结构决定；
+    - 平台利润使用实际支付：sum(prices[i] for i in S)；
+    - welfare 仍采用 platform_value - total_user_cost（支付是转移项），便于与文献口径一致。
+    """
+    n = params.n
+    Sigma = params.Sigma
+    sigma_noise_sq = params.sigma_noise_sq
+    alpha = params.alpha
+    v = params.v
+
+    if len(prices) != n:
+        raise ValueError(f"prices length {len(prices)} != n {n}")
+    if any(p < 0 for p in prices):
+        raise ValueError("prices must be non-negative")
+
+    Sigma_post = compute_posterior_covariance(Sigma, S, sigma_noise_sq)
+
+    leakage = [max(0.0, float(Sigma[i, i] - Sigma_post[i, i])) for i in range(n)]
+    total_leakage = float(sum(leakage))
+    platform_value = float(alpha * total_leakage)
+
+    user_costs = [float(v[i] * leakage[i]) for i in range(n)]
+    total_user_cost = float(sum(user_costs))
+
+    welfare = float(platform_value - total_user_cost)
+
+    platform_payment = float(sum(prices[i] for i in S))
+    platform_profit = float(platform_value - platform_payment)
+
+    return {
+        "leakage": leakage,
+        "total_leakage": total_leakage,
+        "platform_value": platform_value,
+        "user_costs": user_costs,
+        "total_user_cost": total_user_cost,
+        "welfare": welfare,
+        "platform_payment": platform_payment,
+        "platform_profit": platform_profit,
+            "profit": platform_profit,
+    }
+
+
+def calculate_outcome_with_prices(S: Set[int], params: ScenarioBParams, prices: List[float]) -> Dict:
+    """评估器用：给定分享集合与实际prices输出结果字典。"""
+    return solve_for_S_with_prices(params, S, prices)
+
+
+def _supporting_prices_for_set(params: ScenarioBParams, S: Set[int], epsilon: float = 1e-6) -> List[float]:
+    """对给定集合S，构造TMD意义下的最小支撑价格（加epsilon打破无差异）。"""
+    n = params.n
+    Sigma = params.Sigma
+    sigma_noise_sq = params.sigma_noise_sq
+    v = params.v
+
+    # 基础泄露（在S下）
+    Sigma_post = compute_posterior_covariance(Sigma, S, sigma_noise_sq)
+    leak = [max(0.0, float(Sigma[i, i] - Sigma_post[i, i])) for i in range(n)]
+
+    prices = [0.0] * n
+    for i in S:
+        S_wo = set(S)
+        S_wo.remove(i)
+        Sigma_post_wo = compute_posterior_covariance(Sigma, S_wo, sigma_noise_sq)
+        leak_i_wo = max(0.0, float(Sigma[i, i] - Sigma_post_wo[i, i]))
+        marginal = max(0.0, leak[i] - leak_i_wo)
+        prices[i] = float(v[i] * marginal + (epsilon if epsilon is not None else 0.0))
+    return prices
+
+
+def _profit_for_set_under_supporting_prices(params: ScenarioBParams, S: Set[int], epsilon: float = 1e-6) -> Tuple[float, List[float], Dict]:
+    """返回：平台利润、支撑价格向量、以及用于审计的诊断信息。"""
+    prices = _supporting_prices_for_set(params, S, epsilon=epsilon)
+    outcome = solve_for_S_with_prices(params, S, prices)
+
+    # 均衡裕度审计：对i∈S应≥epsilon；对i∉S应≤0（在p_i=0时）
+    n = params.n
+    Sigma = params.Sigma
+    sigma_noise_sq = params.sigma_noise_sq
+    v = params.v
+
+    Sigma_post = compute_posterior_covariance(Sigma, S, sigma_noise_sq)
+    leak = [max(0.0, float(Sigma[i, i] - Sigma_post[i, i])) for i in range(n)]
+
+    margins_in = []
+    for i in S:
+        S_wo = set(S); S_wo.remove(i)
+        Sigma_post_wo = compute_posterior_covariance(Sigma, S_wo, sigma_noise_sq)
+        leak_i_wo = max(0.0, float(Sigma[i, i] - Sigma_post_wo[i, i]))
+        marginal = max(0.0, leak[i] - leak_i_wo)
+        margins_in.append(float(prices[i] - v[i] * marginal))
+
+    margins_out = []
+    for j in range(n):
+        if j in S:
+            continue
+        # deviation gain if share at price 0
+        S_plus = set(S); S_plus.add(j)
+        Sigma_post_plus = compute_posterior_covariance(Sigma, S_plus, sigma_noise_sq)
+        leak_j_plus = max(0.0, float(Sigma[j, j] - Sigma_post_plus[j, j]))
+        marginal_j = max(0.0, leak_j_plus - leak[j])
+        margins_out.append(float(0.0 - v[j] * marginal_j))
+
+    diag = {
+        "min_margin_in": min(margins_in) if margins_in else None,
+        "max_margin_out": max(margins_out) if margins_out else None,
+    }
+    return float(outcome["platform_profit"]), prices, diag
+
+
+def solve_stackelberg_personalized(params: ScenarioBParams,
+                                  exact_n_limit: int = 22,
+                                  epsilon: float = 1e-6,
+                                  local_search_restarts: int = 10,
+                                  local_search_max_iters: int = 200,
+                                  rng_seed: int = 0) -> Dict:
+    """TMD个性化定价的理论基线（Stackelberg）求解器。
+
+    输出包含：
+    - eq_share_set: 平台最优诱导的分享集合A*
+    - eq_prices: 对应的最小支撑价格向量p^{A*}（加epsilon）
+    - eq_profit, eq_W, eq_total_leakage
+    - diagnostics: 均衡裕度等审计信息
+    """
+    n = params.n
+    rng = np.random.default_rng(rng_seed)
+
+    def eval_set(S: Set[int]) -> Tuple[float, List[float], Dict, Dict]:
+        profit, prices, diag = _profit_for_set_under_supporting_prices(params, S, epsilon=epsilon)
+        outcome = solve_for_S_with_prices(params, S, prices)
+        return profit, prices, diag, outcome
+
+    # === Exact enumeration for small n ===
+    if n <= exact_n_limit:
+        best = None
+        best_S = set()
+        best_prices = None
+        best_diag = None
+        best_outcome = None
+
+        for mask in range(1 << n):
+            S = {i for i in range(n) if (mask >> i) & 1}
+            profit, prices, diag, outcome = eval_set(S)
+            if (best is None) or (profit > best):
+                best = profit
+                best_S = S
+                best_prices = prices
+                best_diag = diag
+                best_outcome = outcome
+
+        return {
+            "eq_share_set": sorted(best_S),
+            "eq_prices": best_prices,
+            "eq_profit": float(best),
+            "eq_W": float(best_outcome["welfare"]),
+            "eq_total_leakage": float(best_outcome["total_leakage"]),
+            "diagnostics": best_diag,
+            "solver_mode": "exact",
+        }
+
+    # === Local search for larger n ===
+    def neighbors(S: Set[int]):
+        # single flip neighbors
+        for i in range(n):
+            if i in S:
+                S2 = set(S); S2.remove(i)
+            else:
+                S2 = set(S); S2.add(i)
+            yield S2
+
+    best = None
+    best_S = set()
+    best_prices = None
+    best_diag = None
+    best_outcome = None
+
+    for r in range(local_search_restarts):
+        # random init
+        S = {i for i in range(n) if rng.random() < 0.5}
+        profit, prices, diag, outcome = eval_set(S)
+        improved = True
+        it = 0
+        while improved and it < local_search_max_iters:
+            it += 1
+            improved = False
+            best_local = profit
+            best_local_S = S
+            best_local_prices = prices
+            best_local_diag = diag
+            best_local_outcome = outcome
+
+            for S2 in neighbors(S):
+                p2, pr2, d2, o2 = eval_set(S2)
+                if p2 > best_local + 1e-12:
+                    best_local = p2
+                    best_local_S = S2
+                    best_local_prices = pr2
+                    best_local_diag = d2
+                    best_local_outcome = o2
+                    improved = True
+
+            S, profit, prices, diag, outcome = best_local_S, best_local, best_local_prices, best_local_diag, best_local_outcome
+
+        if (best is None) or (profit > best):
+            best = profit
+            best_S = S
+            best_prices = prices
+            best_diag = diag
+            best_outcome = outcome
+
+    return {
+        "eq_share_set": sorted(best_S),
+        "eq_prices": best_prices,
+        "eq_profit": float(best),
+        "eq_W": float(best_outcome["welfare"]),
+        "eq_total_leakage": float(best_outcome["total_leakage"]),
+        "diagnostics": best_diag,
+        "solver_mode": "local_search",
+    }
+
+
+
 def main():
     """示例运行"""
     print("=" * 60)
@@ -337,7 +563,7 @@ def main():
     print("=" * 60)
     
     # 生成实例（小规模便于演示）
-    params = generate_instance(n=8, rho=0.2, seed=13645)
+    params = generate_instance(n=20, rho=0.2, seed=42)
     
     print(f"\n参数设置：")
     print(f"  用户数 n = {params.n}")
