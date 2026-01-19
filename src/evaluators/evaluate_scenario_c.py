@@ -761,33 +761,27 @@ if __name__ == "__main__":
         
         def llm_consumer(consumer_params, m, anonymization):
             """LLM消费者决策"""
-            # 构建提示词 v2.0：充分信息 + 零引导
-            prompt = f"""你需要决定是否参与一个数据分享计划。
+            # 构建提示词 v3：机制更清楚（但不提供“怎么算/该选什么”的步骤）
+            prompt = f"""你是消费者，需要在“参与数据分享计划”与“拒绝参与”之间做选择。你的目标是最大化你的期望净效用（补偿 + 市场结果带来的收益 − 隐私成本）。
 
-【提议内容】
-数据中介提议：如果你分享个人数据，将支付你 {m:.2f} 的补偿。
-隐私保护方式：{anonymization}
+【数据分享计划】
+- 若参与：你立刻获得补偿 m = {m:.2f}。
+- 隐私机制：
+  - identified：商家可能将你的数据与身份绑定，更容易对你做个性化定价（对高偏好者更可能不利）。
+  - anonymized：商家只能利用匿名统计信息，通常更难针对个人定价，但仍可能从总体数据改进产品/定价。
 
-【关于隐私保护方式】
-- "identified"：你的数据会保留身份信息，商家可以看到你的个人偏好参数
-- "anonymized"：你的数据会被匿名化处理，商家只能看到统计信息
+【你的参数】
+- 偏好强度 θ_i = {consumer_params['theta_i']:.2f} （越大表示你越喜欢该产品/更可能购买）
+- 隐私成本 τ_i = {consumer_params['tau_i']:.2f} （参与会带来这项隐私损失成本）
 
-【你的个人参数】
-- 你对该产品的偏好参数 θ = {consumer_params['theta_i']:.2f}
-  （这个参数反映你有多喜欢这类产品；数据被分享后，商家会知道这个参数）
-  
-- 你对隐私损失的评估 τ = {consumer_params['tau_i']:.2f}
-  （这是你对"失去隐私"本身的货币化估值）
+【决策要求】
+请你判断：参与是否“值得”。你不需要精确计算市场均衡，但要考虑以下要点：
+1) 补偿 m 是参与的直接收益；
+2) identified 可能导致对你更不利的个性化定价风险（尤其当 θ_i 较高时）；
+3) anonymized 个性化定价风险较小，但补偿收益不变；
+4) 参与会产生隐私成本 τ_i。
 
-【市场背景】
-- 商家会使用收集到的数据来调整产品和定价策略
-- 如果采用"identified"，商家可以针对不同消费者制定不同价格
-- 如果采用"anonymized"，商家只能根据整体数据改进产品，对所有人定价相同
-- 市场上消费者的平均偏好约为 θ ≈ 5.0
-
-【你的决策】
-你会参与这个数据分享计划吗？
-
+【输出格式（必须严格遵守）】
 请按以下格式回答：
 第1行：你的决策理由（一句话，20字以内）
 第2行：决策：参与 或 决策：拒绝
@@ -805,11 +799,26 @@ if __name__ == "__main__":
                 # 打印LLM的完整回答（用于调试和理解）
                 print(f"    [消费者 θ={consumer_params['theta_i']:.2f}, τ={consumer_params['tau_i']:.2f}] {answer[:80]}...")
                 
-                # 解析回答
-                if "参与" in answer or "同意" in answer or "yes" in answer.lower():
-                    return True
-                else:
+                # 解析回答：优先只看“决策：...”那一行，避免理由里出现“拒绝参与/参与但...”导致误判
+                lines = [ln.strip() for ln in answer.splitlines() if ln.strip()]
+                decision_line = ""
+                for ln in reversed(lines):
+                    if ln.startswith("决策"):
+                        decision_line = ln
+                        break
+
+                dl = decision_line.lower()
+                if ("拒绝" in decision_line) or ("no" in dl):
                     return False
+                if ("参与" in decision_line) or ("yes" in dl):
+                    return True
+
+                # 兜底：如果格式不符合，再用宽松规则
+                if "拒绝" in answer:
+                    return False
+                if "参与" in answer:
+                    return True
+                return bool(m > consumer_params['tau_i'])
                     
             except Exception as e:
                 print(f"⚠️ LLM调用失败: {e}")
@@ -825,40 +834,38 @@ if __name__ == "__main__":
         
         def llm_intermediary(market_params):
             """LLM中介策略选择"""
-            # 构建提示词 v2.0：充分信息 + 零引导
-            prompt = f"""你是数据市场的中介，需要设计一个数据收集方案以最大化你的利润。
+            # 构建提示词 v3：机制更清楚（但不提供“最优策略建议”）
+            prompt = f"""你是“数据中介”，你的目标是最大化你的期望利润。
 
-【市场环境】
-- 市场中有 {market_params['N']} 个消费者
-- 消费者的产品偏好参数 θ 服从正态分布：均值 {market_params['mu_theta']:.2f}，标准差 {market_params['sigma_theta']:.2f}
-- 消费者的隐私评估 τ 服从正态分布：均值 {market_params['tau_mean']:.2f}，标准差 {market_params['tau_std']:.2f}
+【市场参数】
+- 消费者数量 N = {market_params['N']}
+- 消费者偏好 θ ~ Normal(均值 {market_params['mu_theta']:.2f}, 标准差 {market_params['sigma_theta']:.2f})
+- 消费者隐私成本 τ ~ Normal(均值 {market_params['tau_mean']:.2f}, 标准差 {market_params['tau_std']:.2f})
+- 数据结构：{market_params['data_structure']}
 
-【你需要选择的策略】
-1. **补偿金额 m**（范围 0 到 3）：你向每个参与数据分享的消费者支付的金额
-2. **隐私保护方式**：
-   - "identified"：保留消费者身份信息，商家可以看到每个人的偏好 θ
-   - "anonymized"：匿名化处理，商家只能看到统计信息
+【你的决策（你先动）】
+你要选择：
+1) 补偿 m（范围 0 到 3）：你向每个参与者支付的金额
+2) 匿名化策略：identified 或 anonymized
 
-【业务流程】
-1. 你公布策略（m 和隐私保护方式）
-2. 消费者根据自己的参数（θ_i 和 τ_i）决定是否参与
-3. 你将收集到的数据出售给商家
-4. 商家根据数据调整产品和定价
+【消费者反应（随后）】
+消费者会比较“参与的期望净收益”与其隐私成本 τ_i 来决定是否参与。
+一般来说：m 越高，参与率越高；identified 可能降低参与激励（因个性化定价风险），anonymized 可能提高参与激励。
 
-【商家行为】
-- 如果获得"identified"数据，商家会针对每个消费者的 θ_i 进行个性化定价
-- 如果获得"anonymized"数据，商家只能改进产品，对所有人统一定价
-- 商家愿意支付的数据价格取决于数据的信息量和参与人数
+【你卖给商家的数据费 m0（关键）】
+商家愿意为数据支付的价格 m0 由“数据带来的商家利润增量”决定：
+m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
+直觉：参与人数越多、数据越能支持个性化定价或改进产品，m0 越大，但边际收益递减。
 
 【你的利润】
-利润 = 从商家获得的数据收入 - 向消费者支付的总补偿
+利润 = m0 − m × (参与人数)
 
-【你的目标】
-选择能最大化利润的策略。
+【输出格式（必须严格遵守）】
+只输出一行 JSON，不要输出任何额外文字：
+{{"m": 数字,"anonymization":"identified" 或 "anonymized","reason":"100到150字"}}
 
-请按以下格式回答：
-第1行：你的策略理由（一句话，30字以内）
-第2行：{{"m": 你选择的补偿金额, "anonymization": "identified" 或 "anonymized"}}"""
+请给出你的选择。
+"""
 
             try:
                 response = client.chat.completions.create(

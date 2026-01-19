@@ -3285,7 +3285,10 @@ if __name__ == "__main__":
     )
     
     # 保存到文件
+    from pathlib import Path
     output_path = "data/ground_truth/scenario_c_optimal.json"
+    # 确保目录存在
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(gt, f, indent=2, ensure_ascii=False)
     
