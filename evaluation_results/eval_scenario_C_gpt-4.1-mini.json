@@ -26,7 +26,7 @@
     false
   ],
   "llm_participation_rate": 0.0,
-  "gt_participation_rate": 1.0,
+  "gt_participation_rate": 0.8374674897276418,
   "participation_history": [
     [
       false,
@@ -78,7 +78,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "参与虽有1元补偿和更准判断，但被个性化定价的风险较大，且可搭便车获取部分信息，综合收益偏向拒绝。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制导致的个性化定价风险较大，且我可以搭便车获取部分信息，避免被精准价格歧视。",
         "all_trials": [
           "reject",
           "reject",
@@ -90,7 +90,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "我信号较高，参与会暴露给生产者导致更高价格，且我可以搭便车获得部分信息，补偿不足以抵消潜在的价格歧视损失。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制导致精准价格歧视风险较大，且我可通过他人数据搭便车获得部分信息，故拒绝参与更优。",
         "all_trials": [
           "reject",
           "reject",
@@ -102,7 +102,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "参与虽有1元补偿和更准信号，但被精准定价风险大且其他人参与时我可搭便车获益，故拒绝更优。",
+        "reasoning": "参与虽有1元补偿和更准信号，但实名个性化定价风险较大，且可搭便车获取部分信息，综合考虑选择拒绝。",
         "all_trials": [
           "reject",
           "reject",
@@ -114,7 +114,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "我信号为5.26，接近中间值，参与虽得1元补偿但会暴露信号导致个性化定价风险，且可搭便车获取他人数据提升判断，故拒绝参与。",
+        "reasoning": "我信号为5.26，接近中间值，参与虽有1元补偿和更准判断，但被个性化定价风险较大且可搭便车获益，故拒绝参与。",
         "all_trials": [
           "reject",
           "reject",
@@ -126,7 +126,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制下的个性化定价可能导致我支付更高价格，且我可以搭便车获取部分信息，风险大于收益。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制带来的个性化定价风险可能导致我支付更高价格，且我可以搭便车获得部分信息，故拒绝参与。",
         "all_trials": [
           "reject",
           "reject",
@@ -138,7 +138,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "参与虽有1元补偿和更准信号，但实名个性化定价风险较大，且可搭便车获取部分信息，综合考虑拒绝更优。",
+        "reasoning": "参与虽有1元补偿和更准判断，但实名个性化定价风险较大，且可搭便车获取部分信息，综合考虑拒绝更优。",
         "all_trials": [
           "reject",
           "reject",
@@ -150,7 +150,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确信息，但实名个性化定价可能导致我支付更高价格，且我可通过他人数据搭便车获得部分信息，故拒绝参与更优。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制下的个性化定价可能导致我支付更高价格，且我仍能通过他人数据搭便车获得较好判断，故拒绝参与。",
         "all_trials": [
           "reject",
           "reject",
@@ -162,7 +162,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制导致的个性化定价风险可能使我支付更高价格，且我可通过搭便车获得部分信息，故选择拒绝。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名个性化定价可能导致我支付更高价格，且我可通过搭便车获得部分信息，故拒绝参与更优。",
         "all_trials": [
           "reject",
           "reject",
@@ -174,7 +174,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "我获得1元补偿的收益有限，而参与会暴露我的信号导致可能的价格歧视，且我仍能通过他人数据搭便车提升判断准确性，故选择拒绝。",
+        "reasoning": "补偿仅1元不足以抵消被精准价格歧视的风险，且即使不参与也能搭便车获得部分信息，故选择拒绝。",
         "all_trials": [
           "reject",
           "reject",
@@ -186,7 +186,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制带来的个性化定价风险可能导致我支付更高价格，且我仍能搭便车获得部分信息，故选择拒绝。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制带来的个性化定价风险可能导致我支付更高价格，且我仍能通过他人匿名数据学习，搭便车更划算。",
         "all_trials": [
           "reject",
           "reject",
@@ -198,7 +198,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确信号，但实名且个性化定价可能导致我支付更高价格，且我可通过他人数据搭便车获得部分信息，故拒绝参与。",
+        "reasoning": "参与虽有1元补偿和更准信号，但实名个性化定价风险大，且可搭便车获部分信息，综合收益偏低。",
         "all_trials": [
           "reject",
           "reject",
@@ -210,7 +210,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "参与虽有1元补偿和更准确信息，但被个性化定价的风险较大，且不参与仍能搭便车获益，综合考虑拒绝更优。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名制下的个性化定价可能导致我支付更高价格，且我可以搭便车获取部分信息，风险大于收益。",
         "all_trials": [
           "reject",
           "reject",
@@ -234,7 +234,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "参与虽有1元补偿和更准信号，但被个性化定价的风险较大，且不参与仍能搭便车获益，综合考虑拒绝更优。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名且个性化定价可能导致我支付更高价格，且我可通过搭便车获得部分信息，故拒绝参与。",
         "all_trials": [
           "reject",
           "reject",
@@ -246,7 +246,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "参与虽有1元补偿和更准信号，但被精准定价风险大且其他人参与时我可搭便车获益，故拒绝以避免价格歧视。",
+        "reasoning": "我可以搭便车获得其他参与者的数据提升判断准确性，同时避免被生产者基于我的信号进行个性化价格歧视，且补偿1元不足以弥补潜在的价格歧视损失。",
         "all_trials": [
           "reject",
           "reject",
@@ -258,7 +258,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "我初步评估较高且能搭便车获取数据，避免被个性化定价，拒绝参与更有利。",
+        "reasoning": "当前已有0人参与，单独参与风险被精准定价且收益有限，且我可搭便车学习他人数据，故拒绝参与更优。",
         "all_trials": [
           "reject",
           "reject",
@@ -270,7 +270,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名个性化定价可能导致我支付更高价格，且我可以搭便车获取部分信息，风险较大。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名个性化定价可能导致我支付更高价格，且我可通过他人匿名数据搭便车获得部分信息，故拒绝参与。",
         "all_trials": [
           "reject",
           "reject",
@@ -282,7 +282,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "我获得1元补偿，但被生产者精准定价的风险可能导致支付更高价格，且我仍能搭便车获得部分信息，综合来看拒绝更优。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信号，但实名制下的个性化定价风险较大，且我可以搭便车获取部分信息，避免被精准价格歧视。",
         "all_trials": [
           "reject",
           "reject",
@@ -294,7 +294,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但被生产者精准定价可能导致支付更高价格，且我可通过搭便车获得部分信息，故拒绝参与更优。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但被生产者精准定价可能导致支付更高价格，且我可通过他人数据搭便车获得部分信息，故拒绝参与。",
         "all_trials": [
           "reject",
           "reject",
@@ -306,7 +306,7 @@
       {
         "iteration": 1,
         "decision": false,
-        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但实名且个性化定价可能导致我支付更高价格，且我可通过他人数据搭便车获得部分信息，故拒绝参与更优。",
+        "reasoning": "虽然参与能获得1元补偿和更准确的信息，但被生产者精准定价可能导致支付更高价格，且我可以搭便车获得部分信息，避免价格歧视风险。",
         "all_trials": [
           "reject",
           "reject",
@@ -319,39 +319,39 @@
     "llm": {
       "participation_rate": 0.0,
       "num_participants": 0,
-      "consumer_surplus": 87.33570765056163,
-      "producer_profit": 125.0,
-      "social_welfare": 212.33570765056163,
-      "gini_coefficient": 2.220446049250313e-16,
+      "consumer_surplus": 86.38107079198184,
+      "producer_profit": 134.346558059123,
+      "social_welfare": 220.72762885110484,
+      "gini_coefficient": 0.022528105729351156,
       "price_variance": 0.0,
       "price_discrimination_index": 0.0,
       "acceptor_avg_utility": 0.0,
-      "rejecter_avg_utility": 4.366785382528081,
-      "learning_quality_participants": 0.4967141530112329,
-      "learning_quality_rejecters": 0.4967141530112329
+      "rejecter_avg_utility": 4.319053539599092,
+      "learning_quality_participants": 0.4870474835092297,
+      "learning_quality_rejecters": 0.4870474835092297
     },
     "ground_truth": {
-      "participation_rate": 1.0,
-      "num_participants": 20,
-      "consumer_surplus": 99.25198401215019,
-      "producer_profit": 143.43685905177213,
-      "intermediary_profit": -20.0,
-      "social_welfare": 222.68884306392232,
-      "gini_coefficient": 0.0,
-      "price_variance": 1.9721522630525295e-31,
-      "price_discrimination_index": 0.0,
-      "acceptor_avg_utility": 4.962599200607509,
+      "participation_rate": 0.7924999999999999,
+      "num_participants": 15,
+      "consumer_surplus": 74.48723356704163,
+      "producer_profit": 118.98384330759828,
+      "intermediary_profit": -15.85,
+      "social_welfare": 177.62107687463987,
+      "gini_coefficient": 0.04506516468028393,
+      "price_variance": 0.0,
+      "price_discrimination_index": 3.9968028886505636e-16,
+      "acceptor_avg_utility": 0.0,
       "rejecter_avg_utility": 0.0,
-      "learning_quality_participants": 0.1406547983779758,
+      "learning_quality_participants": 0.0,
       "learning_quality_rejecters": 0.0
     },
     "deviations": {
-      "participation_rate_mae": 1.0,
-      "consumer_surplus_mae": 11.916276361588558,
-      "producer_profit_mae": 18.43685905177213,
-      "social_welfare_mae": 10.35313541336069,
-      "gini_mae": 2.220446049250313e-16,
-      "price_discrimination_mae": 0.0
+      "participation_rate_mae": 0.7924999999999999,
+      "consumer_surplus_mae": 11.893837224940214,
+      "producer_profit_mae": 15.36271475152472,
+      "social_welfare_mae": 43.10655197646497,
+      "gini_mae": 0.022537058950932776,
+      "price_discrimination_mae": 3.9968028886505636e-16
     }
   },
   "labels": {
@@ -359,7 +359,7 @@
     "gt_participation_bucket": "high",
     "bucket_match": false,
     "direction": "under_participation",
-    "rate_difference": -1.0
+    "rate_difference": -0.8374674897276418
   },
   "params": {
     "N": 20,
@@ -372,8 +372,8 @@
     "m_0": 0.0,
     "c": 0.0,
     "tau_mean": 0.5,
-    "tau_std": 0.3,
-    "tau_dist": "none",
+    "tau_std": 0.5,
+    "tau_dist": "normal",
     "participation_timing": "ex_ante",
     "posterior_method": "approx",
     "seed": 42

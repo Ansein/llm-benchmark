@@ -255,7 +255,7 @@
 """
 
 import numpy as np
-from typing import Dict, List, Tuple, Optional, Literal
+from typing import Dict, List, Tuple, Optional, Literal, Callable
 from dataclasses import dataclass, asdict
 import json
 from scipy.optimize import minimize_scalar
@@ -326,11 +326,10 @@ class ScenarioCParams:
     # 影响：m越高，参与率越高（论文Theorem 1）
     m: float
     
-    # 生产者向中介支付m_0（我们的扩展，论文隐含）
-    # 中介利润 = m_0 - m·N_参与
-    # 默认值：0.0（中介纯支出）
-    # 扩展：可设为生产者利润提升的某个比例
-    m_0: float = 0.0
+    # 注意：m_0（生产者向中介支付）不是参数，而是内生变量
+    # m_0 = β × max(0, E[π_with_data - π_no_data])
+    # 由 estimate_m0_mc() 函数计算
+    # 在 IntermediaryOptimizationResult 和 GT 输出中返回
     
     """
     ========================================================================
@@ -463,26 +462,32 @@ class MarketOutcome:
     price_discrimination_index: float  # max(p) - min(p)
 
 
-def generate_consumer_data(params: ScenarioCParams) -> ConsumerData:
+def generate_consumer_data(
+    params: ScenarioCParams,
+    rng: Optional[np.random.Generator] = None
+) -> ConsumerData:
     """
     生成消费者数据（真实偏好和信号）
     
     Args:
         params: 场景参数
+        rng: 随机数生成器（如果为None，使用params.seed创建）
         
     Returns:
         ConsumerData对象
     """
-    np.random.seed(params.seed)
+    if rng is None:
+        rng = np.random.default_rng(params.seed)
+    
     N = params.N # 消费者数量
     
     if params.data_structure == "common_preferences": # 共同偏好假设
         # 所有消费者有相同的真实偏好θ
-        theta = np.random.normal(params.mu_theta, params.sigma_theta) # 真实偏好
+        theta = rng.normal(params.mu_theta, params.sigma_theta) # 真实偏好
         w = np.ones(N) * theta # 真实支付意愿
         
         # 独立噪声 ~ N(0, 1)
-        e = np.random.normal(0, 1, N)
+        e = rng.normal(0, 1, N)
         
         # 信号 = 真实支付意愿 + 噪声 * 噪声水平
         s = w + params.sigma * e
@@ -491,10 +496,10 @@ def generate_consumer_data(params: ScenarioCParams) -> ConsumerData:
     
     elif params.data_structure == "common_experience": # 共同经验假设
         # 每个消费者的真实偏好不同
-        w = np.random.normal(params.mu_theta, params.sigma_theta, N) # 真实偏好 ~ N(μ_theta, σ_theta²)
+        w = rng.normal(params.mu_theta, params.sigma_theta, N) # 真实偏好 ~ N(μ_theta, σ_theta²)
         
         # 共同噪声冲击
-        epsilon = np.random.normal(0, 1)
+        epsilon = rng.normal(0, 1)
         e = np.ones(N) * epsilon
         
         # 信号
@@ -560,59 +565,94 @@ def compute_posterior_mean_consumer(
     """
     计算消费者i的后验期望 E[w_i | s_i, participant_signals]
     
+    ⚠️ 关键修正（P0-1）：消费者后验必须包含s_i（论文信息集 I_i={s_i}∪X）
+    
+    论文机制：消费者永远观察到自己的私人信号s_i，这是其信息优势的来源。
+    
+    处理participant_signals中的s_i：
+    - 如果s_i在participant_signals中（消费者是参与者），需避免double count
+    - 采用"从X中分离出s_i"的方式：X_others = X without {s_i}
+    
     Args:
-        s_i: 消费者i自己的信号
-        participant_signals: 参与者的信号集合（可能包括s_i）
+        s_i: 消费者i自己的信号（必须纳入后验！）
+        participant_signals: 参与者的信号集合X（可能包括s_i）
         params: 场景参数
         
     Returns:
-        后验期望 mu_i
+        后验期望 mu_i = E[w_i | s_i, X]
     """
-    if len(participant_signals) == 0:
-        # 没有参与者数据，只能用先验
-        return params.mu_theta # 返回先验期望
-    
     if params.data_structure == "common_preferences":
-        # w_i = θ for all i
-        # 最优估计是所有信号的加权平均
-        # 精确贝叶斯更新
-        n = len(participant_signals) # 参与者数量
+        # w_i = θ for all i （所有人共享同一个真实偏好θ）
+        # 消费者信息集：I_i = {s_i} ∪ X
+        # 后验：E[θ | s_i, X] = E[θ | s_i, X_{-i}]（X_{-i}是其他参与者信号）
         
-        # 先验精度
-        prior_precision = 1 / (params.sigma_theta ** 2) # 先验精度 = 1 / 先验方差
+        # 构造"其他参与者信号"（避免double count）
+        # 方法：检查s_i是否在participant_signals中
+        # 如果在，说明i是参与者，需要从X中移除s_i得到X_{-i}
+        # 如果不在，说明i是拒绝者，X就是X_{-i}
         
-        # 似然精度（每个信号贡献）
-        signal_precision = 1 / (params.sigma ** 2) # 似然精度 = 1 / 噪声方差
+        # 找到与s_i匹配的信号（容忍浮点误差）
+        is_in_X = np.any(np.abs(participant_signals - s_i) < 1e-9)
+        if is_in_X and len(participant_signals) > 1:
+            # i是参与者，从X中移除s_i
+            other_signals = participant_signals[np.abs(participant_signals - s_i) >= 1e-9]
+        elif is_in_X and len(participant_signals) == 1:
+            # i是唯一参与者，X_{-i}为空
+            other_signals = np.array([])
+        else:
+            # i是拒绝者，X_{-i} = X
+            other_signals = participant_signals
         
-        # 后验精度
-        posterior_precision = prior_precision + n * signal_precision # 后验精度 = 先验精度 + 参与者信号的精度
-        posterior_variance = 1 / posterior_precision # 后验方差 = 1 / 后验精度
+        # 精度（precision = 1/variance）
+        tau_0 = 1 / (params.sigma_theta ** 2)  # 先验精度
+        tau_s = 1 / (params.sigma ** 2)        # 信号精度
         
-        # 后验均值
-        posterior_mean = posterior_variance * (
-            prior_precision * params.mu_theta +
-            signal_precision * np.sum(participant_signals) # 后验期望 = 后验方差 * (先验期望 + 参与者信号的精度 * 参与者信号的和)
-        )
+        # 后验精度 = 先验精度 + s_i精度 + 其他信号精度
+        # 重要：s_i必须纳入！（无论i是否参与）
+        n_others = len(other_signals)
+        posterior_precision = tau_0 + tau_s + n_others * tau_s
         
-        return posterior_mean # 返回后验期望
+        # 后验均值（共轭正态）
+        posterior_mean = (
+            tau_0 * params.mu_theta +      # 先验贡献
+            tau_s * s_i +                   # s_i贡献（关键！）
+            tau_s * np.sum(other_signals)   # 其他参与者贡献
+        ) / posterior_precision
+        
+        return posterior_mean
     
     elif params.data_structure == "common_experience":
-        # s_i = w_i + σ·ε
-        # 需要估计共同噪声ε，然后过滤
+        # s_i = w_i + σ·ε （个体偏好 + 共同噪声）
+        # 消费者信息集：I_i = {s_i} ∪ X
+        # 需要从X估计共同噪声ε，然后用s_i推断w_i
         
-        # 如果没有参与者信号，只能用先验
-        if len(participant_signals) == 0:
-            return params.mu_theta # 返回先验期望
+        # 构造"其他参与者信号"（避免在估计ε时double count s_i）
+        is_in_X = np.any(np.abs(participant_signals - s_i) < 1e-9)
+        if is_in_X and len(participant_signals) > 1:
+            other_signals = participant_signals[np.abs(participant_signals - s_i) >= 1e-9]
+        elif is_in_X and len(participant_signals) == 1:
+            other_signals = np.array([])
+        else:
+            other_signals = participant_signals
+        
+        # 如果没有其他参与者信号，只用s_i和先验
+        if len(other_signals) == 0:
+            # 只有s_i，无法估计ε，用先验收缩
+            tau_0 = 1 / (params.sigma_theta ** 2)
+            tau_s = 1 / (params.sigma ** 2)
+            # s_i = w_i + σε, 但不知道ε，假设E[ε]=0
+            # 后验：E[w_i | s_i] = (tau_0·μ_θ + tau_s·s_i) / (tau_0 + tau_s)
+            return (tau_0 * params.mu_theta + tau_s * s_i) / (tau_0 + tau_s)
         
         # 根据参数选择后验估计方法
         if params.posterior_method == "exact":
             # 精确贝叶斯估计（更复杂但更准确）
             # TODO: 实现完整的高斯共轭先验更新
             # 目前回退到近似方法
-            return _compute_ce_posterior_approx(s_i, participant_signals, params) # 返回近似后验期望
+            return _compute_ce_posterior_approx(s_i, other_signals, params)
         else:
-            # 近似方法（计算效率高）
-            return _compute_ce_posterior_approx(s_i, participant_signals, params) # 返回近似后验期望
+            # 近似方法（计算效率高，用X_{-i}估计ε）
+            return _compute_ce_posterior_approx(s_i, other_signals, params)
     
     else:
         raise ValueError(f"Unknown data structure: {params.data_structure}")
@@ -953,41 +993,125 @@ def compute_producer_posterior(
     N = params.N # 消费者数量
     mu_producer = np.full(N, params.mu_theta)  # 默认使用先验
     
-    if params.anonymization == "identified": # 实名化
+    if params.anonymization == "identified":
         # 实名: 生产者可以看到 (i, sᵢ) 映射
-        # 对参与者: 可以用其信号计算个体后验
-        # 对拒绝者: 只能使用先验（因为没有其信号）
-        for i in range(N):
-            if participation[i]:
-                # 参与者: 用其信号和其他参与者信号计算后验
-                mu_producer[i] = compute_posterior_mean_consumer(
-                    data.s[i], participant_signals, params
-                )
-            # 拒绝者保持先验 mu_theta（已经初始化）
+        # 
+        # ⚠️ 关键修正（P0-2）：拒绝者后验不应固定为先验！
+        # 
+        # 论文核心：社会数据外部性（Social Data Externality）
+        # - 即使消费者i拒绝参与，生产者仍可利用其他参与者的信号X改善对i的预测
+        # - 这是"搭便车"（free-riding）问题的根源：你不贡献数据，但别人的数据仍能帮助预测你
+        # 
+        # 正确处理：
+        # - 参与者：用s_i + X计算个体后验（最精准）
+        # - 拒绝者：用X计算改善的后验（无s_i，但比先验好）
+        
+        if len(participant_signals) == 0:
+            # 无参与者：所有人使用先验（已初始化）
+            pass
+        else:
+            if params.data_structure == "common_preferences":
+                # Common Preferences: w_i = θ for all i
+                # 拒绝者虽无s_i，但生产者可用X更新对θ的估计
+                # E[θ | X] 适用于所有拒绝者
+                tau_0 = 1 / (params.sigma_theta ** 2)
+                tau_s = 1 / (params.sigma ** 2)
+                n_participants = len(participant_signals)
+                
+                # 拒绝者的共同后验（只用X，无个体s_i）
+                posterior_mean_rejecters = (
+                    tau_0 * params.mu_theta +
+                    tau_s * np.sum(participant_signals)
+                ) / (tau_0 + n_participants * tau_s)
+                
+                # 分别处理参与者和拒绝者
+                for i in range(N):
+                    if participation[i]:
+                        # 参与者: 用s_i + X计算个体后验
+                        mu_producer[i] = compute_posterior_mean_consumer(
+                            data.s[i], participant_signals, params
+                        )
+                    else:
+                        # 拒绝者: 用X更新对θ的估计
+                        mu_producer[i] = posterior_mean_rejecters
+            
+            else:  # common_experience
+                # Common Experience: s_i = w_i + σ·ε
+                # 生产者可用X估计共同冲击ε，改善对所有人的预测
+                
+                # 估计共同冲击（使用所有参与者信号）
+                signal_mean = np.mean(participant_signals)
+                n_participants = len(participant_signals)
+                # 简化估计：epsilon_hat ≈ (signal_mean - mu_theta) / sigma
+                # 更准确的版本需要考虑后验收缩
+                epsilon_posterior_var = 1 / (1 + n_participants * params.sigma**2 / params.sigma_theta**2)
+                epsilon_hat = epsilon_posterior_var * (signal_mean - params.mu_theta) / params.sigma
+                
+                # 对所有人的代表性预测（考虑共同冲击）
+                # E[w | X] ≈ μ_θ + σ·E[ε|X]（忽略个体特异性）
+                common_prediction = params.mu_theta + params.sigma * epsilon_hat
+                
+                for i in range(N):
+                    if participation[i]:
+                        # 参与者: 用s_i + X计算精准后验
+                        mu_producer[i] = compute_posterior_mean_consumer(
+                            data.s[i], participant_signals, params
+                        )
+                    else:
+                        # 拒绝者: 用共同预测（基于ε估计）
+                        # 比先验好，但不如参与者的个性化预测
+                        mu_producer[i] = common_prediction
     
     else:  # 匿名化
         # 匿名: 生产者只能看到信号集合 {sᵢ : i ∈ participants}（无身份）
         # 无法识别哪个信号对应哪个消费者，因此无法个性化定价
-        # 所有消费者的后验期望相同（基于聚合统计）
+        # 但可以用聚合统计改善预测！（对所有人统一后验）
+        
         if len(participant_signals) > 0:
-            if params.data_structure == "common_preferences": # 共同偏好假设
+            if params.data_structure == "common_preferences":
                 # Common Preferences: 可以用信号均值更新对θ的估计
                 # E[θ | X] 对所有人相同
-                mean_signal = np.mean(participant_signals) # 参与者信号的平均值
-                n_participants = len(participant_signals) # 参与者数量
+                mean_signal = np.mean(participant_signals)
+                n_participants = len(participant_signals)
                 
-                # 后验期望（简化公式）
-                tau_X = n_participants / params.sigma**2 # 参与者信号的精度
-                tau_0 = 1 / params.sigma_theta**2 # 先验精度
-                mu_common = (tau_0 * params.mu_theta + tau_X * mean_signal) / (tau_0 + tau_X) # 后验期望
-                mu_producer[:] = mu_common # 所有消费者的后验期望相同
+                # 后验期望（共轭正态更新）
+                tau_X = n_participants / params.sigma**2
+                tau_0 = 1 / params.sigma_theta**2
+                mu_common = (tau_0 * params.mu_theta + tau_X * mean_signal) / (tau_0 + tau_X)
+                mu_producer[:] = mu_common
             
-            else:  # 共同经验假设
-                # Common Experience: 生产者知道有共同噪声ε，但无法识别个体
-                # 可以估计 ε，但不知道每个人的 wᵢ
-                # 简化: 使用先验均值（因为无法个性化）
-                mu_producer[:] = params.mu_theta # 所有消费者的后验期望相同
-        # 无参与者时，使用先验（已经初始化）
+            else:  # common_experience
+                # ⚠️ 关键修正（P0-3）：匿名化下仍可学习！
+                # 
+                # Common Experience: s_i = w_i + σ·ε
+                # 虽然无法识别个体，但生产者可以：
+                # 1. 用信号集合的均值估计共同冲击ε
+                # 2. 更新对"代表性个体"的预测
+                # 3. 对所有人使用这个改善的统一预测
+                # 
+                # 这体现了数据的价值，即使在匿名化下！
+                # 否则会人为压低匿名化的福利效应。
+                
+                signal_mean = np.mean(participant_signals)
+                n_participants = len(participant_signals)
+                
+                # 估计共同冲击（贝叶斯更新，带收缩）
+                # E[ε | X] = (1 / (1 + n·σ²/σ_θ²)) · (mean(X) - μ_θ) / σ
+                epsilon_posterior_var = 1 / (1 + n_participants * params.sigma**2 / params.sigma_theta**2)
+                epsilon_hat = epsilon_posterior_var * (signal_mean - params.mu_theta) / params.sigma
+                
+                # 代表性个体的后验均值
+                # E[w | X] ≈ μ_θ + σ·E[ε|X]
+                # 这比先验μ_θ更准确（利用了数据中的共同信息）
+                mu_common = params.mu_theta + params.sigma * epsilon_hat
+                
+                # 进一步收缩到先验（避免小样本过拟合）
+                # 加权：先验 vs 数据驱动的预测
+                data_weight = n_participants / (n_participants + 1.0)
+                mu_common_shrunk = (1 - data_weight) * params.mu_theta + data_weight * mu_common
+                
+                mu_producer[:] = mu_common_shrunk
+        # 无参与者时，使用先验（已初始化）
     
     return mu_producer # 返回所有消费者的后验期望
 
@@ -995,7 +1119,10 @@ def compute_producer_posterior(
 def simulate_market_outcome(
     data: ConsumerData,
     participation: np.ndarray,
-    params: ScenarioCParams
+    params: ScenarioCParams,
+    producer_info_mode: str = "with_data",
+    m0: float = 0.0,
+    rng: Optional[np.random.Generator] = None
 ) -> MarketOutcome:
     """
     模拟给定参与决策下的完整市场均衡
@@ -1048,6 +1175,11 @@ def simulate_market_outcome(
         
         params: ScenarioCParams - 所有模型参数
         
+        producer_info_mode: str - 生产者信息模式（用于m_0计算）
+                           "with_data" (默认): 生产者按政策获得中介数据Y_0
+                           "no_data": 生产者无任何中介信息，Y_0=∅（计算基准）
+                           用途：计算数据信息价值 m_0 = E[π_with] - E[π_no]
+        
     Returns:
         MarketOutcome - 完整的市场结果和福利指标
     
@@ -1055,6 +1187,9 @@ def simulate_market_outcome(
     实现细节（逐步拆解）
     ========================================================================
     """
+    if rng is None:
+        rng = np.random.default_rng(params.seed)
+    
     N = params.N
     
     # ------------------------------------------------------------------------
@@ -1071,7 +1206,7 @@ def simulate_market_outcome(
     # 匿名（Anonymized）：打乱映射，变成无序集合{s_i}
     if params.anonymization == "anonymized" and len(participant_signals) > 0:
         participant_signals = participant_signals.copy()
-        np.random.shuffle(participant_signals)  # 打乱顺序，破坏身份映射
+        rng.shuffle(participant_signals)  # 打乱顺序，破坏身份映射
         # 注意：这里的shuffle是概念性的，实际效果是生产者无法知道
         # 哪个信号对应哪个消费者
     
@@ -1102,26 +1237,42 @@ def simulate_market_outcome(
     # 对应论文Section 4 - Anonymization的经济效果
     # ------------------------------------------------------------------------
     
-    # 生产者的信息集Y_0取决于匿名化政策：
+    # 生产者的信息集Y_0取决于两个因素：
+    # (1) 是否有数据（producer_info_mode）
+    # (2) 匿名化政策（anonymization）
     #
-    # 实名（Identified）：
-    # - Y_0 = {(i, s_i) : i ∈ participants}
-    # - 对参与者i：知道s_i，可计算E[w_i | s_i, X]（与消费者i相同）
-    # - 对拒绝者j：不知道s_j，只能用先验μ_θ
-    # - 结果：μ_producer异质，可以个性化定价
+    # producer_info_mode == "no_data"（无数据基准）：
+    # - Y_0 = ∅（无任何中介信息）
+    # - 对所有人：μ_producer[i] = μ_θ（先验）
+    # - 结果：必须统一定价，无法识别个体
+    # - 用途：计算数据的信息价值 m_0 = E[π_with] - E[π_no]
     #
-    # 匿名（Anonymized）：
-    # - Y_0 = {s_i : i ∈ participants}（无身份）
-    # - 无法识别哪个信号对应哪个消费者
-    # - 对所有人：μ_producer[i] = E[θ | X]（相同）
-    # - 结果：μ_producer同质，必须统一定价
+    # producer_info_mode == "with_data"（默认）：
+    #   实名（Identified）：
+    #   - Y_0 = {(i, s_i) : i ∈ participants}
+    #   - 对参与者i：知道s_i，可计算E[w_i | s_i, X]（与消费者i相同）
+    #   - 对拒绝者j：不知道s_j，只能用先验μ_θ
+    #   - 结果：μ_producer异质，可以个性化定价
+    #
+    #   匿名（Anonymized）：
+    #   - Y_0 = {s_i : i ∈ participants}（无身份）
+    #   - 无法识别哪个信号对应哪个消费者
+    #   - 对所有人：μ_producer[i] = E[θ | X]（相同）
+    #   - 结果：μ_producer同质，必须统一定价
     #
     # 这正是论文Proposition 2的核心：
     # "匿名化通过阻止生产者识别个体，防止价格歧视"
     
-    mu_producer = compute_producer_posterior(
-        data, participation, participant_signals, params
-    )
+    if producer_info_mode == "no_data":
+        # 无数据基准：生产者只有先验信息
+        mu_producer = np.full(N, params.mu_theta)
+    elif producer_info_mode == "with_data":
+        # 默认：生产者按政策获得中介数据
+        mu_producer = compute_producer_posterior(
+            data, participation, participant_signals, params
+        )
+    else:
+        raise ValueError(f"Unknown producer_info_mode: {producer_info_mode}")
     
     # ------------------------------------------------------------------------
     # 步骤4：生产者定价（最优定价策略）
@@ -1129,11 +1280,20 @@ def simulate_market_outcome(
     # ------------------------------------------------------------------------
     
     # 生产者目标：max Π = Σ_i (p_i - c) · q_i
-    # 约束条件：取决于匿名化政策
+    # 约束条件：取决于（1）匿名化政策 （2）是否有数据
     
     prices = np.zeros(N)
     
-    if params.anonymization == "identified":
+    # 无数据基准：强制统一定价（因为所有人信息相同）
+    if producer_info_mode == "no_data":
+        # 即使params.anonymization="identified"，无数据下也必须统一定价
+        # 因为所有人的μ_producer都是先验μ_θ
+        p_uniform, _ = compute_optimal_price_uniform(
+            mu_producer.tolist(), params.c
+        )
+        prices[:] = p_uniform
+    
+    elif params.anonymization == "identified":
         # ----------------------------------------------------------------
         # 实名制：个性化定价（Third-degree price discrimination）
         # ----------------------------------------------------------------
@@ -1243,11 +1403,11 @@ def simulate_market_outcome(
     # - m是每个参与者的统一补偿
     #
     # 净利润：IS = 收入 - 支出
-    # 如果m_0 = 0（默认），则IS < 0（中介纯支出）
-    # 这在论文中是隐含的简化假设
+    # m0作为显式参数传入（默认0.0）
+    # 理论求解器会传入estimate_m0_mc计算的内生m_0
     
     num_participants = int(np.sum(participation))
-    intermediary_profit = params.m_0 - params.m * num_participants
+    intermediary_profit = m0 - params.m * num_participants
     
     # 7.4 社会福利（Social Welfare）
     # SW = CS + PS + IS
@@ -1540,10 +1700,11 @@ def compute_rational_participation_rate_ex_ante(
         num_market_samples: 市场采样数
         
     Returns:
-        (收敛的参与率, 参与率历史)
+        (收敛的参与率, 参与率历史, ΔU)
     """
     r = 0.5  # 初始参与率
     r_history = [r]
+    delta_u = 0.0  # 保存最后的ΔU
     
     for iteration in range(max_iter):
         # 计算代表性消费者的期望效用差（Ex Ante）
@@ -1589,13 +1750,20 @@ def compute_rational_participation_rate_ex_ante(
         # 检查收敛
         if abs(r_new - r) < tol:
             print(f"  Ex Ante固定点收敛于迭代 {iteration + 1}, r* = {r_new:.4f}, ΔU = {delta_u:.4f}")
-            return r_new, r_history
+            return r_new, r_history, delta_u
         
         # 平滑更新
         r = 0.6 * r_new + 0.4 * r
     
-    print(f"  警告: Ex Ante固定点未在{max_iter}次迭代内收敛, 当前 r = {r:.4f}")
-    return r, r_history
+    # ⚠️ P1-2修正：Ground Truth必须收敛，否则不可用
+    # 未收敛说明算法参数不足（max_iter太小或tol太严格）或模型不稳定
+    # Ground Truth生成器不应返回未收敛的结果
+    raise RuntimeError(
+        f"Ex Ante固定点未在{max_iter}次迭代内收敛！\n"
+        f"当前 r = {r:.4f}, 最后ΔU = {delta_u:.4f}\n"
+        f"建议：增加max_iter或放宽tol\n"
+        f"历史：{[f'{x:.3f}' for x in r_history[-10:]]}"
+    )
 
 
 def compute_rational_participation_rate_ex_post(
@@ -1665,8 +1833,13 @@ def compute_rational_participation_rate_ex_post(
         # 平滑更新（避免震荡）
         r = 0.6 * r_new + 0.4 * r
     
-    print(f"  警告: Ex Post固定点未在{max_iter}次迭代内收敛, 当前 r = {r:.4f}")
-    return r, r_history
+    # ⚠️ P1-2修正：Ground Truth必须收敛，否则不可用
+    raise RuntimeError(
+        f"Ex Post固定点未在{max_iter}次迭代内收敛！\n"
+        f"当前 r = {r:.4f}\n"
+        f"建议：增加max_iter或放宽tol\n"
+        f"历史：{[f'{x:.3f}' for x in r_history[-10:]]}"
+    )
 
 
 def compute_rational_participation_rate(
@@ -1724,28 +1897,92 @@ def compute_rational_participation_rate(
         raise ValueError(f"Unsupported participation_timing: {params.participation_timing}")
 
 
-def generate_ground_truth(
+def generate_participation_from_tau(
+    delta_u: float,
+    params: ScenarioCParams,
+    seed: int = None
+) -> np.ndarray:
+    """
+    基于隐私成本τ_i生成participation决策（P2-2修正）
+    
+    经济学microfoundation：
+    - 每个消费者i有隐私成本τ_i ~ F_τ
+    - 消费者i参与当且仅当ΔU ≥ τ_i
+    - 这比独立Bernoulli(r*)更符合理论结构
+    
+    Args:
+        delta_u: 参与vs拒绝的期望效用差（对所有人相同，ex ante）
+        params: 场景参数
+        seed: 随机种子
+        
+    Returns:
+        (N,) bool数组，True表示参与
+    """
+    if seed is not None:
+        np.random.seed(seed)
+    
+    N = params.N
+    
+    if params.tau_dist == "none":
+        # 无异质性：所有人决策相同
+        # 所有人参与 if ΔU > 0 else 拒绝
+        participation = np.full(N, delta_u > 0, dtype=bool)
+    
+    elif params.tau_dist == "normal":
+        # τ_i ~ N(μ_τ, σ_τ²)
+        tau_i = np.random.normal(params.tau_mean, params.tau_std, size=N)
+        # 参与 if τ_i ≤ ΔU
+        participation = tau_i <= delta_u
+    
+    elif params.tau_dist == "uniform":
+        # τ_i ~ Uniform[μ_τ - √3·σ_τ, μ_τ + √3·σ_τ]
+        a = params.tau_mean - np.sqrt(3) * params.tau_std
+        b = params.tau_mean + np.sqrt(3) * params.tau_std
+        tau_i = np.random.uniform(a, b, size=N)
+        # 参与 if τ_i ≤ ΔU
+        participation = tau_i <= delta_u
+    
+    else:
+        raise ValueError(f"Unsupported tau_dist: {params.tau_dist}")
+    
+    return participation
+
+
+def generate_conditional_equilibrium(
     params: ScenarioCParams,
     max_iter: int = 100,
     tol: float = 1e-3,
-    num_mc_samples: int = 50
+    num_mc_samples: int = 50,
+    num_outcome_samples: int = 20
 ) -> Dict:
     """
-    生成场景C的Ground Truth
+    条件均衡：给定中介策略 (m, anonymization) 下的市场均衡
     
-    包括：
-    1. 理性参与率（固定点）
-    2. 对应的市场结果
-    3. 关键指标
+    ⚠️ 注意：这不是完整的Ground Truth！
+    完整的GT需要求解最优策略，见 generate_ground_truth()
+    
+    用途：
+    - 调试特定策略
+    - 反事实分析（"如果中介选择m=2会怎样？"）
+    - 研究策略空间的局部行为
+    
+    输出包含两层指标：
+    1. 理论指标：
+       - r*（固定点收敛值）
+       - E[outcome | r*]（期望市场结果，MC平均）
+    2. 示例指标：
+       - 一次参与抽样realization
+       - 对应的市场结果
     
     Args:
-        params: 场景参数
+        params: 场景参数（包含给定的 m 和 anonymization）
         max_iter: 固定点迭代最大次数
         tol: 收敛容差
-        num_mc_samples: 蒙特卡洛样本数
+        num_mc_samples: 蒙特卡洛样本数（固定点计算）
+        num_outcome_samples: outcome期望化的MC样本数
         
     Returns:
-        Ground Truth字典
+        条件均衡字典（给定策略下的均衡）
     """
     print(f"\n{'='*60}")
     print(f"生成场景C Ground Truth")
@@ -1760,100 +1997,1298 @@ def generate_ground_truth(
     # 计算理性参与率（根据时序模式）
     print(f"\n计算理性参与率（{params.participation_timing}模式）...")
     
+    delta_u = None  # 保存ΔU（用于基于τ_i的participation生成）
+    
     if params.participation_timing == "ex_post":
         # Ex Post需要先生成数据
         print(f"生成消费者数据...")
-        data = generate_consumer_data(params)
-        rational_rate, r_history = compute_rational_participation_rate(
-            params, data, max_iter, tol, num_mc_samples
-        )
-    else:
-        # Ex Ante不需要先生成数据
-        rational_rate, r_history = compute_rational_participation_rate(
+        # Ex Post暂不返回delta_u（TODO: 可以返回平均delta_u）
+        result = compute_rational_participation_rate(
             params, None, max_iter, tol, num_mc_samples
         )
-        # 为了输出，生成一个示例数据
-        print(f"\n生成示例消费者数据（用于输出）...")
-        data = generate_consumer_data(params)
+        rational_rate, r_history = result if len(result) == 2 else result[:2]
+    else:
+        # Ex Ante不需要先生成数据
+        rational_rate, r_history, delta_u = compute_rational_participation_rate_ex_ante(
+            params, max_iter, tol, num_mc_samples, num_mc_samples
+        )
     
-    # 使用理性参与率生成参与决策（采样）
-    np.random.seed(params.seed + 1000)  # 不同的种子
-    rational_participation = np.random.rand(params.N) < rational_rate
+    # ========================================================================
+    # 新增：计算内生m_0（生产者对数据的支付意愿）
+    # ========================================================================
+    print(f"\n计算内生m_0（生产者支付意愿，MC-200次）...")
     
-    # 计算市场结果
-    print(f"\n计算市场结果...")
-    outcome = simulate_market_outcome(data, rational_participation, params)
+    # 定义参与规则（与GT的参与生成一致）
+    def participation_rule(p: ScenarioCParams, world: ConsumerData, rng: np.random.Generator) -> np.ndarray:
+        """生成参与决策（与GT一致的规则）"""
+        if delta_u is None:
+            # Ex Post: 使用Bernoulli(r*)
+            return rng.random(p.N) < rational_rate
+        
+        # Ex Ante: 使用τ阈值规则
+        if p.tau_dist == "none":
+            return np.full(p.N, delta_u > 0, dtype=bool)
+        elif p.tau_dist == "normal":
+            tau = rng.normal(p.tau_mean, p.tau_std, p.N)
+            return tau <= delta_u
+        elif p.tau_dist == "uniform":
+            low = p.tau_mean - np.sqrt(3) * p.tau_std
+            high = p.tau_mean + np.sqrt(3) * p.tau_std
+            tau = rng.uniform(low, high, p.N)
+            return tau <= delta_u
+        else:
+            raise ValueError(f"Unknown tau_dist: {p.tau_dist}")
     
+    # 调用estimate_m0_mc计算内生m_0
+    m_0_estimated, delta_profit_mean, delta_profit_std, e_num_participants = estimate_m0_mc(
+        params=params,
+        participation_rule=participation_rule,
+        T=200,  # MC样本数
+        beta=1.0,  # 中介完全议价能力
+        seed=params.seed + 777
+    )
+    
+    print(f"  m_0 = {m_0_estimated:.4f} (期望利润增量: {delta_profit_mean:.4f} ± {delta_profit_std:.4f})")
+    print(f"  期望参与人数: {e_num_participants:.2f}")
+    
+    # 计算理论口径的中介期望利润
+    expected_intermediary_cost = params.m * e_num_participants
+    expected_intermediary_profit = m_0_estimated - expected_intermediary_cost
+    
+    print(f"  期望中介利润: {expected_intermediary_profit:.4f}")
+    
+    # ========================================================================
+    # 第一部分：计算期望outcome（理论严格，不受抽样波动影响）
+    # ========================================================================
+    print(f"\n计算期望market outcome（MC平均，{num_outcome_samples}次采样）...")
+    
+    expected_metrics = {
+        'consumer_surplus': 0.0,
+        'producer_profit': 0.0,
+        'intermediary_profit': 0.0,
+        'social_welfare': 0.0,
+        'gini_coefficient': 0.0,
+        'price_discrimination_index': 0.0,
+        'participation_rate_realized': 0.0,  # 实际参与率的期望
+    }
+    
+    for sample_idx in range(num_outcome_samples):
+        # 每次重新生成数据和参与决策
+        sample_seed = params.seed + 1000 + sample_idx
+        sample_rng = np.random.default_rng(sample_seed)
+        sample_data = generate_consumer_data(params, rng=sample_rng)
+        
+        # 使用统一的participation_rule生成参与
+        sample_participation = participation_rule(params, sample_data, sample_rng)
+        
+        # ⭐ 计算市场结果（注入内生m_0）
+        sample_outcome = simulate_market_outcome(
+            sample_data, sample_participation, params,
+            producer_info_mode="with_data",
+            m0=m_0_estimated,
+            rng=sample_rng
+        )
+        
+        # 累加
+        expected_metrics['consumer_surplus'] += sample_outcome.consumer_surplus
+        expected_metrics['producer_profit'] += sample_outcome.producer_profit
+        expected_metrics['intermediary_profit'] += sample_outcome.intermediary_profit
+        expected_metrics['social_welfare'] += sample_outcome.social_welfare
+        expected_metrics['gini_coefficient'] += sample_outcome.gini_coefficient
+        expected_metrics['price_discrimination_index'] += sample_outcome.price_discrimination_index
+        expected_metrics['participation_rate_realized'] += sample_outcome.participation_rate
+    
+    # 平均
+    for key in expected_metrics:
+        expected_metrics[key] /= num_outcome_samples
+    
+    # ========================================================================
+    # 第二部分：生成一次示例outcome（用于LLM评估）
+    # ========================================================================
+    print(f"\n生成示例market outcome（单次抽样，用于LLM评估）...")
+    
+    # 使用统一的participation_rule生成参与
+    sample_rng = np.random.default_rng(params.seed + 10000)
+    sample_data_llm = generate_consumer_data(params, rng=sample_rng)
+    sample_participation = participation_rule(params, sample_data_llm, sample_rng)
+    
+    # ⭐ 计算市场结果（注入内生m_0）
+    sample_outcome = simulate_market_outcome(
+        sample_data_llm, sample_participation, params,
+        producer_info_mode="with_data",
+        m0=m_0_estimated,
+        rng=sample_rng
+    )
+    
+    # ========================================================================
+    # 打印结果（显示两套指标）
+    # ========================================================================
     print(f"\n{'='*60}")
     print(f"Ground Truth 结果:")
     print(f"{'='*60}")
-    print(f"参与率: {outcome.participation_rate:.2%} ({outcome.num_participants}/{params.N})")
-    print(f"消费者剩余: {outcome.consumer_surplus:.4f}")
-    print(f"生产者利润: {outcome.producer_profit:.4f}")
-    print(f"中介利润: {outcome.intermediary_profit:.4f}")
-    print(f"社会福利: {outcome.social_welfare:.4f}")
-    print(f"Gini系数: {outcome.gini_coefficient:.4f}")
-    print(f"价格歧视指数: {outcome.price_discrimination_index:.4f}")
+    print(f"\n【理论指标】（r* = {rational_rate:.4f}）")
+    print(f"  内生m_0（生产者支付）: {m_0_estimated:.4f}")
+    print(f"  期望参与人数: {e_num_participants:.2f}")
+    print(f"  期望中介利润: {expected_intermediary_profit:.4f}")
+    print(f"  期望参与率（实际）: {expected_metrics['participation_rate_realized']:.4f}")
+    print(f"  期望消费者剩余: {expected_metrics['consumer_surplus']:.4f}")
+    print(f"  期望生产者利润: {expected_metrics['producer_profit']:.4f}")
+    print(f"  期望社会福利: {expected_metrics['social_welfare']:.4f}")
+    print(f"\n【示例指标】（单次抽样）")
+    print(f"  参与率: {sample_outcome.participation_rate:.2%} ({sample_outcome.num_participants}/{params.N})")
+    print(f"  消费者剩余: {sample_outcome.consumer_surplus:.4f}")
+    print(f"  生产者利润: {sample_outcome.producer_profit:.4f}")
+    print(f"  社会福利: {sample_outcome.social_welfare:.4f}")
     
-    # 构建返回结果
+    # 构建返回结果（P1-1：区分理论和示例）
     result = {
         "params": params.to_dict(),
-        "data": {
-            "w": data.w.tolist(),
-            "s": data.s.tolist(),
-            "theta": float(data.theta) if data.theta is not None else None,
-            "epsilon": float(data.epsilon) if data.epsilon is not None else None,
-        },
-        "rational_participation_rate": float(rational_rate),
-        "rational_participation": rational_participation.tolist(),
+        
+        # 理论指标（严格的Ground Truth）
+        "rational_participation_rate": float(rational_rate),  # r*（固定点）
         "r_history": [float(x) for x in r_history],
-        "outcome": {
-            "participation_rate": float(outcome.participation_rate),
-            "num_participants": int(outcome.num_participants),
-            "consumer_surplus": float(outcome.consumer_surplus),
-            "producer_profit": float(outcome.producer_profit),
-            "intermediary_profit": float(outcome.intermediary_profit),
-            "social_welfare": float(outcome.social_welfare),
-            "gini_coefficient": float(outcome.gini_coefficient),
-            "price_variance": float(outcome.price_variance),
-            "price_discrimination_index": float(outcome.price_discrimination_index),
-            "acceptor_avg_utility": float(outcome.acceptor_avg_utility),
-            "rejecter_avg_utility": float(outcome.rejecter_avg_utility),
-            "learning_quality_participants": float(outcome.learning_quality_participants),
-            "learning_quality_rejecters": float(outcome.learning_quality_rejecters),
+        
+        # ⭐ 内生m_0估计（新增）
+        "m0_estimation": {
+            "m_0": float(m_0_estimated),
+            "delta_profit_mean": float(delta_profit_mean),
+            "delta_profit_std": float(delta_profit_std),
+            "expected_num_participants": float(e_num_participants),
+            "expected_intermediary_cost": float(expected_intermediary_cost),
+            "expected_intermediary_profit": float(expected_intermediary_profit),
+            "method": "estimate_m0_mc (Ex-Ante期望)",
+            "mc_samples": 200,
+            "beta": 1.0
         },
-        "detailed_results": {
-            "prices": outcome.prices.tolist(),
-            "quantities": outcome.quantities.tolist(),
-            "utilities": outcome.utilities.tolist(),
-            "mu_consumers": outcome.mu_consumers.tolist(),
-        }
+        
+        # 期望outcome（MC平均，理论基准）
+        "expected_outcome": {
+            "participation_rate_realized": float(expected_metrics['participation_rate_realized']),
+            "consumer_surplus": float(expected_metrics['consumer_surplus']),
+            "producer_profit": float(expected_metrics['producer_profit']),
+            "intermediary_profit": float(expected_metrics['intermediary_profit']),
+            "social_welfare": float(expected_metrics['social_welfare']),
+            "gini_coefficient": float(expected_metrics['gini_coefficient']),
+            "price_discrimination_index": float(expected_metrics['price_discrimination_index']),
+        },
+        
+        # 示例数据和outcome（用于LLM评估）
+        "sample_data": {
+            "w": sample_data_llm.w.tolist(),
+            "s": sample_data_llm.s.tolist(),
+            "theta": float(sample_data_llm.theta) if sample_data_llm.theta is not None else None,
+            "epsilon": float(sample_data_llm.epsilon) if sample_data_llm.epsilon is not None else None,
+        },
+        "sample_participation": sample_participation.tolist(),
+        "sample_outcome": {
+            "participation_rate": float(sample_outcome.participation_rate),
+            "num_participants": int(sample_outcome.num_participants),
+            "consumer_surplus": float(sample_outcome.consumer_surplus),
+            "producer_profit": float(sample_outcome.producer_profit),
+            "intermediary_profit": float(sample_outcome.intermediary_profit),
+            "social_welfare": float(sample_outcome.social_welfare),
+            "gini_coefficient": float(sample_outcome.gini_coefficient),
+            "price_variance": float(sample_outcome.price_variance),
+            "price_discrimination_index": float(sample_outcome.price_discrimination_index),
+            "acceptor_avg_utility": float(sample_outcome.acceptor_avg_utility),
+            "rejecter_avg_utility": float(sample_outcome.rejecter_avg_utility),
+            "learning_quality_participants": float(sample_outcome.learning_quality_participants),
+            "learning_quality_rejecters": float(sample_outcome.learning_quality_rejecters),
+        },
+        "sample_detailed_results": {
+            "prices": sample_outcome.prices.tolist(),
+            "quantities": sample_outcome.quantities.tolist(),
+            "utilities": sample_outcome.utilities.tolist(),
+            "mu_consumers": sample_outcome.mu_consumers.tolist(),
+        },
+        
+        # 向后兼容（指向expected_outcome）
+        "outcome": {
+            "participation_rate": float(expected_metrics['participation_rate_realized']),
+            "num_participants": int(expected_metrics['participation_rate_realized'] * params.N),
+            "consumer_surplus": float(expected_metrics['consumer_surplus']),
+            "producer_profit": float(expected_metrics['producer_profit']),
+            "intermediary_profit": float(expected_metrics['intermediary_profit']),
+            "social_welfare": float(expected_metrics['social_welfare']),
+            "gini_coefficient": float(expected_metrics['gini_coefficient']),
+            "price_variance": 0.0,  # expected不易计算
+            "price_discrimination_index": float(expected_metrics['price_discrimination_index']),
+            "acceptor_avg_utility": 0.0,  # expected不易计算
+            "rejecter_avg_utility": 0.0,  # expected不易计算
+            "learning_quality_participants": 0.0,  # expected不易计算
+            "learning_quality_rejecters": 0.0,  # expected不易计算
+        },
+        "data": {  # 向后兼容（与sample_data相同）
+            "w": sample_data_llm.w.tolist(),
+            "s": sample_data_llm.s.tolist(),
+            "theta": float(sample_data_llm.theta) if sample_data_llm.theta is not None else None,
+            "epsilon": float(sample_data_llm.epsilon) if sample_data_llm.epsilon is not None else None,
+        },
+        "rational_participation": sample_participation.tolist(),  # 向后兼容
     }
     
     return result
 
 
-# 示例使用
-if __name__ == "__main__":
-    # 创建场景参数（MVP配置）
-    params = ScenarioCParams(
-        N=20,
-        data_structure="common_preferences",
-        anonymization="identified",
-        mu_theta=5.0,
-        sigma_theta=1.0,
-        sigma=1.0,
-        m=1.0,
-        c=0.0,
-        seed=42
+def generate_ground_truth(
+    params_base: Dict,
+    m_grid: Optional[np.ndarray] = None,
+    policies: Optional[List[str]] = None,
+    num_mc_samples: int = 50,
+    max_iter: int = 100,
+    tol: float = 1e-3,
+    num_outcome_samples: int = 20,
+    verbose: bool = True
+) -> Dict:
+    """
+    Ground Truth：完整博弈的均衡解（论文理论解）
+    
+    这是论文《The Economics of Social Data》的完整博弈均衡：
+    
+    博弈序列（Stackelberg博弈）：
+    ┌─────────────────────────────────────────────────┐
+    │ 第0阶段：中介优化（Stackelberg Leader）⭐       │
+    │   max_{m, anonymization} R                      │
+    │   = m_0(m, anonymization) - m·E[N(m, a)]       │
+    └──────────────┬──────────────────────────────────┘
+                   ↓
+    ┌─────────────────────────────────────────────────┐
+    │ 第1阶段：中介发布合约                            │
+    │   offer = (m*, anonymization*)                  │
+    └──────────────┬──────────────────────────────────┘
+                   ↓
+    ┌─────────────────────────────────────────────────┐
+    │ 第2阶段：消费者反应                              │
+    │   r*(m*, anonymization*)                        │
+    └──────────────┬──────────────────────────────────┘
+                   ↓
+    ┌─────────────────────────────────────────────────┐
+    │ 第3阶段：数据交易                                │
+    │   m_0* = E[π_producer(Y_0*) - π_producer(∅)]   │
+    └──────────────┬──────────────────────────────────┘
+                   ↓
+    ┌─────────────────────────────────────────────────┐
+    │ 第4阶段：产品市场                                │
+    │   生产者定价，消费者购买                         │
+    └─────────────────────────────────────────────────┘
+    
+    这才是真正的Ground Truth！
+    
+    Args:
+        params_base: 基础参数字典（N, 数据结构, tau分布等）
+                    ⚠️ 不应包含 m 和 anonymization
+        m_grid: 中介补偿的候选值网格（默认：0到3，31个点）
+        policies: 匿名化策略候选（默认：['identified', 'anonymized']）
+        num_mc_samples: Monte Carlo样本数（用于Ex Ante计算）
+        max_iter: 固定点迭代最大次数
+        tol: 收敛容差
+        num_outcome_samples: outcome期望化的MC样本数
+        verbose: 是否打印详细信息
+    
+    Returns:
+        完整的Ground Truth字典：
+        {
+            "optimal_strategy": {  # 最优策略（博弈的均衡）
+                "m_star": float,
+                "anonymization_star": str,
+                "intermediary_profit_star": float,
+                "r_star": float,
+                ...
+            },
+            "equilibrium": {  # 最优策略下的市场结果
+                "consumer_surplus": float,
+                "producer_profit": float,
+                "intermediary_profit": float,
+                "social_welfare": float,
+                ...
+            },
+            "data_transaction": {  # 数据交易信息
+                "m_0": float,
+                "producer_profit_gain": float,
+                ...
+            },
+            "all_candidates": [...],  # 所有候选策略的结果
+            "sample_data": {...},  # 示例数据（用于LLM评估）
+        }
+    """
+    print(f"\n{'='*70}")
+    print(f"生成Ground Truth - 完整博弈均衡（论文理论解）")
+    print(f"{'='*70}")
+    
+    # 验证params_base不包含m和anonymization
+    if 'm' in params_base:
+        raise ValueError("params_base不应包含'm'！m由中介优化求解。")
+    if 'anonymization' in params_base:
+        raise ValueError("params_base不应包含'anonymization'！anonymization由中介优化求解。")
+    
+    # ⭐ 第1步：中介优化（博弈的起点，Stackelberg Leader）
+    print(f"\n第1步：求解中介最优策略（Stackelberg Leader）...")
+    optimal_policy = optimize_intermediary_policy(
+        params_base=params_base,
+        m_grid=m_grid if m_grid is not None else np.linspace(0, 3, 31),
+        policies=policies if policies is not None else ['identified', 'anonymized'],
+        num_mc_samples=num_mc_samples,
+        max_iter=max_iter,
+        tol=tol,
+        seed=params_base.get('seed'),  # ⭐ 传递seed确保可重复性
+        verbose=verbose
     )
     
-    # 生成Ground Truth
-    gt = generate_ground_truth(params, max_iter=20, num_mc_samples=30)
+    # 第2步：提取最优策略
+    m_star = optimal_policy.optimal_m
+    anonymization_star = optimal_policy.optimal_anonymization
+    optimal_result = optimal_policy.optimal_result
+    
+    print(f"\n{'='*70}")
+    print(f"最优策略（博弈均衡）:")
+    print(f"{'='*70}")
+    print(f"  m* = {m_star:.4f}")
+    print(f"  anonymization* = {anonymization_star}")
+    print(f"  r* = {optimal_result.r_star:.4f}")
+    print(f"  m_0* = {optimal_result.m_0:.4f}")
+    print(f"  中介利润* = {optimal_result.intermediary_profit:.4f}")
+    print(f"  社会福利* = {optimal_result.social_welfare:.4f}")
+    
+    # 第3步：生成最优策略下的示例数据（用于LLM评估）
+    print(f"\n第2步：生成示例数据（用于LLM评估）...")
+    params_optimal = ScenarioCParams(
+        m=m_star,
+        anonymization=anonymization_star,
+        **params_base
+    )
+    
+    # 生成示例world和participation
+    rng_sample = np.random.default_rng(params_optimal.seed + 9999)
+    sample_data = generate_consumer_data(params_optimal, rng=rng_sample)
+    
+    # 使用与optimal_result一致的participation_rule
+    delta_u = optimal_result.delta_u
+    if params_optimal.tau_dist == "normal":
+        tau_samples = rng_sample.normal(params_optimal.tau_mean, params_optimal.tau_std, params_optimal.N)
+        sample_participation = tau_samples <= delta_u
+    elif params_optimal.tau_dist == "uniform":
+        low = params_optimal.tau_mean - np.sqrt(3) * params_optimal.tau_std
+        high = params_optimal.tau_mean + np.sqrt(3) * params_optimal.tau_std
+        tau_samples = rng_sample.uniform(low, high, params_optimal.N)
+        sample_participation = tau_samples <= delta_u
+    else:
+        # 回退到Bernoulli
+        sample_participation = rng_sample.random(params_optimal.N) < optimal_result.r_star
+    
+    # 第4步：构建完整输出
+    result = {
+        # ⭐ 最优策略（博弈的均衡）
+        "optimal_strategy": {
+            "m_star": float(m_star),
+            "anonymization_star": anonymization_star,
+            "intermediary_profit_star": float(optimal_result.intermediary_profit),
+            "r_star": float(optimal_result.r_star),
+            "delta_u_star": float(optimal_result.delta_u) if optimal_result.delta_u is not None else None,
+            "m_0_star": float(optimal_result.m_0)
+        },
+        
+        # 最优策略下的市场均衡结果
+        "equilibrium": {
+            "consumer_surplus": float(optimal_result.consumer_surplus),
+            "producer_profit": float(optimal_result.producer_profit_with_data),  # 有数据的生产者利润
+            "intermediary_profit": float(optimal_result.intermediary_profit),
+            "social_welfare": float(optimal_result.social_welfare),
+            "gini_coefficient": float(optimal_result.gini_coefficient),
+            "price_discrimination_index": float(optimal_result.price_discrimination_index)
+        },
+        
+        # 数据交易信息
+        "data_transaction": {
+            "m_0": float(optimal_result.m_0),
+            "producer_profit_with_data": float(optimal_result.producer_profit_with_data),
+            "producer_profit_no_data": float(optimal_result.producer_profit_no_data),
+            "producer_profit_gain": float(optimal_result.producer_profit_gain),
+            "expected_num_participants": float(optimal_result.num_participants),
+            "intermediary_cost": float(optimal_result.intermediary_cost)
+        },
+        
+        # 所有候选策略（用于分析）
+        "all_candidates": [
+            {
+                "m": float(r.m),
+                "anonymization": r.anonymization,
+                "intermediary_profit": float(r.intermediary_profit),
+                "r_star": float(r.r_star),
+                "m_0": float(r.m_0),
+                "social_welfare": float(r.social_welfare),
+                "consumer_surplus": float(r.consumer_surplus),
+                "producer_profit": float(r.producer_profit_with_data)
+            }
+            for r in optimal_policy.all_results
+        ],
+        
+        # 示例数据（用于LLM评估）
+        "sample_data": {
+            "w": sample_data.w.tolist(),
+            "s": sample_data.s.tolist(),
+            "theta": float(sample_data.theta) if sample_data.theta is not None else None,
+            "epsilon": float(sample_data.epsilon) if sample_data.epsilon is not None else None
+        },
+        "sample_participation": sample_participation.tolist(),
+        
+        # 基础参数
+        "params_base": params_base,
+        
+        # 元数据
+        "metadata": {
+            "generation_method": "optimize_intermediary_policy",
+            "is_optimal_strategy": True,
+            "optimization_grid": {
+                "m_min": float(m_grid[0] if m_grid is not None else 0.0),
+                "m_max": float(m_grid[-1] if m_grid is not None else 3.0),
+                "m_steps": int(len(m_grid) if m_grid is not None else 31),
+                "policies": policies if policies is not None else ['identified', 'anonymized']
+            }
+        }
+    }
+    
+    print(f"\n{'='*70}")
+    print(f"Ground Truth 生成完成！")
+    print(f"{'='*70}")
+    
+    return result
+
+
+# ============================================================================
+# 中介最优化（Intermediary Optimization）
+# ============================================================================
+# 
+# 本节实现论文完整的三层博弈框架的外层：中介最优化
+# 
+# 对应论文：
+# - Section 5.2-5.3: 中介的最优信息设计
+# - Proposition 2: 何时选择匿名化
+# - Theorem 1: 最优补偿水平的刻画
+# ============================================================================
+
+@dataclass
+class IntermediaryOptimizationResult:
+    """
+    中介优化结果
+    
+    记录给定策略组合(m, anonymization)下的完整市场均衡
+    """
+    # 策略参数
+    m: float                      # 向消费者支付的数据补偿
+    anonymization: str            # 匿名化策略：'identified' or 'anonymized'
+    
+    # 内层均衡：消费者反应
+    r_star: float                 # 均衡参与率（固定点）
+    delta_u: float                # 期望效用差（参与 vs 拒绝）
+    num_participants: int         # 参与人数（实现值）
+    
+    # 中层均衡：生产者反应
+    producer_profit_with_data: float    # 生产者利润（有数据）
+    producer_profit_no_data: float      # 生产者利润（无数据，baseline）
+    producer_profit_gain: float         # 数据带来的利润增益
+    
+    # 外层：中介利润
+    m_0: float                    # 生产者向中介支付的费用（收入）
+    intermediary_cost: float      # 中介向消费者支付的总成本
+    intermediary_profit: float    # 中介净利润 R = m_0 - cost
+    
+    # 福利指标
+    consumer_surplus: float
+    social_welfare: float
+    gini_coefficient: float
+    price_discrimination_index: float
+
+
+@dataclass
+class OptimalPolicy:
+    """
+    中介的最优策略
+    
+    通过遍历所有候选策略，选择使中介利润最大化的策略
+    """
+    # 最优策略
+    optimal_m: float
+    optimal_anonymization: str
+    
+    # 最优策略下的均衡
+    optimal_result: IntermediaryOptimizationResult
+    
+    # 优化过程
+    all_results: List[IntermediaryOptimizationResult]  # 所有候选策略的结果
+    optimization_summary: Dict  # 优化摘要统计
+
+
+def simulate_market_outcome_no_data(
+    data: ConsumerData,
+    params: ScenarioCParams,
+    seed: Optional[int] = None
+) -> MarketOutcome:
+    """
+    模拟"无数据"情况下的市场结果（Counterfactual Baseline）
+    
+    场景：中介不存在，生产者只能依赖先验信息定价
+    
+    信息结构：
+      - 生产者后验 = 先验：μ_producer[i] = μ_θ for all i
+      - 消费者后验 = 只基于自己信号（无他人数据）：μ_consumer[i] = E[w_i | s_i]
+      
+    定价策略：
+      - 必然是统一定价（因为生产者无法区分个体）
+      - p* = argmax Σ(p-c)·max(μ_θ-p, 0)
+      
+    用途：
+      - 计算生产者从数据中获得的利润增益
+      - 确定生产者对数据的支付意愿 m_0
+      
+    对应论文：
+      - Section 2.3: Producer problem
+      - 用于计算数据的价值增量
+    """
+    if seed is not None:
+        np.random.seed(seed)
+    
+    N = params.N
+    
+    # 生产者后验 = 先验（无数据学习）
+    mu_producer = np.full(N, params.mu_theta)
+    
+    # 消费者后验 = 基于私人信号的贝叶斯更新
+    if params.data_structure == "common_preferences":
+        # E[θ | s_i] 的贝叶斯更新
+        prior_precision = 1.0 / (params.sigma_theta ** 2)
+        signal_precision = 1.0 / (params.sigma ** 2)
+        posterior_precision = prior_precision + signal_precision
+        
+        mu_consumer = (
+            (prior_precision * params.mu_theta + signal_precision * data.s)
+            / posterior_precision
+        )
+    
+    elif params.data_structure == "common_experience":
+        # 无他人数据，无法识别共同噪声ε，只能用先验
+        mu_consumer = np.full(N, params.mu_theta)
+    
+    else:
+        raise ValueError(f"Unknown data_structure: {params.data_structure}")
+    
+    # 生产者统一定价（无个体信息）
+    p_optimal, _ = compute_optimal_price_uniform(mu_producer, params.c)
+    prices = np.full(N, p_optimal)
+    
+    # 消费者购买决策
+    quantities = np.maximum(mu_consumer - prices, 0)
+    
+    # 效用与利润实现
+    utilities = data.w * quantities - prices * quantities - 0.5 * quantities ** 2
+    producer_profit = np.sum((prices - params.c) * quantities)
+    consumer_surplus = np.sum(utilities)
+    intermediary_profit = 0.0
+    social_welfare = consumer_surplus + producer_profit + intermediary_profit
+    
+    # 不平等指标（统一定价）
+    gini_coefficient = 0.0
+    price_discrimination_index = 0.0
+    
+    # 返回市场结果
+    participation = np.zeros(N, dtype=bool)
+    
+    return MarketOutcome(
+        participation=participation,
+        participation_rate=0.0,
+        num_participants=0,
+        prices=prices,
+        quantities=quantities,
+        mu_consumers=mu_consumer,
+        mu_producer=mu_producer,
+        utilities=utilities,
+        consumer_surplus=consumer_surplus,
+        producer_profit=producer_profit,
+        intermediary_profit=intermediary_profit,
+        social_welfare=social_welfare,
+        learning_quality_participants=0.0,
+        learning_quality_rejecters=0.0,
+        gini_coefficient=gini_coefficient,
+        acceptor_avg_utility=0.0,
+        rejecter_avg_utility=np.mean(utilities),
+        price_variance=0.0,
+        price_discrimination_index=price_discrimination_index
+    )
+
+
+def estimate_m0_mc(
+    params: ScenarioCParams,
+    participation_rule: Callable,
+    T: int = 200,
+    beta: float = 1.0,
+    seed: Optional[int] = None
+) -> Tuple[float, float, float, float]:
+    """
+    使用Monte Carlo方法估计数据信息价值m_0（Ex-Ante期望）
+    
+    ========================================================================
+    理论基础（对应论文机制设计框架）
+    ========================================================================
+    
+    数据中介向生产者收取的费用m_0等于"生产者从中介信息中获得的
+    期望利润增量（可提取部分）"：
+    
+        m_0 = β × max(0, E[π_with_data] - E[π_no_data])
+    
+    其中：
+    - π_with_data: 生产者在获得中介数据Y_0后的产品市场利润
+    - π_no_data: 生产者无中介数据（Y_0=∅）时的基准利润
+    - β ∈ [0,1]: 中介可提取比例（默认1.0，即提取全部增量）
+    - E[·]: Ex-Ante期望（在世界状态和参与实现上平均）
+    
+    ========================================================================
+    关键原则（Common Random Numbers）
+    ========================================================================
+    
+    为了确保m_0度量的是**纯信息价值**，必须遵守：
+    
+    1. **同一个world state**:
+       - with和no使用相同的(w, s, τ)实现
+       - 否则差分会混入"世界状态差异"
+    
+    2. **同一个participation**:
+       - with和no使用相同的参与集合A
+       - 否则差分会混入"参与变化效应"
+    
+    3. **Ex-Ante期望**:
+       - 必须用MC平均（T次）估计期望
+       - 单次realization不稳定，不能作为理论m_0
+    
+    这确保：Δπ = π_with(w,A) - π_no(w,A) 只反映信息差异
+    
+    ========================================================================
+    Args:
+        params: ScenarioCParams - 所有模型参数
+        
+        participation_rule: Callable - 参与决策规则
+                           签名：(params, world_data, rng) -> participation
+                           输入：参数、世界状态、随机数生成器
+                           输出：(N,) bool数组，True表示参与
+                           
+                           常见实现：
+                           - Bernoulli(r*): lambda p,w,rng: rng.random(N) < r_star
+                           - Threshold(τ): lambda p,w,rng: w.tau <= delta_u
+        
+        T: int - Monte Carlo样本数（默认200）
+               理论求解器建议≥100以确保稳定估计
+        
+        beta: float - 中介可提取比例（默认1.0）
+                     = 1.0: 提取全部生产者剩余（中介完全议价能力）
+                     < 1.0: 部分提取（中介有竞争或监管约束）
+        
+        seed: Optional[int] - 随机种子（确保可复现）
+    
+    Returns:
+        (m_0, delta_mean, delta_std): Tuple[float, float, float]
+        
+        m_0: 数据信息价值（中介可收取的费用）
+             = β × max(0, delta_mean)
+        
+        delta_mean: 利润增量的期望（可能为负）
+                   = E[π_with - π_no]
+        
+        delta_std: 利润增量的标准差（衡量不确定性）
+                  = std(π_with - π_no)
+    
+    ========================================================================
+    实现细节
+    ========================================================================
+    
+    伪代码：
+    for t = 1 to T:
+        1. 生成同一份世界状态 (w, s, τ)
+        2. 在该状态下生成参与集合 A
+        3. 计算 π_with(w, A, Y_0)  # 生产者有中介数据
+        4. 计算 π_no(w, A, Y_0=∅) # 生产者无中介数据
+        5. 记录 Δπ_t = π_with - π_no
+    
+    输出:
+        m_0 = β × max(0, mean(Δπ))
+        delta_mean = mean(Δπ)
+        delta_std = std(Δπ)
+    
+    ========================================================================
+    与旧实现的区别
+    ========================================================================
+    
+    旧方法（不正确）：
+    - 生成不同world，分别计算π_with和π_no
+    - 用单次或少量realization
+    - 无法分离信息价值 vs 随机波动
+    
+    新方法（正确）：
+    - 同一world，同一participation，只改变信息
+    - 大量MC平均（T=200）
+    - 精确度量纯信息价值
+    
+    差异影响：
+    - 旧方法：m_0不稳定，可能为负，难以解释
+    - 新方法：m_0稳定，总≥0，经济含义清晰
+    """
+    rng = np.random.default_rng(seed) if seed is not None else np.random.default_rng()
+    
+    deltas = []
+    num_parts = []  # 记录每次的参与人数，用于计算E[#participants]
+    
+    for _ in range(T):
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # 步骤1：生成世界状态（使用统一的rng流）
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        world_data = generate_consumer_data(params, rng=rng)
+        
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # 步骤2：在该世界状态下生成参与集合（同一个A）
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        participation = participation_rule(params, world_data, rng)
+        num_parts.append(int(np.sum(participation)))
+        
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # 步骤3：计算with-data利润（生产者有中介信息Y_0）
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        outcome_with = simulate_market_outcome(
+            world_data, participation, params,
+            producer_info_mode="with_data", rng=rng
+        )
+        pi_with = outcome_with.producer_profit
+        
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # 步骤4：计算no-data利润（生产者无中介信息，Y_0=∅）
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # 关键：使用同一个world_data和同一个participation
+        outcome_no = simulate_market_outcome(
+            world_data, participation, params,
+            producer_info_mode="no_data", rng=rng
+        )
+        pi_no = outcome_no.producer_profit
+        
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # 步骤5：记录利润差（纯信息价值）
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        delta = pi_with - pi_no
+        deltas.append(delta)
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 步骤6：计算Ex-Ante期望和标准差
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    delta_mean = float(np.mean(deltas))
+    delta_std = float(np.std(deltas, ddof=1)) if T > 1 else 0.0
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 步骤7：计算m_0和期望参与人数
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # max(0, ·)：如果数据降低生产者利润，中介收取0（不卖数据）
+    # β：中介的议价能力（β=1表示提取全部剩余）
+    m_0 = beta * max(0.0, delta_mean)
+    e_num_participants = float(np.mean(num_parts))  # 期望参与人数
+    
+    return m_0, delta_mean, delta_std, e_num_participants
+
+
+def evaluate_intermediary_strategy(
+    m: float,
+    anonymization: str,
+    params_base: Dict,
+    num_mc_samples: int = 50,
+    max_iter: int = 20,
+    tol: float = 1e-3,
+    seed: Optional[int] = None
+) -> IntermediaryOptimizationResult:
+    """
+    评估给定策略(m, anonymization)下的完整市场均衡
+    
+    执行逆向归纳：
+      1. 内层：求解消费者均衡 r*(m, anonymization)
+      2. 中层：计算生产者利润 π*(r*, anonymization)
+      3. 外层：计算中介利润 R = m_0 - m·r*·N
+      
+    参数：
+      m: 补偿水平
+      anonymization: 匿名化策略
+      params_base: 基础市场参数（dict）
+      num_mc_samples: Monte Carlo样本数
+      max_iter: 固定点最大迭代次数
+      tol: 收敛容差
+      seed: 随机种子
+      
+    返回：
+      IntermediaryOptimizationResult 包含完整均衡信息
+    """
+    if seed is not None:
+        np.random.seed(seed)
+    
+    # 构建完整参数
+    params = ScenarioCParams(
+        m=m,
+        anonymization=anonymization,
+        **params_base
+    )
+    
+    # 内层：求解消费者均衡
+    r_star, r_history, delta_u = compute_rational_participation_rate(
+        params,
+        max_iter=max_iter,
+        tol=tol,
+        num_mc_samples=num_mc_samples
+    )
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 外层：计算生产者对数据的支付意愿 m_0（新方法）
+    # 
+    # 改进方案（GPT建议，理论严格）：
+    #   m_0 = β × max(0, E[π_with_data] - E[π_no_data])
+    # 
+    # 关键原则（Common Random Numbers）：
+    #   1. 同一个world state (w, s, τ)
+    #   2. 同一个participation A
+    #   3. 只改变生产者信息集 Y_0
+    #   4. 用MC估计Ex-Ante期望（T=200）
+    # 
+    # 这确保m_0度量的是**纯信息价值**，不混入：
+    #   - 世界状态差异
+    #   - 参与变化效应
+    #   - 单次realization的随机波动
+    # 
+    # 优点（相比旧方法）：
+    #   - ✅ 理论严格（对应论文机制设计框架）
+    #   - ✅ 稳定可靠（MC平均，不受单次抽样影响）
+    #   - ✅ 经济含义清晰（纯信息价值）
+    #   - ✅ 总是非负（max(0, ·)保证）
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    
+    # 定义参与决策规则（基于τ阈值）
+    def participation_rule(p: ScenarioCParams, world: ConsumerData, rng) -> np.ndarray:
+        """
+        根据τ_i阈值生成参与决策
+        
+        参与条件：τ_i ≤ ΔU（隐私成本 ≤ 参与净收益）
+        """
+        if p.tau_dist == "none":
+            # 同质τ：全体同一决策
+            return np.full(p.N, delta_u > 0, dtype=bool)
+        elif p.tau_dist == "normal":
+            # 正态分布τ
+            tau_samples = rng.normal(p.tau_mean, p.tau_std, p.N)
+            return tau_samples <= delta_u
+        elif p.tau_dist == "uniform":
+            # 均匀分布τ
+            tau_low = p.tau_mean - np.sqrt(3) * p.tau_std
+            tau_high = p.tau_mean + np.sqrt(3) * p.tau_std
+            tau_samples = rng.uniform(tau_low, tau_high, p.N)
+            return tau_samples <= delta_u
+        else:
+            raise ValueError(f"Unknown tau_dist: {p.tau_dist}")
+    
+    # 使用新方法估计m_0（Ex-Ante期望）
+    m_0, delta_profit_mean, delta_profit_std, e_num_participants = estimate_m0_mc(
+        params=params,
+        participation_rule=participation_rule,
+        T=200,  # MC样本数（理论建议≥100）
+        beta=1.0,  # 中介提取全部剩余
+        seed=seed
+    )
+    
+    # 为了兼容性，也生成一次市场实现用于其他指标
+    rng_sample = np.random.default_rng(seed)
+    data = generate_consumer_data(params, rng=rng_sample)
+    participation = participation_rule(params, data, rng_sample)
+    num_participants = int(np.sum(participation))
+    
+    # 计算市场结果（用于消费者剩余、福利等指标）
+    # ⭐ 注入估计的m_0
+    outcome_with_data = simulate_market_outcome(
+        data, participation, params,
+        producer_info_mode="with_data",
+        m0=m_0,
+        rng=rng_sample
+    )
+    producer_profit_with_data = outcome_with_data.producer_profit
+    
+    # 计算无数据基准（用于记录，虽然m_0已经由MC估计）
+    outcome_no_data = simulate_market_outcome(
+        data, participation, params,
+        producer_info_mode="no_data",
+        m0=0.0,
+        rng=rng_sample
+    )
+    producer_profit_no_data = outcome_no_data.producer_profit
+    
+    # 记录单次实现的利润增益（用于对比）
+    producer_profit_gain_sample = producer_profit_with_data - producer_profit_no_data
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 计算中介利润（使用Ex-Ante期望）
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 理论口径：
+    #   R = m_0 - m × E[#participants]
+    # 
+    # 其中：
+    #   m_0 = β × E[π_with - π_no]（由estimate_m0_mc计算）
+    #   E[#participants] 由estimate_m0_mc返回
+    # 
+    # 使用期望参与数（而非单次实现）
+    intermediary_cost = m * e_num_participants
+    intermediary_profit = m_0 - intermediary_cost
+    
+    return IntermediaryOptimizationResult(
+        m=m,
+        anonymization=anonymization,
+        r_star=r_star,
+        delta_u=delta_u,
+        num_participants=num_participants,
+        producer_profit_with_data=producer_profit_with_data,
+        producer_profit_no_data=producer_profit_no_data,
+        producer_profit_gain=producer_profit_gain_sample,  # 单次实现（用于对比）
+        m_0=m_0,  # Ex-Ante期望（MC估计）
+        intermediary_cost=intermediary_cost,
+        intermediary_profit=intermediary_profit,
+        consumer_surplus=outcome_with_data.consumer_surplus,
+        social_welfare=outcome_with_data.social_welfare,
+        gini_coefficient=outcome_with_data.gini_coefficient,
+        price_discrimination_index=outcome_with_data.price_discrimination_index
+    )
+
+
+def optimize_intermediary_policy(
+    params_base: Dict,
+    m_grid: np.ndarray = None,
+    policies: List[str] = None,
+    num_mc_samples: int = 50,
+    max_iter: int = 20,
+    tol: float = 1e-3,
+    seed: Optional[int] = None,
+    verbose: bool = True
+) -> OptimalPolicy:
+    """
+    求解中介的最优策略组合 (m*, anonymization*)
+    
+    通过网格搜索遍历所有候选策略，选择使中介利润最大化的策略
+    
+    对应论文：
+      - Section 5.2-5.3: 中介的最优信息设计
+      - 通过逆向归纳求解Stackelberg均衡
+      
+    参数：
+      params_base: 基础市场参数（dict，不含m和anonymization）
+      m_grid: 补偿候选值（默认：[0, 0.1, ..., 3.0]）
+      policies: 匿名化策略候选（默认：['identified', 'anonymized']）
+      num_mc_samples: Monte Carlo样本数
+      max_iter: 固定点最大迭代次数
+      tol: 收敛容差
+      seed: 随机种子
+      verbose: 是否打印优化过程
+      
+    返回：
+      OptimalPolicy 包含最优策略及所有候选策略的评估结果
+    """
+    if seed is not None:
+        np.random.seed(seed)
+    
+    # 默认参数
+    if m_grid is None:
+        m_grid = np.linspace(0, 3.0, 31)  # [0, 0.1, 0.2, ..., 3.0]
+    
+    if policies is None:
+        policies = ['identified', 'anonymized']
+    
+    if verbose:
+        print("\n" + "="*80)
+        print("🎯 中介最优策略求解（Intermediary Optimal Policy）")
+        print("="*80)
+        print(f"\n策略空间：{len(m_grid)} 个补偿候选 × {len(policies)} 个匿名化策略")
+        print(f"总计：{len(m_grid) * len(policies)} 个候选策略")
+        print(f"\n市场参数：")
+        print(f"  - N = {params_base['N']}")
+        print(f"  - 数据结构 = {params_base['data_structure']}")
+        print(f"  - μ_θ = {params_base['mu_theta']:.2f}")
+        print(f"  - σ_θ = {params_base['sigma_theta']:.2f}")
+        print(f"  - σ = {params_base['sigma']:.2f}")
+        print(f"  - tau分布 = {params_base.get('tau_dist', 'none')}")
+        print("\n" + "-"*80)
+        print(f"{'补偿m':>8} | {'策略':>12} | {'r*':>6} | {'m_0':>8} | {'成本':>8} | {'中介利润R':>10}")
+        print("-"*80)
+    
+    # 遍历所有候选策略
+    all_results = []
+    skipped_count = 0
+    
+    for m in m_grid:
+        for anonymization in policies:
+            try:
+                # 评估该策略
+                result = evaluate_intermediary_strategy(
+                    m=m,
+                    anonymization=anonymization,
+                    params_base=params_base,
+                    num_mc_samples=num_mc_samples,
+                    max_iter=max_iter,
+                    tol=tol,
+                    seed=seed
+                )
+                
+                all_results.append(result)
+                
+                if verbose:
+                    print(f"{m:8.2f} | {anonymization:>12} | "
+                          f"{result.r_star:5.1%} | "
+                          f"{result.m_0:8.2f} | "
+                          f"{result.intermediary_cost:8.2f} | "
+                          f"{result.intermediary_profit:10.2f}")
+            
+            except RuntimeError as e:
+                # 捕获固定点不收敛错误，跳过该候选策略
+                skipped_count += 1
+                if verbose:
+                    print(f"{m:8.2f} | {anonymization:>12} | {'SKIP':>6} | "
+                          f"{'--':>8} | {'--':>8} | {'--':>10}  (不收敛)")
+    
+    # 检查是否有成功的候选策略
+    if not all_results:
+        raise RuntimeError(
+            f"所有 {len(m_grid) * len(policies)} 个候选策略都未收敛！\n"
+            f"建议：\n"
+            f"  1. 增加 max_iter（当前：{max_iter}）\n"
+            f"  2. 放宽 tol（当前：{tol}）\n"
+            f"  3. 调整 m_grid 范围\n"
+            f"  4. 增加 tau_std 以增加异质性"
+        )
+    
+    if verbose and skipped_count > 0:
+        print(f"\n⚠️  跳过 {skipped_count} 个不收敛的候选策略")
+    
+    # 找到最优策略
+    optimal_result = max(all_results, key=lambda x: x.intermediary_profit)
+    
+    if verbose:
+        print("-"*80)
+        print("\n🎯 最优策略：")
+        print(f"  - 最优补偿：m* = {optimal_result.m:.2f}")
+        print(f"  - 最优策略：{optimal_result.anonymization}")
+        print(f"  - 均衡参与率：r* = {optimal_result.r_star:.1%}")
+        print(f"  - 生产者支付：m_0 = {optimal_result.m_0:.2f}")
+        print(f"  - 中介成本：{optimal_result.intermediary_cost:.2f}")
+        print(f"  - 中介利润：R* = {optimal_result.intermediary_profit:.2f}")
+        print(f"  - 社会福利：SW = {optimal_result.social_welfare:.2f}")
+        print("="*80)
+    
+    # 优化摘要
+    optimization_summary = {
+        'num_candidates_total': len(m_grid) * len(policies),
+        'num_candidates_converged': len(all_results),
+        'num_candidates_skipped': skipped_count,
+        'max_profit': optimal_result.intermediary_profit,
+        'profit_range': [
+            min(r.intermediary_profit for r in all_results),
+            max(r.intermediary_profit for r in all_results)
+        ],
+        'optimal_is_anonymized': optimal_result.anonymization == 'anonymized'
+    }
+    
+    return OptimalPolicy(
+        optimal_m=optimal_result.m,
+        optimal_anonymization=optimal_result.anonymization,
+        optimal_result=optimal_result,
+        all_results=all_results,
+        optimization_summary=optimization_summary
+    )
+
+
+def verify_proposition_2(
+    params_base: Dict,
+    N_values: List[int] = None,
+    m_fixed: float = 1.0,
+    seed: Optional[int] = None
+) -> Dict:
+    """
+    验证论文Proposition 2：市场规模对匿名化策略的影响
+    
+    命题：N足够大时，anonymized最优
+    
+    原因：
+      - N大时，聚合数据仍能精确估计θ（大数定律）
+      - anonymized降低消费者价格歧视担忧 → r*更高
+      - 成本降低（或相同m下r*更高）→ R更高
+      
+    对应论文：
+      - Section 5.2, Proposition 2
+      
+    返回：
+      Dict包含不同N下的对比结果
+    """
+    if N_values is None:
+        N_values = [10, 20, 50, 100]
+    
+    print("\n" + "="*80)
+    print("📊 验证Proposition 2：市场规模 N 对匿名化策略的影响")
+    print("="*80)
+    print(f"\n固定补偿：m = {m_fixed:.2f}")
+    print(f"对比策略：identified vs anonymized")
+    print("\n" + "-"*80)
+    print(f"{'N':>5} | {'策略':>12} | {'r*':>6} | {'m_0':>8} | {'R':>10} | {'SW':>10}")
+    print("-"*80)
+    
+    results = {}
+    
+    for N in N_values:
+        # 更新参数
+        params_N = params_base.copy()
+        params_N['N'] = N
+        
+        results[N] = {}
+        
+        for policy in ['identified', 'anonymized']:
+            result = evaluate_intermediary_strategy(
+                m=m_fixed,
+                anonymization=policy,
+                params_base=params_N,
+                seed=seed
+            )
+            
+            results[N][policy] = result
+            
+            print(f"{N:5d} | {policy:>12} | "
+                  f"{result.r_star:5.1%} | "
+                  f"{result.m_0:8.2f} | "
+                  f"{result.intermediary_profit:10.2f} | "
+                  f"{result.social_welfare:10.2f}")
+    
+    print("-"*80)
+    print("\n分析：")
+    
+    for N in N_values:
+        R_iden = results[N]['identified'].intermediary_profit
+        R_anon = results[N]['anonymized'].intermediary_profit
+        
+        if R_anon > R_iden:
+            print(f"  ✅ N={N:3d}: anonymized占优 "
+                  f"(R_anon={R_anon:6.2f} > R_iden={R_iden:6.2f}, "
+                  f"差距={R_anon-R_iden:+6.2f})")
+        else:
+            print(f"  ❌ N={N:3d}: identified占优 "
+                  f"(R_iden={R_iden:6.2f} > R_anon={R_anon:6.2f}, "
+                  f"差距={R_iden-R_anon:+6.2f})")
+    
+    print("="*80)
+    
+    return results
+
+
+def analyze_optimal_compensation_curve(
+    optimal_policy: OptimalPolicy,
+    save_path: Optional[str] = None
+) -> Dict:
+    """
+    分析最优补偿曲线：R(m), r*(m), m_0(m)
+    
+    可视化中介的trade-off：
+      - 提高m → 提高r* → 提高m_0
+      - 但成本也增加（m·r*·N）
+      - 最优m*在边际收益 = 边际成本处
+      
+    对应论文：
+      - Theorem 1: 最优补偿的一阶条件
+    """
+    results_by_policy = {}
+    
+    for policy in ['identified', 'anonymized']:
+        policy_results = [r for r in optimal_policy.all_results 
+                         if r.anonymization == policy]
+        policy_results.sort(key=lambda x: x.m)
+        
+        results_by_policy[policy] = {
+            'm': [r.m for r in policy_results],
+            'r_star': [r.r_star for r in policy_results],
+            'm_0': [r.m_0 for r in policy_results],
+            'intermediary_profit': [r.intermediary_profit for r in policy_results],
+            'social_welfare': [r.social_welfare for r in policy_results]
+        }
+    
+    # 打印关键点
+    print("\n" + "="*80)
+    print("📈 最优补偿曲线分析")
+    print("="*80)
+    
+    for policy in ['identified', 'anonymized']:
+        data = results_by_policy[policy]
+        max_profit_idx = np.argmax(data['intermediary_profit'])
+        
+        print(f"\n{policy.capitalize()}:")
+        print(f"  最优补偿：m* = {data['m'][max_profit_idx]:.2f}")
+        print(f"  最大利润：R* = {data['intermediary_profit'][max_profit_idx]:.2f}")
+        print(f"  对应r*：{data['r_star'][max_profit_idx]:.1%}")
+        print(f"  对应m_0：{data['m_0'][max_profit_idx]:.2f}")
+    
+    if save_path:
+        with open(save_path, 'w') as f:
+            json.dump(results_by_policy, f, indent=2)
+        print(f"\n💾 曲线数据已保存到：{save_path}")
+    
+    print("="*80)
+    
+    return results_by_policy
+
+
+def export_optimization_results(
+    optimal_policy: OptimalPolicy,
+    output_path: str
+):
+    """
+    导出优化结果到JSON文件
+    """
+    from dataclasses import asdict
+    
+    output = {
+        'optimal_policy': {
+            'm': optimal_policy.optimal_m,
+            'anonymization': optimal_policy.optimal_anonymization,
+            'result': asdict(optimal_policy.optimal_result)
+        },
+        'optimization_summary': optimal_policy.optimization_summary,
+        'all_results': [asdict(r) for r in optimal_policy.all_results]
+    }
+    
+    with open(output_path, 'w') as f:
+        json.dump(output, f, indent=2)
+    
+    print(f"\n💾 优化结果已保存到：{output_path}")
+
+
+# ============================================================================
+# 示例使用
+# ============================================================================
+
+if __name__ == "__main__":
+    # 示例：生成最优Ground Truth（论文理论解）
+    params_base = {
+        'N': 20,
+        'data_structure': 'common_preferences',
+        # ⚠️ 不包含 m 和 anonymization，由中介优化求解
+        'mu_theta': 5.0,
+        'sigma_theta': 1.0,
+        'sigma': 1.0,
+        'tau_dist': 'normal',
+        'tau_mean': 1.0,
+        'tau_std': 0.3,
+        'c': 0.0,
+        'participation_timing': 'ex_ante',
+        'seed': 42
+    }
+    
+    # 生成Ground Truth（完整博弈均衡）
+    gt = generate_ground_truth(
+        params_base=params_base,
+        max_iter=20,
+        num_mc_samples=30
+    )
     
     # 保存到文件
-    output_path = "data/ground_truth/scenario_c_result.json"
+    output_path = "data/ground_truth/scenario_c_optimal.json"
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(gt, f, indent=2, ensure_ascii=False)
     
-    print(f"\n✅ Ground Truth已保存到: {output_path}")
+    print(f"\n✅ 最优Ground Truth已保存到: {output_path}")
+    print(f"   最优策略: m*={gt['optimal_strategy']['m_star']:.2f}, "
+          f"{gt['optimal_strategy']['anonymization_star']}")

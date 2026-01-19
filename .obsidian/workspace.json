@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/design/LLM决策机制说明.md",
+                "file": "场景C_Ground_Truth输出结构解析.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "LLM决策机制说明"
+              "title": "场景C_Ground_Truth输出结构解析"
             }
           }
         ],
@@ -198,10 +198,30 @@
       "bases:新建数据库": false
     }
   },
-  "active": "0e3a17c1334eaf02",
+  "active": "e821eae567b737c4",
   "lastOpenFiles": [
+    "场景C_m0升级完成总结.md",
+    "test_m0_new_method.py",
+    "场景C_m0计算方法升级报告.md",
+    "场景C_m0处理机制详解.md",
+    "analysis_results/scenario_c_result_convergence.png",
+    "analysis_results/compensation_sweep.png",
+    "analysis_results/welfare_decomposition.png",
+    "analysis_results/comparison_matrix.png",
+    "analysis_results",
+    "analyze_scenario_c_gt.py",
+    "场景C_中介先动者问题分析.md",
+    "场景C_论文中的价格体系梳理.md",
+    "场景C_m0计算方法说明.md",
+    "test_m0_formula.py",
+    "场景C_理论最优解求解流程总结.md",
+    "场景C_中介先动者实现完成报告.md",
+    "src/scenarios/__pycache__/scenario_c_intermediary_optimization.cpython-313.pyc",
+    "test_intermediary_opt.py",
+    "src/scenarios/scenario_c_intermediary_optimization.py",
+    "场景C_代码实现范围与LLM角色分析.md",
+    "docs/design/LLM决策机制说明.md",
     "docs/design/多智能体并行博弈设计讨论.md",
-    "docs/design/Benchmark有效性分析.md",
-    "docs/design/LLM决策机制说明.md"
+    "docs/design/Benchmark有效性分析.md"
   ]
 }

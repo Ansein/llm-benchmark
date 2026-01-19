@@ -1,0 +1,704 @@
+{
+  "optimal_strategy": {
+    "m_star": 0.0,
+    "anonymization_star": "anonymized",
+    "intermediary_profit_star": 0.001003087552156856,
+    "r_star": 0.0011384444225298138,
+    "delta_u_star": 0.0845451886549311,
+    "m_0_star": 0.001003087552156856
+  },
+  "equilibrium": {
+    "consumer_surplus": 66.20165095266691,
+    "producer_profit": 119.55513864100053,
+    "intermediary_profit": 0.001003087552156856,
+    "social_welfare": 185.7577926812196,
+    "gini_coefficient": 0.3105620612861688,
+    "price_discrimination_index": 0.0
+  },
+  "data_transaction": {
+    "m_0": 0.001003087552156856,
+    "producer_profit_with_data": 119.55513864100053,
+    "producer_profit_no_data": 119.55513864100053,
+    "producer_profit_gain": 0.0,
+    "expected_num_participants": 0.0,
+    "intermediary_cost": 0.0
+  },
+  "all_candidates": [
+    {
+      "m": 0.0,
+      "anonymization": "identified",
+      "intermediary_profit": 0.0,
+      "r_star": 0.00395761879851182,
+      "m_0": 0.0,
+      "social_welfare": 185.7567895936674,
+      "consumer_surplus": 66.2016509526669,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.0,
+      "anonymization": "anonymized",
+      "intermediary_profit": 0.001003087552156856,
+      "r_star": 0.0011384444225298138,
+      "m_0": 0.001003087552156856,
+      "social_welfare": 185.7577926812196,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.1,
+      "anonymization": "anonymized",
+      "intermediary_profit": -0.006500000000000001,
+      "r_star": 0.0033823885885025246,
+      "m_0": 0.0,
+      "social_welfare": 185.75678959366743,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.2,
+      "anonymization": "identified",
+      "intermediary_profit": -0.065,
+      "r_star": 0.01610268396603182,
+      "m_0": 0.0,
+      "social_welfare": 185.7567895936674,
+      "consumer_surplus": 66.2016509526669,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.2,
+      "anonymization": "anonymized",
+      "intermediary_profit": -0.033,
+      "r_star": 0.008546353575774917,
+      "m_0": 0.0,
+      "social_welfare": 185.75678959366743,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.30000000000000004,
+      "anonymization": "identified",
+      "intermediary_profit": -0.13500000000000004,
+      "r_star": 0.02332405526250921,
+      "m_0": 0.0,
+      "social_welfare": 185.7567895936674,
+      "consumer_surplus": 66.2016509526669,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.30000000000000004,
+      "anonymization": "anonymized",
+      "intermediary_profit": -0.10200000000000002,
+      "r_star": 0.016229678016462537,
+      "m_0": 0.0,
+      "social_welfare": 185.75678959366743,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.4,
+      "anonymization": "anonymized",
+      "intermediary_profit": -0.23199999999999998,
+      "r_star": 0.027356685856414254,
+      "m_0": 0.0,
+      "social_welfare": 185.75678959366743,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.5,
+      "anonymization": "anonymized",
+      "intermediary_profit": -0.37,
+      "r_star": 0.03953924521780485,
+      "m_0": 0.0,
+      "social_welfare": 185.75678959366743,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.6000000000000001,
+      "anonymization": "anonymized",
+      "intermediary_profit": -0.7083324939543055,
+      "r_star": 0.06729424343540757,
+      "m_0": 0.0836675060456946,
+      "social_welfare": 185.84045709971312,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.7000000000000001,
+      "anonymization": "identified",
+      "intermediary_profit": -3.386043667643676,
+      "r_star": 0.5073959893378188,
+      "m_0": 3.7749563323563256,
+      "social_welfare": 187.87663548031784,
+      "consumer_surplus": 73.53427675150591,
+      "producer_profit": 117.56740239645563
+    },
+    {
+      "m": 0.7000000000000001,
+      "anonymization": "anonymized",
+      "intermediary_profit": -1.3113653517757997,
+      "r_star": 0.12254389204336003,
+      "m_0": 0.4071346482242005,
+      "social_welfare": 186.16392424189164,
+      "consumer_surplus": 66.20165095266691,
+      "producer_profit": 119.55513864100053
+    },
+    {
+      "m": 0.8,
+      "anonymization": "identified",
+      "intermediary_profit": -5.870318783459523,
+      "r_star": 0.6995857425565087,
+      "m_0": 5.2456812165404765,
+      "social_welfare": 189.98445463461985,
+      "consumer_surplus": 77.68914788781397,
+      "producer_profit": 117.44962553026541
+    },
+    {
+      "m": 0.8,
+      "anonymization": "anonymized",
+      "intermediary_profit": -2.8874040581229203,
+      "r_star": 0.22631385144410082,
+      "m_0": 0.6725959418770802,
+      "social_welfare": 190.27947787561968,
+      "consumer_surplus": 71.81073863841347,
+      "producer_profit": 120.19614329532914
+    },
+    {
+      "m": 0.9,
+      "anonymization": "identified",
+      "intermediary_profit": -8.52690297446702,
+      "r_star": 0.8185669143170122,
+      "m_0": 6.32759702553298,
+      "social_welfare": 190.3033707419136,
+      "consumer_surplus": 81.34369491276186,
+      "producer_profit": 117.93207880361875
+    },
+    {
+      "m": 0.9,
+      "anonymization": "anonymized",
+      "intermediary_profit": -5.7021337134635095,
+      "r_star": 0.3524491259829916,
+      "m_0": 0.7643662865364901,
+      "social_welfare": 182.34185899342359,
+      "consumer_surplus": 73.53053661330594,
+      "producer_profit": 114.34695609358114
+    },
+    {
+      "m": 1.0,
+      "anonymization": "identified",
+      "intermediary_profit": -11.03754766639248,
+      "r_star": 0.8991035099742644,
+      "m_0": 6.987452333607518,
+      "social_welfare": 191.91530230361667,
+      "consumer_surplus": 85.61773562995178,
+      "producer_profit": 118.3101143400574
+    },
+    {
+      "m": 1.0,
+      "anonymization": "anonymized",
+      "intermediary_profit": -9.238510731186837,
+      "r_star": 0.48866263891093675,
+      "m_0": 0.596489268813164,
+      "social_welfare": 184.42098802556424,
+      "consumer_surplus": 78.08854329573542,
+      "producer_profit": 115.73595546101565
+    },
+    {
+      "m": 1.1,
+      "anonymization": "identified",
+      "intermediary_profit": -13.438864915057877,
+      "r_star": 0.9470204010213072,
+      "m_0": 7.417135084942125,
+      "social_welfare": 192.3449850549513,
+      "consumer_surplus": 87.51773562995182,
+      "producer_profit": 118.3101143400574
+    },
+    {
+      "m": 1.1,
+      "anonymization": "anonymized",
+      "intermediary_profit": -13.12992734174782,
+      "r_star": 0.6244070280987108,
+      "m_0": 0.4880726582521831,
+      "social_welfare": 184.31257141500322,
+      "consumer_surplus": 79.0885432957354,
+      "producer_profit": 115.73595546101565
+    },
+    {
+      "m": 1.2000000000000002,
+      "anonymization": "identified",
+      "intermediary_profit": -15.761735937267648,
+      "r_star": 0.9748978982722223,
+      "m_0": 7.662264062732354,
+      "social_welfare": 192.59011403274158,
+      "consumer_surplus": 89.41773562995182,
+      "producer_profit": 118.3101143400574
+    },
+    {
+      "m": 1.2000000000000002,
+      "anonymization": "anonymized",
+      "intermediary_profit": -17.704301305833418,
+      "r_star": 0.7439284341731989,
+      "m_0": 0.43369869416658174,
+      "social_welfare": 183.51792145566608,
+      "consumer_surplus": 87.1479153001747,
+      "producer_profit": 115.1363074613248
+    },
+    {
+      "m": 1.3,
+      "anonymization": "identified",
+      "intermediary_profit": -17.938661352080445,
+      "r_star": 0.9891559748719789,
+      "m_0": 7.768838647919554,
+      "social_welfare": 193.8929486465048,
+      "consumer_surplus": 93.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 1.3,
+      "anonymization": "anonymized",
+      "intermediary_profit": -21.593215492310435,
+      "r_star": 0.8390968428375618,
+      "m_0": 0.3767845076895647,
+      "social_welfare": 183.4228238092228,
+      "consumer_surplus": 90.04584625014584,
+      "producer_profit": 115.10019305138738
+    },
+    {
+      "m": 1.4000000000000001,
+      "anonymization": "identified",
+      "intermediary_profit": -20.047352024917927,
+      "r_star": 0.9957740538123298,
+      "m_0": 7.819647975082075,
+      "social_welfare": 193.94375797366732,
+      "consumer_surplus": 95.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 1.4000000000000001,
+      "anonymization": "anonymized",
+      "intermediary_profit": -25.187831789577867,
+      "r_star": 0.9074427593406753,
+      "m_0": 0.3761682104221366,
+      "social_welfare": 183.44939608574364,
+      "consumer_surplus": 94.57299893193715,
+      "producer_profit": 115.10022894338438
+    },
+    {
+      "m": 1.5,
+      "anonymization": "identified",
+      "intermediary_profit": -22.10182330946315,
+      "r_star": 0.9984917832121512,
+      "m_0": 7.838176690536852,
+      "social_welfare": 193.9622866891221,
+      "consumer_surplus": 97.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 1.5,
+      "anonymization": "anonymized",
+      "intermediary_profit": -28.13307440978176,
+      "r_star": 0.9513999953299797,
+      "m_0": 0.40442559021824,
+      "social_welfare": 183.4776534655398,
+      "consumer_surplus": 96.47299893193716,
+      "producer_profit": 115.10022894338438
+    },
+    {
+      "m": 1.6,
+      "anonymization": "identified",
+      "intermediary_profit": -24.14402599111565,
+      "r_star": 0.999517212782132,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 99.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 1.6,
+      "anonymization": "anonymized",
+      "intermediary_profit": -30.835591917613108,
+      "r_star": 0.9768346163955699,
+      "m_0": 0.40440808238689,
+      "social_welfare": 183.4776359577084,
+      "consumer_surplus": 98.37299893193715,
+      "producer_profit": 115.10022894338438
+    },
+    {
+      "m": 1.7000000000000002,
+      "anonymization": "identified",
+      "intermediary_profit": -26.14402599111565,
+      "r_star": 0.999860602661452,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 101.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 1.7000000000000002,
+      "anonymization": "anonymized",
+      "intermediary_profit": -33.29354557312596,
+      "r_star": 0.9899892402673102,
+      "m_0": 0.3834544268740416,
+      "social_welfare": 183.56748398970103,
+      "consumer_surplus": 102.01766020809282,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 1.8,
+      "anonymization": "identified",
+      "intermediary_profit": -28.14402599111565,
+      "r_star": 0.9999636968386445,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 103.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 1.8,
+      "anonymization": "anonymized",
+      "intermediary_profit": -35.48498881816358,
+      "r_star": 0.9960868157478818,
+      "m_0": 0.36201118183642217,
+      "social_welfare": 183.5460407446634,
+      "consumer_surplus": 104.01766020809279,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 1.9000000000000001,
+      "anonymization": "identified",
+      "intermediary_profit": -30.14402599111565,
+      "r_star": 0.9999914951983748,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 105.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 1.9000000000000001,
+      "anonymization": "anonymized",
+      "intermediary_profit": -37.53713172036952,
+      "r_star": 0.9986178904599434,
+      "m_0": 0.3678682796304804,
+      "social_welfare": 183.55189784245746,
+      "consumer_surplus": 106.0176602080928,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.0,
+      "anonymization": "identified",
+      "intermediary_profit": -32.144025991115655,
+      "r_star": 0.9999982087967275,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 107.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.0,
+      "anonymization": "anonymized",
+      "intermediary_profit": -39.6513061210262,
+      "r_star": 0.9995597711711275,
+      "m_0": 0.33869387897380276,
+      "social_welfare": 183.5227234418008,
+      "consumer_surplus": 108.0176602080928,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.1,
+      "anonymization": "identified",
+      "intermediary_profit": -34.144025991115655,
+      "r_star": 0.9999996610310012,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 109.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.1,
+      "anonymization": "anonymized",
+      "intermediary_profit": -41.649561410022585,
+      "r_star": 0.9998736593194059,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.53446815280438,
+      "consumer_surplus": 110.01766020809279,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.2,
+      "anonymization": "identified",
+      "intermediary_profit": -36.144025991115655,
+      "r_star": 0.9999999423874236,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 111.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.2,
+      "anonymization": "anonymized",
+      "intermediary_profit": -43.649561410022585,
+      "r_star": 0.9999673594687771,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.5344681528044,
+      "consumer_surplus": 112.01766020809282,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.3000000000000003,
+      "anonymization": "identified",
+      "intermediary_profit": -38.14402599111566,
+      "r_star": 0.9999999912087094,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 113.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.3000000000000003,
+      "anonymization": "anonymized",
+      "intermediary_profit": -45.64956141002259,
+      "r_star": 0.9999924145925064,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.53446815280438,
+      "consumer_surplus": 114.01766020809279,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.4000000000000004,
+      "anonymization": "identified",
+      "intermediary_profit": -40.14402599111566,
+      "r_star": 0.9999999987960045,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 115.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.4000000000000004,
+      "anonymization": "anonymized",
+      "intermediary_profit": -47.64956141002259,
+      "r_star": 0.999998415314778,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.5344681528044,
+      "consumer_surplus": 116.0176602080928,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.5,
+      "anonymization": "identified",
+      "intermediary_profit": -42.144025991115655,
+      "r_star": 0.999999999852051,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 117.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.5,
+      "anonymization": "anonymized",
+      "intermediary_profit": -49.649561410022585,
+      "r_star": 0.9999997025418804,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.5344681528044,
+      "consumer_surplus": 118.0176602080928,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.6,
+      "anonymization": "identified",
+      "intermediary_profit": -44.144025991115655,
+      "r_star": 0.9999999999836917,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 119.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.6,
+      "anonymization": "anonymized",
+      "intermediary_profit": -51.649561410022585,
+      "r_star": 0.9999999498538619,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.5344681528044,
+      "consumer_surplus": 120.0176602080928,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.7,
+      "anonymization": "identified",
+      "intermediary_profit": -46.144025991115655,
+      "r_star": 0.9999999999983878,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 121.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.7,
+      "anonymization": "anonymized",
+      "intermediary_profit": -53.649561410022585,
+      "r_star": 0.9999999924104552,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.5344681528044,
+      "consumer_surplus": 122.01766020809282,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.8000000000000003,
+      "anonymization": "identified",
+      "intermediary_profit": -48.14402599111566,
+      "r_star": 0.9999999999998571,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 123.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.8000000000000003,
+      "anonymization": "anonymized",
+      "intermediary_profit": -55.64956141002259,
+      "r_star": 0.9999999989690895,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.53446815280438,
+      "consumer_surplus": 124.01766020809279,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 2.9000000000000004,
+      "anonymization": "identified",
+      "intermediary_profit": -50.14402599111566,
+      "r_star": 0.9999999999999887,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 125.5030220794679,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 2.9000000000000004,
+      "anonymization": "anonymized",
+      "intermediary_profit": -57.64956141002259,
+      "r_star": 0.9999999998743587,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.5344681528044,
+      "consumer_surplus": 126.0176602080928,
+      "producer_profit": 115.16636935473417
+    },
+    {
+      "m": 3.0,
+      "anonymization": "identified",
+      "intermediary_profit": -52.144025991115655,
+      "r_star": 0.9999999999999992,
+      "m_0": 7.855974008884348,
+      "social_welfare": 193.9800840074696,
+      "consumer_surplus": 127.50302207946788,
+      "producer_profit": 118.62108791911737
+    },
+    {
+      "m": 3.0,
+      "anonymization": "anonymized",
+      "intermediary_profit": -59.649561410022585,
+      "r_star": 0.9999999999862644,
+      "m_0": 0.3504385899774178,
+      "social_welfare": 183.53446815280438,
+      "consumer_surplus": 128.0176602080928,
+      "producer_profit": 115.16636935473417
+    }
+  ],
+  "sample_data": {
+    "w": [
+      4.000666676813969,
+      6.0935604584676435,
+      6.4836076585878,
+      4.1137476190388265,
+      4.502359780231689,
+      5.13198228595329,
+      5.022157916965806,
+      4.563615388001284,
+      4.403232520754657,
+      3.667340382585231,
+      6.2904447027930885,
+      6.520371368014148,
+      5.019340847809579,
+      4.3438471545209225,
+      5.924680518338582,
+      5.5475318873600585,
+      5.199914417745742,
+      4.709813474219306,
+      5.574550712550094,
+      5.4564936255067344
+    ],
+    "s": [
+      4.5372490308858815,
+      6.630142812539556,
+      7.020190012659713,
+      4.650329973110739,
+      5.038942134303602,
+      5.6685646400252026,
+      5.558740271037719,
+      5.100197742073196,
+      4.93981487482657,
+      4.203922736657143,
+      6.827027056865001,
+      7.05695372208606,
+      5.555923201881491,
+      4.880429508592835,
+      6.461262872410495,
+      6.084114241431971,
+      5.736496771817654,
+      5.246395828291218,
+      6.111133066622006,
+      5.993075979578647
+    ],
+    "theta": null,
+    "epsilon": 0.5365823540719123
+  },
+  "sample_participation": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "params_base": {
+    "N": 20,
+    "data_structure": "common_experience",
+    "mu_theta": 5.0,
+    "sigma_theta": 1.0,
+    "sigma": 1.0,
+    "tau_dist": "normal",
+    "tau_mean": 1.0,
+    "tau_std": 0.3,
+    "c": 0.0,
+    "participation_timing": "ex_ante",
+    "seed": 42
+  },
+  "metadata": {
+    "generation_method": "optimize_intermediary_policy",
+    "is_optimal_strategy": true,
+    "optimization_grid": {
+      "m_min": 0.0,
+      "m_max": 3.0,
+      "m_steps": 31,
+      "policies": [
+        "identified",
+        "anonymized"
+      ]
+    }
+  }
+}

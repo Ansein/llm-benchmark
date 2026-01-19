@@ -1,9 +1,9 @@
 """
-生成场景C的Ground Truth数据
+生成场景C的Ground Truth数据（完整模式）
 
-包含多个配置的Ground Truth:
-1. MVP配置（Common Preferences + Identified）
-2. 核心对比配置（2种数据结构 × 2种匿名化策略）
+自动生成所有配置：
+1. 最优GT（论文理论解）：Common Experience + Common Preferences
+2. 条件均衡（研究用）：2x2 对比配置（固定m=1.0）
 
 位置: src/scenarios/generate_scenario_c_gt.py
 运行: python -m src.scenarios.generate_scenario_c_gt
@@ -15,199 +15,203 @@ if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 import json
+import numpy as np
 from pathlib import Path
-from .scenario_c_social_data import ScenarioCParams, generate_ground_truth
+from src.scenarios.scenario_c_social_data import (
+    ScenarioCParams,
+    generate_ground_truth,
+    generate_conditional_equilibrium
+)
 
 
-def generate_mvp_config():
-    """生成MVP配置的Ground Truth"""
-    print("\n" + "🎯 "*20)
-    print("生成MVP配置 Ground Truth")
-    print("🎯 "*20)
+def generate_optimal_gt_common_experience():
+    """生成Common Experience的最优Ground Truth（论文理论解）"""
+    print("\n" + "⭐ "*30)
+    print("生成Common Experience最优Ground Truth（论文理论解）")
+    print("⭐ "*30)
     
-    params = ScenarioCParams(
-        N=20,
-        data_structure="common_preferences",
-        anonymization="identified",
-        mu_theta=5.0,
-        sigma_theta=1.0,
-        sigma=1.0,
-        m=1.0,
-        c=0.0,
-        seed=42
-    )
+    params_base = {
+        'N': 20,
+        'data_structure': 'common_experience',
+        # ⚠️ 不包含 m 和 anonymization，由中介优化求解
+        'mu_theta': 5.0,
+        'sigma_theta': 1.0,
+        'sigma': 1.0,
+        'tau_dist': 'normal',
+        'tau_mean': 1.0,
+        'tau_std': 0.3,
+        'c': 0.0,
+        'participation_timing': 'ex_ante',
+        'seed': 42
+    }
     
     gt = generate_ground_truth(
-        params,
+        params_base=params_base,
+        m_grid=np.linspace(0, 3, 31),
         max_iter=20,
-        tol=1e-3,
-        num_mc_samples=50
+        num_mc_samples=50,
+        num_outcome_samples=20
     )
     
-    # 保存（从src/scenarios/向上两级到项目根目录）
-    output_path = Path(__file__).parent.parent.parent / "data" / "ground_truth" / "scenario_c_result.json"
+    # 保存
+    output_path = Path(__file__).parent.parent.parent / "data" / "ground_truth" / "scenario_c_common_experience_optimal.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(gt, f, indent=2, ensure_ascii=False)
     
-    print(f"\n✅ MVP配置已保存到: {output_path}")
+    print(f"\n✅ 已保存到: {output_path}")
+    print(f"\n最优策略:")
+    print(f"  m* = {gt['optimal_strategy']['m_star']:.4f}")
+    print(f"  anonymization* = {gt['optimal_strategy']['anonymization_star']}")
+    print(f"  r* = {gt['optimal_strategy']['r_star']:.4f}")
+    print(f"  中介利润* = {gt['optimal_strategy']['intermediary_profit_star']:.4f}")
+    print(f"  社会福利* = {gt['equilibrium']['social_welfare']:.4f}")
+    
     return gt
 
 
-def generate_core_configs():
-    """生成核心对比配置的Ground Truth"""
-    print("\n" + "🎯 "*20)
-    print("生成核心对比配置 Ground Truth")
-    print("🎯 "*20)
+def generate_optimal_gt_common_preferences():
+    """生成Common Preferences的最优Ground Truth（论文理论解）"""
+    print("\n" + "⭐ "*30)
+    print("生成Common Preferences最优Ground Truth（论文理论解）")
+    print("⭐ "*30)
     
-    configs = []
+    params_base = {
+        'N': 20,
+        'data_structure': 'common_preferences',
+        # ⚠️ 不包含 m 和 anonymization，由中介优化求解
+        'mu_theta': 5.0,
+        'sigma_theta': 1.0,
+        'sigma': 1.0,
+        'tau_dist': 'normal',
+        'tau_mean': 1.0,
+        'tau_std': 0.3,
+        'c': 0.0,
+        'participation_timing': 'ex_ante',
+        'seed': 42
+    }
     
-    # 获取输出目录路径
+    gt = generate_ground_truth(
+        params_base=params_base,
+        m_grid=np.linspace(0, 3, 31),
+        max_iter=20,
+        num_mc_samples=50,
+        num_outcome_samples=20
+    )
+    
+    # 保存
+    output_path = Path(__file__).parent.parent.parent / "data" / "ground_truth" / "scenario_c_common_preferences_optimal.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(gt, f, indent=2, ensure_ascii=False)
+    
+    print(f"\n✅ 已保存到: {output_path}")
+    print(f"\n最优策略:")
+    print(f"  m* = {gt['optimal_strategy']['m_star']:.4f}")
+    print(f"  anonymization* = {gt['optimal_strategy']['anonymization_star']}")
+    print(f"  r* = {gt['optimal_strategy']['r_star']:.4f}")
+    print(f"  中介利润* = {gt['optimal_strategy']['intermediary_profit_star']:.4f}")
+    print(f"  社会福利* = {gt['equilibrium']['social_welfare']:.4f}")
+    
+    return gt
+
+
+def generate_conditional_equilibria_for_comparison():
+    """生成2x2对比配置的条件均衡（用于研究策略空间）"""
+    print("\n" + "🔬 "*30)
+    print("生成2x2条件均衡（研究用）")
+    print("🔬 "*30)
+    
+    results = {}
     output_dir = Path(__file__).parent.parent.parent / "data" / "ground_truth"
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # 2种数据结构 × 2种匿名化策略 = 4个配置
+    # 固定m=1.0，对比2种数据结构 × 2种匿名化策略
     for data_structure in ["common_preferences", "common_experience"]:
         for anonymization in ["identified", "anonymized"]:
             config_name = f"{data_structure}_{anonymization}"
-            print(f"\n生成配置: {config_name}")
+            print(f"\n生成配置: {config_name} (m=1.0)")
             
             params = ScenarioCParams(
                 N=20,
+                m=1.0,  # 固定策略
+                anonymization=anonymization,  # 固定策略
                 data_structure=data_structure,
-                anonymization=anonymization,
                 mu_theta=5.0,
                 sigma_theta=1.0,
                 sigma=1.0,
-                m=1.0,
+                tau_dist='normal',
+                tau_mean=1.0,
+                tau_std=0.3,
                 c=0.0,
+                participation_timing='ex_ante',
                 seed=42
             )
             
-            gt = generate_ground_truth(
+            gt = generate_conditional_equilibrium(
                 params,
                 max_iter=20,
-                tol=1e-3,
-                num_mc_samples=50
+                num_mc_samples=50,
+                num_outcome_samples=20
             )
             
             # 保存
-            output_path = output_dir / f"scenario_c_{config_name}.json"
+            output_path = output_dir / f"scenario_c_{config_name}_m1.0.json"
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump(gt, f, indent=2, ensure_ascii=False)
             
-            print(f"✅ 已保存到: {output_path}")
-            
-            configs.append({
-                "name": config_name,
-                "path": str(output_path),
-                "participation_rate": gt["rational_participation_rate"],
-                "social_welfare": gt["outcome"]["social_welfare"]
-            })
-    
-    return configs
-
-
-def generate_payment_sweep():
-    """生成不同补偿水平的Ground Truth（用于绘制参与率曲线）"""
-    print("\n" + "🎯 "*20)
-    print("生成补偿扫描配置 Ground Truth")
-    print("🎯 "*20)
-    
-    m_values = [0.0, 0.5, 1.0, 2.0, 3.0]
-    results = []
-    
-    # 获取输出目录路径
-    output_dir = Path(__file__).parent.parent.parent / "data" / "ground_truth"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    
-    for m in m_values:
-        print(f"\n生成配置: m={m:.1f}")
-        
-        params = ScenarioCParams(
-            N=20,
-            data_structure="common_preferences",
-            anonymization="identified",
-            mu_theta=5.0,
-            sigma_theta=1.0,
-            sigma=1.0,
-            m=m,
-            c=0.0,
-            seed=42
-        )
-        
-        gt = generate_ground_truth(
-            params,
-            max_iter=20,
-            tol=1e-3,
-            num_mc_samples=50
-        )
-        
-        results.append({
-            "m": m,
-            "participation_rate": gt["rational_participation_rate"],
-            "consumer_surplus": gt["outcome"]["consumer_surplus"],
-            "producer_profit": gt["outcome"]["producer_profit"],
-            "social_welfare": gt["outcome"]["social_welfare"]
-        })
-    
-    # 保存汇总
-    output_path = output_dir / "scenario_c_payment_sweep.json"
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(results, f, indent=2, ensure_ascii=False)
-    
-    print(f"\n✅ 补偿扫描结果已保存到: {output_path}")
-    
-    # 打印汇总表
-    print(f"\n{'='*60}")
-    print(f"补偿扫描结果汇总")
-    print(f"{'='*60}")
-    print(f"{'补偿':^10} | {'参与率':^10} | {'消费者剩余':^12} | {'社会福利':^12}")
-    print(f"{'-'*60}")
-    for r in results:
-        print(f"{r['m']:^10.1f} | {r['participation_rate']:^10.2%} | {r['consumer_surplus']:^12.4f} | {r['social_welfare']:^12.4f}")
+            print(f"  ✅ 保存到: {output_path}")
+            results[config_name] = gt
     
     return results
 
 
 def main():
-    """主函数"""
-    print("\n" + "="*60)
-    print("场景C Ground Truth 生成器")
-    print("="*60)
+    """主函数：生成所有Ground Truth配置"""
+    print("=" * 70)
+    print("场景C Ground Truth 生成器 - 完整模式")
+    print("=" * 70)
+    print("\n将生成以下配置：")
+    print("  1. 最优GT - Common Experience（论文理论解）")
+    print("  2. 最优GT - Common Preferences（论文理论解）")
+    print("  3. 条件均衡 - 2x2对比（固定m=1.0，研究用）")
+    print()
     
-    # 1. 生成MVP配置（默认）
-    mvp_gt = generate_mvp_config()
-    
-    # 2. 生成核心对比配置
-    core_configs = generate_core_configs()
-    
-    # 3. 生成补偿扫描配置
-    payment_sweep = generate_payment_sweep()
-    
-    # 打印总结
-    print("\n" + "="*60)
-    print("✅ 所有Ground Truth生成完成!")
-    print("="*60)
-    
-    print(f"\nMVP配置:")
-    print(f"  参与率: {mvp_gt['rational_participation_rate']:.2%}")
-    print(f"  社会福利: {mvp_gt['outcome']['social_welfare']:.4f}")
-    
-    print(f"\n核心对比配置 ({len(core_configs)}个):")
-    for config in core_configs:
-        print(f"  {config['name']:40s} | 参与率={config['participation_rate']:6.2%} | 福利={config['social_welfare']:8.4f}")
-    
-    print(f"\n补偿扫描: {len(payment_sweep)}个补偿水平")
-    
-    print(f"\n📁 所有文件已保存到 data/ground_truth/ 目录")
-
-
-if __name__ == "__main__":
     try:
-        main()
+        # 1. 生成最优GT（两种数据结构）
+        print("\n" + "=" * 70)
+        print("第一步：生成最优Ground Truth（论文理论解）")
+        print("=" * 70)
+        
+        generate_optimal_gt_common_experience()
+        generate_optimal_gt_common_preferences()
+        
+        # 2. 生成条件均衡（研究用）
+        print("\n" + "=" * 70)
+        print("第二步：生成条件均衡（研究用）")
+        print("=" * 70)
+        
+        generate_conditional_equilibria_for_comparison()
+        
+        print("\n" + "=" * 70)
+        print("✅ 所有Ground Truth生成完成！")
+        print("=" * 70)
+        print("\n生成文件列表：")
+        print("  • scenario_c_common_experience_optimal.json（最优GT）")
+        print("  • scenario_c_common_preferences_optimal.json（最优GT）")
+        print("  • scenario_c_common_preferences_identified_m1.0.json（条件均衡）")
+        print("  • scenario_c_common_preferences_anonymized_m1.0.json（条件均衡）")
+        print("  • scenario_c_common_experience_identified_m1.0.json（条件均衡）")
+        print("  • scenario_c_common_experience_anonymized_m1.0.json（条件均衡）")
+        print()
+    
     except Exception as e:
         print(f"\n❌ 生成失败: {e}")
         import traceback
         traceback.print_exc()
+
+
+if __name__ == "__main__":
+    main()

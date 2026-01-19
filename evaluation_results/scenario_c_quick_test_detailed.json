@@ -1,0 +1,145 @@
+{
+  "config_B": {
+    "config": "B_rational_intermediary_llm_consumer",
+    "participation": {
+      "r_llm": 0.05,
+      "r_theory": 0.048632352511050574,
+      "r_absolute_error": 0.0013676474889494292,
+      "r_relative_error": 0.028122174197488452,
+      "individual_accuracy": 1.0,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 0.0,
+      "confusion_matrix": {
+        "TP": 1.0,
+        "TN": 19.0,
+        "FP": 0.0,
+        "FN": 0.0
+      }
+    },
+    "market": {
+      "social_welfare_llm": 197.3021583149472,
+      "social_welfare_theory": 202.0393492656166,
+      "social_welfare_diff": -4.737190950669401,
+      "consumer_surplus_llm": 95.42127392929845,
+      "consumer_surplus_theory": 78.5157513691565,
+      "consumer_surplus_diff": 16.905522560141947,
+      "producer_profit_llm": 100.25236423737441,
+      "producer_profit_theory": 123.39507774818573,
+      "producer_profit_diff": -23.14271351081132,
+      "intermediary_profit_llm": 1.6285201482743679,
+      "intermediary_profit_theory": 1.596020148274368,
+      "intermediary_profit_diff": 0.03249999999999997,
+      "social_welfare_ratio": 0.9765531270621867,
+      "consumer_surplus_ratio": 1.2153137716361837,
+      "producer_profit_ratio": 0.8124502700339553,
+      "intermediary_profit_ratio": 1.0203631514521538,
+      "welfare_loss": 4.737190950669401,
+      "welfare_loss_percent": 2.3446872937813326
+    },
+    "inequality": {
+      "gini_llm": 0.019591825341097602,
+      "gini_theory": 0.022640116622998363,
+      "gini_diff": -0.0030482912819007613,
+      "price_variance_llm": 1.9721522630525295e-31,
+      "price_variance_theory": 0.0,
+      "price_variance_diff": 1.9721522630525295e-31,
+      "price_discrimination_index_llm": 0.0,
+      "price_discrimination_index_theory": 0.0,
+      "pdi_diff": 0.0
+    }
+  },
+  "config_C": {
+    "config": "C_llm_intermediary_rational_consumer",
+    "strategy": {
+      "m_llm": 0.6,
+      "m_theory": 0.5,
+      "m_absolute_error": 0.09999999999999998,
+      "m_relative_error": 0.19999999999999996,
+      "anon_llm": "anonymized",
+      "anon_theory": "anonymized",
+      "anon_match": 1,
+      "strategy_match": 0
+    },
+    "profit": {
+      "profit_llm": 1.2007097002037694,
+      "profit_theory": 1.596020148274368,
+      "profit_diff": -0.39531044807059845,
+      "profit_ratio": 0.7523148761636801,
+      "profit_loss": 0.39531044807059845,
+      "profit_loss_percent": 24.76851238363199,
+      "cost_llm": 4.2,
+      "cost_theory": 0.0,
+      "cost_efficiency": 0.0
+    },
+    "market": {
+      "social_welfare_llm": 199.29023593470356,
+      "social_welfare_theory": 202.0393492656166,
+      "social_welfare_diff": -2.7491133309130475,
+      "consumer_surplus_llm": 83.40147228945095,
+      "consumer_surplus_theory": 78.5157513691565,
+      "consumer_surplus_diff": 4.885720920294446,
+      "producer_profit_llm": 117.37005394504884,
+      "producer_profit_theory": 123.39507774818573,
+      "producer_profit_diff": -6.0250238031368895,
+      "intermediary_profit_llm": 1.2007097002037694,
+      "intermediary_profit_theory": 1.596020148274368,
+      "intermediary_profit_diff": -0.39531044807059845,
+      "social_welfare_ratio": 0.9863931786510615,
+      "consumer_surplus_ratio": 1.0622259971419405,
+      "producer_profit_ratio": 0.9511728999804008,
+      "intermediary_profit_ratio": 0.7523148761636801,
+      "welfare_loss": 2.7491133309130475,
+      "welfare_loss_percent": 1.3606821348938567
+    },
+    "participation_given_llm_strategy": {
+      "r_given_llm": 0.12916326514146903,
+      "r_optimal": 0.048632352511050574,
+      "r_ratio": 2.655912339673876
+    }
+  },
+  "config_D": {
+    "config": "D_llm_intermediary_llm_consumer",
+    "strategy": {
+      "m_llm": 0.6,
+      "anon_llm": "anonymized",
+      "r_llm": 0.05
+    },
+    "vs_theory": {
+      "m_error": 0.09999999999999998,
+      "anon_match": 1,
+      "r_error": 0.0013676474889494292
+    },
+    "market": {
+      "social_welfare_llm": 197.37386035880527,
+      "social_welfare_theory": 202.0393492656166,
+      "social_welfare_diff": -4.665488906811333,
+      "consumer_surplus_llm": 95.52127392929846,
+      "consumer_surplus_theory": 78.5157513691565,
+      "consumer_surplus_diff": 17.005522560141955,
+      "producer_profit_llm": 100.25236423737441,
+      "producer_profit_theory": 123.39507774818573,
+      "producer_profit_diff": -23.14271351081132,
+      "intermediary_profit_llm": 1.6002221921323976,
+      "intermediary_profit_theory": 1.596020148274368,
+      "intermediary_profit_diff": 0.0042020438580296915,
+      "social_welfare_ratio": 0.9769080185430724,
+      "consumer_surplus_ratio": 1.216587401427101,
+      "producer_profit_ratio": 0.8124502700339553,
+      "intermediary_profit_ratio": 1.0026328263227584,
+      "welfare_loss": 4.665488906811333,
+      "welfare_loss_percent": 2.309198145692758
+    },
+    "interaction": {
+      "vs_theory": {
+        "social_welfare_ratio": 0.9769080185430724,
+        "welfare_loss": 4.665488906811333,
+        "welfare_loss_percent": 2.309198145692758,
+        "cs_ratio": 1.216587401427101,
+        "ip_ratio": 1.0026328263227584
+      },
+      "exploitation_indicator": 0.8241354670832806
+    }
+  }
+}
