@@ -16,53 +16,49 @@
 
 ```
 benchmark/
-├── src/                          # 源代码
-│   ├── evaluators/               # 评估器模块
-│   │   ├── __init__.py
-│   │   ├── llm_client.py        # LLM客户端封装
-│   │   ├── evaluate_scenario_a.py  # 场景A评估器
-│   │   ├── evaluate_scenario_b.py  # 场景B评估器
-│   │   └── evaluate_scenario_c.py  # 场景C评估器 ✨
-│   ├── scenarios/                # 场景生成器
-│   │   ├── __init__.py
-│   │   ├── scenario_a_personalization.py  # 场景A理论求解器
-│   │   ├── scenario_b_too_much_data.py    # 场景B理论求解器
-│   │   └── scenario_c_social_data.py      # 场景C理论求解器 ✨
-│   └── utils/                    # 工具函数
-│       ├── __init__.py
-│       └── extract_pdf_text.py   # PDF文本提取工具
-├── data/                         # 数据文件
-│   ├── ground_truth/             # Ground Truth数据
-│   │   ├── scenario_a_result.json
-│   │   └── scenario_b_result.json
-│   └── test_results/             # 测试结果
-│       ├── test_eval_scenario_a.json
-│       └── test_eval_scenario_b.json
-├── configs/                      # 配置文件
-│   └── model_configs.json        # LLM模型配置
-├── docs/                         # 文档
-│   ├── design/                   # 设计文档
-│   │   ├── 设计方案.md
-│   │   ├── 最终设计方案.md
-│   │   ├── 新方案.md
-│   │   ├── 指标.md
-│   │   └── 场景.md
-│   ├── README_evaluation.md      # 详细使用说明
-│   ├── README_scenarios.md       # Ground truth生成说明
-│   └── QUICKSTART.md            # 🔥 快速开始指南
-├── papers/                       # 论文PDF
-│   ├── Personalization and privacy choice.pdf
-│   ├── Too Much Data Prices and Inefficiencies in Data Markets.pdf
-│   ├── The Economics of Social Data.pdf
-│   ├── Data-enabled learning, network effects, and competitive advantage.pdf
-│   ├── To Partner or Not to Partner The Partnership Between Platforms and Data Brokers in Two-sided Markets.pdf
-│   ├── _ICDE_2026__llm_amplify_inequality_in_data_market (3).pdf
-│   └── extracted_text/           # 提取的论文文本
-├── evaluation_results/           # 评估结果输出目录（自动创建）
-├── run_evaluation.py             # 主评估脚本
-├── test_evaluation.py            # 测试脚本
-└── README.md                     # 本文件
+├── src/
+│   ├── evaluators/
+│   │   ├── evaluate_scenario_a.py
+│   │   ├── evaluate_scenario_b.py
+│   │   ├── evaluate_scenario_c.py          # 场景C评估器（可直接运行，支持真实LLM）⭐
+│   │   └── scenario_c_metrics.py
+│   └── scenarios/
+│       ├── generate_scenario_c_gt.py       # 生成场景C Ground Truth
+│       └── scenario_c_social_data.py       # 场景C理论求解器（Stackelberg + m0内生化）
+├── configs/
+│   └── model_configs.json                 # 模型配置（OpenAI兼容base_url等）
+├── data/
+│   └── ground_truth/                      # 生成的GT输出目录（自动创建）
+├── evaluation_results/                    # 评估输出目录（自动创建/保存）
+└── docs/
+    ├── README_scenario_c_evaluator.md     # 场景C评估器使用说明 ⭐
+    ├── README_evaluation.md
+    └── README_scenarios.md
 ```
+
+## 🚀 快速开始（场景C，真实LLM）
+
+### 0) 安装依赖
+
+```bash
+pip install openai numpy pandas
+```
+
+Windows 建议先设置：`$env:PYTHONIOENCODING="utf-8"`
+
+### 1) 生成 Ground Truth（只需一次）
+
+```bash
+python -m src.scenarios.generate_scenario_c_gt
+```
+
+### 2) 运行评估器（真实LLM）
+
+```bash
+python src/evaluators/evaluate_scenario_c.py
+```
+
+在 `src/evaluators/evaluate_scenario_c.py` 里修改 **`TARGET_MODEL = "gpt-4.1-mini"`** 来选择模型（按 `configs/model_configs.json` 的 `config_name` 匹配）。
 
 ## 📦 模块说明
 
@@ -88,9 +84,8 @@ benchmark/
 
 ### docs/
 文档目录
-- `design/`: 设计文档（中文）
 - `README_*.md`: 各种说明文档
-- `QUICKSTART.md`: 快速开始指南
+- `README_scenario_c_evaluator.md`: 场景C评估器使用说明（推荐先看）
 
 ### papers/
 论文PDF及提取的文本
@@ -189,12 +184,11 @@ benchmark/
 
 ## 🚀 使用示例
 
-### 快速测试（验证系统）
+### 场景C（推荐：真实LLM）
 
 ```bash
-# Windows PowerShell
-$env:PYTHONIOENCODING="utf-8"
-python test_evaluation.py
+python -m src.scenarios.generate_scenario_c_gt
+python src/evaluators/evaluate_scenario_c.py
 ```
 
 ### 单个场景评估
@@ -340,8 +334,8 @@ python run_evaluation.py \
 - [x] 完成LLM客户端封装
 - [x] 测试完整评估流程
 - [x] 实现场景C（Economics of Social Data）✨
-- [ ] 测试场景C并生成Ground Truth
-- [ ] 集成场景C到主评估脚本
+- [x] 生成场景C Ground Truth
+- [ ] （可选）将场景C集成到 run_evaluation.py 统一入口
 - [ ] 实现场景D（Data-enabled Learning）
 - [ ] 实现场景E（Platform-Data Broker Partnership）
 - [ ] 添加解释题评估（keypoints + factor_ranks）
@@ -353,14 +347,14 @@ python run_evaluation.py \
 1. **API成本**：每个完整评估约需100-300次LLM调用
 2. **运行时间**：单个场景约5-15分钟
 3. **编码问题**（Windows）：运行前设置`$env:PYTHONIOENCODING="utf-8"`
-4. **API密钥安全**：不要将`model_configs.json`提交到公开仓库
+4. **API密钥安全**：如果仓库公开，请不要在 `configs/model_configs.json` 中明文保存密钥；建议改为环境变量或使用私有仓库。
 
 ## 📞 联系方式
 
 如有问题，请查看：
-- `QUICKSTART.md` - 快速开始
-- `README_evaluation.md` - 详细文档
-- `最终设计方案.md` - 设计方案
+- `docs/README_scenario_c_evaluator.md` - 场景C评估器说明
+- `docs/README_evaluation.md` - 评估系统说明
+- `docs/README_scenarios.md` - 场景与GT生成说明
 
 ---
 

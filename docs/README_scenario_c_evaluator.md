@@ -17,17 +17,25 @@
 
 ## 快速开始
 
-### 方式1：直接运行（最简单）⭐
+### 方式1：直接运行（推荐，真实LLM）⭐
 
 ```bash
 # 1. 生成Ground Truth（如果还没有）
 python -m src.scenarios.generate_scenario_c_gt
 
-# 2. 直接运行评估器（使用内置的模拟LLM）
+# 2. 直接运行评估器（使用 configs/model_configs.json 中配置的真实LLM）
 python src/evaluators/evaluate_scenario_c.py
 ```
 
-这会运行一个完整的演示，评估所有4种配置（A、B、C、D）！
+这会运行评估并输出 CSV/JSON 到 `evaluation_results/`。
+
+#### 选择要评估的模型
+
+在 `src/evaluators/evaluate_scenario_c.py` 中修改：
+
+- `TARGET_MODEL = "gpt-4.1-mini"`
+
+它会按 `configs/model_configs.json` 中的 `config_name` 精确匹配。
 
 ---
 
