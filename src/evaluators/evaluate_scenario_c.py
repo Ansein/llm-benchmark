@@ -144,7 +144,10 @@ class ScenarioCEvaluator:
         for i in range(N):
             consumer = {
                 'tau_i': float(tau_values[i]),
+                'data_structure': self.params_base['data_structure'],
             }
+            if 's' in sample_data:
+                consumer['s_i'] = float(sample_data['s'][i])
             
             # 根据data_structure添加theta和w
             if self.params_base['data_structure'] == 'common_preferences':
@@ -409,6 +412,7 @@ class ScenarioCEvaluator:
             'tau_mean': self.params_base['tau_mean'],
             'tau_std': self.params_base['tau_std'],
             'data_structure': self.params_base['data_structure'],
+            'm_init': 1.0,
         }
         
         if callable(llm_intermediary_agent):
@@ -519,6 +523,7 @@ class ScenarioCEvaluator:
             'tau_mean': self.params_base['tau_mean'],
             'tau_std': self.params_base['tau_std'],
             'data_structure': self.params_base['data_structure'],
+            'm_init': 1.0,
         }
 
         history: List[Dict] = []
@@ -544,15 +549,38 @@ class ScenarioCEvaluator:
                 print(f"LLM选择: m={m_llm:.4f}, {anon_llm}")
 
             # 计算理性消费者对该策略的反应
-            result_llm = evaluate_intermediary_strategy(
-                m=m_llm,
-                anonymization=anon_llm,
-                params_base=self.params_base,
-                num_mc_samples=50,
-                max_iter=100,
-                tol=1e-3,
-                seed=self.params_base['seed']
-            )
+            try:
+                result_llm = evaluate_intermediary_strategy(
+                    m=m_llm,
+                    anonymization=anon_llm,
+                    params_base=self.params_base,
+                    num_mc_samples=50,
+                    max_iter=100,
+                    tol=1e-3,
+                    seed=self.params_base['seed']
+                )
+            except RuntimeError as e:
+                # 修改：固定点不收敛时不中断整个评估，记录失败轮次并继续
+                if verbose:
+                    print(f"⚠️ 固定点未收敛，跳过该轮: {e}")
+                round_info = {
+                    "round": t,
+                    "m": float(m_llm),
+                    "anonymization": anon_llm,
+                    "participation_rate": 0.0,
+                    "num_participants": 0,
+                    "m0": 0.0,
+                    "intermediary_cost": 0.0,
+                    "intermediary_profit": -1e9,
+                    "reasons": {
+                        "participants": [],
+                        "rejecters": []
+                    },
+                    "converged": False,
+                    "error": str(e)
+                }
+                history.append(round_info)
+                continue
 
             profit_llm = result_llm.intermediary_profit
             r_given_llm = result_llm.r_star
@@ -586,7 +614,8 @@ class ScenarioCEvaluator:
                 "reasons": {
                     "participants": reasons_participants,
                     "rejecters": reasons_rejecters
-                }
+                },
+                "converged": True
             }
             history.append(round_info)
 
@@ -685,6 +714,7 @@ class ScenarioCEvaluator:
             'tau_mean': self.params_base['tau_mean'],
             'tau_std': self.params_base['tau_std'],
             'data_structure': self.params_base['data_structure'],
+            'm_init': 1.0,
         }
 
         history: List[Dict] = []
@@ -900,6 +930,7 @@ class ScenarioCEvaluator:
             'tau_mean': self.params_base['tau_mean'],
             'tau_std': self.params_base['tau_std'],
             'data_structure': self.params_base['data_structure'],
+            'm_init': 1.0,
         }
         
         if callable(llm_intermediary_agent):
@@ -1057,12 +1088,17 @@ class ScenarioCEvaluator:
             "Consumer Surplus": self.gt_A['equilibrium']['consumer_surplus'],
             "Producer Profit": self.gt_A['equilibrium']['producer_profit'],
             "Intermediary Profit": self.gt_A['equilibrium']['intermediary_profit'],
-            "Welfare Loss (%)": 0.0,
+            "Intermediary Profit Loss (%)": 0.0,
         }
         rows.append(row_A)
         
         # 配置B
         if results_B:
+            profit_theory = self.gt_A['equilibrium']['intermediary_profit']
+            profit_B = results_B['market']['intermediary_profit_llm']
+            profit_loss_B = (
+                (profit_theory - profit_B) / profit_theory if profit_theory != 0 else 0.0
+            )
             row_B = {
                 "Config": "B",
                 "Intermediary": "Rational",
@@ -1074,12 +1110,17 @@ class ScenarioCEvaluator:
                 "Consumer Surplus": results_B['market']['consumer_surplus_llm'],
                 "Producer Profit": results_B['market']['producer_profit_llm'],
                 "Intermediary Profit": results_B['market']['intermediary_profit_llm'],
-                "Welfare Loss (%)": results_B['market']['welfare_loss_percent'],
+                "Intermediary Profit Loss (%)": profit_loss_B * 100,
             }
             rows.append(row_B)
         
         # 配置C
         if results_C:
+            profit_theory = self.gt_A['equilibrium']['intermediary_profit']
+            profit_C = results_C['profit']['profit_llm']
+            profit_loss_C = (
+                (profit_theory - profit_C) / profit_theory if profit_theory != 0 else 0.0
+            )
             row_C = {
                 "Config": "C",
                 "Intermediary": "LLM",
@@ -1091,12 +1132,17 @@ class ScenarioCEvaluator:
                 "Consumer Surplus": results_C['market']['consumer_surplus_llm'],
                 "Producer Profit": results_C['market']['producer_profit_llm'],
                 "Intermediary Profit": results_C['profit']['profit_llm'],
-                "Welfare Loss (%)": results_C['market']['welfare_loss_percent'],
+                "Intermediary Profit Loss (%)": profit_loss_C * 100,
             }
             rows.append(row_C)
         
         # 配置D
         if results_D:
+            profit_theory = self.gt_A['equilibrium']['intermediary_profit']
+            profit_D = results_D['market']['intermediary_profit_llm']
+            profit_loss_D = (
+                (profit_theory - profit_D) / profit_theory if profit_theory != 0 else 0.0
+            )
             row_D = {
                 "Config": "D",
                 "Intermediary": "LLM",
@@ -1108,7 +1154,7 @@ class ScenarioCEvaluator:
                 "Consumer Surplus": results_D['market']['consumer_surplus_llm'],
                 "Producer Profit": results_D['market']['producer_profit_llm'],
                 "Intermediary Profit": results_D['market']['intermediary_profit_llm'],
-                "Welfare Loss (%)": results_D['market']['welfare_loss_percent'],
+                "Intermediary Profit Loss (%)": profit_loss_D * 100,
             }
             rows.append(row_D)
         
@@ -1198,6 +1244,19 @@ if __name__ == "__main__":
         
         def _call_llm_consumer(consumer_params, m, anonymization):
             """调用LLM并返回(决策, 理由, 原始回复)"""
+            data_structure = consumer_params.get('data_structure', 'common_preferences')
+            s_i = consumer_params.get('s_i', None)
+            signal_text = f"你的私人信号 s_i = {s_i:.2f}" if s_i is not None else "你的私人信号 s_i 未提供"
+            if data_structure == "common_preferences":
+                structure_text = (
+                    "共同偏好：所有消费者真实偏好相同（记为 θ），"
+                    "你的信号满足 s_i = θ + 个体噪声。"
+                )
+            else:
+                structure_text = (
+                    "共同经历：每个消费者真实偏好不同（记为 θ_i），但信号含共同冲击，"
+                    "s_i = θ_i + ε（ε对所有人相同）。"
+                )
             # 构建提示词 v3：机制更清楚（但不提供“怎么算/该选什么”的步骤）
             prompt = f"""你是消费者，需要在“参与数据分享计划”与“拒绝参与”之间做选择。你的目标是最大化你的期望净效用（补偿 + 市场结果带来的收益 − 隐私成本）。
 
@@ -1210,6 +1269,13 @@ if __name__ == "__main__":
 【你的参数】
 - 偏好强度 θ_i = {consumer_params['theta_i']:.2f} （越大表示你越喜欢该产品/更可能购买）
 - 隐私成本 τ_i = {consumer_params['tau_i']:.2f} （参与会带来这项隐私损失成本）
+
+【你的私人信号】
+- {signal_text}
+
+【数据结构说明】
+- 当前结构：{data_structure}
+- {structure_text}
 
 【决策要求】
 请你判断：参与是否“值得”。你不需要精确计算市场均衡，但要考虑以下要点：
@@ -1287,8 +1353,11 @@ if __name__ == "__main__":
             """LLM中介策略选择"""
             # 修改：在提示中加入“上一轮反馈/历史摘要”，引导多轮学习（但不教其计算方法）
             feedback_text = ""
+            m_prev = market_params.get("m_init", 1.0)
+            history_text = ""
             if feedback:
                 reasons = feedback.get("reasons", {})
+                m_prev = float(feedback.get("m", m_prev))
                 feedback_text = f"""
 
 【上一轮结果（仅供参考）】
@@ -1300,6 +1369,28 @@ if __name__ == "__main__":
 - 参与者理由（逐条）: {reasons.get('participants')}
 - 拒绝者理由（逐条）: {reasons.get('rejecters')}
 """
+            # 修改：历史记忆管理（按利润排序，便于观察趋势）
+            if history:
+                try:
+                    sorted_history = sorted(
+                        history,
+                        key=lambda x: float(x.get("intermediary_profit", 0.0)),
+                        reverse=True
+                    )
+                except Exception:
+                    sorted_history = history
+                history_lines = []
+                for h in sorted_history:
+                    history_lines.append(
+                        f"m={float(h.get('m', 0.0)):.2f}, "
+                        f"anon={h.get('anonymization')}, "
+                        f"r={float(h.get('participation_rate', 0.0)):.3f}, "
+                        f"profit={float(h.get('intermediary_profit', 0.0)):.3f}"
+                    )
+                history_text = (
+                    "\n【历史记忆（按利润从高到低排序）】\n"
+                    + "\n".join(history_lines)
+                )
 
             prompt = f"""你是“数据中介”，你的目标是最大化你的期望利润。
 
@@ -1311,12 +1402,15 @@ if __name__ == "__main__":
 
 【你的决策（你先动）】
 你要选择：
-1) 补偿 m（范围 0 到 3）：你向每个参与者支付的金额
+1) 本轮补偿的改变量 Δm（范围 -0.5 到 0.5）
 2) 匿名化策略：identified 或 anonymized
 
 【消费者反应（随后）】
 消费者会比较“参与的期望净收益”与其隐私成本 τ_i 来决定是否参与。
-一般来说：m 越高，参与率越高；identified 可能降低参与激励（因个性化定价风险），anonymized 可能提高参与激励。
+一般来说：m 越高，参与率越高；identified 往往提高数据的可识别度与定价精度但可能降低参与率，anonymized 往往提高参与率但可能降低个性化定价能力。请自行权衡利润。
+
+【学习提示（不提供计算步骤）】
+请以历史中“利润最高”的策略为基准，做小幅微调，目标是进一步提高你的利润。
 
 【你卖给商家的数据费 m0（关键）】
 商家愿意为数据支付的价格 m0 由“数据带来的商家利润增量”决定：
@@ -1328,8 +1422,10 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
 
 【输出格式（必须严格遵守）】
 只输出一行 JSON，不要输出任何额外文字：
-{{"m": 数字,"anonymization":"identified" 或 "anonymized","reason":"50-100字"}}
+{{"delta_m": 数字,"anonymization":"identified" 或 "anonymized","reason":"50-100字"}}
 {feedback_text}
+{history_text}
+上一轮 m = {m_prev:.2f}，本轮 m = clamp(m_prev + Δm, 0, 3)。
 请给出你的选择。
 """
 
@@ -1349,8 +1445,15 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
                 json_match = re.search(r'\{[^}]+\}', answer)
                 if json_match:
                     result = json.loads(json_match.group())
-                    m = float(result['m'])
-                    anon = result['anonymization']
+                    anon = result.get('anonymization')
+                    if 'delta_m' in result:
+                        delta_m = float(result['delta_m'])
+                        delta_m = max(-0.5, min(0.5, delta_m))
+                        m = m_prev + delta_m
+                    elif 'm' in result:
+                        m = float(result['m'])
+                    else:
+                        m = m_prev
                     
                     # 验证合法性
                     m = max(0.0, min(3.0, m))
@@ -1377,110 +1480,115 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
     print("✅ LLM代理创建成功")
     
     # ========================================================================
-    # 1. 初始化评估器
+    # 1. 初始化评估器（共同偏好 + 共同经历）
     # ========================================================================
-    print("\n" + "=" * 70)
-    print("步骤1: 加载Ground Truth")
-    print("=" * 70)
+    gt_jobs = [
+        ("common_preferences", "data/ground_truth/scenario_c_common_preferences_optimal.json"),
+        ("common_experience", "data/ground_truth/scenario_c_common_experience_optimal.json"),
+    ]
     
-    gt_path = "data/ground_truth/scenario_c_common_preferences_optimal.json"
-    
-    try:
-        evaluator = ScenarioCEvaluator(gt_path)
-        print(f"✅ 成功加载: {gt_path}")
-        print(f"\n理论基准（配置A）:")
-        print(f"  m* = {evaluator.gt_A['optimal_strategy']['m_star']:.4f}")
-        print(f"  anonymization* = {evaluator.gt_A['optimal_strategy']['anonymization_star']}")
-        print(f"  r* = {evaluator.gt_A['optimal_strategy']['r_star']:.4f}")
-        print(f"  中介利润* = {evaluator.gt_A['optimal_strategy']['intermediary_profit_star']:.4f}")
+    for gt_tag, gt_path in gt_jobs:
+        print("\n" + "=" * 70)
+        print(f"步骤1: 加载Ground Truth（{gt_tag}）")
+        print("=" * 70)
         
-    except FileNotFoundError:
-        print(f"❌ 找不到Ground Truth文件: {gt_path}")
-        print(f"\n请先运行以下命令生成Ground Truth:")
-        print(f"  python -m src.scenarios.generate_scenario_c_gt")
-        sys.exit(1)
-    
-    # ========================================================================
-    # 2. 评估配置B（LLM消费者）
-    # ========================================================================
-    print("\n" + "=" * 70)
-    print(f"步骤2: 评估配置B（理性中介 × {model_name}消费者）")
-    print("=" * 70)
-    
-    results_B = evaluator.evaluate_config_B(
-        llm_consumer_agent=llm_consumer,
-        verbose=True
-    )
-    
-    # ========================================================================
-    # 3. 评估配置C（LLM中介）
-    # ========================================================================
-    print("\n" + "=" * 70)
-    print(f"步骤3: 评估配置C（{model_name}中介 × 理性消费者）")
-    print("=" * 70)
-    
-    # 修改：使用多轮学习版中介评估
-    results_C = evaluator.evaluate_config_C_iterative(
-        llm_intermediary_agent=llm_intermediary,
-        rounds=20,
-        verbose=True
-    )
-    
-    # ========================================================================
-    # 4. 评估配置D（双边LLM）
-    # ========================================================================
-    print("\n" + "=" * 70)
-    print(f"步骤4: 评估配置D（{model_name}中介 × {model_name}消费者）")
-    print("=" * 70)
-    
-    # 修改：使用多轮学习版中介评估（配置D）
-    results_D = evaluator.evaluate_config_D_iterative(
-        llm_intermediary_agent=llm_intermediary,
-        llm_consumer_agent=llm_consumer,
-        rounds=20,
-        verbose=True
-    )
-    
-    # ========================================================================
-    # 5. 生成综合报告
-    # ========================================================================
-    print("\n" + "=" * 70)
-    print("步骤5: 生成综合报告")
-    print("=" * 70)
-    
-    timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
-    output_path = f"evaluation_results/scenario_c_{model_name}_{timestamp}.csv"
-    df = evaluator.generate_report(
-        results_B=results_B,
-        results_C=results_C,
-        results_D=results_D,
-        output_path=output_path
-    )
-    
-    print("\n报告预览:")
-    print(df.to_string(index=False))
-    
-    # 6. 保存详细结果
-    detailed_results = {
-        "model": model_name,
-        "timestamp": timestamp,
-        "config_B": results_B,
-        "config_C": results_C,
-        "config_D": results_D,
-    }
-    
-    output_json = f"evaluation_results/scenario_c_{model_name}_{timestamp}_detailed.json"
-    Path(output_json).parent.mkdir(parents=True, exist_ok=True)
-    with open(output_json, 'w', encoding='utf-8') as f:
-        json.dump(detailed_results, f, indent=2, ensure_ascii=False)
-    
-    print(f"\n详细结果已保存到: {output_json}")
-    
-    print("\n" + "=" * 70)
-    print("✅ 评估完成！")
-    print("=" * 70)
-    print(f"\n📊 评估模型: {model_name}")
-    print(f"📁 结果文件:")
-    print(f"  • CSV报告: {output_path}")
-    print(f"  • 详细JSON: {output_json}")
-    print()
+        try:
+            evaluator = ScenarioCEvaluator(gt_path)
+            print(f"✅ 成功加载: {gt_path}")
+            print(f"\n理论基准（配置A）:")
+            print(f"  m* = {evaluator.gt_A['optimal_strategy']['m_star']:.4f}")
+            print(f"  anonymization* = {evaluator.gt_A['optimal_strategy']['anonymization_star']}")
+            print(f"  r* = {evaluator.gt_A['optimal_strategy']['r_star']:.4f}")
+            print(f"  中介利润* = {evaluator.gt_A['optimal_strategy']['intermediary_profit_star']:.4f}")
+            
+        except FileNotFoundError:
+            print(f"❌ 找不到Ground Truth文件: {gt_path}")
+            print(f"\n请先运行以下命令生成 Ground Truth:")
+            print(f"  python -m src.scenarios.generate_scenario_c_gt")
+            sys.exit(1)
+        
+        # ====================================================================
+        # 2. 评估配置B（LLM消费者）
+        # ====================================================================
+        print("\n" + "=" * 70)
+        print(f"步骤2: 评估配置B（理性中介 × {model_name}消费者）")
+        print("=" * 70)
+        
+        results_B = evaluator.evaluate_config_B(
+            llm_consumer_agent=llm_consumer,
+            verbose=True
+        )
+        
+        # ====================================================================
+        # 3. 评估配置C（LLM中介）
+        # ====================================================================
+        print("\n" + "=" * 70)
+        print(f"步骤3: 评估配置C（{model_name}中介 × 理性消费者）")
+        print("=" * 70)
+        
+        # 修改：使用多轮学习版中介评估
+        results_C = evaluator.evaluate_config_C_iterative(
+            llm_intermediary_agent=llm_intermediary,
+            rounds=20,
+            verbose=True
+        )
+        
+        # ====================================================================
+        # 4. 评估配置D（双边LLM）
+        # ====================================================================
+        print("\n" + "=" * 70)
+        print(f"步骤4: 评估配置D（{model_name}中介 × {model_name}消费者）")
+        print("=" * 70)
+        
+        # 修改：使用多轮学习版中介评估（配置D）
+        results_D = evaluator.evaluate_config_D_iterative(
+            llm_intermediary_agent=llm_intermediary,
+            llm_consumer_agent=llm_consumer,
+            rounds=20,
+            verbose=True
+        )
+        
+        # ====================================================================
+        # 5. 生成综合报告
+        # ====================================================================
+        print("\n" + "=" * 70)
+        print(f"步骤5: 生成综合报告（{gt_tag}）")
+        print("=" * 70)
+        
+        timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
+        output_path = f"evaluation_results/scenario_c_{gt_tag}_{model_name}_{timestamp}.csv"
+        df = evaluator.generate_report(
+            results_B=results_B,
+            results_C=results_C,
+            results_D=results_D,
+            output_path=output_path
+        )
+        
+        print("\n报告预览:")
+        print(df.to_string(index=False))
+        
+        # 6. 保存详细结果
+        detailed_results = {
+            "model": model_name,
+            "timestamp": timestamp,
+            "gt_tag": gt_tag,
+            "config_B": results_B,
+            "config_C": results_C,
+            "config_D": results_D,
+        }
+        
+        output_json = f"evaluation_results/scenario_c_{gt_tag}_{model_name}_{timestamp}_detailed.json"
+        Path(output_json).parent.mkdir(parents=True, exist_ok=True)
+        with open(output_json, 'w', encoding='utf-8') as f:
+            json.dump(detailed_results, f, indent=2, ensure_ascii=False)
+        
+        print(f"\n详细结果已保存到: {output_json}")
+        
+        print("\n" + "=" * 70)
+        print(f"✅ 评估完成（{gt_tag}）！")
+        print("=" * 70)
+        print(f"\n📊 评估模型: {model_name}")
+        print(f"📁 结果文件:")
+        print(f"  • CSV报告: {output_path}")
+        print(f"  • 详细JSON: {output_json}")
+        print()
