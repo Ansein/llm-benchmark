@@ -1,0 +1,12 @@
+{
+  "experiment_meta": {
+    "model_name": "gpt-4.1-mini",
+    "timestamp": "20260122_170924",
+    "total_versions": 1
+  },
+  "versions": {
+    "b.v0": {
+      "error": "LLMClient.__init__() got an unexpected keyword argument 'model_name'"
+    }
+  }
+}
