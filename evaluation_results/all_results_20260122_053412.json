@@ -1,0 +1,44 @@
+[
+  {
+    "scenario": "C",
+    "model_name": "gpt-4.1-mini",
+    "result": {
+      "model": "gpt-4.1-mini",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260121_233455_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260121_233455.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260121_235434_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260121_235434.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "deepseek-v3",
+    "result": {
+      "model": "deepseek-v3",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260122_001816_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260122_001816.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260122_004023_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260122_004023.csv"
+        }
+      ]
+    }
+  }
+]

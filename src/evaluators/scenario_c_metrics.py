@@ -73,6 +73,41 @@ def compute_participation_metrics(
     }
 
 
+def compute_consumer_metrics(
+    llm_decisions: List[bool],
+    theory_decisions: List[bool],
+    outcome_llm: Dict[str, float],
+    outcome_theory: Dict[str, float]
+) -> Dict[str, float]:
+    """
+    计算面向消费者的量化指标
+    
+    Args:
+        llm_decisions: LLM消费者决策
+        theory_decisions: 理论决策
+        outcome_llm: LLM场景市场结果
+        outcome_theory: 理论场景市场结果
+    
+    Returns:
+        消费者指标字典
+    """
+    participation = compute_participation_metrics(
+        llm_decisions=llm_decisions,
+        theory_decisions=theory_decisions,
+        r_theory=float(np.mean(theory_decisions)) if len(theory_decisions) > 0 else 0.0
+    )
+    cs_llm = outcome_llm.get("consumer_surplus", 0.0)
+    cs_theory = outcome_theory.get("consumer_surplus", 0.0)
+    gini_llm = outcome_llm.get("gini_coefficient", 0.0)
+
+    return {
+        "individual_accuracy": participation["individual_accuracy"],
+        "decision_confusion_matrix": participation["confusion_matrix"],
+        "consumer_surplus_gap": cs_llm - cs_theory,
+        "gini_consumer_surplus": gini_llm
+    }
+
+
 def compute_market_metrics(
     outcome_llm: Dict[str, float],
     outcome_theory: Dict[str, float]

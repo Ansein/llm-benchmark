@@ -15,7 +15,7 @@ import json
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from typing import Dict, List, Callable, Optional, Tuple
+from typing import Dict, List, Callable, Optional, Tuple, Any
 from dataclasses import dataclass
 
 # 处理直接运行和模块导入两种情况
@@ -40,7 +40,8 @@ from src.evaluators.scenario_c_metrics import (
     compute_strategy_metrics,
     compute_profit_metrics,
     compute_ranking_metrics,
-    compute_interaction_metrics
+    compute_interaction_metrics,
+    compute_consumer_metrics
 )
 
 
@@ -219,22 +220,32 @@ class ScenarioCEvaluator:
         market_params: Dict,
         feedback: Optional[Dict] = None,
         history: Optional[List[Dict]] = None
-    ) -> Tuple[float, str]:
-        """安全调用中介代理，兼容是否支持反馈/历史"""
+    ) -> Tuple[float, str, str, str]:
+        """安全调用中介代理，兼容是否支持反馈/历史，并返回理由与原始输出"""
         if callable(llm_intermediary_agent):
             try:
-                return llm_intermediary_agent(
+                result = llm_intermediary_agent(
                     market_params=market_params,
                     feedback=feedback,
                     history=history
                 )
             except TypeError:
-                return llm_intermediary_agent(market_params=market_params)
-        return llm_intermediary_agent.choose_strategy(
-            market_params=market_params,
-            feedback=feedback,
-            history=history
-        )
+                result = llm_intermediary_agent(market_params=market_params)
+        else:
+            result = llm_intermediary_agent.choose_strategy(
+                market_params=market_params,
+                feedback=feedback,
+                history=history
+            )
+
+        if isinstance(result, tuple):
+            if len(result) == 4:
+                return result[0], result[1], str(result[2]), str(result[3])
+            if len(result) == 3:
+                return result[0], result[1], str(result[2]), ""
+            if len(result) == 2:
+                return result[0], result[1], "", ""
+        return float(result), "anonymized", "", ""
     
     def evaluate_config_B(
         self,
@@ -352,6 +363,12 @@ class ScenarioCEvaluator:
                 llm_decisions,
                 theory_decisions,
                 r_star
+            ),
+            "consumer": compute_consumer_metrics(
+                llm_decisions=llm_decisions,
+                theory_decisions=theory_decisions,
+                outcome_llm=outcome_llm_dict,
+                outcome_theory=outcome_theory
             ),
             "market": compute_market_metrics(
                 outcome_llm_dict,
@@ -538,7 +555,7 @@ class ScenarioCEvaluator:
                           f"参与率: {feedback['participation_rate']:.4f}")
 
             # 让中介根据反馈选择策略
-            m_llm, anon_llm = self._call_intermediary_agent(
+            m_llm, anon_llm, intermediary_reason, intermediary_raw = self._call_intermediary_agent(
                 llm_intermediary_agent,
                 market_params=market_params,
                 feedback=feedback,
@@ -546,7 +563,11 @@ class ScenarioCEvaluator:
             )
 
             if verbose:
+                if intermediary_raw:
+                    print(f"[中介策略] {intermediary_raw}")
                 print(f"LLM选择: m={m_llm:.4f}, {anon_llm}")
+                if intermediary_reason:
+                    print(f"中介理由: {intermediary_reason}")
 
             # 计算理性消费者对该策略的反应
             try:
@@ -567,6 +588,8 @@ class ScenarioCEvaluator:
                     "round": t,
                     "m": float(m_llm),
                     "anonymization": anon_llm,
+                    "intermediary_reason": intermediary_reason,
+                    "intermediary_raw": intermediary_raw,
                     "participation_rate": 0.0,
                     "num_participants": 0,
                     "m0": 0.0,
@@ -580,6 +603,15 @@ class ScenarioCEvaluator:
                     "error": str(e)
                 }
                 history.append(round_info)
+                if verbose:
+                    print("本轮结果（未收敛）:")
+                    print(f"  m={round_info['m']:.4f}, anonymization={round_info['anonymization']}")
+                    if round_info.get("intermediary_reason"):
+                        print(f"  中介理由: {round_info['intermediary_reason']}")
+                    print(f"  r={round_info['participation_rate']:.4f}, num={round_info['num_participants']}")
+                    print(f"  m0={round_info['m0']:.4f}, cost={round_info['intermediary_cost']:.4f}")
+                    print(f"  profit={round_info['intermediary_profit']:.4f}")
+                    print(f"  error={round_info.get('error')}")
                 continue
 
             profit_llm = result_llm.intermediary_profit
@@ -606,6 +638,8 @@ class ScenarioCEvaluator:
                 "round": t,
                 "m": float(m_llm),
                 "anonymization": anon_llm,
+                "intermediary_reason": intermediary_reason,
+                "intermediary_raw": intermediary_raw,
                 "participation_rate": float(r_given_llm),
                 "num_participants": num_participants,
                 "m0": float(result_llm.m_0),
@@ -623,7 +657,13 @@ class ScenarioCEvaluator:
                 best_round = round_info
 
             if verbose:
-                print(f"本轮利润: {profit_llm:.4f}, 参与率: {r_given_llm:.4f}, m0: {result_llm.m_0:.4f}")
+                print("本轮结果:")
+                print(f"  m={round_info['m']:.4f}, anonymization={round_info['anonymization']}")
+                if round_info.get("intermediary_reason"):
+                    print(f"  中介理由: {round_info['intermediary_reason']}")
+                print(f"  r={round_info['participation_rate']:.4f}, num={round_info['num_participants']}")
+                print(f"  m0={round_info['m0']:.4f}, cost={round_info['intermediary_cost']:.4f}")
+                print(f"  profit={round_info['intermediary_profit']:.4f}")
 
         # 用最优轮次生成指标
         assert best_round is not None
@@ -728,7 +768,7 @@ class ScenarioCEvaluator:
                     print(f"上一轮利润: {feedback['intermediary_profit']:.4f}, "
                           f"参与率: {feedback['participation_rate']:.4f}")
 
-            m_llm, anon_llm = self._call_intermediary_agent(
+            m_llm, anon_llm, intermediary_reason, intermediary_raw = self._call_intermediary_agent(
                 llm_intermediary_agent,
                 market_params=market_params,
                 feedback=feedback,
@@ -736,7 +776,11 @@ class ScenarioCEvaluator:
             )
 
             if verbose:
+                if intermediary_raw:
+                    print(f"[中介策略] {intermediary_raw}")
                 print(f"LLM中介选择: m={m_llm:.4f}, {anon_llm}")
+                if intermediary_reason:
+                    print(f"中介理由: {intermediary_reason}")
 
             # 让LLM消费者响应
             consumers = self._get_sample_consumers()
@@ -798,6 +842,8 @@ class ScenarioCEvaluator:
                 "round": t,
                 "m": float(m_llm),
                 "anonymization": anon_llm,
+                "intermediary_reason": intermediary_reason,
+                "intermediary_raw": intermediary_raw,
                 "participation_rate": r_llm,
                 "num_participants": int(np.sum(llm_decisions_arr)),
                 "m0": float(m_0_D),
@@ -814,7 +860,13 @@ class ScenarioCEvaluator:
                 best_round = round_info
 
             if verbose:
-                print(f"本轮利润: {outcome_D.intermediary_profit:.4f}, 参与率: {r_llm:.4f}")
+                print("本轮结果:")
+                print(f"  m={round_info['m']:.4f}, anonymization={round_info['anonymization']}")
+                if round_info.get("intermediary_reason"):
+                    print(f"  中介理由: {round_info['intermediary_reason']}")
+                print(f"  r={round_info['participation_rate']:.4f}, num={round_info['num_participants']}")
+                print(f"  m0={round_info['m0']:.4f}, cost={round_info['intermediary_cost']:.4f}")
+                print(f"  profit={round_info['intermediary_profit']:.4f}")
 
         # 用最优轮次生成指标
         assert best_round is not None
@@ -870,6 +922,29 @@ class ScenarioCEvaluator:
             'consumer_surplus': outcome_best.consumer_surplus,
             'producer_profit': outcome_best.producer_profit,
             'intermediary_profit': outcome_best.intermediary_profit,
+            'gini_coefficient': outcome_best.gini_coefficient,
+        }
+
+        # 计算同策略下理性消费者基准（用于消费者指标）
+        result_rational = evaluate_intermediary_strategy(
+            m=m_llm,
+            anonymization=anon_llm,
+            params_base=self.params_base,
+            num_mc_samples=50,
+            max_iter=100,
+            tol=1e-3,
+            seed=self.params_base['seed']
+        )
+        theory_decisions = self._get_theory_decisions(
+            float(result_rational.delta_u),
+            consumers
+        )
+        outcome_rational_dict = {
+            'social_welfare': result_rational.social_welfare,
+            'consumer_surplus': result_rational.consumer_surplus,
+            'producer_profit': result_rational.producer_profit_with_data,
+            'intermediary_profit': result_rational.intermediary_profit,
+            'gini_coefficient': result_rational.gini_coefficient
         }
 
         metrics = {
@@ -884,6 +959,12 @@ class ScenarioCEvaluator:
                 "anon_match": int(anon_llm == anon_star),
                 "r_error": abs(float(np.mean(llm_decisions_arr)) - self.gt_A['optimal_strategy']['r_star']),
             },
+            "consumer": compute_consumer_metrics(
+                llm_decisions=llm_decisions_arr,
+                theory_decisions=theory_decisions,
+                outcome_llm=outcome_best_dict,
+                outcome_theory=outcome_rational_dict
+            ),
             "market": compute_market_metrics(outcome_best_dict, outcome_A),
             "interaction": compute_interaction_metrics(
                 outcome_best_dict,
@@ -1013,6 +1094,29 @@ class ScenarioCEvaluator:
             'consumer_surplus': outcome_D.consumer_surplus,
             'producer_profit': outcome_D.producer_profit,
             'intermediary_profit': outcome_D.intermediary_profit,
+            'gini_coefficient': outcome_D.gini_coefficient,
+        }
+
+        # 同策略下理性消费者基准（用于消费者指标）
+        result_rational = evaluate_intermediary_strategy(
+            m=m_llm,
+            anonymization=anon_llm,
+            params_base=self.params_base,
+            num_mc_samples=50,
+            max_iter=100,
+            tol=1e-3,
+            seed=self.params_base['seed']
+        )
+        theory_decisions = self._get_theory_decisions(
+            float(result_rational.delta_u),
+            consumers
+        )
+        outcome_rational_dict = {
+            'social_welfare': result_rational.social_welfare,
+            'consumer_surplus': result_rational.consumer_surplus,
+            'producer_profit': result_rational.producer_profit_with_data,
+            'intermediary_profit': result_rational.intermediary_profit,
+            'gini_coefficient': result_rational.gini_coefficient
         }
         
         # 4. 提取配置A的结果
@@ -1036,6 +1140,12 @@ class ScenarioCEvaluator:
                 "anon_match": int(anon_llm == self.gt_A['optimal_strategy']['anonymization_star']),
                 "r_error": abs(r_llm - self.gt_A['optimal_strategy']['r_star']),
             },
+            "consumer": compute_consumer_metrics(
+                llm_decisions=llm_decisions,
+                theory_decisions=theory_decisions,
+                outcome_llm=outcome_D_dict,
+                outcome_theory=outcome_rational_dict
+            ),
             "market": compute_market_metrics(outcome_D_dict, outcome_A),
             "interaction": compute_interaction_metrics(
                 outcome_D_dict,
@@ -1089,6 +1199,13 @@ class ScenarioCEvaluator:
             "Producer Profit": self.gt_A['equilibrium']['producer_profit'],
             "Intermediary Profit": self.gt_A['equilibrium']['intermediary_profit'],
             "Intermediary Profit Loss (%)": 0.0,
+            "Individual Accuracy": np.nan,
+            "TP": np.nan,
+            "TN": np.nan,
+            "FP": np.nan,
+            "FN": np.nan,
+            "Consumer Surplus Gap": np.nan,
+            "Gini Consumer Surplus": np.nan,
         }
         rows.append(row_A)
         
@@ -1099,6 +1216,7 @@ class ScenarioCEvaluator:
             profit_loss_B = (
                 (profit_theory - profit_B) / profit_theory if profit_theory != 0 else 0.0
             )
+            confusion_B = results_B["consumer"]["decision_confusion_matrix"]
             row_B = {
                 "Config": "B",
                 "Intermediary": "Rational",
@@ -1111,6 +1229,13 @@ class ScenarioCEvaluator:
                 "Producer Profit": results_B['market']['producer_profit_llm'],
                 "Intermediary Profit": results_B['market']['intermediary_profit_llm'],
                 "Intermediary Profit Loss (%)": profit_loss_B * 100,
+                "Individual Accuracy": results_B["consumer"]["individual_accuracy"],
+                "TP": confusion_B["TP"],
+                "TN": confusion_B["TN"],
+                "FP": confusion_B["FP"],
+                "FN": confusion_B["FN"],
+                "Consumer Surplus Gap": results_B["consumer"]["consumer_surplus_gap"],
+                "Gini Consumer Surplus": results_B["consumer"]["gini_consumer_surplus"],
             }
             rows.append(row_B)
         
@@ -1133,6 +1258,13 @@ class ScenarioCEvaluator:
                 "Producer Profit": results_C['market']['producer_profit_llm'],
                 "Intermediary Profit": results_C['profit']['profit_llm'],
                 "Intermediary Profit Loss (%)": profit_loss_C * 100,
+                "Individual Accuracy": np.nan,
+                "TP": np.nan,
+                "TN": np.nan,
+                "FP": np.nan,
+                "FN": np.nan,
+                "Consumer Surplus Gap": np.nan,
+                "Gini Consumer Surplus": np.nan,
             }
             rows.append(row_C)
         
@@ -1143,6 +1275,7 @@ class ScenarioCEvaluator:
             profit_loss_D = (
                 (profit_theory - profit_D) / profit_theory if profit_theory != 0 else 0.0
             )
+            confusion_D = results_D["consumer"]["decision_confusion_matrix"]
             row_D = {
                 "Config": "D",
                 "Intermediary": "LLM",
@@ -1155,6 +1288,13 @@ class ScenarioCEvaluator:
                 "Producer Profit": results_D['market']['producer_profit_llm'],
                 "Intermediary Profit": results_D['market']['intermediary_profit_llm'],
                 "Intermediary Profit Loss (%)": profit_loss_D * 100,
+                "Individual Accuracy": results_D["consumer"]["individual_accuracy"],
+                "TP": confusion_D["TP"],
+                "TN": confusion_D["TN"],
+                "FP": confusion_D["FP"],
+                "FN": confusion_D["FN"],
+                "Consumer Surplus Gap": results_D["consumer"]["consumer_surplus_gap"],
+                "Gini Consumer Surplus": results_D["consumer"]["gini_consumer_surplus"],
             }
             rows.append(row_D)
         
@@ -1167,28 +1307,19 @@ class ScenarioCEvaluator:
         return df
 
 
-# ============================================================================
-# 直接运行示例
-# ============================================================================
-
-if __name__ == "__main__":
+def run_scenario_c_evaluation(model_config_name: str, rounds: int = 20) -> Dict[str, Any]:
     """
-    直接运行评估器
+    运行场景C评估（支持指定模型与学习轮数）
     
-    使用configs/model_configs.json中配置的真实LLM模型
+    Args:
+        model_config_name: configs/model_configs.json 中的 config_name
+        rounds: LLM中介多轮学习轮数
+    
+    Returns:
+        汇总结果（包含输出文件路径）
     """
-    import sys
-    import io
-    from pathlib import Path
-    from openai import OpenAI
     import re
-    
-    # 添加项目根目录到Python路径
-    project_root = Path(__file__).parent.parent.parent
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
-    
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    from openai import OpenAI
     
     print("=" * 70)
     print("场景C评估器 - 使用真实LLM模型")
@@ -1205,24 +1336,18 @@ if __name__ == "__main__":
         print(f"可用模型: {[cfg['config_name'] for cfg in model_configs]}")
     except FileNotFoundError:
         print(f"❌ 找不到配置文件: {config_path}")
-        sys.exit(1)
-    
-    # ========================================================================
-    # 选择要评估的模型（直接指定模型名称）
-    # ========================================================================
-    # 修改这里来选择不同的模型
-    TARGET_MODEL = "gpt-4.1-mini"  # 可选: grok-3-mini, gpt-4.1-mini, deepseek-v3, gemini-2.5-flash
+        raise
     
     selected_model_config = None
     for config in model_configs:
-        if config['config_name'] == TARGET_MODEL:
+        if config['config_name'] == model_config_name:
             selected_model_config = config
             break
     
     if selected_model_config is None:
-        print(f"❌ 找不到模型配置: {TARGET_MODEL}")
+        print(f"❌ 找不到模型配置: {model_config_name}")
         print(f"可用模型: {[cfg['config_name'] for cfg in model_configs]}")
-        sys.exit(1)
+        raise ValueError(f"找不到模型配置: {model_config_name}")
     
     model_name = selected_model_config['config_name']
     print(f"\n🎯 选择模型: {model_name}")
@@ -1333,12 +1458,19 @@ if __name__ == "__main__":
         
         # 修改：暴露带理由的调用接口（给配置D多轮学习使用）
         def llm_consumer_with_reason(consumer_params, m, anonymization):
-            decision, reason, answer = _call_llm_consumer(
-                consumer_params=consumer_params,
-                m=m,
-                anonymization=anonymization
-            )
-            return bool(decision), reason
+            try:
+                decision, reason, answer = _call_llm_consumer(
+                    consumer_params=consumer_params,
+                    m=m,
+                    anonymization=anonymization
+                )
+                return bool(decision), reason
+            except Exception as e:
+                print(f"⚠️ LLM调用失败: {e}")
+                # 失败时使用简单启发式，并返回可记录的简短理由
+                fallback_decision = bool(m > consumer_params['tau_i'])
+                fallback_reason = "调用失败，使用m与τ的启发式判断"
+                return fallback_decision, fallback_reason
 
         llm_consumer.with_reason = llm_consumer_with_reason
 
@@ -1379,19 +1511,15 @@ if __name__ == "__main__":
                     )
                 except Exception:
                     sorted_history = history
-                history_lines = []
+                history_text = "\n【历史记忆（按利润从高到低）】\n"
                 for h in sorted_history:
-                    history_lines.append(
-                        f"m={float(h.get('m', 0.0)):.2f}, "
+                    history_text += (
+                        f"- m={h.get('m'):.3f}, "
                         f"anon={h.get('anonymization')}, "
-                        f"r={float(h.get('participation_rate', 0.0)):.3f}, "
-                        f"profit={float(h.get('intermediary_profit', 0.0)):.3f}"
+                        f"r={h.get('participation_rate'):.3f}, "
+                        f"profit={h.get('intermediary_profit'):.3f}\n"
                     )
-                history_text = (
-                    "\n【历史记忆（按利润从高到低排序）】\n"
-                    + "\n".join(history_lines)
-                )
-
+            
             prompt = f"""你是“数据中介”，你的目标是最大化你的期望利润。
 
 【市场参数】
@@ -1407,10 +1535,7 @@ if __name__ == "__main__":
 
 【消费者反应（随后）】
 消费者会比较“参与的期望净收益”与其隐私成本 τ_i 来决定是否参与。
-一般来说：m 越高，参与率越高；identified 往往提高数据的可识别度与定价精度但可能降低参与率，anonymized 往往提高参与率但可能降低个性化定价能力。请自行权衡利润。
-
-【学习提示（不提供计算步骤）】
-请以历史中“利润最高”的策略为基准，做小幅微调，目标是进一步提高你的利润。
+你需要权衡：identified 策略下，数据可识别性/定价精度提高，但可能降低消费者参与率；anonymized 策略下，参与率可能提高，但个性化定价能力下降。请自行权衡以最大化利润。
 
 【你卖给商家的数据费 m0（关键）】
 商家愿意为数据支付的价格 m0 由“数据带来的商家利润增量”决定：
@@ -1420,6 +1545,9 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
 【你的利润】
 利润 = m0 − m × (参与人数)
 
+【你的目标】
+你的目标是最大化利润。请根据历史记忆，以利润最高的历史策略为基准进行微调，努力提高你的利润。
+
 【输出格式（必须严格遵守）】
 只输出一行 JSON，不要输出任何额外文字：
 {{"delta_m": 数字,"anonymization":"identified" 或 "anonymized","reason":"50-100字"}}
@@ -1428,53 +1556,28 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
 上一轮 m = {m_prev:.2f}，本轮 m = clamp(m_prev + Δm, 0, 3)。
 请给出你的选择。
 """
-
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[{"role": "user", "content": prompt}],
+                **generate_args
+            )
+            answer = response.choices[0].message.content.strip()
+            raw_answer = answer
+            json_match = re.search(r'\{[^}]+\}', answer)
+            if json_match:
+                answer = json_match.group(0)
             try:
-                response = client.chat.completions.create(
-                    model=model_name,
-                    messages=[{"role": "user", "content": prompt}],
-                    **generate_args
-                )
-                
-                answer = response.choices[0].message.content.strip()
-                
-                # 打印LLM的完整回答（用于调试和理解）
-                print(f"  [中介策略] {answer[:100]}...")
-                
-                # 提取JSON
-                json_match = re.search(r'\{[^}]+\}', answer)
-                if json_match:
-                    result = json.loads(json_match.group())
-                    anon = result.get('anonymization')
-                    if 'delta_m' in result:
-                        delta_m = float(result['delta_m'])
-                        delta_m = max(-0.5, min(0.5, delta_m))
-                        m = m_prev + delta_m
-                    elif 'm' in result:
-                        m = float(result['m'])
-                    else:
-                        m = m_prev
-                    
-                    # 验证合法性
-                    m = max(0.0, min(3.0, m))
-                    if anon not in ['identified', 'anonymized']:
-                        anon = 'anonymized'
-                    
-                    return m, anon
-                else:
-                    raise ValueError("无法解析JSON")
-                    
-            except Exception as e:
-                print(f"⚠️ LLM调用失败: {e}，使用默认策略")
-                # 失败时使用合理的默认值
-                return 0.6, "anonymized"
+                obj = json.loads(answer)
+            except Exception:
+                obj = {"delta_m": 0.0, "anonymization": "anonymized", "reason": "解析失败"}
+            delta_m = float(obj.get("delta_m", 0.0))
+            anonymization = obj.get("anonymization", "anonymized")
+            reason = str(obj.get("reason", "")).strip()
+            m_current = max(0.0, min(3.0, m_prev + delta_m))
+            return m_current, anonymization, reason, raw_answer
         
         return llm_intermediary
     
-    # ========================================================================
-    # 创建LLM代理
-    # ========================================================================
-    print("\n创建LLM代理...")
     llm_consumer = create_llm_consumer(client, selected_model_config)
     llm_intermediary = create_llm_intermediary(client, selected_model_config)
     print("✅ LLM代理创建成功")
@@ -1486,6 +1589,12 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
         ("common_preferences", "data/ground_truth/scenario_c_common_preferences_optimal.json"),
         ("common_experience", "data/ground_truth/scenario_c_common_experience_optimal.json"),
     ]
+    
+    summary = {
+        "model": model_name,
+        "rounds": rounds,
+        "outputs": []
+    }
     
     for gt_tag, gt_path in gt_jobs:
         print("\n" + "=" * 70)
@@ -1505,52 +1614,35 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
             print(f"❌ 找不到Ground Truth文件: {gt_path}")
             print(f"\n请先运行以下命令生成 Ground Truth:")
             print(f"  python -m src.scenarios.generate_scenario_c_gt")
-            sys.exit(1)
+            raise
         
-        # ====================================================================
-        # 2. 评估配置B（LLM消费者）
-        # ====================================================================
         print("\n" + "=" * 70)
         print(f"步骤2: 评估配置B（理性中介 × {model_name}消费者）")
         print("=" * 70)
-        
         results_B = evaluator.evaluate_config_B(
             llm_consumer_agent=llm_consumer,
             verbose=True
         )
         
-        # ====================================================================
-        # 3. 评估配置C（LLM中介）
-        # ====================================================================
         print("\n" + "=" * 70)
         print(f"步骤3: 评估配置C（{model_name}中介 × 理性消费者）")
         print("=" * 70)
-        
-        # 修改：使用多轮学习版中介评估
         results_C = evaluator.evaluate_config_C_iterative(
             llm_intermediary_agent=llm_intermediary,
-            rounds=20,
+            rounds=rounds,
             verbose=True
         )
         
-        # ====================================================================
-        # 4. 评估配置D（双边LLM）
-        # ====================================================================
         print("\n" + "=" * 70)
         print(f"步骤4: 评估配置D（{model_name}中介 × {model_name}消费者）")
         print("=" * 70)
-        
-        # 修改：使用多轮学习版中介评估（配置D）
         results_D = evaluator.evaluate_config_D_iterative(
             llm_intermediary_agent=llm_intermediary,
             llm_consumer_agent=llm_consumer,
-            rounds=20,
+            rounds=rounds,
             verbose=True
         )
         
-        # ====================================================================
-        # 5. 生成综合报告
-        # ====================================================================
         print("\n" + "=" * 70)
         print(f"步骤5: 生成综合报告（{gt_tag}）")
         print("=" * 70)
@@ -1567,7 +1659,6 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
         print("\n报告预览:")
         print(df.to_string(index=False))
         
-        # 6. 保存详细结果
         detailed_results = {
             "model": model_name,
             "timestamp": timestamp,
@@ -1575,6 +1666,7 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
             "config_B": results_B,
             "config_C": results_C,
             "config_D": results_D,
+            "report_rows": df.to_dict(orient="records")
         }
         
         output_json = f"evaluation_results/scenario_c_{gt_tag}_{model_name}_{timestamp}_detailed.json"
@@ -1592,3 +1684,50 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
         print(f"  • CSV报告: {output_path}")
         print(f"  • 详细JSON: {output_json}")
         print()
+        
+        summary["outputs"].append({
+            "gt_tag": gt_tag,
+            "csv_report": output_path,
+            "detailed_json": output_json
+        })
+    
+    return summary
+
+
+# ============================================================================
+# 直接运行示例
+# ============================================================================
+
+if __name__ == "__main__":
+    """
+    直接运行评估器
+    
+    使用configs/model_configs.json中配置的真实LLM模型
+    """
+    import argparse
+    import io
+    from pathlib import Path
+    
+    # 添加项目根目录到Python路径
+    project_root = Path(__file__).parent.parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    
+    parser = argparse.ArgumentParser(description="场景C评估器（真实LLM）")
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="gpt-4.1-mini",
+        help="模型配置名称（configs/model_configs.json 中的 config_name）"
+    )
+    parser.add_argument(
+        "--rounds",
+        type=int,
+        default=20,
+        help="LLM中介多轮学习轮数"
+    )
+    args = parser.parse_args()
+    
+    run_scenario_c_evaluation(model_config_name=args.model, rounds=args.rounds)

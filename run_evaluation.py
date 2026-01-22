@@ -11,7 +11,7 @@
    python run_evaluation.py --scenarios A --models gpt-4.1-mini --num-trials 3 --max-iterations 15
 
 3. 场景C批量评估（社会数据外部性）：
-   python run_evaluation.py --scenarios C --models gpt-4.1-mini --num-trials 3 --max-iterations 10
+   python run_evaluation.py --scenarios C --models gpt-4.1-mini deepseek-v3 gemini-2.5-flash grok-3-mini --max-iterations 20
 
 4. 同时评估多个场景：
    python run_evaluation.py --scenarios A B C --models gpt-4.1-mini --num-trials 1 --max-iterations 15
@@ -30,13 +30,16 @@
 
 import argparse
 import json
+import os
+import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Any
 import pandas as pd
 
 from src.evaluators import create_llm_client, ScenarioAEvaluator, ScenarioBEvaluator
-from src.evaluators.evaluate_scenario_c import ScenarioCEvaluator
+from src.evaluators.evaluate_scenario_c import run_scenario_c_evaluation
 
 
 def load_existing_results(output_dir: str = "evaluation_results") -> List[Dict[str, Any]]:
@@ -126,11 +129,10 @@ def run_single_evaluation(
     print(f"{'='*80}")
     
     try:
-        # 创建LLM客户端
-        llm_client = create_llm_client(model_name)
-        
         # 根据场景选择评估器
         if scenario == "A":
+            # 创建LLM客户端
+            llm_client = create_llm_client(model_name)
             evaluator = ScenarioAEvaluator(llm_client)
             # 运行评估
             results = evaluator.simulate_llm_equilibrium(
@@ -141,6 +143,8 @@ def run_single_evaluation(
             evaluator.print_evaluation_summary(results)
             
         elif scenario == "B":
+            # 创建LLM客户端
+            llm_client = create_llm_client(model_name)
             evaluator = ScenarioBEvaluator(llm_client)
             # 运行评估（静态博弈模式，平台使用理论求解器）
             # 注意：max_iterations参数在静态博弈中不再使用
@@ -149,13 +153,40 @@ def run_single_evaluation(
             evaluator.print_evaluation_summary(results)
             
         elif scenario == "C":
-            evaluator = ScenarioCEvaluator(llm_client)
-            # 运行评估（固定点迭代）
-            results = evaluator.evaluate(
-                max_iterations=max_iterations,
-                num_trials=num_trials
-            )
-            # 结果已在evaluate()内部打印
+            # 场景C：直接运行评估脚本，确保输出完整一致
+            cmd = [
+                sys.executable,
+                "-u",
+                "src/evaluators/evaluate_scenario_c.py",
+                "--model",
+                model_name,
+                "--rounds",
+                str(max_iterations)
+            ]
+            subprocess.run(cmd, check=True)
+
+            # 收集本次生成的详细结果文件（共同偏好 + 共同经历）
+            output_path = Path(output_dir)
+            scenario_c_reports = []
+            for gt_tag in ["common_preferences", "common_experience"]:
+                pattern = f"scenario_c_{gt_tag}_{model_name}_*_detailed.json"
+                candidates = list(output_path.glob(pattern))
+                if not candidates:
+                    continue
+                latest = max(candidates, key=lambda p: p.stat().st_mtime)
+                csv_path = latest.with_name(latest.name.replace("_detailed.json", ".csv"))
+                scenario_c_reports.append({
+                    "gt_tag": gt_tag,
+                    "detailed_json": str(latest),
+                    "csv_report": str(csv_path)
+                })
+
+            results = {
+                "model": model_name,
+                "rounds": max_iterations,
+                "status": "completed",
+                "scenario_c_reports": scenario_c_reports
+            }
             
         else:
             raise ValueError(f"不支持的场景: {scenario}")
@@ -166,7 +197,7 @@ def run_single_evaluation(
         
         # 场景A和B使用evaluator.save_results，场景C直接保存
         if scenario in ["A", "B"]:
-        evaluator.save_results(results, str(output_path))
+            evaluator.save_results(results, str(output_path))
         else:  # 场景C
             with open(output_path, 'w', encoding='utf-8') as f:
                 json.dump(results, f, indent=2, ensure_ascii=False)
@@ -260,6 +291,28 @@ def generate_summary_report(all_results: List[Dict[str, Any]], output_dir: str =
         model_name = item["model_name"]
         result = item["result"]
         
+        # 场景C：直接读取评估器生成的详细JSON，保持指标一致
+        if scenario == "C":
+            reports = result.get("scenario_c_reports", [])
+            if not reports:
+                print(f"  [警告] 跳过 场景C-{model_name}: 缺少 scenario_c_reports")
+                continue
+            for rep in reports:
+                detailed_json = rep.get("detailed_json")
+                if not detailed_json or not Path(detailed_json).exists():
+                    print(f"  [警告] 找不到详细结果: {detailed_json}")
+                    continue
+                with open(detailed_json, "r", encoding="utf-8") as f:
+                    detailed = json.load(f)
+                for row in detailed.get("report_rows", []):
+                    row.update({
+                        "场景": "C",
+                        "模型": model_name,
+                        "数据结构": rep.get("gt_tag", "unknown")
+                    })
+                    summary_data.append(row)
+            continue
+
         # 检查必需字段
         if "metrics" not in result:
             print(f"  [警告] 跳过 {scenario}-{model_name}: 缺少 metrics 字段")
@@ -314,20 +367,6 @@ def generate_summary_report(all_results: List[Dict[str, Any]], output_dir: str =
                 "泄露MAE": f"{metrics['deviations']['total_leakage_mae']:.4f}",
                 "泄露分桶匹配": "[是]" if labels.get("llm_leakage_bucket") == labels.get("gt_leakage_bucket") else "[否]" if labels else "N/A",
                 "过度分享匹配": "[是]" if labels.get("llm_over_sharing") == labels.get("gt_over_sharing") else "[否]" if labels else "N/A"
-            })
-        
-        # 场景C的指标
-        elif scenario == "C":
-            row.update({
-                "参与率_LLM": f"{metrics['llm']['participation_rate']:.2%}",
-                "参与率_GT": f"{metrics['ground_truth']['participation_rate']:.2%}",
-                "参与人数_LLM": f"{metrics['llm']['num_participants']}",
-                "CS_MAE": f"{metrics['deviations']['consumer_surplus_mae']:.4f}",
-                "利润MAE": f"{metrics['deviations']['producer_profit_mae']:.4f}",
-                "福利MAE": f"{metrics['deviations']['social_welfare_mae']:.4f}",
-                "Gini_MAE": f"{metrics['deviations']['gini_mae']:.4f}",
-                "参与率分桶匹配": "[是]" if labels.get("bucket_match") else "[否]" if labels else "N/A",
-                "方向标签": labels.get("direction", "N/A")
             })
         
         summary_data.append(row)
