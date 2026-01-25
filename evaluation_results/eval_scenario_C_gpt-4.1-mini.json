@@ -5,13 +5,13 @@
   "scenario_c_reports": [
     {
       "gt_tag": "common_preferences",
-      "detailed_json": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260121_233455_detailed.json",
-      "csv_report": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260121_233455.csv"
+      "detailed_json": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260124_151200_detailed.json",
+      "csv_report": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260124_151200.csv"
     },
     {
       "gt_tag": "common_experience",
-      "detailed_json": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260121_235434_detailed.json",
-      "csv_report": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260121_235434.csv"
+      "detailed_json": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260124_152730_detailed.json",
+      "csv_report": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260124_152730.csv"
     }
   ]
 }

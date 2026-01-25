@@ -1,0 +1,65 @@
+[
+  {
+    "scenario": "C",
+    "model_name": "gpt-4.1-mini",
+    "result": {
+      "model": "gpt-4.1-mini",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260124_151200_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_preferences_gpt-4.1-mini_20260124_151200.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260124_152730_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_experience_gpt-4.1-mini_20260124_152730.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "deepseek-v3",
+    "result": {
+      "model": "deepseek-v3",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260124_160401_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260124_160401.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260124_164150_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260124_164150.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "grok-4-fast",
+    "result": {
+      "model": "grok-4-fast",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c_common_preferences_grok-4-fast_20260124_191955_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_preferences_grok-4-fast_20260124_191955.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c_common_experience_grok-4-fast_20260124_200448_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c_common_experience_grok-4-fast_20260124_200448.csv"
+        }
+      ]
+    }
+  }
+]

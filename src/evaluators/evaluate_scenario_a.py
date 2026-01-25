@@ -291,9 +291,10 @@ class ScenarioAEvaluator:
 def main():
     """测试评估器"""
     from .llm_client import create_llm_client
+    import os
     
     # 创建LLM客户端
-    llm_client = create_llm_client("gpt-4.1-mini")
+    llm_client = create_llm_client("deepseek-v3.2")
     
     # 创建评估器
     evaluator = ScenarioAEvaluator(llm_client)
@@ -304,8 +305,12 @@ def main():
     # 打印摘要
     evaluator.print_evaluation_summary(results)
     
+    # 创建场景A专属输出目录
+    output_dir = "evaluation_results/scenario_a"
+    os.makedirs(output_dir, exist_ok=True)
+    
     # 保存结果
-    evaluator.save_results(results, f"eval_scenario_a_{llm_client.config_name}.json")
+    evaluator.save_results(results, f"{output_dir}/eval_scenario_a_{llm_client.config_name}.json")
 
 
 if __name__ == "__main__":

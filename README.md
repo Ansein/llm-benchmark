@@ -58,7 +58,7 @@ python -m src.scenarios.generate_scenario_c_gt
 python src/evaluators/evaluate_scenario_c.py
 ```
 
-在 `src/evaluators/evaluate_scenario_c.py` 里修改 **`TARGET_MODEL = "gpt-4.1-mini"`** 来选择模型（按 `configs/model_configs.json` 的 `config_name` 匹配）。
+在 `src/evaluators/evaluate_scenario_c.py` 里修改 **`TARGET_MODEL = "deepseek-v3.2"`** 来选择模型（按 `configs/model_configs.json` 的 `config_name` 匹配）。
 
 ## 📦 模块说明
 
@@ -77,6 +77,13 @@ python src/evaluators/evaluate_scenario_c.py
 数据文件目录
 - `ground_truth/`: 理论基准数据（由场景生成器生成）
 - `test_results/`: 测试结果
+
+### evaluation_results/
+评估结果输出目录（按场景分类）
+- `scenario_a/`: 场景A的所有评估结果
+- `scenario_b/`: 场景B的所有评估结果
+- `scenario_c/`: 场景C的所有评估结果
+- `summary_report_*.csv`: 跨场景汇总报告
 
 ### configs/
 配置文件目录
@@ -180,7 +187,7 @@ python src/evaluators/evaluate_scenario_c.py
 | `num_trials` | 3 | 每个决策重复次数 |
 | `max_iterations` | 10 | 最大迭代次数 |
 | `scenarios` | A, B | 要评估的场景 |
-| `models` | gpt-4.1-mini | 要评估的模型 |
+| `models` | deepseek-v3.2 | 要评估的模型（默认） |
 
 ## 🚀 使用示例
 
@@ -195,19 +202,22 @@ python src/evaluators/evaluate_scenario_c.py
 
 ```bash
 # 场景A
-python run_evaluation.py --single --scenarios A --models gpt-4.1-mini
+python run_evaluation.py --single --scenarios A --models deepseek-v3.2
 
 # 场景B
-python run_evaluation.py --single --scenarios B --models deepseek-v3
+python run_evaluation.py --single --scenarios B --models deepseek-v3.2
 ```
 
 ### 批量评估（生成对比报告）
 
 ```bash
-# 评估所有场景和所有模型
+# 评估所有场景（默认模型：deepseek-v3.2）
+python run_evaluation.py --scenarios A B
+
+# 评估多个模型（可选）
 python run_evaluation.py \
   --scenarios A B \
-  --models gpt-4.1-mini deepseek-v3 grok-3-mini
+  --models gemini-3-flash-preview gpt-5-mini-2025-08-07 deepseek-v3.2 qwen-plus
 ```
 
 ## 📈 测试结果（示例）
@@ -263,11 +273,34 @@ python run_evaluation.py \
 
 ## 📊 输出文件
 
+### 输出目录结构
+
+评估结果按场景分类保存：
+
+```
+evaluation_results/
+├── scenario_a/                    # 场景A评估结果
+│   ├── eval_scenario_A_deepseek-v3.2.json
+│   ├── eval_scenario_A_gpt-5-mini-2025-08-07.json
+│   └── ...
+├── scenario_b/                    # 场景B评估结果
+│   ├── eval_scenario_B_deepseek-v3.2.json
+│   └── ...
+├── scenario_c/                    # 场景C评估结果
+│   ├── scenario_c_common_preferences_deepseek-v3.2_20260124_123456.csv
+│   ├── scenario_c_common_preferences_deepseek-v3.2_20260124_123456_detailed.json
+│   ├── scenario_c_common_experience_deepseek-v3.2_20260124_123456.csv
+│   ├── scenario_c_common_experience_deepseek-v3.2_20260124_123456_detailed.json
+│   ├── eval_scenario_C_deepseek-v3.2.json
+│   └── ...
+└── summary_report_20260124_123456.csv  # 跨场景汇总报告
+```
+
 ### 单个评估结果
 
 ```json
 {
-  "model_name": "gpt-4.1-mini",
+  "model_name": "deepseek-v3.2",
   "llm_disclosure_set": [0, 2, 5],
   "gt_disclosure_set": [5],
   "converged": true,
@@ -289,9 +322,8 @@ python run_evaluation.py \
 
 | 场景 | 模型 | 收敛 | 迭代次数 | 利润MAE | CS_MAE | 福利MAE | 标签匹配 |
 |------|------|------|----------|---------|--------|---------|----------|
-| A | gpt-4.1-mini | ✅ | 1 | 0.000 | 0.000 | 0.000 | ✅ |
-| B | gpt-4.1-mini | ✅ | 1 | 4.562 | - | 1.816 | ❌ |
-| A | deepseek-v3 | ✅ | 2 | 0.150 | 0.200 | 0.100 | ✅ |
+| A | deepseek-v3.2 | ✅ | 1 | 0.000 | 0.000 | 0.000 | ✅ |
+| B | deepseek-v3.2 | ✅ | 1 | 4.562 | - | 1.816 | ❌ |
 | ... | ... | ... | ... | ... | ... | ... | ... |
 
 ## 🔧 技术细节

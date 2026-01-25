@@ -1307,13 +1307,14 @@ class ScenarioCEvaluator:
         return df
 
 
-def run_scenario_c_evaluation(model_config_name: str, rounds: int = 20) -> Dict[str, Any]:
+def run_scenario_c_evaluation(model_config_name: str, rounds: int = 20, output_dir: str = "evaluation_results/scenario_c") -> Dict[str, Any]:
     """
     运行场景C评估（支持指定模型与学习轮数）
     
     Args:
         model_config_name: configs/model_configs.json 中的 config_name
         rounds: LLM中介多轮学习轮数
+        output_dir: 输出目录（默认为 evaluation_results/scenario_c）
     
     Returns:
         汇总结果（包含输出文件路径）
@@ -1553,7 +1554,7 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
 {{"delta_m": 数字,"anonymization":"identified" 或 "anonymized","reason":"50-100字"}}
 {feedback_text}
 {history_text}
-上一轮 m = {m_prev:.2f}，本轮 m = clamp(m_prev + Δm, 0, 3)。
+上一轮 m = {m_prev:.2f}，本轮 m = max(m_prev + Δm, 0)（最小值为0，无最大值限制）。
 请给出你的选择。
 """
             response = client.chat.completions.create(
@@ -1573,7 +1574,8 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
             delta_m = float(obj.get("delta_m", 0.0))
             anonymization = obj.get("anonymization", "anonymized")
             reason = str(obj.get("reason", "")).strip()
-            m_current = max(0.0, min(3.0, m_prev + delta_m))
+            # 修改：解除m的上限限制，只保留最小值0
+            m_current = max(0.0, m_prev + delta_m)
             return m_current, anonymization, reason, raw_answer
         
         return llm_intermediary
@@ -1648,7 +1650,9 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
         print("=" * 70)
         
         timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
-        output_path = f"evaluation_results/scenario_c_{gt_tag}_{model_name}_{timestamp}.csv"
+        # 确保输出目录存在
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        output_path = f"{output_dir}/scenario_c_{gt_tag}_{model_name}_{timestamp}.csv"
         df = evaluator.generate_report(
             results_B=results_B,
             results_C=results_C,
@@ -1669,8 +1673,7 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
             "report_rows": df.to_dict(orient="records")
         }
         
-        output_json = f"evaluation_results/scenario_c_{gt_tag}_{model_name}_{timestamp}_detailed.json"
-        Path(output_json).parent.mkdir(parents=True, exist_ok=True)
+        output_json = f"{output_dir}/scenario_c_{gt_tag}_{model_name}_{timestamp}_detailed.json"
         with open(output_json, 'w', encoding='utf-8') as f:
             json.dump(detailed_results, f, indent=2, ensure_ascii=False)
         
@@ -1719,7 +1722,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model",
         type=str,
-        default="gpt-4.1-mini",
+        default="deepseek-v3.2",
         help="模型配置名称（configs/model_configs.json 中的 config_name）"
     )
     parser.add_argument(
@@ -1728,6 +1731,12 @@ if __name__ == "__main__":
         default=20,
         help="LLM中介多轮学习轮数"
     )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="evaluation_results/scenario_c",
+        help="输出目录（默认: evaluation_results/scenario_c）"
+    )
     args = parser.parse_args()
     
-    run_scenario_c_evaluation(model_config_name=args.model, rounds=args.rounds)
+    run_scenario_c_evaluation(model_config_name=args.model, rounds=args.rounds, output_dir=args.output_dir)

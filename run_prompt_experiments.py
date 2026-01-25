@@ -322,7 +322,7 @@ class PromptExperimentController:
     """提示词实验控制器"""
     
     def __init__(self, 
-                 model_name: str = "gpt-4.1-mini",
+                 model_name: str = "deepseek-v3.2",
                  ground_truth_path: str = "data/ground_truth/scenario_b_result.json",
                  output_dir: str = "evaluation_results/prompt_experiments_b",
                  use_theory_platform: bool = True,
@@ -614,8 +614,8 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="场景B提示词版本实验控制器")
-    parser.add_argument("--model", type=str, default="gpt-4.1-mini", 
-                        help="LLM模型名称 (默认: gpt-4.1-mini)")
+    parser.add_argument("--model", type=str, default="deepseek-v3.2", 
+                        help="LLM模型名称 (默认: deepseek-v3.2)")
     parser.add_argument("--versions", type=str, nargs="+", 
                         help="要运行的版本列表，如 b.v0 b.v1 (默认: 所有版本)")
     parser.add_argument("--rounds", type=int, default=1, 

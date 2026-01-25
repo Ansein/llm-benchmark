@@ -5,19 +5,19 @@
 使用示例：
 
 1. 场景B批量评估（多个模型）：
-   python run_evaluation.py --scenarios B --models gpt-4.1-mini deepseek-v3 gemini-2.5-flash grok-3-mini --num-trials 1
+   python run_evaluation.py --scenarios B --models gemini-3-flash-preview gpt-5-mini-2025-08-07 deepseek-v3.2 qwen-plus --num-trials 1
 
 2. 场景A批量评估（需指定最大迭代次数）：
-   python run_evaluation.py --scenarios A --models gpt-4.1-mini --num-trials 3 --max-iterations 15
+   python run_evaluation.py --scenarios A --models deepseek-v3.2 --num-trials 3 --max-iterations 15
 
 3. 场景C批量评估（社会数据外部性）：
-   python run_evaluation.py --scenarios C --models gpt-4.1-mini deepseek-v3 gemini-2.5-flash grok-3-mini --max-iterations 20
+   python run_evaluation.py --scenarios C --models gemini-3-flash-preview gpt-5-mini-2025-08-07 deepseek-v3.2 qwen-plus --max-iterations 20
 
 4. 同时评估多个场景：
-   python run_evaluation.py --scenarios A B C --models gpt-4.1-mini --num-trials 1 --max-iterations 15
+   python run_evaluation.py --scenarios B C --models deepseek-v3.2 --num-trials 1 --max-iterations 15
 
 5. 单次评估模式（用于快速测试）：
-   python run_evaluation.py --single --scenarios C --models gpt-4.1-mini --num-trials 1
+   python run_evaluation.py --single --scenarios C --models deepseek-v3.2 --num-trials 1
 
 6. 仅生成汇总报告（使用已有结果，不重新运行）：
    python run_evaluation.py --summary-only
@@ -44,16 +44,16 @@ from src.evaluators.evaluate_scenario_c import run_scenario_c_evaluation
 
 def load_existing_results(output_dir: str = "evaluation_results") -> List[Dict[str, Any]]:
     """
-    从输出目录加载已有的评估结果
+    从输出目录及其子文件夹加载已有的评估结果
     
     Args:
-        output_dir: 输出目录
+        output_dir: 输出根目录（会自动扫描 scenario_a, scenario_b, scenario_c 子文件夹）
     
     Returns:
         评估结果列表
     """
     print(f"\n{'='*80}")
-    print(f"[加载结果] 从 {output_dir} 加载已有评估结果")
+    print(f"[加载结果] 从 {output_dir} 及其子文件夹加载已有评估结果")
     print(f"{'='*80}")
     
     output_path = Path(output_dir)
@@ -63,42 +63,49 @@ def load_existing_results(output_dir: str = "evaluation_results") -> List[Dict[s
     
     all_results = []
     
-    # 查找所有评估结果文件
-    result_files = list(output_path.glob("eval_scenario_*.json"))
-    
-    if not result_files:
-        print(f"[错误] 在 {output_dir} 中没有找到评估结果文件")
-        return []
-    
-    print(f"[信息] 找到 {len(result_files)} 个结果文件")
-    
-    for result_file in result_files:
-        try:
-            # 从文件名解析场景和模型
-            # 文件名格式: eval_scenario_A_model-name.json, eval_scenario_B_model-name.json, eval_scenario_C_model-name.json
-            filename = result_file.stem  # 去掉 .json
-            parts = filename.split("_")
-            
-            if len(parts) >= 3:
-                scenario = parts[2]  # "A", "B", 或 "C"
-                model_name = "_".join(parts[3:])  # 剩余部分是模型名
-                
-                # 加载结果
-                with open(result_file, 'r', encoding='utf-8') as f:
-                    result = json.load(f)
-                
-                all_results.append({
-                    "scenario": scenario,
-                    "model_name": model_name,
-                    "result": result
-                })
-                
-                print(f"  [OK] 加载: 场景{scenario} | {model_name}")
-            else:
-                print(f"  [跳过] {result_file.name} (文件名格式不符)")
+    # 扫描所有场景子文件夹
+    for scenario_name in ["scenario_a", "scenario_b", "scenario_c"]:
+        scenario_dir = output_path / scenario_name
+        if not scenario_dir.exists():
+            print(f"[跳过] 子文件夹不存在: {scenario_dir}")
+            continue
         
-        except Exception as e:
-            print(f"  [失败] {result_file.name} - {e}")
+        # 查找该场景的所有评估结果文件
+        result_files = list(scenario_dir.glob("eval_scenario_*.json"))
+        
+        if not result_files:
+            print(f"[信息] 在 {scenario_dir} 中没有找到评估结果文件")
+            continue
+        
+        print(f"[信息] 在 {scenario_dir} 中找到 {len(result_files)} 个结果文件")
+        
+        for result_file in result_files:
+            try:
+                # 从文件名解析场景和模型
+                # 文件名格式: eval_scenario_A_model-name.json, eval_scenario_B_model-name.json, eval_scenario_C_model-name.json
+                filename = result_file.stem  # 去掉 .json
+                parts = filename.split("_")
+                
+                if len(parts) >= 3:
+                    scenario = parts[2]  # "A", "B", 或 "C"
+                    model_name = "_".join(parts[3:])  # 剩余部分是模型名
+                    
+                    # 加载结果
+                    with open(result_file, 'r', encoding='utf-8') as f:
+                        result = json.load(f)
+                    
+                    all_results.append({
+                        "scenario": scenario,
+                        "model_name": model_name,
+                        "result": result
+                    })
+                    
+                    print(f"  [OK] 加载: 场景{scenario} | {model_name} | {result_file.name}")
+                else:
+                    print(f"  [跳过] {result_file.name} (文件名格式不符)")
+            
+            except Exception as e:
+                print(f"  [失败] {result_file.name} - {e}")
     
     print(f"\n[完成] 成功加载 {len(all_results)} 个评估结果")
     return all_results
@@ -119,13 +126,18 @@ def run_single_evaluation(
         model_name: 模型配置名称
         num_trials: 每个决策的重复次数
         max_iterations: 最大迭代次数
-        output_dir: 输出目录
+        output_dir: 输出目录（根目录，会自动为每个场景创建子文件夹）
     
     Returns:
         评估结果字典
     """
+    # 为每个场景创建专属子文件夹
+    scenario_dir = Path(output_dir) / f"scenario_{scenario.lower()}"
+    scenario_dir.mkdir(parents=True, exist_ok=True)
+    
     print(f"\n{'='*80}")
     print(f"[开始评估] 场景{scenario} | 模型: {model_name}")
+    print(f"[输出目录] {scenario_dir}")
     print(f"{'='*80}")
     
     try:
@@ -161,16 +173,17 @@ def run_single_evaluation(
                 "--model",
                 model_name,
                 "--rounds",
-                str(max_iterations)
+                str(max_iterations),
+                "--output-dir",
+                str(scenario_dir)
             ]
             subprocess.run(cmd, check=True)
 
             # 收集本次生成的详细结果文件（共同偏好 + 共同经历）
-            output_path = Path(output_dir)
             scenario_c_reports = []
             for gt_tag in ["common_preferences", "common_experience"]:
                 pattern = f"scenario_c_{gt_tag}_{model_name}_*_detailed.json"
-                candidates = list(output_path.glob(pattern))
+                candidates = list(scenario_dir.glob(pattern))
                 if not candidates:
                     continue
                 latest = max(candidates, key=lambda p: p.stat().st_mtime)
@@ -191,9 +204,8 @@ def run_single_evaluation(
         else:
             raise ValueError(f"不支持的场景: {scenario}")
         
-        # 保存结果
-        output_path = Path(output_dir) / f"eval_scenario_{scenario}_{model_name}.json"
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+        # 保存结果到场景专属子文件夹
+        output_path = scenario_dir / f"eval_scenario_{scenario}_{model_name}.json"
         
         # 场景A和B使用evaluator.save_results，场景C直接保存
         if scenario in ["A", "B"]:
@@ -406,14 +418,14 @@ def main():
         "--models",
         type=str,
         nargs="+",
-        default=["gpt-4.1-mini"],
+        default=["deepseek-v3.2"],
         help="要评估的模型列表（配置名称）"
     )
     
     parser.add_argument(
         "--num-trials",
         type=int,
-        default=3,
+        default=1,
         help="每个决策的重复次数（用于评估稳定性）"
     )
     

@@ -5,13 +5,13 @@
   "scenario_c_reports": [
     {
       "gt_tag": "common_preferences",
-      "detailed_json": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260122_001816_detailed.json",
-      "csv_report": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260122_001816.csv"
+      "detailed_json": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260124_160401_detailed.json",
+      "csv_report": "evaluation_results\\scenario_c_common_preferences_deepseek-v3_20260124_160401.csv"
     },
     {
       "gt_tag": "common_experience",
-      "detailed_json": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260122_004023_detailed.json",
-      "csv_report": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260122_004023.csv"
+      "detailed_json": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260124_164150_detailed.json",
+      "csv_report": "evaluation_results\\scenario_c_common_experience_deepseek-v3_20260124_164150.csv"
     }
   ]
 }

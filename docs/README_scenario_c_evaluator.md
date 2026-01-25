@@ -25,15 +25,23 @@ python -m src.scenarios.generate_scenario_c_gt
 
 # 2. 直接运行评估器（使用 configs/model_configs.json 中配置的真实LLM）
 python src/evaluators/evaluate_scenario_c.py
+
+# 3. 指定输出目录（可选）
+python src/evaluators/evaluate_scenario_c.py --output-dir evaluation_results/scenario_c
 ```
 
-这会运行评估并输出 CSV/JSON 到 `evaluation_results/`。
+这会运行评估并输出 CSV/JSON 到指定目录（默认为 `evaluation_results/scenario_c/`）。
 
 #### 选择要评估的模型
 
-在 `src/evaluators/evaluate_scenario_c.py` 中修改：
+方式1：通过命令行参数
+```bash
+python src/evaluators/evaluate_scenario_c.py --model deepseek-v3.2
+```
 
-- `TARGET_MODEL = "gpt-4.1-mini"`
+方式2：在 `src/evaluators/evaluate_scenario_c.py` 中修改默认值：
+
+- `TARGET_MODEL = "deepseek-v3.2"`
 
 它会按 `configs/model_configs.json` 中的 `config_name` 精确匹配。
 
@@ -156,7 +164,7 @@ df = evaluator.generate_report(
     results_B=results_B,
     results_C=results_C,
     results_D=results_D,
-    output_path="evaluation_results/my_llm_report.csv"
+    output_path="evaluation_results/scenario_c/my_llm_report.csv"
 )
 
 print(df)
@@ -324,7 +332,7 @@ for model in models:
     print(f"  配置C - 利润效率: {results_C['profit']['profit_ratio']:.2%}")
 
 # 3. 保存结果
-with open("evaluation_results/all_models_comparison.json", 'w') as f:
+with open("evaluation_results/scenario_c/all_models_comparison.json", 'w') as f:
     json.dump(all_results, f, indent=2)
 
 # 4. 生成对比报告
@@ -344,7 +352,7 @@ for model in models:
     comparison_data.append(row)
 
 df_comparison = pd.DataFrame(comparison_data)
-df_comparison.to_csv("evaluation_results/models_comparison.csv", index=False)
+df_comparison.to_csv("evaluation_results/scenario_c/models_comparison.csv", index=False)
 
 print("\n模型对比:")
 print(df_comparison.to_string(index=False))
@@ -403,9 +411,10 @@ src/evaluators/
 
 test_scenario_c_evaluator.py        # 测试脚本（含模拟代理）
 
-evaluation_results/                  # 评估结果输出目录
-├── scenario_c_test_report.csv      # 简要报告
-└── scenario_c_test_detailed.json   # 详细结果
+evaluation_results/                  # 评估结果输出根目录
+└── scenario_c/                      # 场景C专属子目录
+    ├── scenario_c_test_report.csv      # 简要报告
+    └── scenario_c_test_detailed.json   # 详细结果
 
 data/ground_truth/                   # Ground Truth文件
 ├── scenario_c_common_preferences_optimal.json
@@ -421,7 +430,7 @@ data/ground_truth/                   # Ground Truth文件
 python test_scenario_c_evaluator.py
 
 # 查看结果
-cat evaluation_results/scenario_c_test_report.csv
+cat evaluation_results/scenario_c/scenario_c_test_report.csv
 ```
 
 ---

@@ -234,7 +234,9 @@ def main():
         "config_D": results_D,
     }
     
-    output_json = "evaluation_results/scenario_c_test_detailed.json"
+    output_json = "evaluation_results/scenario_c/scenario_c_test_detailed.json"
+    from pathlib import Path
+    Path(output_json).parent.mkdir(parents=True, exist_ok=True)
     with open(output_json, 'w', encoding='utf-8') as f:
         json.dump(detailed_results, f, indent=2, ensure_ascii=False)
     
