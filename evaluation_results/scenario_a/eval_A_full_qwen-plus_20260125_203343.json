@@ -1,0 +1,219 @@
+{
+  "model_name": "qwen-plus",
+  "scenario": "A_recommendation",
+  "num_rounds": 1,
+  "rational_share": false,
+  "rational_price": false,
+  "rational_search": false,
+  "params": {
+    "n_consumers": 10,
+    "n_firms": 10,
+    "search_cost": 0.02,
+    "privacy_costs": [
+      0.03623620356542087,
+      0.053521429192297486,
+      0.04695981825434215,
+      0.042959754525911095,
+      0.029680559213273096,
+      0.02967983561008608,
+      0.026742508365045985,
+      0.050985284373248056,
+      0.04303345035229626,
+      0.04624217733388136
+    ],
+    "v_dist": {
+      "type": "uniform",
+      "low": 0.0,
+      "high": 1.0
+    },
+    "r_value": 0.8,
+    "firm_cost": 0.0,
+    "seed": 42
+  },
+  "delta": 0.09689994053818178,
+  "all_rounds": [
+    {
+      "share_rate": 1.0,
+      "avg_price": 0.20616000000000004,
+      "consumer_surplus": 7.381597777313652,
+      "firm_profit": 1.267,
+      "social_welfare": 8.648597777313652,
+      "total_search_cost": 0.08,
+      "avg_search_cost": 0.008,
+      "purchase_rate": 1.0,
+      "consumers_data": [
+        {
+          "index": 0,
+          "share": true,
+          "share_reason": "分享数据可减少搜索成本并提升匹配质量，预期效用增益超过隐私成本0.0362，符合效用最大化目标。",
+          "purchase_index": 5,
+          "search_cost": 0.0,
+          "utility": 0.804386148071335,
+          "privacy_cost": 0.03623620356542087
+        },
+        {
+          "index": 1,
+          "share": true,
+          "share_reason": "分享数据可显著降低搜索成本并提高匹配质量，预期效用提升超过隐私成本0.0535，符合效用最大化目标。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.6756911533187325,
+          "privacy_cost": 0.053521429192297486
+        },
+        {
+          "index": 2,
+          "share": true,
+          "share_reason": "分享数据可减少搜索次数并提升匹配质量，效用增益超过隐私成本0.0470，符合效用最大化目标。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.8122241298900799,
+          "privacy_cost": 0.04695981825434215
+        },
+        {
+          "index": 3,
+          "share": true,
+          "share_reason": "分享数据可降低搜索成本并提高匹配质量，预期效用提升超过隐私成本0.0430，符合效用最大化目标。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.658733012483696,
+          "privacy_cost": 0.042959754525911095
+        },
+        {
+          "index": 4,
+          "share": true,
+          "share_reason": "分享数据可减少搜索成本并提高匹配质量，预期效用提升超过隐私成本0.0297，符合效用最大化目标。",
+          "purchase_index": 4,
+          "search_cost": 0.0,
+          "utility": 0.7843478490760911,
+          "privacy_cost": 0.029680559213273096
+        },
+        {
+          "index": 5,
+          "share": true,
+          "share_reason": "分享数据可显著降低搜索成本并提高匹配质量，预期效用增益超过隐私成本0.0297，符合效用最大化目标。",
+          "purchase_index": 4,
+          "search_cost": 0.02,
+          "utility": 0.7971720142156475,
+          "privacy_cost": 0.02967983561008608
+        },
+        {
+          "index": 6,
+          "share": true,
+          "share_reason": "分享数据可降低搜索成本并提升匹配质量，预期效用增益超过隐私成本0.0267，符合效用最大化目标。",
+          "purchase_index": 5,
+          "search_cost": 0.04,
+          "utility": 0.6613742968108908,
+          "privacy_cost": 0.026742508365045985
+        },
+        {
+          "index": 7,
+          "share": true,
+          "share_reason": "分享数据可减少搜索成本并提升匹配质量，预期效用增益超过隐私成本0.0510，符合效用最大化目标。",
+          "purchase_index": 7,
+          "search_cost": 0.0,
+          "utility": 0.7777692011821437,
+          "privacy_cost": 0.050985284373248056
+        },
+        {
+          "index": 8,
+          "share": true,
+          "share_reason": "分享数据可降低搜索成本并提高匹配质量，预期效用增益超过隐私成本0.0430，符合效用最大化目标。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.8204156457878167,
+          "privacy_cost": 0.04303345035229626
+        },
+        {
+          "index": 9,
+          "share": true,
+          "share_reason": "分享数据可降低搜索成本并提升匹配质量，预期效用增益超过隐私成本0.0462，符合效用最大化目标。",
+          "purchase_index": 6,
+          "search_cost": 0.02,
+          "utility": 0.5894843264772185,
+          "privacy_cost": 0.04624217733388136
+        }
+      ],
+      "firms_data": [
+        {
+          "index": 0,
+          "price": 0.8,
+          "price_reason": "因消费者保留效用为0.8且100%按推荐顺序搜索，定价0.8可最大化利润而不失需求，同时远高于零成本与竞争者均价。",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 1,
+          "price": 0.0889,
+          "price_reason": "与竞争对手平均价持平，可维持市场份额并确保盈利，避免因低价牺牲利润或因高价失去需求。",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 2,
+          "price": 0.099,
+          "price_reason": "略高于竞争对手平均价格0.0988，在保留效用0.8内保持竞争力；因消费者按推荐顺序搜索且100%分享数据，微幅溢价可提升利润而不显著损失需求。",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 3,
+          "price": 0.11,
+          "price_reason": "略高于平均价以提升利润，同时低于保留效用0.8确保需求，平衡竞争与盈利。",
+          "sales_count": 4,
+          "profit": 0.44
+        },
+        {
+          "index": 4,
+          "price": 0.12,
+          "price_reason": "略低于行业均价0.1220以吸引价格敏感消费者，同时确保正利润，因边际成本为0且保留效用0.8支撑需求。",
+          "sales_count": 2,
+          "profit": 0.24
+        },
+        {
+          "index": 5,
+          "price": 0.135,
+          "price_reason": "略低于行业均价以吸引价格敏感消费者，同时保持利润空间，因边际成本为0且消费者按推荐顺序搜索。",
+          "sales_count": 2,
+          "profit": 0.27
+        },
+        {
+          "index": 6,
+          "price": 0.15,
+          "price_reason": "略低于平均价0.1503以争取更多消费者，同时保持接近成本的利润空间，最大化市场份额与总利润。",
+          "sales_count": 1,
+          "profit": 0.15
+        },
+        {
+          "index": 7,
+          "price": 0.167,
+          "price_reason": "与市场平均价持平，避免因高价流失需求，同时确保利润最大化，因边际成本为0，微利亦可接受。",
+          "sales_count": 1,
+          "profit": 0.167
+        },
+        {
+          "index": 8,
+          "price": 0.1855,
+          "price_reason": "与市场平均价持平，避免价格战同时保持竞争力，确保需求不流失并实现合理利润。",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 9,
+          "price": 0.2062,
+          "price_reason": "与市场平均价持平可维持竞争力，避免因高价流失需求，同时确保正利润。",
+          "sales_count": 0,
+          "profit": 0.0
+        }
+      ]
+    }
+  ],
+  "averages": {
+    "avg_share_rate": 1.0,
+    "avg_price": 0.20616000000000004,
+    "avg_consumer_surplus": 7.381597777313652,
+    "avg_firm_profit": 1.267,
+    "avg_social_welfare": 8.648597777313652,
+    "avg_search_cost": 0.008,
+    "avg_purchase_rate": 1.0
+  }
+}

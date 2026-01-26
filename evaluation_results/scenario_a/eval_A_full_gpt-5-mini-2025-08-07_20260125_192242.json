@@ -1,0 +1,170 @@
+{
+  "model_name": "gpt-5-mini-2025-08-07",
+  "scenario": "A_recommendation",
+  "num_rounds": 1,
+  "rational_share": false,
+  "rational_price": false,
+  "rational_search": false,
+  "params": {
+    "n_consumers": 10,
+    "n_firms": 3,
+    "search_cost": 0.02,
+    "privacy_costs": [
+      0.03623620356542087,
+      0.053521429192297486,
+      0.04695981825434215,
+      0.042959754525911095,
+      0.029680559213273096,
+      0.02967983561008608,
+      0.026742508365045985,
+      0.050985284373248056,
+      0.04303345035229626,
+      0.04624217733388136
+    ],
+    "v_dist": {
+      "type": "uniform",
+      "low": 0.0,
+      "high": 1.0
+    },
+    "r_value": 0.8,
+    "firm_cost": 0.0,
+    "seed": 42
+  },
+  "delta": 0.03239999999999999,
+  "all_rounds": [
+    {
+      "share_rate": 0.4,
+      "avg_price": 0.5796666666666667,
+      "consumer_surplus": 1.6463426166922517,
+      "firm_profit": 3.838,
+      "social_welfare": 5.484342616692252,
+      "total_search_cost": 0.04,
+      "avg_search_cost": 0.004,
+      "purchase_rate": 0.7,
+      "consumers_data": [
+        {
+          "index": 0,
+          "share": false,
+          "share_reason": "不分享：不分享期望效用≈0.82，分享后≈0.8162（扣隐私成本0.0362），因此不分享略优。",
+          "purchase_index": 2,
+          "search_cost": 0.0,
+          "utility": 0.2795979199113825,
+          "privacy_cost": 0.03623620356542087
+        },
+        {
+          "index": 1,
+          "share": false,
+          "share_reason": "不分享：预计效用≈0.82，分享后约0.799，隐私成本0.0535抵消了推荐带来的收益。",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.0,
+          "privacy_cost": 0.053521429192297486
+        },
+        {
+          "index": 2,
+          "share": false,
+          "share_reason": "不分享：预期净效用≈0.82，分享后预期≈0.8056，隐私成本0.047使得分享总体效用降低。",
+          "purchase_index": -1,
+          "search_cost": 0.02,
+          "utility": -0.02,
+          "privacy_cost": 0.04695981825434215
+        },
+        {
+          "index": 3,
+          "share": true,
+          "share_reason": "推荐显著减少搜索次数并提高匹配质量，预期节省搜索成本并提升获得高估值概率，净效用预计大于隐私成本0.0430。",
+          "purchase_index": 2,
+          "search_cost": 0.0,
+          "utility": 0.14169048527601497,
+          "privacy_cost": 0.042959754525911095
+        },
+        {
+          "index": 4,
+          "share": true,
+          "share_reason": "推荐提高匹配并节省搜索成本，预期效用≈0.8229>不分享≈0.82，净增约0.003，故选择分享。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.07592371747703894,
+          "privacy_cost": 0.029680559213273096
+        },
+        {
+          "index": 5,
+          "share": true,
+          "share_reason": "分享可省约0.0288搜索费并提高期望产品价值，扣除0.0297隐私费后净效用略增（0.8223>0.8200），因此分享。",
+          "purchase_index": 1,
+          "search_cost": 0.0,
+          "utility": 0.3639889815095218,
+          "privacy_cost": 0.02967983561008608
+        },
+        {
+          "index": 6,
+          "share": true,
+          "share_reason": "推荐显著提高匹配并减少平均搜索次数，带来的预期效用提升大于隐私成本0.0267，因此选择分享。",
+          "purchase_index": 1,
+          "search_cost": 0.0,
+          "utility": 0.209030981664294,
+          "privacy_cost": 0.026742508365045985
+        },
+        {
+          "index": 7,
+          "share": false,
+          "share_reason": "隐私成本0.051大于推荐带来的净增值（搜索节省与匹配提升约0.02），因此不分享以最大化效用。",
+          "purchase_index": -1,
+          "search_cost": 0.02,
+          "utility": -0.02,
+          "privacy_cost": 0.050985284373248056
+        },
+        {
+          "index": 8,
+          "share": false,
+          "share_reason": "不分享：预期效用≈0.82；分享虽提高匹配并节省搜索，但扣隐私0.043后≈0.810，低于不分享，故不分享。",
+          "purchase_index": 1,
+          "search_cost": 0.0,
+          "utility": 0.4736693345835825,
+          "privacy_cost": 0.04303345035229626
+        },
+        {
+          "index": 9,
+          "share": false,
+          "share_reason": "不分享：期望净效用0.82>分享后的0.806，隐私成本抵消推荐带来的增益。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.14244119627041674,
+          "privacy_cost": 0.04624217733388136
+        }
+      ],
+      "firms_data": [
+        {
+          "index": 0,
+          "price": 0.8,
+          "price_reason": "竞争对手报价为0，分享者按最低价优先不会选我；随机搜索占60%，平均分到我1/3，需求固定时提价提高利润，取最大可接受0.8。",
+          "sales_count": 2,
+          "profit": 1.6
+        },
+        {
+          "index": 1,
+          "price": 0.36,
+          "price_reason": "略低于市场均价0.40，吸引40%按推荐搜索的用户并保留较高利润，对60%随机搜索者也有竞争力。",
+          "sales_count": 3,
+          "profit": 1.08
+        },
+        {
+          "index": 2,
+          "price": 0.579,
+          "price_reason": "定价略低于竞争均价0.58，吸引40%数据共享者并保有随机搜索份额，最大化利润。",
+          "sales_count": 2,
+          "profit": 1.158
+        }
+      ]
+    }
+  ],
+  "averages": {
+    "avg_share_rate": 0.4,
+    "avg_price": 0.5796666666666667,
+    "avg_consumer_surplus": 1.6463426166922517,
+    "avg_firm_profit": 3.838,
+    "avg_social_welfare": 5.484342616692252,
+    "avg_search_cost": 0.004,
+    "avg_purchase_rate": 0.7
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "model_name": "gemini-3-flash-preview",
+  "scenario": "A_recommendation",
+  "num_rounds": 1,
+  "rational_share": false,
+  "rational_price": false,
+  "rational_search": false,
+  "params": {
+    "n_consumers": 10,
+    "n_firms": 1,
+    "search_cost": 0.02,
+    "privacy_costs": [
+      0.03623620356542087,
+      0.053521429192297486,
+      0.04695981825434215,
+      0.042959754525911095,
+      0.029680559213273096,
+      0.02967983561008608,
+      0.026742508365045985,
+      0.050985284373248056,
+      0.04303345035229626,
+      0.04624217733388136
+    ],
+    "v_dist": {
+      "type": "uniform",
+      "low": 0.0,
+      "high": 1.0
+    },
+    "r_value": 0.8,
+    "firm_cost": 0.0,
+    "seed": 42
+  },
+  "delta": 0.0,
+  "all_rounds": [
+    {
+      "share_rate": 1.0,
+      "avg_price": 0.499,
+      "consumer_surplus": 1.4776151069084902,
+      "firm_profit": 3.4930000000000003,
+      "social_welfare": 4.9706151069084905,
+      "total_search_cost": 0.0,
+      "avg_search_cost": 0.0,
+      "purchase_rate": 0.7,
+      "consumers_data": [
+        {
+          "index": 0,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统直接锁定高估值产品，将预期搜索成本从约0.08降至0。节省的搜索成本（0.08）显著高于隐私成本（0.0362），从而使总效用最大化。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.23871984499054247,
+          "privacy_cost": 0.03623620356542087
+        },
+        {
+          "index": 1,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统显著降低搜索成本（随机搜索至0.8以上平均需5次，成本0.08）并提高匹配效率。节省的搜索成本和效率提升超过了0.0535的隐私成本，从而使期望净效用最大化。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.09977783350861316,
+          "privacy_cost": 0.053521429192297486
+        },
+        {
+          "index": 2,
+          "share": true,
+          "share_reason": "分享数据能显著降低搜索成本并提高匹配效率。不分享时随机搜索的预期成本较高且匹配度低。虽然隐私成本为0.0470，但通过推荐系统获得的估值提升与搜索成本节省之和超过了该隐私成本，符合效用最大化原则。",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.04695981825434215,
+          "privacy_cost": 0.04695981825434215
+        },
+        {
+          "index": 3,
+          "share": true,
+          "share_reason": "分享数据虽有0.0430的隐私成本，但能通过推荐系统将预期搜索次数从5次降至1次，节省0.08的搜索成本。此外，推荐系统还能提高匹配效率，获得更高估值。综合计算，分享数据带来的效用提升高于隐私成本。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.03117090242159455,
+          "privacy_cost": 0.042959754525911095
+        },
+        {
+          "index": 4,
+          "share": true,
+          "share_reason": "分享数据虽有0.0297的隐私成本，但推荐系统能显著降低搜索成本（随机搜索预期成本约0.08）并提高匹配效率。节省的搜索成本远高于隐私成本，分享数据能获得更高的净效用。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.37692371747703896,
+          "privacy_cost": 0.029680559213273096
+        },
+        {
+          "index": 5,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统显著降低搜索成本。在随机搜索下，达到0.8保留效用的预期搜索成本约为0.08，而隐私成本仅为0.0297。分享数据带来的搜索效率提升和估值优化远超隐私成本，符合效用最大化原则。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.2131221590324745,
+          "privacy_cost": 0.02967983561008608
+        },
+        {
+          "index": 6,
+          "share": true,
+          "share_reason": "分享数据可将随机搜索转为有序推荐，显著降低搜索成本（预期节省约0.08），并提高匹配估值。虽然需支付0.0267的隐私成本，但其远低于搜索成本的节省和效用增益，能实现效用最大化。",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.026742508365045985,
+          "privacy_cost": 0.026742508365045985
+        },
+        {
+          "index": 7,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统显著降低搜索成本（随机搜索期望成本约0.08）并提高匹配估值。节省的搜索成本与效用提升之和超过了0.0510的隐私成本，分享数据可实现效用最大化。",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.050985284373248056,
+          "privacy_cost": 0.050985284373248056
+        },
+        {
+          "index": 8,
+          "share": true,
+          "share_reason": "分享数据虽有0.0430的隐私成本，但推荐系统能将搜索成本从随机搜索的期望值0.08降至接近0，并提高匹配估值。搜索成本的节省和匹配效率的提升超过了隐私成本，能最大化个人净效用。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.24538924153432734,
+          "privacy_cost": 0.04303345035229626
+        },
+        {
+          "index": 9,
+          "share": true,
+          "share_reason": "分享数据能通过推荐算法显著降低搜索成本（预计节省0.08）并提高匹配效率。虽然隐私成本为0.0462，但节省的搜索成本和更高的预期效用使得分享数据的净效用高于随机搜索的净效用。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.3971990189365354,
+          "privacy_cost": 0.04624217733388136
+        }
+      ],
+      "firms_data": [
+        {
+          "index": 0,
+          "price": 0.499,
+          "price_reason": "在100%消费者分享数据并按推荐顺序搜索的透明市场中，竞争对手均价为0.5。为最大化利润，我方定价0.499以略低于竞争对手的价格获取全部市场份额，同时该价格远高于边际成本0且符合消费者保留效用。",
+          "sales_count": 7,
+          "profit": 3.4930000000000003
+        }
+      ]
+    }
+  ],
+  "averages": {
+    "avg_share_rate": 1.0,
+    "avg_price": 0.499,
+    "avg_consumer_surplus": 1.4776151069084902,
+    "avg_firm_profit": 3.4930000000000003,
+    "avg_social_welfare": 4.9706151069084905,
+    "avg_search_cost": 0.0,
+    "avg_purchase_rate": 0.7
+  }
+}

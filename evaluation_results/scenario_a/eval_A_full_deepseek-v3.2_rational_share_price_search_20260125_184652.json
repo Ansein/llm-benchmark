@@ -1,0 +1,177 @@
+{
+  "model_name": "deepseek-v3.2",
+  "scenario": "A_recommendation",
+  "num_rounds": 1,
+  "rational_share": true,
+  "rational_price": true,
+  "rational_search": true,
+  "params": {
+    "n_consumers": 10,
+    "n_firms": 4,
+    "search_cost": 0.02,
+    "privacy_costs": [
+      0.03623620356542087,
+      0.053521429192297486,
+      0.04695981825434215,
+      0.042959754525911095,
+      0.029680559213273096,
+      0.02967983561008608,
+      0.026742508365045985,
+      0.050985284373248056,
+      0.04303345035229626,
+      0.04624217733388136
+    ],
+    "v_dist": {
+      "type": "uniform",
+      "low": 0.0,
+      "high": 1.0
+    },
+    "r_value": 0.8,
+    "firm_cost": 0.0,
+    "seed": 42
+  },
+  "delta": 0.045535999999999986,
+  "all_rounds": [
+    {
+      "share_rate": 1.0,
+      "avg_price": 0.6687402762143707,
+      "consumer_surplus": 1.3236390010891546,
+      "firm_profit": 6.018662485929337,
+      "social_welfare": 7.342301487018491,
+      "total_search_cost": 0.0,
+      "avg_search_cost": 0.0,
+      "purchase_rate": 0.9,
+      "consumers_data": [
+        {
+          "index": 0,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0362",
+          "purchase_index": 2,
+          "search_cost": 0.0,
+          "utility": 0.15362144013159088,
+          "privacy_cost": 0.03623620356542087
+        },
+        {
+          "index": 1,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0535",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.11695087710436183,
+          "privacy_cost": 0.053521429192297486
+        },
+        {
+          "index": 2,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0470",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.25348385367570914,
+          "privacy_cost": 0.04695981825434215
+        },
+        {
+          "index": 3,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0430",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.09999273626932521,
+          "privacy_cost": 0.042959754525911095
+        },
+        {
+          "index": 4,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0297",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.20718344126266827,
+          "privacy_cost": 0.029680559213273096
+        },
+        {
+          "index": 5,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0297",
+          "purchase_index": 1,
+          "search_cost": 0.0,
+          "utility": 0.05524870529515108,
+          "privacy_cost": 0.02967983561008608
+        },
+        {
+          "index": 6,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0267",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": -0.0009908805720142341,
+          "privacy_cost": 0.026742508365045985
+        },
+        {
+          "index": 7,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0510",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.050985284373248056,
+          "privacy_cost": 0.050985284373248056
+        },
+        {
+          "index": 8,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0430",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.2616753695734459,
+          "privacy_cost": 0.04303345035229626
+        },
+        {
+          "index": 9,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0455, τ=0.0462",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.2274587427221647,
+          "privacy_cost": 0.04624217733388136
+        }
+      ],
+      "firms_data": [
+        {
+          "index": 0,
+          "price": 0.6687402762143707,
+          "price_reason": "理性均衡价格: 0.6687",
+          "sales_count": 2,
+          "profit": 1.3374805524287414
+        },
+        {
+          "index": 1,
+          "price": 0.6687402762143707,
+          "price_reason": "理性均衡价格: 0.6687",
+          "sales_count": 1,
+          "profit": 0.6687402762143707
+        },
+        {
+          "index": 2,
+          "price": 0.6687402762143707,
+          "price_reason": "理性均衡价格: 0.6687",
+          "sales_count": 1,
+          "profit": 0.6687402762143707
+        },
+        {
+          "index": 3,
+          "price": 0.6687402762143707,
+          "price_reason": "理性均衡价格: 0.6687",
+          "sales_count": 5,
+          "profit": 3.3437013810718534
+        }
+      ]
+    }
+  ],
+  "averages": {
+    "avg_share_rate": 1.0,
+    "avg_price": 0.6687402762143707,
+    "avg_consumer_surplus": 1.3236390010891546,
+    "avg_firm_profit": 6.018662485929337,
+    "avg_social_welfare": 7.342301487018491,
+    "avg_search_cost": 0.0,
+    "avg_purchase_rate": 0.9
+  }
+}

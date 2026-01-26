@@ -1,0 +1,219 @@
+{
+  "model_name": "gemini-3-flash-preview",
+  "scenario": "A_recommendation",
+  "num_rounds": 1,
+  "rational_share": false,
+  "rational_price": false,
+  "rational_search": false,
+  "params": {
+    "n_consumers": 10,
+    "n_firms": 10,
+    "search_cost": 0.02,
+    "privacy_costs": [
+      0.03623620356542087,
+      0.053521429192297486,
+      0.04695981825434215,
+      0.042959754525911095,
+      0.029680559213273096,
+      0.02967983561008608,
+      0.026742508365045985,
+      0.050985284373248056,
+      0.04303345035229626,
+      0.04624217733388136
+    ],
+    "v_dist": {
+      "type": "uniform",
+      "low": 0.0,
+      "high": 1.0
+    },
+    "r_value": 0.8,
+    "firm_cost": 0.0,
+    "seed": 42
+  },
+  "delta": 0.09689994053818178,
+  "all_rounds": [
+    {
+      "share_rate": 1.0,
+      "avg_price": 0.12600000000000003,
+      "consumer_surplus": 7.695312469772969,
+      "firm_profit": 1.17,
+      "social_welfare": 8.86531246977297,
+      "total_search_cost": 0.0,
+      "avg_search_cost": 0.0,
+      "purchase_rate": 1.0,
+      "consumers_data": [
+        {
+          "index": 0,
+          "share": true,
+          "share_reason": "分享数据后，推荐系统可直接定位最高估值产品（期望约0.91），且首搜免费使搜索成本为0。相比随机搜索（期望搜索5次，成本0.08，净效用0.82），分享后的净效用（0.8728）更高，足以覆盖隐私成本。",
+          "purchase_index": 5,
+          "search_cost": 0.0,
+          "utility": 0.8573861480713351,
+          "privacy_cost": 0.03623620356542087
+        },
+        {
+          "index": 1,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统显著提高匹配效率，预期获得最高估值产品（约0.91）且节省搜索成本。虽然有0.0535的隐私成本，但总效用（约0.856）仍高于随机搜索的期望效用（约0.82）。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.7206911533187325,
+          "privacy_cost": 0.053521429192297486
+        },
+        {
+          "index": 2,
+          "share": true,
+          "share_reason": "分享数据可获得排序推荐，预期首选估值约0.909且无搜索成本。相比随机搜索（需多次搜索，预期净效用0.82），分享后的净效用（0.862）更高，收益增量足以覆盖0.0470的隐私成本。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.8572241298900799,
+          "privacy_cost": 0.04695981825434215
+        },
+        {
+          "index": 3,
+          "share": true,
+          "share_reason": "分享数据可直接获得最高估值产品（期望0.909）且无搜索成本。不分享时随机搜索期望效用约为0.82（0.9减去0.08搜索费）。分享后的净效用0.866高于不分享，即便扣除隐私成本依然更优。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.703733012483696,
+          "privacy_cost": 0.042959754525911095
+        },
+        {
+          "index": 4,
+          "share": true,
+          "share_reason": "分享数据后，推荐系统按估值排序，首选即为最大值（约0.909），搜索成本为0。不分享则需随机搜索，预期搜索5次，成本0.08，期望效用0.82。分享后的净效用（0.8793）高于不分享，足以覆盖隐私成本。",
+          "purchase_index": 4,
+          "search_cost": 0.0,
+          "utility": 0.8303478490760912,
+          "privacy_cost": 0.029680559213273096
+        },
+        {
+          "index": 5,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统将搜索成本从约0.08降至0，并提升预期估值至0.909。扣除0.0297隐私成本后，净效用约0.879，高于不分享时的0.82，符合效用最大化原则。",
+          "purchase_index": 4,
+          "search_cost": 0.0,
+          "utility": 0.8631720142156476,
+          "privacy_cost": 0.02967983561008608
+        },
+        {
+          "index": 6,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统直接锁定高估值企业，节省约0.08的预期搜索成本。虽然需支付0.0267的隐私成本，但净效用（约0.88）仍高于随机搜索的净效用（约0.82），符合效用最大化原则。",
+          "purchase_index": 5,
+          "search_cost": 0.0,
+          "utility": 0.7543742968108909,
+          "privacy_cost": 0.026742508365045985
+        },
+        {
+          "index": 7,
+          "share": true,
+          "share_reason": "分享数据能通过推荐算法直接锁定最高估值产品（约0.91），避免随机搜索带来的高额搜索成本（约0.08），且提升的匹配效用与节省的搜索成本之和大于隐私成本（0.051）。",
+          "purchase_index": 7,
+          "search_cost": 0.0,
+          "utility": 0.8467692011821437,
+          "privacy_cost": 0.050985284373248056
+        },
+        {
+          "index": 8,
+          "share": true,
+          "share_reason": "分享数据能通过推荐系统直接锁定最高估值产品，节省约0.08的预期搜索成本。尽管存在0.043的隐私成本，但推荐带来的匹配效率提升和搜索成本节省使净效用（约0.866）高于随机搜索的净效用（约0.82）。",
+          "purchase_index": 3,
+          "search_cost": 0.0,
+          "utility": 0.8654156457878166,
+          "privacy_cost": 0.04303345035229626
+        },
+        {
+          "index": 9,
+          "share": true,
+          "share_reason": "分享数据后推荐系统可锁定最高估值（约0.91），且首搜免费使搜索成本为0，扣除隐私成本后净效用约0.863。不分享需随机搜索，预期搜索5次，成本0.08，净效用约0.82。分享效用更高。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.3961990189365354,
+          "privacy_cost": 0.04624217733388136
+        }
+      ],
+      "firms_data": [
+        {
+          "index": 0,
+          "price": 0.5,
+          "price_reason": "",
+          "sales_count": 1,
+          "profit": 0.5
+        },
+        {
+          "index": 1,
+          "price": 0.055,
+          "price_reason": "在100%数据分享和推荐搜索环境下，消费者倾向于优先选择低价。设定略低于市场均值0.0556的价格（0.055），旨在通过竞争优势获取更高市场份额，同时在零边际成本下实现利润最大化。",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 2,
+          "price": 0.061,
+          "price_reason": "在100%数据分享及推荐搜索环境下，消费者倾向于选择排序靠前的低价产品。设定略低于市场均价0.0617的价格，旨在通过竞争优势获取更高市场份额，从而在零边际成本下实现利润最大化。",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 3,
+          "price": 0.065,
+          "price_reason": "鉴于100%消费者分享数据并按推荐顺序搜索，市场透明度极高。为在竞争中获得优先推荐并获取市场份额，我选择略低于市场平均价格（0.0684）定价，以在保持利润空间的同时最大化需求。",
+          "sales_count": 4,
+          "profit": 0.26
+        },
+        {
+          "index": 4,
+          "price": 0.074,
+          "price_reason": "由于100%消费者按推荐顺序搜索，市场透明度极高。为在竞争中获得需求，价格需略低于市场平均水平0.0757。设定为0.074以在保持利润空间的同时，提高在推荐排序中的竞争力，实现利润最大化。",
+          "sales_count": 2,
+          "profit": 0.148
+        },
+        {
+          "index": 5,
+          "price": 0.082,
+          "price_reason": "In a market with 100% data sharing and ordered search, consumers prioritize lower prices. Undercutting the current average price of 0.0839 increases the likelihood of being selected first, thereby capturing demand and maximizing profit relative to the zero marginal cost.",
+          "sales_count": 2,
+          "profit": 0.164
+        },
+        {
+          "index": 6,
+          "price": 0.092,
+          "price_reason": "Given 100% data sharing and ordered search, consumers are highly price-sensitive. Pricing slightly below the market average of 0.0930 maximizes the probability of being selected while maintaining a positive profit margin above the zero marginal cost.",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 7,
+          "price": 0.098,
+          "price_reason": "为了在竞争中保持优势，我将价格设定在略低于市场平均水平 0.1032 的位置。由于 100% 的消费者按推荐顺序搜索，较低的价格能提高被选中的概率，从而在边际成本为零的情况下最大化市场份额和利润。",
+          "sales_count": 1,
+          "profit": 0.098
+        },
+        {
+          "index": 8,
+          "price": 0.11,
+          "price_reason": "鉴于100%消费者分享数据并按顺序搜索，市场透明度极高。为在10家企业的竞争中获得流量优势，定价需略低于市场平均价格0.1141，以在保持利润空间的同时最大化市场份额。",
+          "sales_count": 0,
+          "profit": 0.0
+        },
+        {
+          "index": 9,
+          "price": 0.123,
+          "price_reason": "在100%数据共享和有序搜索环境下，消费者倾向于选择低价。定价略低于市场平均水平0.1263，旨在通过价格优势获取更高市场份额，从而在零边际成本下实现利润最大化。",
+          "sales_count": 0,
+          "profit": 0.0
+        }
+      ]
+    }
+  ],
+  "averages": {
+    "avg_share_rate": 1.0,
+    "avg_price": 0.12600000000000003,
+    "avg_consumer_surplus": 7.695312469772969,
+    "avg_firm_profit": 1.17,
+    "avg_social_welfare": 8.86531246977297,
+    "avg_search_cost": 0.0,
+    "avg_purchase_rate": 1.0
+  }
+}

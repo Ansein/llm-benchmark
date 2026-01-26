@@ -1,0 +1,156 @@
+{
+  "model_name": "deepseek-v3.2",
+  "scenario": "A_recommendation",
+  "num_rounds": 1,
+  "rational_share": false,
+  "rational_price": false,
+  "rational_search": false,
+  "params": {
+    "n_consumers": 10,
+    "n_firms": 1,
+    "search_cost": 0.02,
+    "privacy_costs": [
+      0.03623620356542087,
+      0.053521429192297486,
+      0.04695981825434215,
+      0.042959754525911095,
+      0.029680559213273096,
+      0.02967983561008608,
+      0.026742508365045985,
+      0.050985284373248056,
+      0.04303345035229626,
+      0.04624217733388136
+    ],
+    "v_dist": {
+      "type": "uniform",
+      "low": 0.0,
+      "high": 1.0
+    },
+    "r_value": 0.8,
+    "firm_cost": 0.0,
+    "seed": 42
+  },
+  "delta": 0.0,
+  "all_rounds": [
+    {
+      "share_rate": 0.9,
+      "avg_price": 0.5,
+      "consumer_surplus": 1.5216003912817382,
+      "firm_profit": 3.5,
+      "social_welfare": 5.021600391281738,
+      "total_search_cost": 0.0,
+      "avg_search_cost": 0.0,
+      "purchase_rate": 0.7,
+      "consumers_data": [
+        {
+          "index": 0,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高匹配质量，带来的预期收益（搜索节省和更高估值）很可能超过隐私成本0.0362。考虑到50%的分享率，平台推荐效果有一定保障，因此分享是理性的。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.23771984499054247,
+          "privacy_cost": 0.03623620356542087
+        },
+        {
+          "index": 1,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高产品估值期望，带来的收益（如减少多次搜索的0.02成本）很可能超过隐私成本0.0535，从而最大化我的总效用。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.09877783350861316,
+          "privacy_cost": 0.053521429192297486
+        },
+        {
+          "index": 2,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高产品估值期望，带来的效用提升预计超过隐私成本0.0470。考虑到50%的消费者分享数据，平台推荐效果可能较好，因此选择分享以最大化净效用。",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.04695981825434215,
+          "privacy_cost": 0.04695981825434215
+        },
+        {
+          "index": 3,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高匹配质量，带来的效用提升（如更高估值和搜索节省）预计超过隐私成本0.0430，因此分享数据是理性选择。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.03017090242159455,
+          "privacy_cost": 0.042959754525911095
+        },
+        {
+          "index": 4,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高匹配质量，带来的预期收益（搜索节省和更高估值）很可能超过隐私成本0.0297，因此分享数据是理性选择。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.37592371747703895,
+          "privacy_cost": 0.029680559213273096
+        },
+        {
+          "index": 5,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高产品估值期望，带来的收益（如减少多次搜索的0.02成本及更高估值）很可能超过隐私成本0.0297，从而最大化我的效用。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.2121221590324745,
+          "privacy_cost": 0.02967983561008608
+        },
+        {
+          "index": 6,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高产品估值期望，带来的效用提升预计超过隐私成本0.0267。首次搜索免费，但后续搜索每次0.02，不分享时随机搜索效率低，可能多次付费。",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.026742508365045985,
+          "privacy_cost": 0.026742508365045985
+        },
+        {
+          "index": 7,
+          "share": false,
+          "share_reason": "隐私成本0.0510较高，而推荐带来的搜索节省和估值提升有限（仅一家企业，搜索成本低，保留效用0.8已较高），不分享的预期效用更优。",
+          "purchase_index": -1,
+          "search_cost": 0.0,
+          "utility": -0.0,
+          "privacy_cost": 0.050985284373248056
+        },
+        {
+          "index": 8,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高产品估值期望，带来的效用提升预计超过隐私成本0.0430。考虑到50%的消费者分享数据，平台推荐效果可能较好，因此分享是理性选择。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.24438924153432734,
+          "privacy_cost": 0.04303345035229626
+        },
+        {
+          "index": 9,
+          "share": true,
+          "share_reason": "推荐系统能显著减少搜索成本并提高产品估值期望，带来的效用提升预计超过隐私成本0.0462。在50%其他消费者分享的市场中，不分享将处于效率劣势，因此选择分享以最大化净效用。",
+          "purchase_index": 0,
+          "search_cost": 0.0,
+          "utility": 0.3961990189365354,
+          "privacy_cost": 0.04624217733388136
+        }
+      ],
+      "firms_data": [
+        {
+          "index": 0,
+          "price": 0.5,
+          "price_reason": "匹配竞争对手平均价格0.5，以保持市场竞争力。由于边际成本为0，此价格能最大化利润，同时避免因过高价格失去需求或过低价格损失利润。消费者保留效用0.8确保价格在可接受范围内。",
+          "sales_count": 7,
+          "profit": 3.5
+        }
+      ]
+    }
+  ],
+  "averages": {
+    "avg_share_rate": 0.9,
+    "avg_price": 0.5,
+    "avg_consumer_surplus": 1.5216003912817382,
+    "avg_firm_profit": 3.5,
+    "avg_social_welfare": 5.021600391281738,
+    "avg_search_cost": 0.0,
+    "avg_purchase_rate": 0.7
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "model_name": "deepseek-v3.2",
+  "scenario": "A_recommendation",
+  "num_rounds": 2,
+  "rational_share": true,
+  "rational_price": true,
+  "rational_search": true,
+  "params": {
+    "n_consumers": 4,
+    "n_firms": 3,
+    "search_cost": 0.02,
+    "privacy_costs": [
+      0.03623620356542087,
+      0.053521429192297486,
+      0.04695981825434215,
+      0.042959754525911095
+    ],
+    "v_dist": {
+      "type": "uniform",
+      "low": 0.0,
+      "high": 1.0
+    },
+    "r_value": 0.8,
+    "firm_cost": 0.0,
+    "seed": 42
+  },
+  "delta": 0.03239999999999999,
+  "all_rounds": [
+    {
+      "share_rate": 1.0,
+      "avg_price": 0.6299609534767533,
+      "consumer_surplus": 0.20498735644598765,
+      "firm_profit": 1.88988286043026,
+      "social_welfare": 2.094870216876248,
+      "total_search_cost": 0.0,
+      "avg_search_cost": 0.0,
+      "purchase_rate": 0.75,
+      "consumers_data": [
+        {
+          "index": 0,
+          "share": true,
+          "share_reason": "理性决策: Delta=0.0324, τ=0.0362",
+          "purchase_index": 

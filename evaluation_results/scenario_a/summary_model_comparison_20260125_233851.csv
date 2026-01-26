@@ -1,0 +1,6 @@
+model,share_rate,avg_price,consumer_surplus,firm_profit,social_welfare,avg_search_cost,purchase_rate
+deepseek-v3.2,0.99,0.2244,5.7981,2.011,7.8091,0.0002,0.96
+gemini-3-flash-preview,0.89,0.2483,5.6562,1.7536,7.4098,0.003,0.9
+gpt-5-mini-2025-08-07,0.64,0.3625,4.2629,2.3386,6.6014,0.0016,0.8
+qwen-plus,1.0,0.4068,4.2936,2.8937,7.1873,0.0112,0.9
+rational,0.9308,0.6821,1.2692,6.1785,7.4476,0.0003,0.8654
