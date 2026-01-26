@@ -1,0 +1,105 @@
+{
+  "model_name": "deepseek-v3.2",
+  "game_type": "fictitious_play",
+  "config": "B_fictitious_play",
+  "max_rounds": 50,
+  "actual_rounds": 6,
+  "belief_window": 10,
+  "history": [
+    {
+      "round": 1,
+      "m": 0.7000000000000001,
+      "anonymization": "identified",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    },
+    {
+      "round": 2,
+      "m": 0.7000000000000001,
+      "anonymization": "identified",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        11
+      ],
+      "m0": 2.9305960632360426,
+      "intermediary_profit": 2.2305960632360424
+    },
+    {
+      "round": 3,
+      "m": 0.7000000000000001,
+      "anonymization": "identified",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        17
+      ],
+      "m0": 2.3831094988937593,
+      "intermediary_profit": 1.6831094988937592
+    },
+    {
+      "round": 4,
+      "m": 0.7000000000000001,
+      "anonymization": "identified",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    },
+    {
+      "round": 5,
+      "m": 0.7000000000000001,
+      "anonymization": "identified",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    },
+    {
+      "round": 6,
+      "m": 0.7000000000000001,
+      "anonymization": "identified",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    }
+  ],
+  "convergence_analysis": {
+    "converged": true,
+    "convergence_round": 3,
+    "participation_rate_trajectory": [
+      0.0,
+      0.05,
+      0.05,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "profit_trajectory": [
+      0.0,
+      2.2305960632360424,
+      1.6831094988937592,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "final_participation_rate": 0.0,
+    "final_profit": 0.0
+  },
+  "ground_truth": {
+    "m_star": 0.7000000000000001,
+    "anonymization_star": "identified",
+    "r_star": 0.06538230128851415
+  },
+  "final_strategy": {
+    "participation_rate": 0.0,
+    "profit": 0.0
+  }
+}

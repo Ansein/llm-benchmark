@@ -1,0 +1,65 @@
+{
+  "model_name": "deepseek-v3.2",
+  "game_type": "fictitious_play",
+  "config": "B_fictitious_play",
+  "max_rounds": 50,
+  "actual_rounds": 3,
+  "belief_window": 10,
+  "history": [
+    {
+      "round": 1,
+      "m": 0.0,
+      "anonymization": "anonymized",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    },
+    {
+      "round": 2,
+      "m": 0.0,
+      "anonymization": "anonymized",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    },
+    {
+      "round": 3,
+      "m": 0.0,
+      "anonymization": "anonymized",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    }
+  ],
+  "convergence_analysis": {
+    "converged": true,
+    "convergence_round": 0,
+    "participation_rate_trajectory": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "profit_trajectory": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "final_participation_rate": 0.0,
+    "final_profit": 0.0
+  },
+  "ground_truth": {
+    "m_star": 0.0,
+    "anonymization_star": "anonymized",
+    "r_star": 0.0011384444225298138
+  },
+  "final_strategy": {
+    "participation_rate": 0.0,
+    "profit": 0.0
+  }
+}

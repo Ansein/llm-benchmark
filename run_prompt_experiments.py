@@ -395,7 +395,7 @@ class PromptExperimentController:
         llm_config = self.model_config.copy()
         llm_config["generate_args"] = llm_config.get("generate_args", {}).copy()
         llm_config["generate_args"]["temperature"] = 0.7
-        llm_config["generate_args"]["max_tokens"] = 500
+        llm_config["generate_args"]["max_tokens"] = 1500  # 增加到1500以避免截断（中文reason字段需要更多tokens）
         
         llm_client = LLMClient(config=llm_config)
         
@@ -614,8 +614,8 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="场景B提示词版本实验控制器")
-    parser.add_argument("--model", type=str, default="deepseek-v3.2", 
-                        help="LLM模型名称 (默认: deepseek-v3.2)")
+    parser.add_argument("--model", type=str, default="gemini-3-flash-preview", 
+                        help="LLM模型名称 (默认: gemini-3-flash-preview)")
     parser.add_argument("--versions", type=str, nargs="+", 
                         help="要运行的版本列表，如 b.v0 b.v1 (默认: 所有版本)")
     parser.add_argument("--rounds", type=int, default=1, 

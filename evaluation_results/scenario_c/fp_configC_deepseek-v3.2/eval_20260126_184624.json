@@ -1,0 +1,326 @@
+{
+  "model_name": "deepseek-v3.2",
+  "game_type": "fictitious_play",
+  "config": "C_fictitious_play",
+  "max_rounds": 50,
+  "actual_rounds": 16,
+  "belief_window": 10,
+  "history": [
+    {
+      "round": 1,
+      "m": 1.0,
+      "anonymization": "anonymized",
+      "intermediary_reason": "作为第一轮，无历史参考，假设50%参与率。选择中等补偿m=1.0（接近隐私成本均值），以平衡吸引力和成本。匿名化策略可降低消费者对价格歧视的担忧，提升参与意愿，从而扩大数据规模，为后续轮次优化奠定基础。",
+      "participation_rate": 0.55,
+      "num_participants": 11,
+      "participation_set": [
+        1,
+        2,
+        4,
+        9,
+        11,
+        12,
+        13,
+        16,
+        17,
+        18,
+        19
+      ],
+      "m0": 5.291786253729572,
+      "intermediary_profit": -5.708213746270428
+    },
+    {
+      "round": 2,
+      "m": 0.7,
+      "anonymization": "anonymized",
+      "intermediary_reason": "上轮m=1.0且匿名化利润为负，参与率仅55%，说明对消费者吸引力不足。在隐私成本均值1.0下，需降低补偿m来减少成本，同时保持匿名化以维持参与率。估计m=0.7对消费者吸引力适中，能提高参与率同时控制单位成本，有望实现正利润。",
+      "participation_rate": 0.25,
+      "num_participants": 5,
+      "participation_set": [
+        1,
+        2,
+        13,
+        18,
+        19
+      ],
+      "m0": 4.099437154107797,
+      "intermediary_profit": 0.5994371541077967
+    },
+    {
+      "round": 3,
+      "m": 0.5,
+      "anonymization": "anonymized",
+      "intermediary_reason": "历史显示anonymized参与率更高（平均40%），降低m至0.5可减少补偿成本，同时保持参与率在合理水平以最大化利润，避免像轮次1那样因m过高导致亏损。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.245646672156949
+    },
+    {
+      "round": 4,
+      "m": 0.45,
+      "anonymization": "anonymized",
+      "intermediary_reason": "历史显示anonymized策略下参与率随m降低而下降，但利润在m=0.5时最高（2.246）。进一步降低m至0.45可减少单位补偿成本，同时anonymized策略能维持一定参与率，预计在低补偿下仍能吸引部分低隐私成本消费者，从而最大化利润。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.295646672156949
+    },
+    {
+      "round": 5,
+      "m": 0.425,
+      "anonymization": "identified",
+      "intermediary_reason": "历史数据显示低补偿(m=0.45)时匿名化参与率仅5%，但利润接近峰值；若改用识别策略且进一步降低补偿，可减少成本支出，虽可能降低参与率，但利润有望更高，因为每参与者成本降低且商家支付m0不变。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.320646672156949
+    },
+    {
+      "round": 6,
+      "m": 0.4,
+      "anonymization": "identified",
+      "intermediary_reason": "历史数据显示identified策略下参与率稳定在5%，但利润随m降低而增加；m=0.425时利润已达2.321，进一步降低m至0.4可减少补偿支出，同时identified策略能维持低参与率但确保商家支付m0，从而最大化利润。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.345646672156949
+    },
+    {
+      "round": 7,
+      "m": 0.375,
+      "anonymization": "identified",
+      "intermediary_reason": "历史数据显示identified策略下参与率稳定在5%，但利润随m降低而持续上升。进一步小幅降低m至0.375可减少补偿支出，同时预计参与率保持稳定，从而最大化利润。匿名化策略虽参与率较高，但补偿成本增加导致利润较低。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.370646672156949
+    },
+    {
+      "round": 8,
+      "m": 0.35,
+      "anonymization": "identified",
+      "intermediary_reason": "历史数据显示 identified 策略下参与率稳定在5%，而随着 m 从0.425降到0.375，利润持续增加。为进一步提升利润，我将在此策略下继续小幅降低补偿金额到0.35，预期仍能维持5%的参与率，从而最大化单用户利润。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.395646672156949
+    },
+    {
+      "round": 9,
+      "m": 0.325,
+      "anonymization": "identified",
+      "intermediary_reason": "历史显示identified策略下参与率稳定在5%，但利润随m降低而持续上升。继续小幅降低m至0.325可在保持相同参与率的同时进一步减少补偿支出，从而提升利润。匿名化策略虽参与率较高，但利润较低且不稳定。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.420646672156949
+    },
+    {
+      "round": 10,
+      "m": 0.3,
+      "anonymization": "identified",
+      "intermediary_reason": "历史数据显示identified策略下参与率稳定在5%，但利润随m降低而持续增长（从2.321升至2.421）。继续小幅降低m至0.300可进一步减少补偿支出，同时预计参与率保持稳定，从而最大化利润。",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    },
+    {
+      "round": 11,
+      "m": 0.31,
+      "anonymization": "identified",
+      "intermediary_reason": "historial shows low participation (5%) when m <= 0.425 with identified but yields positive profit; raising m slightly to 0.310 (from 0.300) may entice very low-τ consumers to join while maintaining profitably low compensation to participants, as observed earlier profitable m range (0.375–0.425) with identified.",
+      "participation_rate": 0.0,
+      "num_participants": 0,
+      "participation_set": [],
+      "m0": 0.0,
+      "intermediary_profit": 0.0
+    },
+    {
+      "round": 12,
+      "m": 0.35,
+      "anonymization": "anonymized",
+      "intermediary_reason": "历史显示 anonymized 策略平均参与率（11.7%）远高于 identified（3.6%），且 m=0.350 在 identified 时曾获利润 2.396，但参与率仅 5%。改用 anonymized 可望提高参与人数，从而在相同补偿下增加利润，避免像最近两轮零参与的情况。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.395646672156949
+    },
+    {
+      "round": 13,
+      "m": 0.375,
+      "anonymization": "anonymized",
+      "intermediary_reason": "历史显示anonymized策略参与率稳定在5%，而identified策略在m≤0.3时参与率降至0%。选择m=0.375可确保参与率，同时避免过高补偿成本，平衡利润最大化。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.370646672156949
+    },
+    {
+      "round": 14,
+      "m": 0.325,
+      "anonymization": "anonymized",
+      "intermediary_reason": "历史显示anonymized策略下参与率稳定在5%，而identified策略在m≤0.35时参与率降至0%。选择anonymized可确保参与率，且m=0.325在最近anonymized轮次中利润较高（2.421），平衡了补偿成本与参与人数。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.420646672156949
+    },
+    {
+      "round": 15,
+      "m": 0.325,
+      "anonymization": "anonymized",
+      "intermediary_reason": "历史数据显示 anonymized 策略下参与率稳定在 5.0%，高于 identified 的 3.6%，且 m=0.325 时利润最高（2.421），选择此组合可最大化利润。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.420646672156949
+    },
+    {
+      "round": 16,
+      "m": 0.325,
+      "anonymization": "anonymized",
+      "intermediary_reason": "历史记录显示 anonymized 策略参与率稳定在5%，高于 identified。利润在 m=0.325 时最高，达到 2.421。综合考虑参与率与补偿成本，维持此组合以最大化利润。",
+      "participation_rate": 0.05,
+      "num_participants": 1,
+      "participation_set": [
+        1
+      ],
+      "m0": 2.745646672156949,
+      "intermediary_profit": 2.420646672156949
+    }
+  ],
+  "convergence_analysis": {
+    "converged": true,
+    "convergence_round": 13,
+    "participation_stability": 0.98,
+    "m_trajectory": [
+      1.0,
+      0.7,
+      0.5,
+      0.45,
+      0.425,
+      0.4,
+      0.375,
+      0.35,
+      0.325,
+      0.3,
+      0.31,
+      0.35,
+      0.375,
+      0.325,
+      0.325,
+      0.325
+    ],
+    "anon_trajectory": [
+      "anonymized",
+      "anonymized",
+      "anonymized",
+      "anonymized",
+      "identified",
+      "identified",
+      "identified",
+      "identified",
+      "identified",
+      "identified",
+      "identified",
+      "anonymized",
+      "anonymized",
+      "anonymized",
+      "anonymized",
+      "anonymized"
+    ],
+    "participation_rate_trajectory": [
+      0.55,
+      0.25,
+      0.05,
+      0.05,
+      0.05,
+      0.05,
+      0.05,
+      0.05,
+      0.05,
+      0.0,
+      0.0,
+      0.05,
+      0.05,
+      0.05,
+      0.05,
+      0.05
+    ],
+    "profit_trajectory": [
+      -5.708213746270428,
+      0.5994371541077967,
+      2.245646672156949,
+      2.295646672156949,
+      2.320646672156949,
+      2.345646672156949,
+      2.370646672156949,
+      2.395646672156949,
+      2.420646672156949,
+      0.0,
+      0.0,
+      2.395646672156949,
+      2.370646672156949,
+      2.420646672156949,
+      2.420646672156949,
+      2.420646672156949
+    ],
+    "final_m": 0.325,
+    "final_anonymization": "anonymized",
+    "final_participation_rate": 0.05,
+    "final_profit": 2.420646672156949,
+    "similarity_to_optimal": {
+      "m_error": 0.37500000000000006,
+      "anon_match": false,
+      "profit_ratio": 1.5062192685537739
+    }
+  },
+  "ground_truth": {
+    "m_star": 0.7000000000000001,
+    "anonymization_star": "identified",
+    "profit_star": 1.6071011191359812,
+    "r_star": 0.06538230128851415
+  },
+  "final_strategy": {
+    "m": 0.325,
+    "anonymization": "anonymized",
+    "participation_rate": 0.05,
+    "profit": 2.420646672156949
+  }
+}

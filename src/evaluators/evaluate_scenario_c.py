@@ -5,18 +5,140 @@
 - 配置A：理性×理性（理论基准）
 - 配置B：理性中介×LLM消费者
 - 配置C：LLM中介×理性消费者
-- 配置D：LLM中介×LLM消费者
+- 配置D：LLM中介×LLM消费者（多轮迭代学习）
+- 配置D_FP：LLM中介×LLM消费者（虚拟博弈）
 
 所有指标都是完全量化的、客观的。
+
+========================================
+运行方式
+========================================
+
+1. 【多轮迭代模式】（现有方法）
+   运行配置B、C、D的完整评估：
+   
+   python -m src.evaluators.evaluate_scenario_c --mode iterative --model deepseek-v3.2
+   
+   # 自定义轮数（默认20轮）
+   python -m src.evaluators.evaluate_scenario_c --mode iterative --model deepseek-v3.2 --rounds 30
+   
+   输出：
+   - evaluation_results/scenario_c/scenario_c_common_preferences_deepseek-v3.2_YYYYMMDD_HHMMSS.csv
+   - evaluation_results/scenario_c/scenario_c_common_preferences_deepseek-v3.2_YYYYMMDD_HHMMSS_detailed.json
+
+2. 【虚拟博弈模式】（新增）
+   只运行指定配置的虚拟博弈版本：
+   
+   # 一次运行所有三个配置（推荐）
+   python -m src.evaluators.evaluate_scenario_c --mode fp --fp_config all --model deepseek-v3.2
+   
+   # 单独运行配置B_FP：理性中介 × LLM消费者（消费者学习）
+   python -m src.evaluators.evaluate_scenario_c --mode fp --fp_config B --model deepseek-v3.2
+   
+   # 单独运行配置C_FP：LLM中介 × 理性消费者（中介学习）
+   python -m src.evaluators.evaluate_scenario_c --mode fp --fp_config C --model deepseek-v3.2
+   
+   # 单独运行配置D_FP：LLM中介 × LLM消费者（双方学习，默认）
+   python -m src.evaluators.evaluate_scenario_c --mode fp --fp_config D --model deepseek-v3.2
+   
+   # 自定义参数（默认50轮，信念窗口10）
+   python -m src.evaluators.evaluate_scenario_c \
+       --mode fp \
+       --fp_config all \
+       --model deepseek-v3.2 \
+       --rounds 50 \
+       --belief_window 10
+   
+   输出（每个配置一个目录）：
+   - evaluation_results/scenario_c/fp_configB_deepseek-v3.2/eval_YYYYMMDD_HHMMSS.json
+   - evaluation_results/scenario_c/fp_configC_deepseek-v3.2/eval_YYYYMMDD_HHMMSS.json
+   - evaluation_results/scenario_c/fp_configD_deepseek-v3.2/eval_YYYYMMDD_HHMMSS.json
+   - 对应的可视化图表（_profit_rate.png 和 _strategy_evolution.png）
+
+3. 【为已有结果生成可视化】
+   从已保存的FP结果JSON文件生成图表：
+   
+   # 单个文件
+   python -m src.evaluators.evaluate_scenario_c --visualize evaluation_results/scenario_c/fp_deepseek-v3.2/eval_YYYYMMDD_HHMMSS.json
+   
+   # 整个目录
+   python -m src.evaluators.evaluate_scenario_c --visualize evaluation_results/scenario_c/fp_deepseek-v3.2/
+   
+   # 多个路径
+   python -m src.evaluators.evaluate_scenario_c --visualize path1.json path2/ path3/*.json
+
+========================================
+参数说明
+========================================
+
+--mode: 运行模式
+  - iterative: 现有多轮迭代学习（运行B+C+D）
+  - fp: 虚拟博弈（只运行指定配置的FP版本）
+
+--fp_config: 虚拟博弈的配置选择（仅在mode=fp时有效）
+  - all: 一次运行所有三个配置（推荐）
+  - B: 配置B_FP（理性中介 × LLM消费者）- 测试消费者学习能力
+  - C: 配置C_FP（LLM中介 × 理性消费者）- 测试中介学习能力
+  - D: 配置D_FP（LLM中介 × LLM消费者）- 测试双方学习能力（默认）
+
+--model: 模型配置名称
+  默认: deepseek-v3.2
+  可选: deepseek-v3.2, gpt-4.1-mini 等（见configs/model_configs.json）
+
+--rounds: 多轮学习轮数
+  - iterative模式默认: 20轮
+  - fp模式默认: 50轮
+
+--belief_window: 虚拟博弈信念窗口大小
+  默认: 10（使用最近10轮历史）
+
+--output-dir: 输出目录
+  默认: evaluation_results/scenario_c
+
+--visualize: 可视化模式
+  为已有JSON文件生成图表（支持文件、目录、通配符）
+
+========================================
+虚拟博弈配置对比
+========================================
+
+| 配置     | 中介类型   | 消费者类型 | 中介学习 | 消费者学习 | 测试目标          |
+|---------|-----------|-----------|---------|-----------|------------------|
+| B_FP    | 理性      | LLM       | ❌      | ✅        | LLM消费者学习能力 |
+| C_FP    | LLM       | 理性      | ✅      | ❌        | LLM中介学习能力   |
+| D_FP    | LLM       | LLM       | ✅      | ✅        | 双方学习与均衡    |
+
+========================================
+Iterative vs FP 对比
+========================================
+
+| 特性           | Iterative（现有）      | FP（虚拟博弈）           |
+|----------------|----------------------|-------------------------|
+| 中介学习       | 按利润排序反馈       | 按时间序列历史趋势      |
+| 消费者学习     | 无历史               | 观察最近N轮参与频率     |
+| 收敛检测       | 无                   | 策略+参与集合稳定       |
+| 默认轮数       | 20轮                 | 50轮（可提前收敛）      |
+| 运行配置       | B+C+D                | B_FP或C_FP或D_FP      |
+| 输出           | CSV报告              | JSON+可视化图表         |
+
+========================================
 """
 
 import sys
 import json
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
 from pathlib import Path
 from typing import Dict, List, Callable, Optional, Tuple, Any
 from dataclasses import dataclass
+
+# 配置matplotlib中文显示
+plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'DejaVu Sans']
+plt.rcParams['axes.unicode_minus'] = False
 
 # 处理直接运行和模块导入两种情况
 if __name__ == "__main__":
@@ -388,6 +510,250 @@ class ScenarioCEvaluator:
             print(f"  福利损失: {metrics['market']['welfare_loss_percent']:.2f}%")
         
         return metrics
+    
+    def evaluate_config_B_fictitious_play(
+        self,
+        llm_client,
+        model_config: Dict,
+        max_rounds: int = 50,
+        belief_window: int = 10,
+        verbose: bool = True
+    ) -> Dict:
+        """
+        配置B（虚拟博弈版）：理性中介 × LLM消费者（Fictitious Play）
+        
+        中介：始终使用理论最优策略（m*, anon*）
+        消费者：基于历史学习其他消费者的参与概率
+        
+        Args:
+            llm_client: OpenAI格式的LLM客户端
+            model_config: 模型配置字典
+            max_rounds: 最大轮数
+            belief_window: 信念窗口大小
+            verbose: 是否打印详细信息
+        
+        Returns:
+            评估结果字典
+        """
+        import re
+        
+        model_name = model_config['model_name']
+        generate_args = model_config.get('generate_args', {})
+        
+        if verbose:
+            print("\n" + "="*70)
+            print("配置B（虚拟博弈）：理性中介 × LLM消费者 - Fictitious Play")
+            print(f"最大轮数: {max_rounds}, 信念窗口: {belief_window}")
+            print("="*70)
+        
+        # 理论最优策略（固定不变）
+        m_star = self.gt_A['optimal_strategy']['m_star']
+        anon_star = self.gt_A['optimal_strategy']['anonymization_star']
+        r_star = self.gt_A['optimal_strategy']['r_star']
+        
+        if verbose:
+            print(f"\n理性中介策略: m*={m_star:.4f}, {anon_star}")
+        
+        market_params = {
+            'N': self.params_base['N'],
+            'mu_theta': self.params_base['mu_theta'],
+            'sigma_theta': self.params_base['sigma_theta'],
+            'tau_mean': self.params_base['tau_mean'],
+            'tau_std': self.params_base['tau_std'],
+            'data_structure': self.params_base['data_structure'],
+        }
+        
+        history: List[Dict] = []
+        consumers = self._get_sample_consumers()
+        N = market_params['N']
+        
+        # ===== 虚拟博弈迭代 =====
+        for round_num in range(max_rounds):
+            if verbose:
+                print(f"\n{'='*70}")
+                print(f"[轮次 {round_num + 1}/{max_rounds}]")
+                print(f"{'='*70}")
+            
+            # 1. 计算消费者信念
+            window = min(belief_window, round_num)
+            consumer_belief_probs = self._compute_consumer_belief(history, window_size=window, N=N)
+            
+            # 2. 消费者决策（基于历史）
+            llm_decisions: List[bool] = []
+            
+            for idx, consumer_params in enumerate(consumers):
+                consumer_params['consumer_id'] = idx
+                
+                # 构建消费者FP提示词
+                consumer_prompt = self.build_consumer_prompt_fp(
+                    consumer_params=consumer_params,
+                    m=m_star,
+                    anonymization=anon_star,
+                    history=history,
+                    consumer_belief_probs=consumer_belief_probs,
+                    belief_window=belief_window,
+                    N=N
+                )
+                
+                # 调用消费者LLM
+                try:
+                    response = llm_client.chat.completions.create(
+                        model=model_name,
+                        messages=[{"role": "user", "content": consumer_prompt}],
+                        **generate_args
+                    )
+                    answer = response.choices[0].message.content.strip()
+                    lines = [ln.strip() for ln in answer.splitlines() if ln.strip()]
+                    decision_line = ""
+                    for ln in reversed(lines):
+                        if ln.startswith("决策"):
+                            decision_line = ln
+                            break
+                    
+                    dl = decision_line.lower()
+                    if ("拒绝" in decision_line) or ("no" in dl):
+                        decision = False
+                    elif ("参与" in decision_line) or ("yes" in dl):
+                        decision = True
+                    elif "拒绝" in answer:
+                        decision = False
+                    elif "参与" in answer:
+                        decision = True
+                    else:
+                        decision = m_star > consumer_params['tau_i']
+                    
+                    llm_decisions.append(bool(decision))
+                except Exception as e:
+                    if verbose and idx < 5:
+                        print(f"[WARN] 消费者{idx}决策失败: {e}")
+                    llm_decisions.append(False)
+            
+            llm_decisions_arr = np.array(llm_decisions)
+            r_llm = float(np.mean(llm_decisions_arr))
+            participation_set = [i for i, d in enumerate(llm_decisions) if d]
+            
+            # 3. 计算市场结果
+            params = ScenarioCParams(
+                m=m_star,
+                anonymization=anon_star,
+                **self.params_base
+            )
+            rng = np.random.default_rng(self.params_base['seed'])
+            consumer_data = generate_consumer_data(params, rng=rng)
+            
+            from src.scenarios.scenario_c_social_data import estimate_m0_mc
+            
+            def participation_rule(p, world, rng):
+                return llm_decisions_arr
+            
+            m_0, _, _, _ = estimate_m0_mc(
+                params=params,
+                participation_rule=participation_rule,
+                T=100,
+                beta=1.0,
+                seed=self.params_base['seed']
+            )
+            
+            outcome = simulate_market_outcome(
+                consumer_data,
+                llm_decisions_arr,
+                params,
+                producer_info_mode="with_data",
+                m0=m_0,
+                rng=rng
+            )
+            
+            # 4. 记录历史
+            round_info = {
+                "round": round_num + 1,
+                "m": float(m_star),
+                "anonymization": anon_star,
+                "participation_rate": r_llm,
+                "num_participants": int(np.sum(llm_decisions_arr)),
+                "participation_set": participation_set,
+                "m0": float(m_0),
+                "intermediary_profit": float(outcome.intermediary_profit),
+            }
+            history.append(round_info)
+            
+            if verbose:
+                print(f"参与率: {r_llm:.2%} ({round_info['num_participants']}/{N})")
+                print(f"利润: {round_info['intermediary_profit']:.4f}")
+            
+            # 5. 检查收敛（参与集合稳定）
+            if len(history) >= 3:
+                last_3_sets = [
+                    frozenset(h.get('participation_set', [])) 
+                    for h in history[-3:]
+                ]
+                if len(set(last_3_sets)) == 1:
+                    if verbose:
+                        print(f"\n[提前收敛] 连续3轮参与集合不变，停止迭代")
+                    break
+        
+        # ===== 最终分析 =====
+        if verbose:
+            print(f"\n{'='*70}")
+            print(f"[虚拟博弈结束] 总轮数: {len(history)}")
+            print(f"{'='*70}")
+        
+        # 简化的收敛分析
+        participation_rate_traj = [h['participation_rate'] for h in history]
+        profit_traj = [h['intermediary_profit'] for h in history]
+        
+        final_rate = participation_rate_traj[-1]
+        final_profit = profit_traj[-1]
+        
+        # 检查是否收敛
+        converged = False
+        convergence_round = None
+        if len(history) >= 3:
+            last_3_sets = [frozenset(h.get('participation_set', [])) for h in history[-3:]]
+            converged = len(set(last_3_sets)) == 1
+            if converged:
+                for i in range(2, len(history)):
+                    check_sets = [frozenset(h.get('participation_set', [])) for h in history[i-2:i+1]]
+                    if len(set(check_sets)) == 1:
+                        convergence_round = i - 2
+                        break
+        
+        if verbose:
+            print(f"\n[收敛性分析]")
+            print(f"是否收敛: {converged}")
+            if converged and convergence_round is not None:
+                print(f"收敛轮数: {convergence_round}")
+            print(f"最终参与率: {final_rate:.2%} (理论最优 {r_star:.2%})")
+            print(f"最终利润: {final_profit:.4f}")
+            print(f"参与率误差: {abs(final_rate - r_star):.4f}")
+        
+        results = {
+            "model_name": model_config.get('config_name', 'unknown'),
+            "game_type": "fictitious_play",
+            "config": "B_fictitious_play",
+            "max_rounds": max_rounds,
+            "actual_rounds": len(history),
+            "belief_window": belief_window,
+            "history": history,
+            "convergence_analysis": {
+                "converged": converged,
+                "convergence_round": convergence_round,
+                "participation_rate_trajectory": participation_rate_traj,
+                "profit_trajectory": profit_traj,
+                "final_participation_rate": final_rate,
+                "final_profit": final_profit
+            },
+            "ground_truth": {
+                "m_star": m_star,
+                "anonymization_star": anon_star,
+                "r_star": r_star
+            },
+            "final_strategy": {
+                "participation_rate": final_rate,
+                "profit": final_profit
+            }
+        }
+        
+        return results
     
     def evaluate_config_C(
         self,
@@ -978,6 +1344,235 @@ class ScenarioCEvaluator:
 
         return metrics
     
+    def evaluate_config_C_fictitious_play(
+        self,
+        llm_client,
+        model_config: Dict,
+        max_rounds: int = 50,
+        belief_window: int = 10,
+        verbose: bool = True
+    ) -> Dict:
+        """
+        配置C（虚拟博弈版）：LLM中介 × 理性消费者（Fictitious Play）
+        
+        中介：基于历史学习参与率趋势
+        消费者：理性决策（给定中介策略后做最优反应）
+        
+        Args:
+            llm_client: OpenAI格式的LLM客户端
+            model_config: 模型配置字典
+            max_rounds: 最大轮数
+            belief_window: 信念窗口大小
+            verbose: 是否打印详细信息
+        
+        Returns:
+            评估结果字典
+        """
+        import re
+        
+        model_name = model_config['model_name']
+        generate_args = model_config.get('generate_args', {})
+        
+        if verbose:
+            print("\n" + "="*70)
+            print("配置C（虚拟博弈）：LLM中介 × 理性消费者 - Fictitious Play")
+            print(f"最大轮数: {max_rounds}, 信念窗口: {belief_window}")
+            print("="*70)
+        
+        m_star = self.gt_A['optimal_strategy']['m_star']
+        anon_star = self.gt_A['optimal_strategy']['anonymization_star']
+        profit_star = self.gt_A['optimal_strategy']['intermediary_profit_star']
+        r_star = self.gt_A['optimal_strategy']['r_star']
+        
+        market_params = {
+            'N': self.params_base['N'],
+            'mu_theta': self.params_base['mu_theta'],
+            'sigma_theta': self.params_base['sigma_theta'],
+            'tau_mean': self.params_base['tau_mean'],
+            'tau_std': self.params_base['tau_std'],
+            'data_structure': self.params_base['data_structure'],
+        }
+        
+        history: List[Dict] = []
+        consumers = self._get_sample_consumers()
+        
+        # ===== 虚拟博弈迭代 =====
+        for round_num in range(max_rounds):
+            if verbose:
+                print(f"\n{'='*70}")
+                print(f"[轮次 {round_num + 1}/{max_rounds}]")
+                print(f"{'='*70}")
+            
+            # 1. 计算中介信念
+            window = min(belief_window, round_num)
+            intermediary_belief = self._compute_intermediary_belief(history, window_size=window)
+            
+            # 2. 中介决策（基于历史）
+            intermediary_prompt = self.build_intermediary_prompt_fp(
+                market_params=market_params,
+                history=history,
+                belief_stats=intermediary_belief,
+                belief_window=belief_window
+            )
+            
+            # 调用中介LLM
+            try:
+                response = llm_client.chat.completions.create(
+                    model=model_name,
+                    messages=[{"role": "user", "content": intermediary_prompt}],
+                    **generate_args
+                )
+                answer = response.choices[0].message.content.strip()
+                json_match = re.search(r'\{[^}]+\}', answer)
+                if json_match:
+                    answer = json_match.group(0)
+                obj = json.loads(answer)
+                m_llm = float(obj.get("m", 0.5))
+                anon_llm = obj.get("anonymization", "anonymized")
+                intermediary_reason = str(obj.get("reason", "")).strip()
+            except Exception as e:
+                print(f"[WARN] 中介决策失败: {e}，使用默认策略")
+                m_llm = 0.5
+                anon_llm = "anonymized"
+                intermediary_reason = "调用失败"
+            
+            if verbose:
+                print(f"中介选择: m={m_llm:.4f}, {anon_llm}")
+                if intermediary_reason:
+                    print(f"中介理由: {intermediary_reason}")
+            
+            # 3. 理性消费者决策
+            # 使用理论最优决策规则
+            params = ScenarioCParams(
+                m=m_llm,
+                anonymization=anon_llm,
+                **self.params_base
+            )
+            rng = np.random.default_rng(self.params_base['seed'])
+            consumer_data = generate_consumer_data(params, rng=rng)
+            
+            from src.scenarios.scenario_c_social_data import estimate_m0_mc
+            
+            # 获取tau值（从consumers列表）
+            tau_array = np.array([c['tau_i'] for c in consumers])
+            
+            # 理性决策：基于delta_u
+            if anon_llm == "identified":
+                # identified情况：参与门槛略高
+                delta_u = m_llm - 0.1  # 简化估算，考虑个性化定价风险
+                
+                def rational_participation_rule(p, world, rng):
+                    return tau_array <= delta_u
+                
+                m_0, _, _, _ = estimate_m0_mc(
+                    params=params,
+                    participation_rule=rational_participation_rule,
+                    T=100,
+                    beta=1.0,
+                    seed=self.params_base['seed']
+                )
+                
+                rational_decisions = rational_participation_rule(None, consumer_data, rng)
+            else:
+                # anonymized情况：参与门槛为m
+                delta_u = m_llm
+                
+                def rational_participation_rule(p, world, rng):
+                    return tau_array <= delta_u
+                
+                m_0, _, _, _ = estimate_m0_mc(
+                    params=params,
+                    participation_rule=rational_participation_rule,
+                    T=100,
+                    beta=1.0,
+                    seed=self.params_base['seed']
+                )
+                
+                rational_decisions = rational_participation_rule(None, consumer_data, rng)
+            
+            r_rational = float(np.mean(rational_decisions))
+            participation_set = [i for i, d in enumerate(rational_decisions) if d]
+            
+            outcome = simulate_market_outcome(
+                consumer_data,
+                rational_decisions,
+                params,
+                producer_info_mode="with_data",
+                m0=m_0,
+                rng=rng
+            )
+            
+            # 4. 记录历史
+            round_info = {
+                "round": round_num + 1,
+                "m": float(m_llm),
+                "anonymization": anon_llm,
+                "intermediary_reason": intermediary_reason,
+                "participation_rate": r_rational,
+                "num_participants": int(np.sum(rational_decisions)),
+                "participation_set": participation_set,
+                "m0": float(m_0),
+                "intermediary_profit": float(outcome.intermediary_profit),
+            }
+            history.append(round_info)
+            
+            if verbose:
+                print(f"理性消费者参与率: {r_rational:.2%} ({round_info['num_participants']}/{market_params['N']})")
+                print(f"中介利润: {round_info['intermediary_profit']:.4f}")
+            
+            # 5. 检查收敛
+            if self._check_fp_convergence(history, threshold=3):
+                if verbose:
+                    print(f"\n[提前收敛] 连续3轮策略和参与集合不变，停止迭代")
+                break
+        
+        # ===== 最终分析 =====
+        if verbose:
+            print(f"\n{'='*70}")
+            print(f"[虚拟博弈结束] 总轮数: {len(history)}")
+            print(f"{'='*70}")
+        
+        # 收敛性分析
+        convergence_analysis = self._analyze_fp_convergence(history, self.gt_A['optimal_strategy'])
+        
+        if verbose:
+            print(f"\n[收敛性分析]")
+            print(f"是否收敛: {convergence_analysis['converged']}")
+            if convergence_analysis['converged']:
+                print(f"收敛轮数: {convergence_analysis['convergence_round']}")
+            print(f"最终策略: m={convergence_analysis['final_m']:.4f}, {convergence_analysis['final_anonymization']}")
+            print(f"最终参与率: {convergence_analysis['final_participation_rate']:.2%}")
+            print(f"最终利润: {convergence_analysis['final_profit']:.4f} (理论最优 {profit_star:.4f})")
+            print(f"与理论最优对比:")
+            print(f"  m误差: {convergence_analysis['similarity_to_optimal']['m_error']:.4f}")
+            print(f"  anon匹配: {convergence_analysis['similarity_to_optimal']['anon_match']}")
+            print(f"  利润比率: {convergence_analysis['similarity_to_optimal']['profit_ratio']:.2%}")
+        
+        results = {
+            "model_name": model_config.get('config_name', 'unknown'),
+            "game_type": "fictitious_play",
+            "config": "C_fictitious_play",
+            "max_rounds": max_rounds,
+            "actual_rounds": len(history),
+            "belief_window": belief_window,
+            "history": history,
+            "convergence_analysis": convergence_analysis,
+            "ground_truth": {
+                "m_star": m_star,
+                "anonymization_star": anon_star,
+                "profit_star": profit_star,
+                "r_star": r_star
+            },
+            "final_strategy": {
+                "m": convergence_analysis['final_m'],
+                "anonymization": convergence_analysis['final_anonymization'],
+                "participation_rate": convergence_analysis['final_participation_rate'],
+                "profit": convergence_analysis['final_profit']
+            }
+        }
+        
+        return results
+    
     def evaluate_config_D(
         self,
         llm_intermediary_agent: Callable,
@@ -1165,6 +1760,722 @@ class ScenarioCEvaluator:
         
         return metrics
     
+    # ========================================================================
+    # 虚拟博弈（Fictitious Play）相关方法
+    # ========================================================================
+    
+    def _compute_intermediary_belief(
+        self,
+        history: List[Dict],
+        window_size: int = 10
+    ) -> Dict[str, float]:
+        """
+        计算中介基于历史的信念（参与率趋势）
+        
+        Args:
+            history: 历史记录
+            window_size: 窗口大小
+        
+        Returns:
+            {"avg_participation_rate": float,
+             "avg_rate_identified": float,
+             "avg_rate_anonymized": float}
+        """
+        if len(history) == 0:
+            return {
+                "avg_participation_rate": 0.5,
+                "avg_rate_identified": 0.5,
+                "avg_rate_anonymized": 0.5
+            }
+        
+        recent_history = history[-window_size:]
+        
+        all_rates = [h['participation_rate'] for h in recent_history]
+        identified_rates = [h['participation_rate'] for h in recent_history if h['anonymization'] == 'identified']
+        anonymized_rates = [h['participation_rate'] for h in recent_history if h['anonymization'] == 'anonymized']
+        
+        return {
+            "avg_participation_rate": float(np.mean(all_rates)) if all_rates else 0.5,
+            "avg_rate_identified": float(np.mean(identified_rates)) if identified_rates else None,
+            "avg_rate_anonymized": float(np.mean(anonymized_rates)) if anonymized_rates else None
+        }
+    
+    def _compute_consumer_belief(
+        self,
+        history: List[Dict],
+        window_size: int = 10,
+        N: int = 100
+    ) -> Dict[int, float]:
+        """
+        计算消费者基于历史的信念（其他消费者的参与概率）
+        
+        Args:
+            history: 历史记录
+            window_size: 窗口大小
+            N: 消费者总数
+        
+        Returns:
+            {consumer_id: 参与概率}
+        """
+        if len(history) == 0:
+            return {i: 0.5 for i in range(N)}
+        
+        recent_history = history[-window_size:]
+        
+        belief_probs = {}
+        for consumer_id in range(N):
+            participate_count = sum(
+                1 for h in recent_history 
+                if consumer_id in h.get('participation_set', [])
+            )
+            belief_probs[consumer_id] = participate_count / len(recent_history)
+        
+        return belief_probs
+    
+    def _check_fp_convergence(
+        self,
+        history: List[Dict],
+        threshold: int = 3
+    ) -> bool:
+        """
+        检查FP是否收敛
+        
+        收敛条件：连续threshold轮
+        - m变化 < 0.01
+        - anon不变
+        - 参与集合不变
+        
+        Args:
+            history: 历史记录
+            threshold: 稳定轮数阈值
+        
+        Returns:
+            是否收敛
+        """
+        if len(history) < threshold:
+            return False
+        
+        recent = history[-threshold:]
+        
+        # 检查m变化
+        m_values = [h['m'] for h in recent]
+        m_stable = all(abs(m_values[i] - m_values[i+1]) < 0.01 for i in range(len(m_values)-1))
+        
+        # 检查anon不变
+        anon_values = [h['anonymization'] for h in recent]
+        anon_stable = len(set(anon_values)) == 1
+        
+        # 检查参与集合不变
+        participation_sets = [
+            frozenset(h.get('participation_set', []))
+            for h in recent
+        ]
+        participation_stable = len(set(participation_sets)) == 1
+        
+        return m_stable and anon_stable and participation_stable
+    
+    def _analyze_fp_convergence(
+        self,
+        history: List[Dict],
+        gt_optimal: Dict
+    ) -> Dict[str, Any]:
+        """
+        分析FP的收敛性
+        
+        Args:
+            history: 完整历史
+            gt_optimal: 理论最优策略
+        
+        Returns:
+            收敛分析结果
+        """
+        n_rounds = len(history)
+        
+        # 提取轨迹
+        m_trajectory = [h['m'] for h in history]
+        anon_trajectory = [h['anonymization'] for h in history]
+        participation_rate_trajectory = [h['participation_rate'] for h in history]
+        profit_trajectory = [h.get('intermediary_profit', 0) for h in history]
+        
+        # 检测收敛轮数
+        convergence_round = None
+        for i in range(2, n_rounds):
+            if self._check_fp_convergence(history[:i+1], threshold=3):
+                convergence_round = i - 2  # 从这一轮开始稳定
+                break
+        
+        # 计算稳定性
+        if n_rounds >= 10:
+            last_10_participation = participation_rate_trajectory[-10:]
+            participation_stability = 1.0 - np.std(last_10_participation)
+        else:
+            participation_stability = 0.0
+        
+        # 与理论最优对比
+        final_m = m_trajectory[-1]
+        final_anon = anon_trajectory[-1]
+        final_profit = profit_trajectory[-1]
+        
+        m_star = gt_optimal['m_star']
+        anon_star = gt_optimal['anonymization_star']
+        profit_star = gt_optimal['intermediary_profit_star']
+        
+        return {
+            "converged": convergence_round is not None,
+            "convergence_round": convergence_round,
+            "participation_stability": float(participation_stability),
+            "m_trajectory": m_trajectory,
+            "anon_trajectory": anon_trajectory,
+            "participation_rate_trajectory": participation_rate_trajectory,
+            "profit_trajectory": profit_trajectory,
+            "final_m": final_m,
+            "final_anonymization": final_anon,
+            "final_participation_rate": participation_rate_trajectory[-1],
+            "final_profit": final_profit,
+            "similarity_to_optimal": {
+                "m_error": abs(final_m - m_star),
+                "anon_match": final_anon == anon_star,
+                "profit_ratio": final_profit / profit_star if profit_star > 0 else 0
+            }
+        }
+    
+    def build_intermediary_prompt_fp(
+        self,
+        market_params: Dict,
+        history: List[Dict],
+        belief_stats: Dict,
+        belief_window: int = 10
+    ) -> str:
+        """构建中介的FP提示词（隐式信念）"""
+        
+        recent_history = history[-belief_window:] if history else []
+        
+        # 构建历史文本
+        if len(recent_history) == 0:
+            history_text = """
+【历史记录】
+这是第一轮，暂无历史记录。你可以假设大约50%的消费者会参与。"""
+        else:
+            # 展示历史（按时间顺序）
+            history_lines = []
+            for h in recent_history:
+                history_lines.append(
+                    f"- 轮次{h['round']}: "
+                    f"m={h['m']:.3f}, {h['anonymization']}, "
+                    f"参与率={h['participation_rate']:.1%}, "
+                    f"利润={h.get('intermediary_profit', 0):.3f}"
+                )
+            
+            # 计算统计趋势
+            trend_text = "\n【参与率趋势】"
+            if belief_stats.get('avg_rate_identified') is not None:
+                trend_text += f"\n- identified 策略下平均参与率: {belief_stats['avg_rate_identified']:.1%}"
+            if belief_stats.get('avg_rate_anonymized') is not None:
+                trend_text += f"\n- anonymized 策略下平均参与率: {belief_stats['avg_rate_anonymized']:.1%}"
+            
+            history_text = f"""
+【历史记录】（最近{len(recent_history)}轮）
+{chr(10).join(history_lines)}
+{trend_text}"""
+        
+        # 构建完整提示词
+        prompt = f"""你是"数据中介"，目标是最大化你的利润。
+
+【市场参数】
+- 消费者数量 N = {market_params['N']}
+- 消费者偏好 θ ~ Normal(均值 {market_params['mu_theta']:.2f}, 标准差 {market_params['sigma_theta']:.2f})
+- 消费者隐私成本 τ ~ Normal(均值 {market_params['tau_mean']:.2f}, 标准差 {market_params['tau_std']:.2f})
+- 数据结构：{market_params['data_structure']}
+
+{history_text}
+
+【你的决策】
+选择本轮策略：
+1) 补偿金额 m（建议范围 0.1 到 2.0）
+2) 匿名化策略：identified 或 anonymized
+
+【机制说明】
+- 消费者会权衡"补偿收益"与"隐私成本+价格歧视风险"
+- identified：商家可识别消费者，能精准定价，但消费者参与意愿可能降低
+- anonymized：商家只能统一定价，消费者更可能参与
+- 你的利润 = m0（商家支付）− m × 参与人数
+
+【输出格式】
+只输出一行JSON，不要额外文字：
+{{"m": 数字, "anonymization": "identified"或"anonymized", "reason": "50-100字理由"}}
+
+请基于历史记录，选择本轮策略以最大化利润。
+"""
+        return prompt
+    
+    def build_consumer_prompt_fp(
+        self,
+        consumer_params: Dict,
+        m: float,
+        anonymization: str,
+        history: List[Dict],
+        consumer_belief_probs: Dict[int, float],
+        belief_window: int = 10,
+        N: int = 100
+    ) -> str:
+        """构建消费者的FP提示词（隐式信念）"""
+        
+        consumer_id = consumer_params.get('consumer_id', -1)
+        recent_history = history[-belief_window:] if history else []
+        
+        # 构建历史文本
+        if len(recent_history) == 0:
+            history_text = """
+【历史观察】
+这是第一轮，暂无历史记录。你可以假设其他消费者大约各有50%的概率参与。"""
+        else:
+            # 展示历史参与情况
+            history_lines = []
+            for h in recent_history:
+                participants = h.get('participation_set', [])
+                # 只显示前10个参与者
+                participant_str = ', '.join(map(str, sorted(participants)[:10]))
+                if len(participants) > 10:
+                    participant_str += '...'
+                history_lines.append(
+                    f"- 轮次{h['round']}: "
+                    f"m={h['m']:.2f}, {h['anonymization']}, "
+                    f"参与者={{{participant_str}}}"
+                )
+            
+            # 计算其他消费者的参与频率（只显示前10个）
+            freq_lines = []
+            consumer_ids = sorted(consumer_belief_probs.keys())
+            if consumer_id in consumer_ids:
+                consumer_ids.remove(consumer_id)  # 不显示自己
+            
+            for cid in consumer_ids[:10]:
+                freq = consumer_belief_probs[cid]
+                freq_lines.append(f"- 消费者{cid}: {freq:.0%}")
+            if len(consumer_ids) > 10:
+                freq_lines.append(f"- ...（共{len(consumer_ids)}个其他消费者）")
+            
+            history_text = f"""
+【历史观察】（最近{len(recent_history)}轮）
+{chr(10).join(history_lines)}
+
+【其他消费者的参与频率】
+{chr(10).join(freq_lines)}"""
+        
+        # 构建完整提示词
+        data_structure = consumer_params.get('data_structure', 'common_preferences')
+        theta_i = consumer_params['theta_i']
+        tau_i = consumer_params['tau_i']
+        s_i = consumer_params.get('s_i', None)
+        
+        signal_text = f"你的私人信号 s_i = {s_i:.2f}" if s_i is not None else "你的私人信号 s_i 未提供"
+        
+        if data_structure == "common_preferences":
+            structure_text = "共同偏好：所有消费者真实偏好相同（记为 θ），你的信号满足 s_i = θ + 个体噪声。"
+        else:
+            structure_text = "共同经历：每个消费者真实偏好不同（记为 θ_i），但信号含共同冲击，s_i = θ_i + ε（ε对所有人相同）。"
+        
+        prompt = f"""你是消费者，需要决定是否参与数据分享计划。目标是最大化你的期望净效用。
+
+【本轮条件】
+- 补偿金额 m = {m:.2f}
+- 匿名化策略：{anonymization}
+  * identified：商家可能将你的数据与身份绑定，更容易对你做个性化定价（对高偏好者可能不利）
+  * anonymized：商家只能利用匿名统计信息，通常更难针对个人定价
+
+【你的参数】
+- 偏好强度 θ_i = {theta_i:.2f}（越大表示你越喜欢该产品）
+- 隐私成本 τ_i = {tau_i:.2f}（参与会带来的隐私损失成本）
+- {signal_text}
+
+【数据结构】
+- {structure_text}
+
+{history_text}
+
+【决策要求】
+判断参与是否值得。考虑要点：
+1) 补偿 m 是参与的直接收益
+2) identified 可能导致对你更不利的个性化定价风险（尤其当 θ_i 较高时）
+3) anonymized 个性化定价风险较小
+4) 参与会产生隐私成本 τ_i
+5) 基于历史观察，考虑其他消费者的行为模式
+
+【输出格式】
+请按以下格式回答：
+第1行：你的决策理由（50-100字）
+第2行：决策：参与 或 决策：拒绝
+"""
+        return prompt
+    
+    def evaluate_config_D_fictitious_play(
+        self,
+        llm_client,  # 原始LLM client（OpenAI格式）
+        model_config: Dict,  # 模型配置
+        max_rounds: int = 50,
+        belief_window: int = 10,
+        verbose: bool = True
+    ) -> Dict:
+        """
+        配置D（虚拟博弈版）：LLM中介 × LLM消费者（Fictitious Play）
+        
+        注意：此方法接受原始LLM client，直接使用FP提示词
+        
+        Args:
+            llm_client: OpenAI格式的LLM客户端
+            model_config: 模型配置字典
+            max_rounds: 最大轮数
+            belief_window: 信念窗口大小
+            verbose: 是否打印详细信息
+        
+        Returns:
+            评估结果字典
+        """
+        import re
+        
+        model_name = model_config['model_name']
+        generate_args = model_config.get('generate_args', {})
+        if verbose:
+            print("\n" + "="*70)
+            print("配置D（虚拟博弈）：LLM中介 × LLM消费者 - Fictitious Play")
+            print(f"最大轮数: {max_rounds}, 信念窗口: {belief_window}")
+            print("="*70)
+        
+        m_star = self.gt_A['optimal_strategy']['m_star']
+        anon_star = self.gt_A['optimal_strategy']['anonymization_star']
+        profit_star = self.gt_A['optimal_strategy']['intermediary_profit_star']
+        
+        market_params = {
+            'N': self.params_base['N'],
+            'mu_theta': self.params_base['mu_theta'],
+            'sigma_theta': self.params_base['sigma_theta'],
+            'tau_mean': self.params_base['tau_mean'],
+            'tau_std': self.params_base['tau_std'],
+            'data_structure': self.params_base['data_structure'],
+        }
+        
+        history: List[Dict] = []
+        
+        # ===== 虚拟博弈迭代 =====
+        for round_num in range(max_rounds):
+            if verbose:
+                print(f"\n{'='*70}")
+                print(f"[轮次 {round_num + 1}/{max_rounds}]")
+                print(f"{'='*70}")
+            
+            # 1. 计算中介信念
+            window = min(belief_window, round_num)
+            intermediary_belief = self._compute_intermediary_belief(history, window_size=window)
+            
+            # 2. 中介决策
+            intermediary_prompt = self.build_intermediary_prompt_fp(
+                market_params=market_params,
+                history=history,
+                belief_stats=intermediary_belief,
+                belief_window=belief_window
+            )
+            
+            # 调用中介LLM（使用FP提示词）
+            try:
+                response = llm_client.chat.completions.create(
+                    model=model_name,
+                    messages=[{"role": "user", "content": intermediary_prompt}],
+                    **generate_args
+                )
+                answer = response.choices[0].message.content.strip()
+                json_match = re.search(r'\{[^}]+\}', answer)
+                if json_match:
+                    answer = json_match.group(0)
+                obj = json.loads(answer)
+                m_llm = float(obj.get("m", 0.5))
+                anon_llm = obj.get("anonymization", "anonymized")
+                intermediary_reason = str(obj.get("reason", "")).strip()
+            except Exception as e:
+                print(f"[WARN] 中介决策失败: {e}，使用默认策略")
+                m_llm = 0.5
+                anon_llm = "anonymized"
+                intermediary_reason = "调用失败"
+            
+            if verbose:
+                print(f"中介选择: m={m_llm:.4f}, {anon_llm}")
+                if intermediary_reason:
+                    print(f"中介理由: {intermediary_reason}")
+            
+            # 3. 计算消费者信念
+            N = market_params['N']
+            consumer_belief_probs = self._compute_consumer_belief(history, window_size=window, N=N)
+            
+            # 4. 消费者决策
+            consumers = self._get_sample_consumers()
+            llm_decisions: List[bool] = []
+            
+            for idx, consumer_params in enumerate(consumers):
+                consumer_params['consumer_id'] = idx  # 添加ID
+                
+                # 构建消费者FP提示词
+                consumer_prompt = self.build_consumer_prompt_fp(
+                    consumer_params=consumer_params,
+                    m=m_llm,
+                    anonymization=anon_llm,
+                    history=history,
+                    consumer_belief_probs=consumer_belief_probs,
+                    belief_window=belief_window,
+                    N=N
+                )
+                
+                # 调用消费者LLM（使用FP提示词）
+                try:
+                    response = llm_client.chat.completions.create(
+                        model=model_name,
+                        messages=[{"role": "user", "content": consumer_prompt}],
+                        **generate_args
+                    )
+                    answer = response.choices[0].message.content.strip()
+                    lines = [ln.strip() for ln in answer.splitlines() if ln.strip()]
+                    decision_line = ""
+                    for ln in reversed(lines):
+                        if ln.startswith("决策"):
+                            decision_line = ln
+                            break
+                    
+                    dl = decision_line.lower()
+                    if ("拒绝" in decision_line) or ("no" in dl):
+                        decision = False
+                    elif ("参与" in decision_line) or ("yes" in dl):
+                        decision = True
+                    elif "拒绝" in answer:
+                        decision = False
+                    elif "参与" in answer:
+                        decision = True
+                    else:
+                        # 默认根据m vs tau判断
+                        decision = m_llm > consumer_params['tau_i']
+                    
+                    llm_decisions.append(bool(decision))
+                except Exception as e:
+                    if verbose and idx < 5:  # 只打印前几个错误
+                        print(f"[WARN] 消费者{idx}决策失败: {e}")
+                    llm_decisions.append(False)
+            
+            llm_decisions_arr = np.array(llm_decisions)
+            r_llm = float(np.mean(llm_decisions_arr))
+            participation_set = [i for i, d in enumerate(llm_decisions) if d]
+            
+            # 5. 计算市场结果
+            params = ScenarioCParams(
+                m=m_llm,
+                anonymization=anon_llm,
+                **self.params_base
+            )
+            rng = np.random.default_rng(self.params_base['seed'])
+            consumer_data = generate_consumer_data(params, rng=rng)
+            
+            from src.scenarios.scenario_c_social_data import estimate_m0_mc
+            
+            def participation_rule(p, world, rng):
+                return llm_decisions_arr
+            
+            m_0_D, _, _, _ = estimate_m0_mc(
+                params=params,
+                participation_rule=participation_rule,
+                T=100,
+                beta=1.0,
+                seed=self.params_base['seed']
+            )
+            
+            outcome_D = simulate_market_outcome(
+                consumer_data,
+                llm_decisions_arr,
+                params,
+                producer_info_mode="with_data",
+                m0=m_0_D,
+                rng=rng
+            )
+            
+            # 6. 记录历史
+            round_info = {
+                "round": round_num + 1,
+                "m": float(m_llm),
+                "anonymization": anon_llm,
+                "intermediary_reason": intermediary_reason,
+                "participation_rate": r_llm,
+                "num_participants": int(np.sum(llm_decisions_arr)),
+                "participation_set": participation_set,
+                "m0": float(m_0_D),
+                "intermediary_cost": float(m_llm * np.sum(llm_decisions_arr)),
+                "intermediary_profit": float(outcome_D.intermediary_profit),
+            }
+            history.append(round_info)
+            
+            if verbose:
+                print(f"参与率: {r_llm:.2%} ({round_info['num_participants']}/{N})")
+                print(f"利润: {round_info['intermediary_profit']:.4f}")
+            
+            # 7. 检查收敛
+            if self._check_fp_convergence(history, threshold=3):
+                if verbose:
+                    print(f"\n[提前收敛] 连续3轮策略和参与集合不变，停止迭代")
+                break
+        
+        # ===== 最终分析 =====
+        if verbose:
+            print(f"\n{'='*70}")
+            print(f"[虚拟博弈结束] 总轮数: {len(history)}")
+            print(f"{'='*70}")
+        
+        # 收敛性分析
+        convergence_analysis = self._analyze_fp_convergence(history, self.gt_A['optimal_strategy'])
+        
+        if verbose:
+            print(f"\n[收敛性分析]")
+            print(f"是否收敛: {convergence_analysis['converged']}")
+            if convergence_analysis['converged']:
+                print(f"收敛轮数: {convergence_analysis['convergence_round']}")
+            print(f"最终策略: m={convergence_analysis['final_m']:.4f}, {convergence_analysis['final_anonymization']}")
+            print(f"最终参与率: {convergence_analysis['final_participation_rate']:.2%}")
+            print(f"最终利润: {convergence_analysis['final_profit']:.4f} (理论最优 {profit_star:.4f})")
+            print(f"与理论最优对比:")
+            print(f"  m误差: {convergence_analysis['similarity_to_optimal']['m_error']:.4f}")
+            print(f"  anon匹配: {convergence_analysis['similarity_to_optimal']['anon_match']}")
+            print(f"  利润比率: {convergence_analysis['similarity_to_optimal']['profit_ratio']:.2%}")
+        
+        # 构造结果
+        results = {
+            "model_name": model_config.get('config_name', 'unknown'),
+            "game_type": "fictitious_play",
+            "config": "D_fictitious_play",
+            "max_rounds": max_rounds,
+            "actual_rounds": len(history),
+            "belief_window": belief_window,
+            "history": history,
+            "convergence_analysis": convergence_analysis,
+            "ground_truth": {
+                "m_star": m_star,
+                "anonymization_star": anon_star,
+                "profit_star": profit_star,
+                "r_star": self.gt_A['optimal_strategy']['r_star']
+            },
+            "final_strategy": {
+                "m": convergence_analysis['final_m'],
+                "anonymization": convergence_analysis['final_anonymization'],
+                "participation_rate": convergence_analysis['final_participation_rate'],
+                "profit": convergence_analysis['final_profit']
+            }
+        }
+        
+        return results
+    
+    def _visualize_fictitious_play(self, results: Dict, output_path: str):
+        """为FP结果生成可视化（与场景B类似）"""
+        from pathlib import Path
+        
+        output_dir = Path(output_path).parent
+        base_name = Path(output_path).stem
+        
+        try:
+            history = results.get("history", [])
+            conv_analysis = results.get("convergence_analysis", {})
+            
+            if not history:
+                print("[WARN] 没有历史数据，跳过可视化")
+                return
+            
+            # === 可视化1：利润与参与率曲线 ===
+            fig1, ax1 = plt.subplots(figsize=(10, 6))
+            
+            profit_traj = conv_analysis.get("profit_trajectory", [])
+            participation_traj = conv_analysis.get("participation_rate_trajectory", [])
+            
+            if profit_traj:
+                rounds = list(range(1, len(profit_traj) + 1))
+                
+                # 主轴：利润
+                ax1.plot(rounds, profit_traj, 'b-o', linewidth=2, markersize=4, label='中介利润')
+                ax1.set_xlabel('轮次', fontsize=12)
+                ax1.set_ylabel('中介利润', color='b', fontsize=12)
+                ax1.tick_params(axis='y', labelcolor='b')
+                ax1.grid(True, alpha=0.3)
+                
+                # 次轴：参与率
+                if participation_traj:
+                    ax2 = ax1.twinx()
+                    ax2.plot(rounds, participation_traj, 'r-s', linewidth=2, markersize=4, 
+                            alpha=0.7, label='参与率')
+                    ax2.set_ylabel('参与率', color='r', fontsize=12)
+                    ax2.tick_params(axis='y', labelcolor='r')
+                    ax2.set_ylim([0, 1])
+                
+                # 标注收敛点
+                if conv_analysis.get("converged"):
+                    conv_round = conv_analysis.get("convergence_round")
+                    if conv_round and conv_round < len(profit_traj):
+                        ax1.axvline(x=conv_round + 1, color='g', linestyle='--', 
+                                   alpha=0.5, label=f'收敛点(第{conv_round + 1}轮)')
+                
+                # 图例
+                lines1, labels1 = ax1.get_legend_handles_labels()
+                if participation_traj:
+                    lines2, labels2 = ax2.get_legend_handles_labels()
+                    ax1.legend(lines1 + lines2, labels1 + labels2, loc='best')
+                else:
+                    ax1.legend(loc='best')
+                
+                ax1.set_title('虚拟博弈：利润与参与率演化', fontsize=14, fontweight='bold')
+                
+                plt.tight_layout()
+                fig1_path = output_dir / f"{base_name}_profit_rate.png"
+                plt.savefig(fig1_path, dpi=150, bbox_inches='tight')
+                plt.close(fig1)
+                print(f"[图表] 利润曲线已保存到: {fig1_path}")
+            
+            # === 可视化2：策略演化热力图 ===
+            # 简化版：只显示m和参与率的演化
+            fig2, (ax_m, ax_anon) = plt.subplots(2, 1, figsize=(12, 8))
+            
+            m_traj = conv_analysis.get("m_trajectory", [])
+            anon_traj = conv_analysis.get("anon_trajectory", [])
+            
+            if m_traj:
+                rounds = list(range(1, len(m_traj) + 1))
+                
+                # m的演化
+                ax_m.plot(rounds, m_traj, 'b-o', linewidth=2, markersize=3)
+                ax_m.set_xlabel('轮次', fontsize=12)
+                ax_m.set_ylabel('补偿金额 m', fontsize=12)
+                ax_m.grid(True, alpha=0.3)
+                ax_m.set_title('补偿金额演化', fontsize=12, fontweight='bold')
+                
+                # 标注理论最优
+                m_star = results['ground_truth']['m_star']
+                ax_m.axhline(y=m_star, color='r', linestyle='--', alpha=0.5, label=f'理论最优 m={m_star:.3f}')
+                ax_m.legend()
+                
+                # anonymization策略演化（用颜色块表示）
+                anon_values = [1 if a == 'identified' else 0 for a in anon_traj]
+                anon_matrix = np.array(anon_values).reshape(1, -1)
+                
+                from matplotlib.colors import ListedColormap
+                cmap = ListedColormap(['#90EE90', '#FF6B6B'])
+                im = ax_anon.imshow(anon_matrix, cmap=cmap, 
+                                   aspect='auto', interpolation='none')
+                ax_anon.set_xlabel('轮次', fontsize=12)
+                ax_anon.set_ylabel('匿名化策略', fontsize=12)
+                ax_anon.set_yticks([0])
+                ax_anon.set_yticklabels(['策略'])
+                ax_anon.set_title('匿名化策略演化 (绿=anonymized, 红=identified)', 
+                                 fontsize=12, fontweight='bold')
+                
+                plt.tight_layout()
+                fig2_path = output_dir / f"{base_name}_strategy_evolution.png"
+                plt.savefig(fig2_path, dpi=150, bbox_inches='tight')
+                plt.close(fig2)
+                print(f"[图表] 策略演化图已保存到: {fig2_path}")
+            
+        except Exception as e:
+            print(f"[WARN] 可视化生成失败: {e}")
+            import traceback
+            traceback.print_exc()
+    
     def generate_report(
         self,
         results_B: Dict = None,
@@ -1307,7 +2618,14 @@ class ScenarioCEvaluator:
         return df
 
 
-def run_scenario_c_evaluation(model_config_name: str, rounds: int = 20, output_dir: str = "evaluation_results/scenario_c") -> Dict[str, Any]:
+def run_scenario_c_evaluation(
+    model_config_name: str, 
+    rounds: int = 20, 
+    mode: str = "iterative",
+    fp_config: str = "D",
+    belief_window: int = 10,
+    output_dir: str = "evaluation_results/scenario_c"
+) -> Dict[str, Any]:
     """
     运行场景C评估（支持指定模型与学习轮数）
     
@@ -1618,81 +2936,175 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
             print(f"  python -m src.scenarios.generate_scenario_c_gt")
             raise
         
-        print("\n" + "=" * 70)
-        print(f"步骤2: 评估配置B（理性中介 × {model_name}消费者）")
-        print("=" * 70)
-        results_B = evaluator.evaluate_config_B(
-            llm_consumer_agent=llm_consumer,
-            verbose=True
-        )
+        # FP模式：根据fp_config选择运行哪个配置
+        if mode == "fp":
+            # 确定要运行的配置列表
+            if fp_config == "all":
+                configs_to_run = ["B", "C", "D"]
+            else:
+                configs_to_run = [fp_config]
+            
+            fp_results = {}  # 存储所有FP结果
+            
+            for config in configs_to_run:
+                print("\n" + "=" * 70)
+                print(f"步骤{2 if len(configs_to_run) == 1 else f'2-{chr(65 + configs_to_run.index(config))}'}: 虚拟博弈 - 配置{config}_FP")
+                print("=" * 70)
+                
+                if config == "B":
+                    # 配置B_FP: 理性中介 × LLM消费者
+                    result = evaluator.evaluate_config_B_fictitious_play(
+                        llm_client=client,
+                        model_config=selected_model_config,
+                        max_rounds=rounds if rounds != 20 else 50,
+                        belief_window=belief_window,
+                        verbose=True
+                    )
+                elif config == "C":
+                    # 配置C_FP: LLM中介 × 理性消费者
+                    result = evaluator.evaluate_config_C_fictitious_play(
+                        llm_client=client,
+                        model_config=selected_model_config,
+                        max_rounds=rounds if rounds != 20 else 50,
+                        belief_window=belief_window,
+                        verbose=True
+                    )
+                else:  # config == "D"
+                    # 配置D_FP: LLM中介 × LLM消费者
+                    result = evaluator.evaluate_config_D_fictitious_play(
+                        llm_client=client,
+                        model_config=selected_model_config,
+                        max_rounds=rounds if rounds != 20 else 50,
+                        belief_window=belief_window,
+                        verbose=True
+                    )
+                
+                fp_results[config] = result
+            
+            results_B = None
+            results_C = None
+            results_D = None
+        else:
+            # Iterative模式：运行配置B、C、D
+            print("\n" + "=" * 70)
+            print(f"步骤2: 评估配置B（理性中介 × {model_name}消费者）")
+            print("=" * 70)
+            results_B = evaluator.evaluate_config_B(
+                llm_consumer_agent=llm_consumer,
+                verbose=True
+            )
+            
+            print("\n" + "=" * 70)
+            print(f"步骤3: 评估配置C（{model_name}中介 × 理性消费者）")
+            print("=" * 70)
+            results_C = evaluator.evaluate_config_C_iterative(
+                llm_intermediary_agent=llm_intermediary,
+                rounds=rounds,
+                verbose=True
+            )
+            
+            print("\n" + "=" * 70)
+            print(f"步骤4: 评估配置D（{model_name}中介 × {model_name}消费者）")
+            print("=" * 70)
+            
+            # 现有多轮迭代模式
+            results_D = evaluator.evaluate_config_D_iterative(
+                llm_intermediary_agent=llm_intermediary,
+                llm_consumer_agent=llm_consumer,
+                rounds=rounds,
+                verbose=True
+            )
         
         print("\n" + "=" * 70)
-        print(f"步骤3: 评估配置C（{model_name}中介 × 理性消费者）")
-        print("=" * 70)
-        results_C = evaluator.evaluate_config_C_iterative(
-            llm_intermediary_agent=llm_intermediary,
-            rounds=rounds,
-            verbose=True
-        )
-        
-        print("\n" + "=" * 70)
-        print(f"步骤4: 评估配置D（{model_name}中介 × {model_name}消费者）")
-        print("=" * 70)
-        results_D = evaluator.evaluate_config_D_iterative(
-            llm_intermediary_agent=llm_intermediary,
-            llm_consumer_agent=llm_consumer,
-            rounds=rounds,
-            verbose=True
-        )
-        
-        print("\n" + "=" * 70)
-        print(f"步骤5: 生成综合报告（{gt_tag}）")
+        print(f"步骤{3 if mode == 'fp' else 5}: 保存结果（{gt_tag}）")
         print("=" * 70)
         
         timestamp = pd.Timestamp.now().strftime("%Y%m%d_%H%M%S")
-        # 确保输出目录存在
-        Path(output_dir).mkdir(parents=True, exist_ok=True)
-        output_path = f"{output_dir}/scenario_c_{gt_tag}_{model_name}_{timestamp}.csv"
-        df = evaluator.generate_report(
-            results_B=results_B,
-            results_C=results_C,
-            results_D=results_D,
-            output_path=output_path
-        )
         
-        print("\n报告预览:")
-        print(df.to_string(index=False))
-        
-        detailed_results = {
-            "model": model_name,
-            "timestamp": timestamp,
-            "gt_tag": gt_tag,
-            "config_B": results_B,
-            "config_C": results_C,
-            "config_D": results_D,
-            "report_rows": df.to_dict(orient="records")
-        }
-        
-        output_json = f"{output_dir}/scenario_c_{gt_tag}_{model_name}_{timestamp}_detailed.json"
-        with open(output_json, 'w', encoding='utf-8') as f:
-            json.dump(detailed_results, f, indent=2, ensure_ascii=False)
-        
-        print(f"\n详细结果已保存到: {output_json}")
-        
-        print("\n" + "=" * 70)
-        print(f"✅ 评估完成（{gt_tag}）！")
-        print("=" * 70)
-        print(f"\n📊 评估模型: {model_name}")
-        print(f"📁 结果文件:")
-        print(f"  • CSV报告: {output_path}")
-        print(f"  • 详细JSON: {output_json}")
-        print()
-        
-        summary["outputs"].append({
-            "gt_tag": gt_tag,
-            "csv_report": output_path,
-            "detailed_json": output_json
-        })
+        # 根据模式选择输出目录
+        if mode == "fp":
+            # FP模式：为每个配置保存结果
+            for config, result in fp_results.items():
+                print(f"\n[配置{config}_FP]")
+                config_suffix = f"config{config}"
+                final_output_dir = f"{output_dir}/fp_{config_suffix}_{model_name}"
+                Path(final_output_dir).mkdir(parents=True, exist_ok=True)
+                
+                # FP模式只保存详细JSON（不生成CSV报告）
+                output_json = f"{final_output_dir}/eval_{timestamp}.json"
+                with open(output_json, 'w', encoding='utf-8') as f:
+                    json.dump(result, f, indent=2, ensure_ascii=False)
+                
+                print(f"  结果已保存到: {output_json}")
+                
+                # 生成可视化
+                evaluator._visualize_fictitious_play(result, output_json)
+                
+                print(f"  可视化:")
+                print(f"    • 利润曲线: {Path(output_json).stem}_profit_rate.png")
+                print(f"    • 策略演化: {Path(output_json).stem}_strategy_evolution.png")
+                
+                summary["outputs"].append({
+                    "gt_tag": gt_tag,
+                    "mode": "fictitious_play",
+                    "config": config,
+                    "detailed_json": output_json
+                })
+            
+            print("\n" + "=" * 70)
+            if fp_config == "all":
+                print(f"✅ 虚拟博弈评估完成（所有配置，{gt_tag}）！")
+            else:
+                print(f"✅ 虚拟博弈评估完成（配置{fp_config}，{gt_tag}）！")
+            print("=" * 70)
+            print(f"\n📊 评估模型: {model_name}")
+            print(f"📊 运行配置: {', '.join(fp_results.keys())}")
+            print()
+        else:
+            # Iterative模式：保持原有逻辑
+            Path(output_dir).mkdir(parents=True, exist_ok=True)
+            output_path = f"{output_dir}/scenario_c_{gt_tag}_{model_name}_{timestamp}.csv"
+            df = evaluator.generate_report(
+                results_B=results_B,
+                results_C=results_C,
+                results_D=results_D,
+                output_path=output_path
+            )
+            
+            print("\n报告预览:")
+            print(df.to_string(index=False))
+            
+            detailed_results = {
+                "model": model_name,
+                "timestamp": timestamp,
+                "gt_tag": gt_tag,
+                "config_B": results_B,
+                "config_C": results_C,
+                "config_D": results_D,
+                "report_rows": df.to_dict(orient="records")
+            }
+            
+            output_json = f"{output_dir}/scenario_c_{gt_tag}_{model_name}_{timestamp}_detailed.json"
+            with open(output_json, 'w', encoding='utf-8') as f:
+                json.dump(detailed_results, f, indent=2, ensure_ascii=False)
+            
+            print(f"\n详细结果已保存到: {output_json}")
+            
+            print("\n" + "=" * 70)
+            print(f"✅ 评估完成（{gt_tag}）！")
+            print("=" * 70)
+            print(f"\n📊 评估模型: {model_name}")
+            print(f"📁 结果文件:")
+            print(f"  • CSV报告: {output_path}")
+            print(f"  • 详细JSON: {output_json}")
+            print()
+            
+            summary["outputs"].append({
+                "gt_tag": gt_tag,
+                "mode": "iterative",
+                "csv_report": output_path,
+                "detailed_json": output_json
+            })
     
     return summary
 
@@ -1729,7 +3141,27 @@ if __name__ == "__main__":
         "--rounds",
         type=int,
         default=20,
-        help="LLM中介多轮学习轮数"
+        help="多轮学习轮数（iterative模式默认20，fp模式默认50）"
+    )
+    parser.add_argument(
+        "--mode",
+        type=str,
+        default="iterative",
+        choices=["iterative", "fp"],
+        help="博弈模式：iterative=现有多轮学习，fp=虚拟博弈"
+    )
+    parser.add_argument(
+        "--fp_config",
+        type=str,
+        default="D",
+        choices=["B", "C", "D", "all"],
+        help="FP模式下运行的配置：B=理性中介×LLM消费者，C=LLM中介×理性消费者，D=LLM×LLM，all=运行所有三个配置"
+    )
+    parser.add_argument(
+        "--belief_window",
+        type=int,
+        default=10,
+        help="虚拟博弈信念窗口大小"
     )
     parser.add_argument(
         "--output-dir",
@@ -1737,6 +3169,78 @@ if __name__ == "__main__":
         default="evaluation_results/scenario_c",
         help="输出目录（默认: evaluation_results/scenario_c）"
     )
+    parser.add_argument(
+        "--visualize",
+        type=str,
+        nargs='+',
+        help="为已有JSON文件生成可视化（支持文件路径或目录）"
+    )
     args = parser.parse_args()
     
-    run_scenario_c_evaluation(model_config_name=args.model, rounds=args.rounds, output_dir=args.output_dir)
+    # ===== 可视化模式 =====
+    if args.visualize:
+        print(f"\n{'='*70}")
+        print(f"[可视化模式] 从已有结果生成图表")
+        print(f"{'='*70}")
+        
+        import glob
+        
+        # 收集所有JSON文件
+        json_files = []
+        for path_pattern in args.visualize:
+            path_obj = Path(path_pattern)
+            
+            if path_obj.is_file() and path_obj.suffix == '.json':
+                json_files.append(path_obj)
+            elif path_obj.is_dir():
+                json_files.extend(path_obj.glob('*.json'))
+            elif '*' in str(path_pattern):
+                json_files.extend([Path(p) for p in glob.glob(path_pattern)])
+            else:
+                print(f"[WARN] 无效路径: {path_pattern}")
+        
+        if not json_files:
+            print("[ERROR] 未找到任何JSON文件")
+            sys.exit(1)
+        
+        print(f"\n找到 {len(json_files)} 个JSON文件\n")
+        
+        # 创建临时评估器（用于访问可视化方法）
+        temp_evaluator = ScenarioCEvaluator("data/ground_truth/scenario_c_common_preferences_optimal.json")
+        
+        # 为每个JSON文件生成可视化
+        for json_path in json_files:
+            try:
+                print(f"处理: {json_path}")
+                
+                with open(json_path, 'r', encoding='utf-8') as f:
+                    results = json.load(f)
+                
+                # 检查是否是FP结果
+                if results.get("game_type") != "fictitious_play":
+                    print(f"  [SKIP] 不是虚拟博弈结果，跳过")
+                    continue
+                
+                # 生成可视化
+                temp_evaluator._visualize_fictitious_play(results, str(json_path))
+                print(f"  [OK] 可视化生成成功\n")
+                
+            except Exception as e:
+                print(f"  [ERROR] 处理失败: {e}\n")
+                import traceback
+                traceback.print_exc()
+        
+        print(f"\n{'='*70}")
+        print(f"可视化完成！")
+        print(f"{'='*70}")
+        sys.exit(0)
+    
+    # ===== 正常运行模式 =====
+    run_scenario_c_evaluation(
+        model_config_name=args.model, 
+        rounds=args.rounds, 
+        mode=args.mode,
+        fp_config=args.fp_config,
+        belief_window=args.belief_window,
+        output_dir=args.output_dir
+    )

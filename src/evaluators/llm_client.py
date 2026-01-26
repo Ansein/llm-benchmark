@@ -4,6 +4,7 @@ LLM客户端封装
 """
 
 import json
+import re
 from typing import Dict, List, Any, Optional
 from openai import OpenAI
 
@@ -112,6 +113,13 @@ class LLMClient:
         except json.JSONDecodeError as e:
             print(f"❌ JSON解析失败: {e}")
             print(f"原始响应: {response_text}")
+            
+            # 尝试修复不完整的JSON（主要针对截断的reason字段）
+            repaired_json = self._repair_truncated_json(response_text)
+            if repaired_json:
+                print(f"✅ 成功修复JSON，提取到的字段: {list(repaired_json.keys())}")
+                return repaired_json
+            
             raise
     
     def _clean_json_response(self, response_text: str) -> str:
@@ -140,7 +148,6 @@ class LLMClient:
             text = text[:-3].strip()
         
         # 方法2: 使用正则表达式提取JSON（更鲁棒）
-        import re
         # 匹配```json 或 ``` 包裹的内容
         json_block_pattern = r'```(?:json)?\s*\n?(.*?)\n?```'
         match = re.search(json_block_pattern, text, re.DOTALL)
@@ -154,6 +161,41 @@ class LLMClient:
             text = text[start:end]
         
         return text
+    
+    def _repair_truncated_json(self, text: str) -> Optional[Dict[str, Any]]:
+        """
+        尝试修复被截断的JSON（通常是reason字段被截断）
+        
+        策略：使用正则表达式提取关键字段，即使整体JSON不完整
+        
+        Args:
+            text: 不完整的JSON文本
+        
+        Returns:
+            修复后的字典，如果无法修复则返回None
+        """
+        result = {}
+        
+        # 提取 share 字段（最关键）
+        share_match = re.search(r'"share"\s*:\s*(\d+)', text)
+        if share_match:
+            result["share"] = int(share_match.group(1))
+        
+        # 提取 belief_share_rate 字段（如果有）
+        belief_match = re.search(r'"belief_share_rate"\s*:\s*([\d.]+)', text)
+        if belief_match:
+            result["belief_share_rate"] = float(belief_match.group(1))
+        
+        # 提取 reason 字段（尽力而为，可能不完整）
+        reason_match = re.search(r'"reason"\s*:\s*"([^"]*)', text)
+        if reason_match:
+            result["reason"] = reason_match.group(1) + "...(截断)"
+        
+        # 如果至少提取到 share 字段，就认为修复成功
+        if "share" in result:
+            return result
+        
+        return None
 
 
 def load_model_configs(config_path: str = "configs/model_configs.json") -> Dict[str, Dict]:

@@ -1,24 +1,102 @@
 """
-场景B的LLM评估器 - 静态博弈版本
+场景B主评估器 - 推断外部性博弈
+
 评估LLM在"Too Much Data"场景下的决策能力（推断外部性）
 
 博弈时序：
 1. 阶段0：生成相关结构与隐私偏好（公共知识）
 2. 阶段1：平台报价（统一价或个性化价）
-3. 阶段2：用户同时决策（看不到他人决策）
+3. 阶段2：用户同时决策（基于信念，看不到他人决策）
 4. 阶段3：结算（计算泄露、效用、利润）
 
-# 仅测试虚拟博弈
-python src/evaluators/evaluate_scenario_b.py --mode fp
+支持两种博弈模式：
+- 静态博弈：一次性决策（理论基准）
+- 虚拟博弈：多轮迭代学习（测试LLM学习能力）
 
-# 仅测试静态博弈（对比基准）
-python src/evaluators/evaluate_scenario_b.py --mode static
+========================================
+运行方式
+========================================
 
-# 同时测试两种模式
-python src/evaluators/evaluate_scenario_b.py --mode both
+1. 【静态博弈】（一次性决策，对比基准）
+   
+   python -m src.evaluators.evaluate_scenario_b --mode static --model deepseek-v3.2
+   
+   输出：
+   - evaluation_results/static_deepseek-v3/eval_YYYYMMDD_HHMMSS.json
 
-# 为整个目录的所有JSON生成可视化
-python -m src.evaluators.evaluate_scenario_b --visualize evaluation_results/scenario_b/
+2. 【虚拟博弈】（多轮迭代学习，主要测试）
+   
+   python -m src.evaluators.evaluate_scenario_b --mode fp --model deepseek-v3.2
+   
+   # 自定义参数（默认50轮，信念窗口10，1次试验）
+   python -m src.evaluators.evaluate_scenario_b \
+       --mode fp \
+       --model deepseek-v3.2 \
+       --max_rounds 50 \
+       --belief_window 10 \
+       --num_trials 1
+   
+   输出：
+   - evaluation_results/fp_deepseek-v3/eval_YYYYMMDD_HHMMSS.json
+   - evaluation_results/fp_deepseek-v3/eval_YYYYMMDD_HHMMSS_share_rate.png
+   - evaluation_results/fp_deepseek-v3/eval_YYYYMMDD_HHMMSS_strategy_heatmap.png
+
+3. 【同时运行两种模式】
+   
+   python -m src.evaluators.evaluate_scenario_b --mode both --model deepseek-v3.2
+
+4. 【为已有结果生成可视化】
+   从已保存的FP结果JSON文件生成图表：
+   
+   # 单个文件
+   python -m src.evaluators.evaluate_scenario_b --visualize evaluation_results/fp_deepseek-v3.2/eval_20260122_143530.json
+   
+   # 整个目录
+   python -m src.evaluators.evaluate_scenario_b --visualize evaluation_results/fp_deepseek-v3.2/
+   
+   # 多个路径或通配符
+   python -m src.evaluators.evaluate_scenario_b --visualize "evaluation_results/fp_*/eval_*.json"
+
+========================================
+参数说明
+========================================
+
+--mode: 运行模式
+  - static: 静态博弈（一次性决策）
+  - fp: 虚拟博弈（多轮学习）
+  - both: 同时运行两种模式
+
+--model: 模型配置名称
+  默认: deepseek-v3.2
+  可选: deepseek-v3.2, gpt-4.1-mini 等（见configs/model_configs.json）
+
+--max_rounds: 虚拟博弈最大轮数
+  默认: 50轮
+
+--belief_window: 虚拟博弈信念窗口大小
+  默认: 10（使用最近10轮历史）
+
+--num_trials: 重复试验次数
+  默认: 1次
+
+--visualize: 可视化模式
+  为已有JSON文件生成图表（支持文件、目录、通配符）
+
+========================================
+静态博弈 vs 虚拟博弈的区别
+========================================
+
+| 特性           | 静态博弈              | 虚拟博弈                |
+|----------------|----------------------|-------------------------|
+| 决策次数       | 1次                  | 最多50轮                |
+| 历史信息       | 无                   | 观察最近10轮分享情况    |
+| 信念更新       | 初始均匀分布         | 经验频率动态更新        |
+| 收敛检测       | N/A                  | 连续3轮分享集合不变     |
+| 提示词         | 简洁版               | 包含历史+概率估计       |
+| 输出           | JSON                 | JSON + 可视化图表       |
+| 测试目标       | 理解推断外部性       | 学习与收敛能力          |
+
+========================================
 """
 
 import json
@@ -133,7 +211,7 @@ class ScenarioBEvaluator:
 你必须输出严格JSON格式，不要包含任何额外的文本。"""
     
     
-    def build_user_decision_prompt_fp(self, user_id: int, price: float, history: List[Dict[int, int]], current_round: int) -> str:
+    def build_user_decision_prompt_fp(self, user_id: int, price: float, history: List[Dict[int, int]], belief_probs: Dict[int, float], current_round: int) -> str:
         """
         构建用户决策提示词（虚拟博弈版本）
         
@@ -141,6 +219,7 @@ class ScenarioBEvaluator:
             user_id: 用户ID
             price: 平台给出的报价
             history: 历史记录（最近若干轮）
+            belief_probs: 基于历史的其他用户分享概率估计
             current_round: 当前轮数
         
         Returns:
@@ -153,12 +232,20 @@ class ScenarioBEvaluator:
         v_min, v_max = 0.3, 1.2
         v_mean = (v_min + v_max) / 2
         
+        # 判断用户v在分布中的相对位置
+        if v_i < v_mean - 0.2:
+            v_description = "偏低"
+        elif v_i < v_mean + 0.2:
+            v_description = "中等"
+        else:
+            v_description = "偏高"
+        
         # 构建历史观察部分
         history_text = ""
         if len(history) == 0:
             # 第1轮，没有历史
             history_text = """【历史观察】
-这是第一轮决策，暂无历史记录。"""
+这是第一轮决策，暂无历史记录。你可以假设其他用户各有50%的概率选择分享。"""
         else:
             # 有历史记录
             history_lines = []
@@ -166,120 +253,58 @@ class ScenarioBEvaluator:
                 share_set = sorted([uid for uid, decision in round_decisions.items() if decision == 1])
                 history_lines.append(f"- 轮次{idx+1}: {{{', '.join(map(str, share_set))}}}")
             
+            # 构建概率估计
+            prob_lines = []
+            for uid in range(n):
+                if uid != user_id:  # 不显示自己的
+                    prob = belief_probs.get(uid, 0.5)
+                    prob_lines.append(f"- 用户{uid}: {prob:.0%}")
+            
             history_text = f"""【历史观察】
 最近{len(history)}轮的分享情况：
-{chr(10).join(history_lines)}"""
-        
-        # 获取该用户的相关性摘要
-        corr_summary = self.correlation_summaries[user_id]
-        mean_corr = corr_summary["mean_corr"]
-        topk_neighbors = corr_summary["topk_neighbors"]
-        strong_neighbors_count = corr_summary["strong_neighbors_count"]
-        
-        # 格式化TopK邻居信息
-        neighbors_str = ", ".join([f"用户{j}(相关系数={c:.2f})" for j, c in topk_neighbors])
-        
-        # 判断用户v在分布中的相对位置
-        if v_i < v_mean - 0.2:
-            v_level = "低"
-            v_description = "偏低"
-        elif v_i < v_mean + 0.2:
-            v_level = "中"
-            v_description = "中等"
-        else:
-            v_level = "高"
-            v_description = "偏高"
+{chr(10).join(history_lines)}
+
+基于历史的分享概率估计：
+{chr(10).join(prob_lines)}"""
         
         prompt = f"""
-# 场景：数据市场虚拟博弈（推断外部性）
+# 场景：数据市场决策（推断外部性）
 
-你是用户 {user_id}，正在参与一个**多轮重复的数据市场决策**。
+你是用户 {user_id}，正在参与一个数据市场。
 
-## 基本信息
-
-**你的私有信息**：
-- 你的隐私偏好：v[{user_id}] = {v_i:.3f}
+## 你的私有信息：
 - 平台给你的报价：p[{user_id}] = {price:.4f}
+- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
 
-**公共知识**（所有人都知道）：
+## 公共知识：
 - 用户总数：n = {n}
 - 用户间信息相关系数：ρ = {rho:.2f}
-  你的信息与其他用户的信息相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。
-  ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
+  你的信息与其他用户的信息相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
 - 观测噪声：σ² = {sigma_noise_sq}
+  观测噪声表示数据本身的不确定性。σ²越大，数据的噪声越大，平台从数据中提取有效信息的能力越弱，你的信息泄露程度越低；σ²越小，数据越准确，平台的推断越精确，信息泄露程度越高。
 - 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
-  （你的 v = {v_i:.3f}，相对位置：{v_description}，属于{v_level}隐私偏好群体）
-
-**你的相关性结构**：
-- 你与其他人的平均相关系数：{mean_corr:.2f}
-- 你最强相关的邻居：{neighbors_str}
-- 强相关邻居数量（相关系数 > 0.5）：{strong_neighbors_count}
+（你的 v = {v_i:.3f}，相对位置：{v_description}）
 
 {history_text}
 
-**你不知道的信息**：
-- 其他用户的具体 v 值（你只知道分布）
-- 其他用户在本轮会如何决策（因为是同时决策）
+## 核心机制：
+- **推断外部性**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
+- 如果你**分享**，你会得到来自平台的补偿 p = {price:.4f}，但你的信息会从间接部分泄露变成完全泄露
+- 如果你**不分享**，你可以保护未间接泄露的那部分信息，但代价是无法得到补偿
+- **次模性**：分享的人越多，你再分享带来的边际泄露越小（基础泄露越高，边际泄露越低）
+- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息），分享的真正成本是**边际泄露**带来的成本
+- 补偿价格旨在覆盖你的边际隐私损失
 
-## 推断外部性机制
-
-**关键概念**：即使你不分享数据，平台也能通过其他人的数据推断你的信息。
-
-**泄露信息量 I_i(a)**：
-- 给定分享集合 S，平台对你的推断精度提升量
-- 通过贝叶斯更新计算：I_i(S) = σ_i² - Var(X_i | S)
-- **核心外部性**：I_i 不仅取决于你是否分享，还取决于其他人是否分享
-
-**你的效用函数**：
-- 如果你**分享**：u_i = p_i - v_i × I_i(你分享, 其他人的决策)
-- 如果你**不分享**：u_i = 0 - v_i × I_i(你不分享, 其他人的决策)
-
-**关键洞察**：
-- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息）
-- 分享的真正成本是**边际泄露** = I_i(分享) - I_i(不分享)
-- 补偿价格 p_i 旨在覆盖你的边际隐私损失
-
-## 理性预期决策框架
-
-基于历史观察和机制理解，你需要：
-
-**1. 基于历史和分布推测其他人的行为**：
-- v 值较低的用户更可能分享（隐私成本低）
-- v 值较高的用户更不可能分享（隐私成本高）
-- 你的 v = {v_i:.3f}，处于{v_level}水平
-- 参考历史记录中其他用户的选择模式
-
-**2. 计算期望效用**：
-- E[u_i | 分享] = E[p_i - v_i × I_i(1, a_{{-i}})]
-- E[u_i | 不分享] = E[- v_i × I_i(0, a_{{-i}})]
-
-**3. 理解次模性**：
-- 分享的人越多，你的边际信息价值越低
-- 基础泄露越高（别人分享多），你分享的边际泄露越小
-
-**4. 做出最佳反应**：
-- 如果 E[u_i | 分享] > E[u_i | 不分享]，则分享
-- 否则不分享
-
-## 你的任务
-
-基于上述机制和历史观察，通过**理性预期**判断是否分享数据。
-
-**思考要点**：
-1. 你的 v 值在分布中的位置如何？（v = {v_i:.3f}，属于{v_level}群体）
-2. 根据历史，预期本轮会有多少比例的用户分享？
-3. 在那个预期下，你分享的边际价值是多少？
-4. 报价 p = {price:.4f} 能否覆盖你的边际隐私损失？
-5. 相关性 ρ = {rho:.2f} 如何影响外部性？
-
-## 输出格式
+## 决策框架：
+- 隐私成本 = v × 边际信息泄露量
+- 你需要权衡：补偿收益 p vs 隐私成本 v × 边际泄露量
+- 基于历史观察和其他用户的分享概率，估计你的期望效用
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的权衡与信念依据（不超过150字）"
-}}
-"""
+  "reason": "简要说明你的决策理由（不超过150字）"
+}}"""
         return prompt
     
     def build_user_decision_prompt(self, user_id: int, price: float) -> str:
@@ -323,90 +348,38 @@ class ScenarioBEvaluator:
         prompt = f"""
 # 场景：数据市场静态博弈（推断外部性）
 
-你是用户 {user_id}，正在参与一个**一次性的数据市场决策**。
+你是用户 {user_id}，正在参与一个数据市场。
 
-## 基本信息
-
-**你的私有信息**：
-- 你的隐私偏好：v[{user_id}] = {v_i:.3f}
+## 你的私有信息：
 - 平台给你的报价：p[{user_id}] = {price:.4f}
+- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
 
-**公共知识**（所有人都知道）：
+## 公共知识：
 - 用户总数：n = {n}
 - 用户间信息相关系数：ρ = {rho:.2f}
-  你的信息与其他用户的信息相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。
-  ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
+  你的信息与其他用户的信息相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
 - 观测噪声：σ² = {sigma_noise_sq}
+  观测噪声表示数据本身的不确定性。σ²越大，数据的噪声越大，平台从数据中提取有效信息的能力越弱，你的信息泄露程度越低；σ²越小，数据越准确，平台的推断越精确，信息泄露程度越高。
 - 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
-  （你的 v = {v_i:.3f}，相对位置：{v_description}，属于{v_level}隐私偏好群体）
+（你的 v = {v_i:.3f}，相对位置：{v_description}）
 
-**你的相关性结构**：
-- 你与其他人的平均相关系数：{mean_corr:.2f}
-- 你最强相关的邻居：{neighbors_str}
-- 强相关邻居数量（相关系数 > 0.5）：{strong_neighbors_count}
+## 核心机制：
+- **推断外部性**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
+- 如果你**分享**，你会得到来自平台的补偿 p = {price:.4f}，但你的信息会从间接部分泄露变成完全泄露
+- 如果你**不分享**，你可以保护未间接泄露的那部分信息，但代价是无法得到补偿
+- **次模性**：分享的人越多，你再分享带来的边际泄露越小（基础泄露越高，边际泄露越低）
+- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息），分享的真正成本是**边际泄露**带来的成本
+- 补偿价格旨在覆盖你的边际隐私损失
 
-**你不知道的信息**：
-- 其他用户的具体 v 值（你只知道分布）
-- 其他用户会如何决策（因为是同时决策）
-
-## 推断外部性机制
-
-**关键概念**：即使你不分享数据，平台也能通过其他人的数据推断你的信息。
-
-**泄露信息量 I_i(a)**：
-- 给定分享集合 S，平台对你的推断精度提升量
-- 通过贝叶斯更新计算：I_i(S) = σ_i² - Var(X_i | S)
-- **核心外部性**：I_i 不仅取决于你是否分享，还取决于其他人是否分享
-
-**你的效用函数**：
-- 如果你**分享**：u_i = p_i - v_i × I_i(你分享, 其他人的决策)
-- 如果你**不分享**：u_i = 0 - v_i × I_i(你不分享, 其他人的决策)
-
-**关键洞察**：
-- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息）
-- 分享的真正成本是**边际泄露** = I_i(分享) - I_i(不分享)
-- 补偿价格 p_i 旨在覆盖你的边际隐私损失
-
-## 理性预期决策框架
-
-因为你不知道其他人会如何选择，你需要：
-
-**1. 基于分布推测其他人的行为**：
-- v 值较低的用户更可能分享（隐私成本低）
-- v 值较高的用户更不可能分享（隐私成本高）
-- 你的 v = {v_i:.3f}，处于{v_level}水平
-
-**2. 计算期望效用**：
-- E[u_i | 分享] = E[p_i - v_i × I_i(1, a_{{-i}})]
-- E[u_i | 不分享] = E[- v_i × I_i(0, a_{{-i}})]
-
-**3. 理解次模性**：
-- 分享的人越多，你的边际信息价值越低
-- 基础泄露越高（别人分享多），你分享的边际泄露越小
-
-**4. 做出最佳反应**：
-- 如果 E[u_i | 分享] > E[u_i | 不分享]，则分享
-- 否则不分享
-
-## 你的任务
-
-基于上述机制，在**不知道其他人具体决策**的情况下，通过**理性预期**判断是否分享数据。
-
-**思考要点**：
-1. 你的 v 值在分布中的位置如何？（v = {v_i:.3f}，属于{v_level}群体）
-2. 预期会有多少比例的用户分享？
-3. 在那个预期下，你分享的边际价值是多少？
-4. 报价 p = {price:.4f} 能否覆盖你的边际隐私损失？
-5. 相关性 ρ = {rho:.2f} 如何影响外部性？
-
-## 输出格式
+## 决策框架：
+- 隐私成本 = v × 边际信息泄露量
+- 你需要权衡：补偿收益 p vs 隐私成本 v × 边际泄露量
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的权衡与信念依据（不超过150字）"
-}}
-"""
+  "reason": "简要说明你的决策理由（不超过150字）"
+}}"""
         return prompt
     
     
@@ -427,12 +400,14 @@ class ScenarioBEvaluator:
         Returns:
             {
                 "share": int (0或1),
+                "belief_share_rate": float,
                 "reason": str
             }
         """
         prompt = self.build_user_decision_prompt(user_id, price)
         
         decisions = []
+        beliefs = []
         reasons = []
         
         for trial in range(num_trials):
@@ -455,6 +430,7 @@ class ScenarioBEvaluator:
                         share = 0
                     
                     decisions.append(share)
+                    beliefs.append(float(response.get("belief_share_rate", 0.5)))
                     reasons.append(response.get("reason", ""))
                     break
                     
@@ -463,16 +439,19 @@ class ScenarioBEvaluator:
                     if retry_count > max_retries:
                         print(f"  [WARN] 用户{user_id} 试验{trial+1}失败（已重试{max_retries}次）: {e}")
                         decisions.append(0)
+                        beliefs.append(0.5)
                         reasons.append("")
                     else:
                         print(f"  [WARN] 用户{user_id} 试验{trial+1}失败，重试中...")
         
         # 多数投票
         final_decision = 1 if sum(decisions) > len(decisions) / 2 else 0
+        final_belief = np.mean(beliefs) if beliefs else 0.5
         final_reason = reasons[0] if reasons else ""
         
         return {
             "share": final_decision,
+            "belief_share_rate": final_belief,
             "reason": final_reason
         }
     
@@ -565,6 +544,7 @@ class ScenarioBEvaluator:
         print(f"{'='*60}")
         
         user_decisions = {}
+        user_beliefs = {}
         user_reasons = {}
         
         print(f"\n收集所有用户决策（每个用户观察自己的个性化报价）...")
@@ -572,10 +552,11 @@ class ScenarioBEvaluator:
             user_price = prices[user_id]
             decision_result = self.query_user_decision(user_id, user_price, num_trials=num_trials)
             user_decisions[user_id] = decision_result["share"]
+            user_beliefs[user_id] = decision_result["belief_share_rate"]
             user_reasons[user_id] = decision_result["reason"]
             
             print(f"  用户{user_id}: price={user_price:.4f}, share={decision_result['share']}, "
-                  f"v={self.params.v[user_id]:.3f}")
+                  f"belief={decision_result['belief_share_rate']:.2%}, v={self.params.v[user_id]:.3f}")
         
         # ===== 阶段3：结算 =====
         print(f"\n{'='*60}")
@@ -609,6 +590,7 @@ class ScenarioBEvaluator:
             # 用户数据
             "users": {
                 "decisions": user_decisions,
+                "beliefs": user_beliefs,
                 "reasons": user_reasons,
                 "v_values": self.params.v
             },
@@ -655,10 +637,41 @@ class ScenarioBEvaluator:
                 "gt_leakage_bucket": self.gt_labels.get("leakage_bucket", "unknown"),
                 "llm_over_sharing": 1 if len(llm_share_set) > len(gt_share_set) else 0,
                 "gt_over_sharing": self.gt_labels.get("over_sharing", 0)
-            }
+            },
+            
+            # 信念一致性分析
+            "belief_consistency": self._analyze_belief_consistency(user_beliefs, user_decisions)
         }
         
         return results
+    
+    def _analyze_belief_consistency(self, user_beliefs: Dict[int, float], user_decisions: Dict[int, int]) -> Dict[str, Any]:
+        """
+        分析用户信念与实际结果的一致性
+        
+        Args:
+            user_beliefs: 每个用户对分享率的信念
+            user_decisions: 每个用户的实际决策
+        
+        Returns:
+            一致性分析结果
+        """
+        n = len(user_decisions)
+        actual_share_rate = sum(user_decisions.values()) / n
+        
+        # 计算信念与实际的偏差
+        belief_errors = []
+        for user_id, belief in user_beliefs.items():
+            error = abs(belief - actual_share_rate)
+            belief_errors.append(error)
+        
+        return {
+            "actual_share_rate": actual_share_rate,
+            "mean_belief": np.mean(list(user_beliefs.values())),
+            "mean_belief_error": np.mean(belief_errors),
+            "max_belief_error": np.max(belief_errors),
+            "belief_std": np.std(list(user_beliefs.values()))
+        }
     
     def _jaccard_similarity(self, set1: set, set2: set) -> float:
         """计算Jaccard相似度"""
@@ -676,6 +689,31 @@ class ScenarioBEvaluator:
             return "medium"
         else:
             return "high"
+    
+    def _compute_belief_probs(self, history: List[Dict[int, int]], window_size: int = 10) -> Dict[int, float]:
+        """
+        基于历史计算每个用户的分享概率（经验频率）
+        
+        Args:
+            history: 历史决策记录
+            window_size: 窗口大小
+        
+        Returns:
+            {user_id: 分享概率}
+        """
+        if len(history) == 0:
+            # 初始信念：均匀分布
+            return {i: 0.5 for i in range(self.params.n)}
+        
+        # 只看最近window_size轮
+        recent_history = history[-window_size:]
+        
+        belief_probs = {}
+        for user_id in range(self.params.n):
+            share_count = sum(1 for round_decisions in recent_history if round_decisions.get(user_id, 0) == 1)
+            belief_probs[user_id] = share_count / len(recent_history)
+        
+        return belief_probs
     
     def _check_convergence(self, history: List[Dict[int, int]], threshold: int = 3) -> bool:
         """
@@ -780,12 +818,13 @@ class ScenarioBEvaluator:
             "final_similarity_to_equilibrium": similarity_trajectory[-1] if similarity_trajectory else 0.0
         }
     
-    def simulate_fictitious_play(self, max_rounds: int = 50, num_trials: int = 1) -> Dict[str, Any]:
+    def simulate_fictitious_play(self, max_rounds: int = 50, belief_window: int = 10, num_trials: int = 1) -> Dict[str, Any]:
         """
         模拟虚拟博弈（Fictitious Play）
         
         Args:
             max_rounds: 最大轮数
+            belief_window: 信念窗口大小（使用最近N轮历史）
             num_trials: 每个决策的重复查询次数（建议为1以控制成本）
         
         Returns:
@@ -793,7 +832,7 @@ class ScenarioBEvaluator:
         """
         print(f"\n{'='*60}")
         print(f"[开始虚拟博弈模拟] 模型: {self.llm_client.config_name}")
-        print(f"最大轮数: {max_rounds}")
+        print(f"最大轮数: {max_rounds}, 信念窗口: {belief_window}")
         print(f"{'='*60}")
         
         n = self.params.n
@@ -819,19 +858,24 @@ class ScenarioBEvaluator:
             print(f"[轮次 {round_num + 1}/{max_rounds}]")
             print(f"{'='*60}")
             
+            # 计算当前信念（基于历史）
+            window = min(belief_window, round_num)  # 实际窗口大小
+            belief_probs = self._compute_belief_probs(history, window_size=window)
+            
             # 用户同时决策
             round_decisions = {}
             for user_id in range(n):
                 user_price = prices[user_id]
                 
-                # 获取历史（最近10轮）
-                recent_history = history[-10:] if len(history) > 0 else []
+                # 获取历史（只传递窗口内的）
+                recent_history = history[-window:] if window > 0 else []
                 
                 # 查询决策
                 decision_result = self.query_user_decision_fp(
                     user_id, 
                     user_price, 
                     recent_history,
+                    belief_probs,
                     round_num,
                     num_trials=num_trials
                 )
@@ -848,6 +892,11 @@ class ScenarioBEvaluator:
             share_set = sorted([uid for uid, dec in round_decisions.items() if dec == 1])
             share_rate = len(share_set) / n
             print(f"本轮分享集合: {share_set} (分享率: {share_rate:.2%})")
+            
+            # 检查收敛
+            if self._check_convergence(history, threshold=3):
+                print(f"\n[提前收敛] 连续3轮分享集合不变，停止迭代")
+                break
         
         # ===== 最终结算 =====
         print(f"\n{'='*60}")
@@ -888,6 +937,7 @@ class ScenarioBEvaluator:
             "game_type": "fictitious_play",
             "max_rounds": max_rounds,
             "actual_rounds": len(history),
+            "belief_window": belief_window,
             
             # 平台数据
             "platform": {
@@ -955,6 +1005,7 @@ class ScenarioBEvaluator:
         user_id: int, 
         price: float,
         history: List[Dict[int, int]],
+        belief_probs: Dict[int, float],
         current_round: int,
         num_trials: int = 1
     ) -> Dict[str, Any]:
@@ -965,6 +1016,7 @@ class ScenarioBEvaluator:
             user_id: 用户ID
             price: 平台报价
             history: 历史记录
+            belief_probs: 信念概率
             current_round: 当前轮数
             num_trials: 重复查询次数
         
@@ -974,7 +1026,7 @@ class ScenarioBEvaluator:
                 "reason": str
             }
         """
-        prompt = self.build_user_decision_prompt_fp(user_id, price, history, current_round)
+        prompt = self.build_user_decision_prompt_fp(user_id, price, history, belief_probs, current_round)
         
         decisions = []
         reasons = []
@@ -1030,6 +1082,7 @@ class ScenarioBEvaluator:
         print(f"  模型: {results['model_name']}")
         print(f"  最大轮数: {results['max_rounds']}")
         print(f"  实际轮数: {results['actual_rounds']}")
+        print(f"  信念窗口: {results['belief_window']}")
         
         print(f"\n【平台报价】")
         platform = results['platform']
@@ -1113,12 +1166,16 @@ class ScenarioBEvaluator:
             print(f"  定价模式: LLM定价")
             if 'uniform_price' in platform:
                 print(f"  统一价格: {platform['uniform_price']:.4f}")
+            if 'belief_share_rate' in platform:
+                print(f"  平台预期分享率: {platform['belief_share_rate']:.2%}")
             if 'reason' in platform:
                 print(f"  平台理由: {platform['reason'][:150]}...")
         else:
             # 兼容旧格式
             if 'uniform_price' in platform:
                 print(f"  统一价格: {platform['uniform_price']:.4f}")
+            if 'belief_share_rate' in platform:
+                print(f"  平台预期分享率: {platform['belief_share_rate']:.2%}")
         
         print(f"\n【分享集合比较】")
         print(f"  LLM结果: {results['llm_share_set']}")
@@ -1143,6 +1200,14 @@ class ScenarioBEvaluator:
         print(f"  总泄露量:     LLM={llm_m['total_leakage']:.4f}  |  GT={gt_m['total_leakage']:.4f}  |  MAE={dev_m['total_leakage_mae']:.4f}")
         print(f"  分享率:       LLM={llm_m['share_rate']:.2%}  |  GT={gt_m['share_rate']:.2%}  |  MAE={dev_m['share_rate_mae']:.2%}")
         
+        print(f"\n【信念一致性分析】")
+        belief = results['belief_consistency']
+        print(f"  实际分享率:         {belief['actual_share_rate']:.2%}")
+        print(f"  平均信念分享率:     {belief['mean_belief']:.2%}")
+        print(f"  平均信念误差:       {belief['mean_belief_error']:.2%}")
+        print(f"  最大信念误差:       {belief['max_belief_error']:.2%}")
+        print(f"  信念标准差:         {belief['belief_std']:.3f}")
+        
         print(f"\n【用户决策分析】")
         users = results['users']
         n = len(users['decisions'])
@@ -1155,7 +1220,8 @@ class ScenarioBEvaluator:
         for group_name, group_users in [("低v组", v_low), ("中v组", v_mid), ("高v组", v_high)]:
             if group_users:
                 share_rate = sum(users['decisions'][i] for i in group_users) / len(group_users)
-                print(f"  {group_name} (n={len(group_users)}): 分享率={share_rate:.2%}")
+                avg_belief = np.mean([users['beliefs'][i] for i in group_users])
+                print(f"  {group_name} (n={len(group_users)}): 分享率={share_rate:.2%}, 平均信念={avg_belief:.2%}")
     
     def save_results(self, results: Dict[str, Any], output_path: str):
         """保存评估结果"""
@@ -1314,6 +1380,7 @@ def main():
     parser.add_argument('--mode', type=str, default='static', choices=['static', 'fp'], 
                         help='博弈模式：static=静态博弈，fp=虚拟博弈')
     parser.add_argument('--max_rounds', type=int, default=50, help='虚拟博弈最大轮数')
+    parser.add_argument('--belief_window', type=int, default=10, help='虚拟博弈信念窗口大小')
     parser.add_argument('--num_trials', type=int, default=1, help='每个决策的重复查询次数')
     parser.add_argument('--visualize', type=str, nargs='+', help='为已有JSON文件生成可视化（支持文件路径或目录）')
     
@@ -1387,9 +1454,9 @@ def main():
     # 创建评估器
     evaluator = ScenarioBEvaluator(llm_client)
     
-    # 创建场景B专属输出目录
+    # 创建输出子文件夹
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = f"evaluation_results/scenario_b"
+    output_dir = f"evaluation_results/{args.mode}_{llm_client.config_name}"
     os.makedirs(output_dir, exist_ok=True)
     
     if args.mode == 'static':
@@ -1397,7 +1464,7 @@ def main():
         print(f"[模式] 静态博弈")
         results = evaluator.simulate_static_game(num_trials=args.num_trials)
         evaluator.print_evaluation_summary(results)
-        output_path = f"{output_dir}/eval_{args.mode}_{llm_client.config_name}_{timestamp}.json"
+        output_path = f"{output_dir}/eval_{timestamp}.json"
         evaluator.save_results(results, output_path)
     
     elif args.mode == 'fp':
@@ -1405,10 +1472,11 @@ def main():
         print(f"[模式] 虚拟博弈")
         results = evaluator.simulate_fictitious_play(
             max_rounds=args.max_rounds,
+            belief_window=args.belief_window,
             num_trials=args.num_trials
         )
         evaluator.print_evaluation_summary_fp(results)
-        output_path = f"{output_dir}/eval_{args.mode}_{llm_client.config_name}_{timestamp}.json"
+        output_path = f"{output_dir}/eval_{timestamp}.json"
         evaluator.save_results(results, output_path)
 
 
