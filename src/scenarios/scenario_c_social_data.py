@@ -255,7 +255,7 @@
 """
 
 import numpy as np
-from typing import Dict, List, Tuple, Optional, Literal, Callable
+from typing import Dict, List, Tuple, Optional, Literal, Callable, Union
 from dataclasses import dataclass, asdict
 import json
 from scipy.optimize import minimize_scalar
@@ -320,11 +320,20 @@ class ScenarioCParams:
     支付参数（对应论文Section 5的参与激励）
     ========================================================================
     """
-    # 中介向消费者支付的补偿m（论文式5.1）
-    # 消费者参与的直接激励：ΔU = E[u|参与] - E[u|拒绝] + m - τ_i
-    # 典型值：0.5-2.0
+    # 中介向消费者支付的补偿m（论文式(4), (11)）
+    # 
+    # ⚠️ 重要修正：论文标准模型使用个性化补偿m_i（向量）
+    # - 论文式(4): R = m0 − Σ^N_{i=1} m_i
+    # - 论文式(11): m*_i = Ui((Si, X−i), X−i) − Ui((Si, X), X)
+    # 
+    # 类型支持：
+    # - float: 统一补偿（简化版本，向后兼容）
+    # - np.ndarray[N]: 个性化补偿（论文标准，推荐）
+    # 
+    # 消费者参与激励：ΔU = E[u|参与] - E[u|拒绝] + m_i - τ_i
+    # 典型值：0.5-2.0（统一）或向量（个性化）
     # 影响：m越高，参与率越高（论文Theorem 1）
-    m: float
+    m: Union[float, np.ndarray]
     
     # 注意：m_0（生产者向中介支付）不是参数，而是内生变量
     # m_0 = β × max(0, E[π_with_data - π_no_data])
@@ -411,8 +420,50 @@ class ScenarioCParams:
     # 固定种子保证：相同参数 → 相同结果
     seed: int = 42
     
-    def to_dict(self):
-        return asdict(self)
+    def __post_init__(self):
+        """
+        后处理：自动转换m为向量格式
+        
+        向后兼容性：
+        - 如果m是标量 → 自动扩展为N维向量（所有人相同补偿）
+        - 如果m是向量 → 验证长度并转换为np.ndarray
+        """
+        if isinstance(self.m, (int, float)):
+            # 统一补偿：自动扩展为向量
+            self.m = np.full(self.N, float(self.m))
+        else:
+            # 个性化补偿：转换并验证
+            self.m = np.array(self.m, dtype=float)
+            if len(self.m) != self.N:
+                raise ValueError(
+                    f"个性化补偿m的长度({len(self.m)})必须等于消费者数N({self.N})"
+                )
+    
+    def to_dict(self) -> Dict:
+        """转换为字典（用于JSON序列化），确保所有numpy数组转为JSON兼容格式"""
+        # ✅ 确保m字段JSON可序列化
+        if isinstance(self.m, np.ndarray):
+            if np.all(self.m == self.m[0]):
+                m_value = float(self.m[0])  # 统一补偿 -> 标量
+            else:
+                m_value = self.m.tolist()  # 个性化补偿 -> 列表
+        else:
+            m_value = float(self.m)
+        
+        return {
+            'N': int(self.N),
+            'data_structure': self.data_structure,
+            'mu_theta': float(self.mu_theta),
+            'sigma_theta': float(self.sigma_theta),
+            'sigma': float(self.sigma),
+            'anonymization': self.anonymization,
+            'm': m_value,  # ✅ JSON可序列化
+            'tau_mean': float(self.tau_mean),
+            'tau_std': float(self.tau_std),
+            'tau_dist': self.tau_dist,
+            'participation_timing': self.participation_timing,
+            'seed': int(self.seed) if self.seed is not None else None
+        }
 
 
 @dataclass
@@ -1363,13 +1414,17 @@ def simulate_market_outcome(
     utilities = data.w * quantities - prices * quantities - 0.5 * quantities ** 2
     
     # 参与补偿（论文Section 5 - Participation incentive）
-    # 参与者额外获得中介支付的补偿m
+    # 参与者额外获得中介支付的补偿m_i（论文式(11)）
     # 这是激励参与的直接手段
     # 
     # 重要：这里不会产生"double counting"
     # 因为utilities[participation]只被加一次m
     # （之前的P0-1修复）
-    utilities[participation] += params.m
+    # 
+    # ✅ 支持个性化补偿：每个消费者i获得m[i]
+    # - 如果m是统一补偿（通过__post_init__扩展为向量），所有人获得相同补偿
+    # - 如果m是个性化补偿，每个人获得不同补偿
+    utilities[participation] += params.m[participation]
     
     # ------------------------------------------------------------------------
     # 步骤7：福利指标计算
@@ -1391,23 +1446,29 @@ def simulate_market_outcome(
     producer_profit = np.sum((prices - params.c) * quantities)
     
     # 7.3 中介利润（Intermediary Profit）
-    # IS = m_0 - m·N_participants
+    # R = m_0 - Σ^N_{i=1} m_i·a_i （论文式(4)）
     #
     # 收入：m_0（生产者向中介支付）
     # - 可以是固定费用
     # - 或生产者利润提升的某个比例（我们的扩展）
     # - 论文隐含假设中介能获得部分生产者剩余
     #
-    # 支出：m·N_participants（中介向消费者支付）
+    # 支出：Σ m_i·a_i（中介向参与者支付）
     # - 激励参与的成本
-    # - m是每个参与者的统一补偿
+    # - m_i是每个消费者i的补偿（论文标准）
+    # - a_i = 1 if 参与, 0 if 拒绝
     #
-    # 净利润：IS = 收入 - 支出
+    # ✅ 支持个性化补偿：
+    # - 统一补偿：Σ m·a_i = m·Σa_i = m·N_participants
+    # - 个性化补偿：Σ m_i·a_i（只对参与者求和）
+    #
+    # 净利润：R = 收入 - 支出
     # m0作为显式参数传入（默认0.0）
     # 理论求解器会传入estimate_m0_mc计算的内生m_0
     
     num_participants = int(np.sum(participation))
-    intermediary_profit = m0 - params.m * num_participants
+    intermediary_cost = np.sum(params.m[participation])  # ✅ 只对参与者求和
+    intermediary_profit = m0 - intermediary_cost
     
     # 7.4 社会福利（Social Welfare）
     # SW = CS + PS + IS
@@ -1991,7 +2052,14 @@ def generate_conditional_equilibrium(
     print(f"  N = {params.N}")
     print(f"  数据结构 = {params.data_structure}")
     print(f"  匿名化 = {params.anonymization}")
-    print(f"  补偿 m = {params.m:.2f}")
+    # 支持标量和向量m的打印
+    if isinstance(params.m, np.ndarray):
+        if np.all(params.m == params.m[0]):
+            print(f"  补偿 m = {params.m[0]:.2f} (统一)")
+        else:
+            print(f"  补偿 m = 向量 (均值={np.mean(params.m):.2f})")
+    else:
+        print(f"  补偿 m = {float(params.m):.2f}")
     print(f"  噪声水平 σ = {params.sigma:.2f}")
     
     # 计算理性参与率（根据时序模式）
@@ -2052,7 +2120,14 @@ def generate_conditional_equilibrium(
     print(f"  期望参与人数: {e_num_participants:.2f}")
     
     # 计算理论口径的中介期望利润
-    expected_intermediary_cost = params.m * e_num_participants
+    # R = m_0 - E[Σ m_i·a_i]（论文式(4)）
+    # ✅ 支持个性化补偿
+    if np.all(params.m == params.m[0]):
+        # 统一补偿（优化路径）
+        expected_intermediary_cost = params.m[0] * e_num_participants
+    else:
+        # 个性化补偿：使用均值补偿×期望参与人数作为近似
+        expected_intermediary_cost = np.mean(params.m) * e_num_participants
     expected_intermediary_profit = m_0_estimated - expected_intermediary_cost
     
     print(f"  期望中介利润: {expected_intermediary_profit:.4f}")
@@ -2789,7 +2864,7 @@ def estimate_m0_mc(
 
 
 def evaluate_intermediary_strategy(
-    m: float,
+    m: Union[float, np.ndarray],
     anonymization: str,
     params_base: Dict,
     num_mc_samples: int = 50,
@@ -2930,25 +3005,30 @@ def evaluate_intermediary_strategy(
     #   E[#participants] 由estimate_m0_mc返回
     # 
     # 使用期望参与数（而非单次实现）
-    intermediary_cost = m * e_num_participants
-    intermediary_profit = m_0 - intermediary_cost
+    # ✅ 支持个性化补偿
+    if isinstance(m, np.ndarray):
+        # 个性化补偿：使用均值补偿作为近似
+        intermediary_cost = float(np.mean(m)) * e_num_participants
+    else:
+        intermediary_cost = float(m) * e_num_participants
+    intermediary_profit = float(m_0 - intermediary_cost)
     
     return IntermediaryOptimizationResult(
-        m=m,
+        m=float(m) if isinstance(m, (int, float, np.integer, np.floating)) else float(np.mean(m)),  # ✅ 向量时返回均值
         anonymization=anonymization,
-        r_star=r_star,
-        delta_u=delta_u,
-        num_participants=num_participants,
-        producer_profit_with_data=producer_profit_with_data,
-        producer_profit_no_data=producer_profit_no_data,
-        producer_profit_gain=producer_profit_gain_sample,  # 单次实现（用于对比）
-        m_0=m_0,  # Ex-Ante期望（MC估计）
-        intermediary_cost=intermediary_cost,
-        intermediary_profit=intermediary_profit,
-        consumer_surplus=outcome_with_data.consumer_surplus,
-        social_welfare=outcome_with_data.social_welfare,
-        gini_coefficient=outcome_with_data.gini_coefficient,
-        price_discrimination_index=outcome_with_data.price_discrimination_index
+        r_star=float(r_star),
+        delta_u=float(delta_u),
+        num_participants=int(num_participants),
+        producer_profit_with_data=float(producer_profit_with_data),
+        producer_profit_no_data=float(producer_profit_no_data),
+        producer_profit_gain=float(producer_profit_gain_sample),  # 单次实现（用于对比）
+        m_0=float(m_0),  # Ex-Ante期望（MC估计）
+        intermediary_cost=float(intermediary_cost),
+        intermediary_profit=float(intermediary_profit),
+        consumer_surplus=float(outcome_with_data.consumer_surplus),
+        social_welfare=float(outcome_with_data.social_welfare),
+        gini_coefficient=float(outcome_with_data.gini_coefficient),
+        price_discrimination_index=float(outcome_with_data.price_discrimination_index)
     )
 
 
@@ -3059,8 +3139,85 @@ def optimize_intermediary_policy(
     if verbose and skipped_count > 0:
         print(f"\n⚠️  跳过 {skipped_count} 个不收敛的候选策略")
     
-    # 找到最优策略
-    optimal_result = max(all_results, key=lambda x: x.intermediary_profit)
+    # ============================================================
+    # ✅ 新增：过滤亏损策略（理性参与约束）
+    # 
+    # 经济学原理：
+    # - 理性中介不会选择R < 0的策略
+    # - 如果所有策略都亏损，应该选择不参与市场（R = 0）
+    # 
+    # 论文依据：
+    # - Proposition 4: "profitable intermediation"
+    # - 隐含假设：中介具有outside option（不参与）
+    # ============================================================
+    profitable_results = [
+        r for r in all_results 
+        if r.intermediary_profit > 0.0  # 严格正利润
+    ]
+    
+    if not profitable_results:
+        # 所有策略都亏损 → 中介选择不参与市场
+        if verbose:
+            print("\n" + "="*80)
+            print("⚠️  所有策略均亏损，中介选择不参与市场")
+            print("="*80)
+            max_loss = max(r.intermediary_profit for r in all_results)
+            max_loss_result = max(all_results, key=lambda x: x.intermediary_profit)
+            print(f"最小亏损: R = {max_loss:.4f}")
+            print(f"  对应策略: m={max_loss_result.m:.2f}, {max_loss_result.anonymization}")
+            print(f"理性选择: 不参与市场（outside option, R=0）")
+            print("="*80)
+        
+        # 返回"不参与"策略
+        # 创建零利润的dummy result
+        dummy_result = IntermediaryOptimizationResult(
+            m=0.0,
+            anonymization="no_participation",
+            r_star=0.0,
+            delta_u=0.0,
+            num_participants=0,
+            producer_profit_with_data=0.0,
+            producer_profit_no_data=0.0,
+            producer_profit_gain=0.0,
+            m_0=0.0,
+            intermediary_cost=0.0,
+            intermediary_profit=0.0,  # 不参与 = 零利润
+            consumer_surplus=0.0,
+            social_welfare=0.0,
+            gini_coefficient=0.0,
+            price_discrimination_index=0.0
+        )
+        
+        optimization_summary = {
+            'num_candidates_total': len(m_grid) * len(policies),
+            'num_candidates_converged': len(all_results),
+            'num_candidates_skipped': skipped_count,
+            'num_candidates_profitable': 0,  # ✅ 新增字段
+            'participation_feasible': False,  # ✅ 新增字段
+            'max_profit': 0.0,
+            'profit_range': [
+                min(r.intermediary_profit for r in all_results),
+                0.0  # 不参与是零利润
+            ],
+            'optimal_is_anonymized': False
+        }
+        
+        return OptimalPolicy(
+            optimal_m=0.0,
+            optimal_anonymization="no_participation",
+            optimal_result=dummy_result,
+            all_results=all_results,
+            optimization_summary=optimization_summary
+        )
+    
+    # ✅ 从盈利策略中选择最优（而非所有策略）
+    optimal_result = max(profitable_results, key=lambda x: x.intermediary_profit)
+    
+    if verbose:
+        print("\n" + "="*80)
+        print(f"✅ 共{len(profitable_results)}个盈利策略")
+        print(f"❌ 淘汰{len(all_results) - len(profitable_results)}个亏损策略")
+        print("="*80)
     
     if verbose:
         print("-"*80)
@@ -3079,6 +3236,8 @@ def optimize_intermediary_policy(
         'num_candidates_total': len(m_grid) * len(policies),
         'num_candidates_converged': len(all_results),
         'num_candidates_skipped': skipped_count,
+        'num_candidates_profitable': len(profitable_results),  # ✅ 新增
+        'participation_feasible': True,  # ✅ 新增（此分支表示有盈利策略）
         'max_profit': optimal_result.intermediary_profit,
         'profit_range': [
             min(r.intermediary_profit for r in all_results),

@@ -1,0 +1,58 @@
+{
+  "experiment_meta": {
+    "model_name": "deepseek-v3-0324",
+    "timestamp": "20260128_204020",
+    "total_versions": 7
+  },
+  "versions": {
+    "b.v0": {
+      "share_rate_mean": 0.8,
+      "share_rate_std": 0.0,
+      "decision_distance_mean": 0.0,
+      "decision_distance_std": 0.0,
+      "num_rounds": 1
+    },
+    "b.v1": {
+      "share_rate_mean": 0.8,
+      "share_rate_std": 0.0,
+      "decision_distance_mean": 0.0,
+      "decision_distance_std": 0.0,
+      "num_rounds": 1
+    },
+    "b.v2": {
+      "share_rate_mean": 0.8,
+      "share_rate_std": 0.0,
+      "decision_distance_mean": 0.0,
+      "decision_distance_std": 0.0,
+      "num_rounds": 1
+    },
+    "b.v3": {
+      "share_rate_mean": 0.8,
+      "share_rate_std": 0.0,
+      "decision_distance_mean": 0.0,
+      "decision_distance_std": 0.0,
+      "num_rounds": 1
+    },
+    "b.v4": {
+      "share_rate_mean": 0.8,
+      "share_rate_std": 0.0,
+      "decision_distance_mean": 0.0,
+      "decision_distance_std": 0.0,
+      "num_rounds": 1
+    },
+    "b.v5": {
+      "share_rate_mean": 0.8,
+      "share_rate_std": 0.0,
+      "decision_distance_mean": 0.0,
+      "decision_distance_std": 0.0,
+      "num_rounds": 1
+    },
+    "b.v6": {
+      "share_rate_mean": 0.7,
+      "share_rate_std": 0.0,
+      "decision_distance_mean": 0.125,
+      "decision_distance_std": 0.0,
+      "num_rounds": 1
+    }
+  }
+}

@@ -2,17 +2,15 @@
   "params": {
     "N": 20,
     "data_structure": "common_preferences",
-    "anonymization": "identified",
     "mu_theta": 5.0,
     "sigma_theta": 1.0,
     "sigma": 1.0,
+    "anonymization": "identified",
     "m": 1.0,
-    "c": 0.0,
     "tau_mean": 1.0,
     "tau_std": 0.3,
     "tau_dist": "normal",
     "participation_timing": "ex_ante",
-    "posterior_method": "approx",
     "seed": 42
   },
   "rational_participation_rate": 0.4679753768907844,

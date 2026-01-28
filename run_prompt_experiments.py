@@ -41,184 +41,330 @@ JSON必须包含 "share" 和 "reason" 两个字段。
         return {
             "b.v0": {
                 "system": system_prompt,
-                "user_template": """你是用户 {user_id}，正在参与一个数据市场。
+                "user_template": """# 数据市场决策
 
-**你的个人信息**：
-- 平台给你的报价：p[{user_id}] = {price:.4f}
-- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
+你是用户 {user_id}，正在参与一个数据市场。
 
-**决策框架**：
-- 如果你分享数据，你会得到补偿 p = {price:.4f}
-- 分享会产生隐私成本 = v × 边际信息泄露量
-- 你需要权衡：补偿收益 vs 隐私成本
+## 你的信息
+
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 决策
+
+如果分享数据：
+- 获得补偿 p = {price:.4f}
+- 产生隐私成本 = v × 边际泄露量
+
+**请权衡：补偿 vs 隐私成本**
+
+## 输出
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的决策理由（不超过150字）"
+  "reason": "简要说明决策理由（不超过150字）"
 }}"""
             },
             
             "b.v1": {
                 "system": system_prompt,
-                "user_template": """你是用户 {user_id}，正在参与一个数据市场。
+                "user_template": """# 数据市场决策
 
-**你的私有信息**：
-- 平台给你的报价：p[{user_id}] = {price:.4f}
-- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
+你是用户 {user_id}，正在参与一个数据市场。
 
-**公共知识**：
+## 你的私有信息
+
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 市场环境
+
 - 用户总数：n = {n}
-- 用户间信息相关系数：ρ = {rho:.2f}
+- 信息相关系数：ρ = {rho:.2f}
 - 观测噪声：σ² = {sigma_noise_sq}
-- 隐私偏好分布：所有用户的 v 范围在 [{v_min}, {v_max}]
-（你的 v = {v_i:.3f}，相对位置：{v_description}）
+- 隐私偏好分布：所有用户的v ∈ [{v_min}, {v_max}]
 
-**决策框架**：
-- 如果你分享数据，你会得到补偿 p = {price:.4f}
-- 分享会产生隐私成本 = v × 边际信息泄露量
-- 你需要权衡：补偿收益 vs 隐私成本
+你的位置：v = {v_i:.3f}（{v_description}）
+
+## 决策框架
+
+如果分享数据：
+- 获得补偿 p = {price:.4f}
+- 产生隐私成本 = v × 边际泄露量
+
+**请权衡：补偿 vs 隐私成本**
+
+## 输出
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的决策理由（不超过150字）"
+  "reason": "简要说明决策理由（不超过150字）"
 }}"""
             },
             
             "b.v2": {
                 "system": system_prompt,
-                "user_template": """你是用户 {user_id}，正在参与一个数据市场。
+                "user_template": """# 数据市场决策
 
-**你的私有信息**：
-- 平台给你的报价：p[{user_id}] = {price:.4f}
-- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
+你是用户 {user_id}，正在参与一个数据市场。
 
-**公共知识**：
-- 用户总数：n = {n}
-- 用户间信息相关系数：ρ = {rho:.2f}
-  你的类型与其他用户的类型相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
-- 观测噪声：σ² = {sigma_noise_sq}
-  观测噪声表示数据本身的不确定性。σ²越大，数据的噪声越大，平台从数据中提取有效信息的能力越弱，你的信息泄露程度越低；σ²越小，数据越准确，平台的推断越精确，信息泄露程度越高。
-- 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
-（你的 v = {v_i:.3f}，相对位置：{v_description}）
+## 你的私有信息
 
-**决策框架**：
-- 如果你分享数据，你会得到补偿 p = {price:.4f}
-- 分享会产生隐私成本 = v × 边际信息泄露量
-- 你需要权衡：补偿收益 vs 隐私成本
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 市场环境
+
+**用户总数**：n = {n}
+
+**信息相关系数**：ρ = {rho:.2f}
+- 你的类型与其他用户的类型相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+- 当前 ρ = {rho:.2f}，推断能力{rho_level}
+
+**观测噪声**：σ² = {sigma_noise_sq}
+- σ² 越大：数据噪声越大，泄露程度越低
+- σ² 越小：数据越准确，泄露程度越高
+
+**隐私偏好分布**：v ∈ [{v_min}, {v_max}]
+- 你的位置：v = {v_i:.3f}（{v_description}）
+
+## 决策框架
+
+如果分享数据：
+- 获得补偿 p = {price:.4f}
+- 产生隐私成本 = v × 边际泄露量
+
+**请权衡：补偿 vs 隐私成本**
+
+## 输出
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的决策理由（不超过150字）"
+  "reason": "简要说明决策理由（不超过150字）"
 }}"""
             },
             
             "b.v3": {
                 "system": system_prompt,
-                "user_template": """你是用户 {user_id}，正在参与一个数据市场。
+                "user_template": """# 数据市场决策（推断外部性）
 
-**你的私有信息**：
-- 平台给你的报价：p[{user_id}] = {price:.4f}
-- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
+你是用户 {user_id}，正在参与一个数据市场。
 
-**公共知识**：
-- 用户总数：n = {n}
-- 用户间信息相关系数：ρ = {rho:.2f}
-  你的类型与其他用户的类型相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
-- 观测噪声：σ² = {sigma_noise_sq}
-  观测噪声表示数据本身的不确定性。σ²越大，数据的噪声越大，平台从数据中提取有效信息的能力越弱，你的信息泄露程度越低；σ²越小，数据越准确，平台的推断越精确，信息泄露程度越高。
-- 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
-（你的 v = {v_i:.3f}，相对位置：{v_description}）
+## 你的私有信息
 
-**关键机制**：
-- 即使你不分享数据，平台也可能通过其他用户的数据推断你的信息（推断外部性）
-- 如果你分享，你的信息会从间接部分泄露变成完全泄露
-- 如果你不分享，你可以保护未间接泄露的那部分信息
-- 不分享也会有基础泄露（因为其他人分享会泄露你的信息），分享的真正成本是边际泄露带来的成本
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
 
-**决策框架**：
-- 如果你分享数据，你会得到补偿 p = {price:.4f}
-- 分享会产生隐私成本 = v × 边际信息泄露量
-- 你需要权衡：补偿收益 vs 隐私成本
+## 市场环境
+
+**用户总数**：n = {n}
+
+**信息相关系数**：ρ = {rho:.2f}
+- 你的类型与其他用户的类型相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+- 当前 ρ = {rho:.2f}，推断能力{rho_level}
+
+**观测噪声**：σ² = {sigma_noise_sq}
+- σ² 越大：数据噪声越大，泄露程度越低
+- σ² 越小：数据越准确，泄露程度越高
+
+**隐私偏好分布**：v ∈ [{v_min}, {v_max}]
+- 你的位置：v = {v_i:.3f}（{v_description}）
+
+## 关键机制
+
+**推断泄露**：即使你不分享，平台也能通过其他人的数据推断你的信息
+
+**两种泄露**：
+- **基础泄露**：其他人分享导致你的信息间接泄露
+- **边际泄露**：你自己分享带来的额外泄露
+
+**分享的真正成本 = 边际泄露**
+
+## 决策框架
+
+**如果分享**：
+- 获得补偿：p = {price:.4f}
+- 隐私成本：v × 边际泄露量
+- 你的信息从部分泄露变为完全泄露
+
+**如果不分享**：
+- 无补偿
+- 保护未间接泄露的部分信息
+- 但仍有基础泄露
+
+**请权衡：补偿 vs 边际隐私成本**
+
+## 输出
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的决策理由（不超过150字）"
+  "reason": "简要说明决策理由（不超过150字）"
 }}"""
             },
             
             "b.v4": {
                 "system": system_prompt,
-                "user_template": """你是用户 {user_id}，正在参与一个数据市场。
+                "user_template": """# 数据市场决策（推断外部性）
 
-**你的私有信息**：
-- 平台给你的报价：p[{user_id}] = {price:.4f}
-- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
+你是用户 {user_id}，正在参与一个数据市场。
 
-**公共知识**：
-- 用户总数：n = {n}
-- 用户间信息相关系数：ρ = {rho:.2f}
-  你的信息与其他用户的信息相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
-- 观测噪声：σ² = {sigma_noise_sq}
-  观测噪声表示数据本身的不确定性。σ²越大，数据的噪声越大，平台从数据中提取有效信息的能力越弱，你的信息泄露程度越低；σ²越小，数据越准确，平台的推断越精确，信息泄露程度越高。
-- 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
-（你的 v = {v_i:.3f}，相对位置：{v_description}）
+## 你的私有信息
 
-**核心机制**：
-- **推断外部性**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
-- 如果你**分享**，你会得到来自平台的补偿 p = {price:.4f}，但你的信息会从间接部分泄露变成完全泄露
-- 如果你**不分享**，你可以保护未间接泄露的那部分信息，但代价是无法得到补偿
-- **次模性**：分享的人越多，你再分享带来的边际泄露越小（基础泄露越高，边际泄露越低）
-- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息），分享的真正成本是**边际泄露**带来的成本
-- 补偿价格旨在覆盖你的边际隐私损失
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
 
-**决策框架**：
-- 隐私成本 = v × 边际信息泄露量
-- 你需要权衡：补偿收益 p vs 隐私成本 v × 边际泄露量
+## 市场环境
+
+**用户总数**：n = {n}
+
+**信息相关系数**：ρ = {rho:.2f}
+- 你的信息与其他用户相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+- 当前 ρ = {rho:.2f}，推断能力{rho_level}
+
+**观测噪声**：σ² = {sigma_noise_sq}
+- σ² 越大：噪声越大，泄露越低
+- σ² 越小：数据越准确，泄露越高
+
+**隐私偏好分布**：v ∈ [{v_min}, {v_max}]
+- 你的位置：v = {v_i:.3f}（{v_description}）
+
+## 核心机制
+
+### 推断外部性
+
+**关键洞察**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
+
+**如果你分享**：
+- 获得补偿 p = {price:.4f}
+- 你的信息从间接部分泄露 → 完全泄露
+
+**如果你不分享**：
+- 无补偿
+- 保护未间接泄露的部分
+- 但仍有基础泄露（他人分享导致）
+
+### 次模性
+
+**分享的人越多 → 你的边际泄露越小**
+- 基础泄露越高 → 边际泄露越低
+- 其他人分享得多 → 你再分享的额外成本减少
+
+### 补偿逻辑
+
+**平台报价旨在覆盖边际隐私损失**
+- 报价 p = {price:.4f} 反映你的边际价值
+- 你需要判断：p 是否足以覆盖 v × 边际泄露
+
+## 决策框架
+
+**隐私成本** = v × 边际泄露量
+
+**权衡**：补偿收益 p vs 隐私成本 v × 边际泄露
+
+## 输出
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的决策理由（不超过150字）"
+  "reason": "简要说明决策理由（不超过150字）"
 }}"""
             },
             
             "b.v5": {
                 "system": system_prompt,
-                "user_template": """# 场景：数据市场静态博弈（推断外部性）
+                "user_template": """# 数据市场静态博弈（推断外部性）
 
 你是用户 {user_id}，正在参与一个**一次性的数据市场决策**。
 
-## 基本信息
+## 你的私有信息
 
-**你的私有信息**：
-- 你的隐私偏好：v[{user_id}] = {v_i:.3f}
-- 平台给你的个性化报价：p[{user_id}] = {price:.4f}
-  （注意：每个用户的报价可能不同）
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+- **平台报价**：p[{user_id}] = {price:.4f}
 
-**公共知识**（所有人都知道）：
+注意：每个用户的报价可能不同
+
+## 公共知识（所有人都知道）
+
+### 市场规模
 - 用户总数：n = {n}
+
+### 信息相关性
 - 类型相关系数：ρ = {rho:.2f}
-- 你的信息型与其他用户的信息相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
+- 你的信息与其他用户的信息相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+- 当前 ρ = {rho:.2f}：推断能力{rho_level}
+
+### 数据质量
 - 观测噪声：σ² = {sigma_noise_sq}
-  观测噪声表示数据本身的不确定性。σ²越大，数据的噪声越大，平台从数据中提取有效信息的能力越弱，你的信息泄露程度越低；σ²越小，数据越准确，平台的推断越精确，信息泄露程度越高。
-- 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
-（你的 v = {v_i:.3f}，相对位置：{v_description}，属于{v_description}隐私偏好群体）
+- σ² 越大：噪声越大，泄露程度越低
+- σ² 越小：数据越准确，泄露程度越高
 
-- **核心外部性**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享，任何人的分享都会带来泄露信息量增加。
-- 如果你**分享**，你会得到来自平台的补偿p_i，但是会导致你的信息会从间接部分泄露变成完全泄露，你的单位信息成本为v_i。
-- 如果你**不分享**，你就可以相应保护你未间接泄露的信息，但代价是无法得到补偿。
-- 基础泄露越高（别人分享多），你分享的边际泄露越小。
-- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息），分享的真正成本是**边际泄露**带来的成本，补偿价格旨在覆盖你的边际隐私损失。
+### 隐私偏好分布
+- 所有用户的 v ∈ [{v_min}, {v_max}]
+- 你的 v = {v_i:.3f}，相对位置：{v_description}
+- 你属于{v_description}隐私偏好群体
 
-## 你的任务
+## 推断外部性机制
 
-基于上述机制，在**不知道其他人具体决策**的情况下，决定是否分享数据。
+### 核心外部性
+- **泄露信息量**：不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
 
-## 输出格式
+### 两种泄露类型
+
+**基础泄露**（Base Leakage）：
+- 来源：其他人分享导致你的信息间接泄露
+- 影响：即使不分享也会存在
+- 原理：通过相关性推断
+
+**边际泄露**（Marginal Leakage）：
+- 来源：你自己分享带来的额外泄露
+- 计算：完全泄露 - 基础泄露
+- 这才是分享的真正成本
+
+### 次模性（Submodularity）
+
+**关键性质**：分享的人越多，你的边际泄露越小
+
+原因：
+- 基础泄露越高 → 边际泄露越低
+- 其他人分享多 → 你再分享的额外成本减少
+
+### 补偿机制
+
+**平台报价逻辑**：
+- 报价 p[{user_id}] = {price:.4f} 旨在覆盖你的边际隐私损失
+- 你的单位信息成本为 v[{user_id}] = {v_i:.3f}
+
+## 决策分析
+
+### 如果分享
+- **收益**：获得补偿 p = {price:.4f}
+- **成本**：隐私成本 = v × 边际泄露量
+- **结果**：信息从部分泄露变为完全泄露
+
+### 如果不分享
+- **收益**：保护未间接泄露的部分信息
+- **成本**：无法得到补偿
+- **结果**：仍有基础泄露存在
+
+### 你的任务
+
+在**不知道其他人具体决策**的情况下，权衡：
+- 补偿收益 p = {price:.4f}
+- 隐私成本 v × 边际泄露量
+
+## 输出
 
 请输出严格JSON：
 {{
@@ -389,6 +535,14 @@ class CustomScenarioBEvaluator(ScenarioBEvaluator):
                 v_description = "偏高"
                 v_level = "高"
             
+            # 判断rho的水平
+            if rho < 0.3:
+                rho_level = "较弱"
+            elif rho >= 0.3 and rho < 0.7:
+                rho_level = "中等"
+            else:
+                rho_level = "较强"
+            
             # 填充模板变量
             prompt = self.custom_user_prompt_template.format(
                 user_id=user_id,
@@ -400,7 +554,8 @@ class CustomScenarioBEvaluator(ScenarioBEvaluator):
                 v_min=v_min,
                 v_max=v_max,
                 v_description=v_description,
-                v_level=v_level
+                v_level=v_level,
+                rho_level=rho_level
             )
             return prompt
         else:
@@ -412,7 +567,7 @@ class PromptExperimentController:
     """提示词实验控制器"""
     
     def __init__(self, 
-                 model_name: str = "deepseek-v3.2",
+                 model_name: str = "gpt-5.2",
                  ground_truth_path: str = "data/ground_truth/scenario_b_result.json",
                  output_dir: str = "evaluation_results/prompt_experiments_b",
                  use_theory_platform: bool = True,
@@ -709,8 +864,10 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="场景B提示词版本实验控制器")
-    parser.add_argument("--model", type=str, default="gemini-3-flash-preview", 
-                        help="LLM模型名称 (默认: gemini-3-flash-preview)")
+    parser.add_argument("--model", type=str, default="gpt-5", 
+                        help="LLM模型名称 (默认: gpt-5, 可选: gpt-5.2, gpt-5.1, gpt-5.1-2025-11-13, gpt-5)")
+    parser.add_argument("--all-models", action="store_true",
+                        help="运行所有配置文件中的模型（忽略--model参数）")
     parser.add_argument("--versions", type=str, nargs="+", 
                         help="要运行的版本列表，如 b.v0 b.v1 (默认: 所有版本)")
     parser.add_argument("--rounds", type=int, default=1, 
@@ -729,20 +886,69 @@ def main():
     
     args = parser.parse_args()
     
-    # 初始化控制器
-    controller = PromptExperimentController(
-        model_name=args.model,
-        ground_truth_path=args.gt_path,
-        output_dir=args.output_dir,
-        use_theory_platform=not args.no_theory_platform,
-        config_file=args.config_file
-    )
-    
-    # 运行实验
-    controller.run_all_experiments(
-        versions=args.versions,
-        num_rounds=args.rounds
-    )
+    # 如果设置了 --all-models，读取配置文件获取所有模型
+    if args.all_models:
+        with open(args.config_file, 'r', encoding='utf-8') as f:
+            all_configs = json.load(f)
+        model_names = [config["config_name"] for config in all_configs]
+        
+        print(f"\n{'='*80}")
+        print(f"🚀 批量运行模式：将依次运行 {len(model_names)} 个模型")
+        print(f"{'='*80}")
+        print(f"模型列表: {', '.join(model_names)}")
+        print(f"提示词版本: {'所有版本' if args.versions is None else ', '.join(args.versions)}")
+        print(f"每个版本运行轮数: {args.rounds}")
+        print(f"{'='*80}\n")
+        
+        # 依次运行每个模型
+        for i, model_name in enumerate(model_names, 1):
+            print(f"\n{'#'*80}")
+            print(f"📊 [{i}/{len(model_names)}] 开始运行模型: {model_name}")
+            print(f"{'#'*80}\n")
+            
+            try:
+                # 初始化控制器
+                controller = PromptExperimentController(
+                    model_name=model_name,
+                    ground_truth_path=args.gt_path,
+                    output_dir=args.output_dir,
+                    use_theory_platform=not args.no_theory_platform,
+                    config_file=args.config_file
+                )
+                
+                # 运行实验
+                controller.run_all_experiments(
+                    versions=args.versions,
+                    num_rounds=args.rounds
+                )
+                
+                print(f"\n✅ 模型 {model_name} 完成！\n")
+                
+            except Exception as e:
+                print(f"\n❌ 模型 {model_name} 运行失败: {str(e)}\n")
+                import traceback
+                traceback.print_exc()
+        
+        print(f"\n{'='*80}")
+        print(f"🎉 所有 {len(model_names)} 个模型运行完成！")
+        print(f"{'='*80}\n")
+        
+    else:
+        # 单模型模式
+        # 初始化控制器
+        controller = PromptExperimentController(
+            model_name=args.model,
+            ground_truth_path=args.gt_path,
+            output_dir=args.output_dir,
+            use_theory_platform=not args.no_theory_platform,
+            config_file=args.config_file
+        )
+        
+        # 运行实验
+        controller.run_all_experiments(
+            versions=args.versions,
+            num_rounds=args.rounds
+        )
 
 
 if __name__ == "__main__":

@@ -270,7 +270,7 @@
       "intermediary_profit": -20.047352024917927,
       "r_star": 0.9957740538123298,
       "m_0": 7.819647975082075,
-      "social_welfare": 193.94375797366732,
+      "social_welfare": 193.94375797366735,
       "consumer_surplus": 95.5030220794679,
       "producer_profit": 118.62108791911737
     },
@@ -440,7 +440,7 @@
       "intermediary_profit": -43.649561410022585,
       "r_star": 0.9999673594687771,
       "m_0": 0.3504385899774178,
-      "social_welfare": 183.5344681528044,
+      "social_welfare": 183.53446815280438,
       "consumer_surplus": 112.01766020809282,
       "producer_profit": 115.16636935473417
     },
@@ -540,7 +540,7 @@
       "intermediary_profit": -53.649561410022585,
       "r_star": 0.9999999924104552,
       "m_0": 0.3504385899774178,
-      "social_welfare": 183.5344681528044,
+      "social_welfare": 183.53446815280438,
       "consumer_surplus": 122.01766020809282,
       "producer_profit": 115.16636935473417
     },
