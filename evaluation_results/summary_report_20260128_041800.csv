@@ -1,0 +1,21 @@
+﻿Config,Intermediary,Consumers,m,Anonymization,Participation Rate,Social Welfare,Consumer Surplus,Producer Profit,Intermediary Profit,Intermediary Profit Loss (%),Individual Accuracy,TP,TN,FP,FN,Consumer Surplus Gap,Gini Consumer Surplus,场景,模型,数据结构
+A (Theory),Rational,Rational,0.7,identified,0.065382301,210.2507797,76.55102814,131.1826504,1.607101119,0,,,,,,,,C,gpt-5-mini-2025-08-07,common_preferences
+B,Rational,LLM,0.7,identified,0,210.2507797,76.55102814,131.1826504,2.517101119,-56.62369276,0.95,0,19,0,1,0,0.017643694,C,gpt-5-mini-2025-08-07,common_preferences
+C,LLM,Rational,0.77,identified,0.101758871,211.1044777,76.55102814,131.1826504,1.773049154,-10.3259237,,,,,,,,C,gpt-5-mini-2025-08-07,common_preferences
+D,LLM,LLM,1.05,anonymized,0,207.7336786,76.55102814,131.1826504,0,100,0.4,0,8,0,12,-7.550068828,0.017643694,C,gpt-5-mini-2025-08-07,common_preferences
+A (Theory),Rational,Rational,0,anonymized,0.001138444,185.7577927,66.20165095,119.5551386,0.001003088,0,,,,,,,,C,gpt-5-mini-2025-08-07,common_experience
+B,Rational,LLM,0,anonymized,0,185.7577927,66.20165095,119.5551386,0.001003088,0,1,0,20,0,0,0,0.310562061,C,gpt-5-mini-2025-08-07,common_experience
+C,LLM,Rational,0.065,anonymized,0.002339879,185.7723891,66.20165095,119.5551386,0.013649457,-1260.744374,,,,,,,,C,gpt-5-mini-2025-08-07,common_experience
+D,LLM,LLM,1,anonymized,0,185.7567896,66.20165095,119.5551386,0,100,0.45,0,9,0,11,-11.88689234,0.310562061,C,gpt-5-mini-2025-08-07,common_experience
+A (Theory),Rational,Rational,0.7,identified,0.065382301,210.2507797,76.55102814,131.1826504,1.607101119,0,,,,,,,,C,qwen-plus,common_preferences
+B,Rational,LLM,0.7,identified,0,210.2507797,76.55102814,131.1826504,2.517101119,-56.62369276,0.95,0,19,0,1,0,0.017643694,C,qwen-plus,common_preferences
+C,LLM,Rational,0.5,identified,0.013376971,208.468095,76.55102814,131.1826504,0.591916437,63.1686874,,,,,,,,C,qwen-plus,common_preferences
+D,LLM,LLM,1.25,identified,0,207.7336786,76.55102814,131.1826504,0,100,0.3,0,6,0,14,-18.2151977,0.017643694,C,qwen-plus,common_preferences
+A (Theory),Rational,Rational,0,anonymized,0.001138444,185.7577927,66.20165095,119.5551386,0.001003088,0,,,,,,,,C,qwen-plus,common_experience
+B,Rational,LLM,0,anonymized,0,185.7577927,66.20165095,119.5551386,0.001003088,0,1,0,20,0,0,0,0.310562061,C,qwen-plus,common_experience
+C,LLM,Rational,0,identified,0.003957619,185.7567896,66.20165095,119.5551386,0,100,,,,,,,,C,qwen-plus,common_experience
+D,LLM,LLM,1.15,identified,0,185.7567896,66.20165095,119.5551386,0,100,0.1,0,2,0,18,-22.26608468,0.310562061,C,qwen-plus,common_experience
+A (Theory),Rational,Rational,0.7,identified,0.065382301,210.2507797,76.55102814,131.1826504,1.607101119,0,,,,,,,,C,deepseek-v3.2,common_preferences
+B,Rational,LLM,0.7,identified,0,210.2507797,76.55102814,131.1826504,2.517101119,-56.62369276,0.95,0,19,0,1,0,0.017643694,C,deepseek-v3.2,common_preferences
+C,LLM,Rational,0.7,identified,0.065382301,210.2507797,76.55102814,131.1826504,1.607101119,0,,,,,,,,C,deepseek-v3.2,common_preferences
+D,LLM,LLM,1.5,anonymized,0.05,213.677278,63.43330069,149.3608678,0.883109499,45.04953743,0.15,1,2,0,17,-38.41226379,0.030155165,C,deepseek-v3.2,common_preferences

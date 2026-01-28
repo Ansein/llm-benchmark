@@ -1,0 +1,44 @@
+[
+  {
+    "scenario": "C",
+    "model_name": "gpt-5-mini-2025-08-07",
+    "result": {
+      "model": "gpt-5-mini-2025-08-07",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_gpt-5-mini-2025-08-07_20260128_012743_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_gpt-5-mini-2025-08-07_20260128_012743.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_experience_gpt-5-mini-2025-08-07_20260128_032926_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_experience_gpt-5-mini-2025-08-07_20260128_032926.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "qwen-plus",
+    "result": {
+      "model": "qwen-plus",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus_20260128_035323_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus_20260128_035323.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_experience_qwen-plus_20260128_041759_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_experience_qwen-plus_20260128_041759.csv"
+        }
+      ]
+    }
+  }
+]

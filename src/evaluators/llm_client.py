@@ -5,6 +5,9 @@ LLM客户端封装
 
 import json
 import re
+import os
+from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Any, Optional
 from openai import OpenAI
 
@@ -12,7 +15,7 @@ from openai import OpenAI
 class LLMClient:
     """LLM客户端封装类"""
     
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: Dict[str, Any], log_dir: Optional[str] = None):
         """
         初始化LLM客户端
         
@@ -24,11 +27,19 @@ class LLMClient:
                 - api_key: API密钥
                 - client_args: 客户端参数（如 base_url）
                 - generate_args: 生成参数（如 temperature）
+            log_dir: 日志目录路径，如果提供则会保存所有LLM调用的详细日志
         """
         self.config_name = config["config_name"]
         self.model_type = config["model_type"]
         self.model_name = config["model_name"]
         self.generate_args = config.get("generate_args", {})
+        
+        # 日志设置
+        self.log_dir = log_dir
+        self.call_counter = 0  # 调用计数器
+        if self.log_dir:
+            Path(self.log_dir).mkdir(parents=True, exist_ok=True)
+            print(f"📝 LLM调用日志已启用，保存路径: {self.log_dir}")
         
         # 初始化OpenAI客户端
         if self.model_type == "openai_chat":
@@ -57,8 +68,21 @@ class LLMClient:
         Returns:
             生成的文本响应
         """
+        self.call_counter += 1
+        call_id = self.call_counter
+        
         # 合并默认参数和自定义参数
         generate_params = {**self.generate_args, **kwargs}
+        
+        # 记录请求信息（用于日志）
+        request_log = {
+            "call_id": call_id,
+            "timestamp": datetime.now().isoformat(),
+            "model_name": self.model_name,
+            "messages": messages,
+            "response_format": response_format,
+            "generate_params": generate_params
+        }
         
         # 调用API
         try:
@@ -76,15 +100,26 @@ class LLMClient:
                     **generate_params
                 )
             
-            return response.choices[0].message.content
+            response_text = response.choices[0].message.content
+            
+            # 保存日志
+            if self.log_dir:
+                self._save_call_log(request_log, response_text, success=True)
+            
+            return response_text
         
         except Exception as e:
+            # 保存失败日志
+            if self.log_dir:
+                self._save_call_log(request_log, str(e), success=False, error=str(e))
+            
             print(f"❌ LLM调用失败: {e}")
             raise
     
     def generate_json(
         self, 
         messages: List[Dict[str, str]], 
+        force_json_mode: bool = False,
         **kwargs
     ) -> Dict[str, Any]:
         """
@@ -92,17 +127,24 @@ class LLMClient:
         
         Args:
             messages: 消息列表
+            force_json_mode: 是否强制使用 API 的 JSON 模式（可能导致截断，默认 False）
             **kwargs: 额外的生成参数
         
         Returns:
             解析后的JSON字典
         """
-        # 请求JSON格式输出
-        response_text = self.generate(
-            messages=messages,
-            response_format={"type": "json_object"},
-            **kwargs
-        )
+        # 请求JSON格式输出（默认不使用 response_format，因为 Gemini 有 bug）
+        if force_json_mode:
+            response_text = self.generate(
+                messages=messages,
+                response_format={"type": "json_object"},
+                **kwargs
+            )
+        else:
+            response_text = self.generate(
+                messages=messages,
+                **kwargs
+            )
         
         # 清理可能的Markdown代码块标记（针对DeepSeek等模型）
         response_text = self._clean_json_response(response_text)
@@ -196,6 +238,39 @@ class LLMClient:
             return result
         
         return None
+    
+    def _save_call_log(self, request_log: Dict[str, Any], response_text: str, 
+                       success: bool, error: Optional[str] = None):
+        """
+        保存LLM调用日志
+        
+        Args:
+            request_log: 请求信息
+            response_text: 响应文本
+            success: 是否成功
+            error: 错误信息（如果失败）
+        """
+        try:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+            call_id = request_log["call_id"]
+            filename = f"call_{call_id:04d}_{timestamp}.json"
+            filepath = os.path.join(self.log_dir, filename)
+            
+            log_data = {
+                **request_log,
+                "response": {
+                    "success": success,
+                    "text": response_text,
+                    "length": len(response_text) if response_text else 0,
+                    "error": error
+                }
+            }
+            
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(log_data, f, indent=2, ensure_ascii=False)
+                
+        except Exception as e:
+            print(f"⚠️ 保存日志失败: {e}")
 
 
 def load_model_configs(config_path: str = "configs/model_configs.json") -> Dict[str, Dict]:

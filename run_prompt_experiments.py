@@ -2,7 +2,7 @@
 场景B提示词版本实验控制器
 
 功能：
-1. 从 docs/prompts_b.md 中解析不同版本的提示词（b.v0 到 b.v5）
+1. 从 docs/prompts_b.md 中解析不同版本的提示词（b.v0 到 b.v6）
 2. 依次用每个版本运行评估实验
 3. 保存每个版本的实验结果到 evaluation_results/prompt_experiments/
 """
@@ -33,7 +33,10 @@ class PromptVersionParser:
         
         # 所有版本共用的系统提示
         system_prompt = """你是理性经济主体，目标是在不确定他人行为的情况下最大化你的期望效用。
-你必须输出严格JSON格式，不要包含任何额外的文本。"""
+
+【重要】你必须只输出一个有效的JSON对象，不要包含任何额外的文本、解释或markdown标记。
+JSON必须包含 "share" 和 "reason" 两个字段。
+确保 "reason" 字段的字符串正确闭合（以引号结束）。"""
         
         return {
             "b.v0": {
@@ -222,6 +225,89 @@ class PromptVersionParser:
   "share": 0或1（0=不分享，1=分享），
   "reason": "简要说明你的权衡与信念依据（不超过150字）"
 }}"""
+            },
+            
+            "b.v6": {
+                "system": system_prompt,
+                "user_template": """# 场景：数据市场静态博弈（推断外部性）
+
+你是用户 {user_id}，正在参与一个**一次性的数据市场决策**。
+
+## 基本信息
+
+**你的私有信息**：
+- 你的隐私偏好：v[{user_id}] = {v_i:.3f}
+- 平台给你的报价：p[{user_id}] = {price:.4f}
+
+**公共知识**（所有人都知道）：
+- 用户总数：n = {n}
+- 类型相关系数：ρ = {rho:.2f}
+  （你的类型与其他用户的类型相关，相关系数为 {rho:.2f}）
+- 观测噪声：σ² = {sigma_noise_sq}
+- 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
+  （你的 v = {v_i:.3f}，相对位置：{v_description}，属于{v_level}隐私偏好群体）
+
+**你不知道的信息**：
+- 其他用户的具体 v 值（你只知道分布）
+- 其他用户会如何决策（因为是同时决策）
+
+## 推断外部性机制
+
+**关键概念**：即使你不分享数据，平台也能通过其他人的数据推断你的信息。
+
+**泄露信息量 I_i(a)**：
+- 给定分享集合 S，平台对你的推断精度提升量
+- 通过贝叶斯更新计算：I_i(S) = σ_i² - Var(X_i | S)
+- **核心外部性**：I_i 不仅取决于你是否分享，还取决于其他人是否分享
+
+**你的效用函数**：
+- 如果你**分享**：u_i = p_i - v_i × I_i(你分享, 其他人的决策)
+- 如果你**不分享**：u_i = 0 - v_i × I_i(你不分享, 其他人的决策)
+
+**关键洞察**：
+- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息）
+- 分享的真正成本是**边际泄露** = I_i(分享) - I_i(不分享)
+- 补偿价格 p_i 旨在覆盖你的边际隐私损失
+
+## 理性预期决策框架
+
+因为你不知道其他人会如何选择，你需要：
+
+**1. 基于分布推测其他人的行为**：
+- v 值较低的用户更可能分享（隐私成本低）
+- v 值较高的用户更不可能分享（隐私成本高）
+- 你的 v = {v_i:.3f}，处于{v_level}水平
+
+**2. 计算期望效用**：
+- E[u_i | 分享] = E[p_i - v_i × I_i(1, a_{{-i}})]
+- E[u_i | 不分享] = E[- v_i × I_i(0, a_{{-i}})]
+
+**3. 理解次模性**：
+- 分享的人越多，你的边际信息价值越低
+- 基础泄露越高（别人分享多），你分享的边际泄露越小
+
+**4. 做出最佳反应**：
+- 如果 E[u_i | 分享] > E[u_i | 不分享]，则分享
+- 否则不分享
+
+## 你的任务
+
+基于上述机制，在**不知道其他人具体决策**的情况下，通过**理性预期**判断是否分享数据。
+
+**思考要点**：
+1. 你的 v 值在分布中的位置如何？（v = {v_i:.3f}，属于{v_level}群体）
+2. 预期会有多少比例的用户分享？
+3. 在那个预期下，你分享的边际价值是多少？
+4. 报价 p = {price:.4f} 能否覆盖你的边际隐私损失？
+5. 相关性 ρ = {rho:.2f} 如何影响外部性？
+
+## 输出格式
+
+请输出严格JSON：
+{{
+  "share": 0或1（0=不分享，1=分享），
+  "reason": "简要说明你的权衡与信念依据（不超过150字）"
+}}"""
             }
         }
     
@@ -295,10 +381,13 @@ class CustomScenarioBEvaluator(ScenarioBEvaluator):
             # 判断用户v在分布中的相对位置
             if v_i < v_mean - 0.2:
                 v_description = "偏低"
+                v_level = "低"
             elif v_i < v_mean + 0.2:
                 v_description = "中等"
+                v_level = "中"
             else:
                 v_description = "偏高"
+                v_level = "高"
             
             # 填充模板变量
             prompt = self.custom_user_prompt_template.format(
@@ -310,7 +399,8 @@ class CustomScenarioBEvaluator(ScenarioBEvaluator):
                 sigma_noise_sq=sigma_noise_sq,
                 v_min=v_min,
                 v_max=v_max,
-                v_description=v_description
+                v_description=v_description,
+                v_level=v_level
             )
             return prompt
         else:
@@ -391,13 +481,18 @@ class PromptExperimentController:
         print(f"📝 System Prompt 长度: {len(system_prompt)} 字符")
         print(f"📝 User Prompt Template 长度: {len(user_prompt_template)} 字符")
         
+        # 创建日志目录（按版本和时间戳）
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        safe_version_id = version_id.replace(".", "_")
+        log_dir = os.path.join(self.output_dir, "llm_logs", f"{safe_version_id}_{timestamp}")
+        
         # 初始化LLM客户端（使用配置文件中的配置，并覆盖temperature和max_tokens）
         llm_config = self.model_config.copy()
         llm_config["generate_args"] = llm_config.get("generate_args", {}).copy()
         llm_config["generate_args"]["temperature"] = 0.7
         llm_config["generate_args"]["max_tokens"] = 1500  # 增加到1500以避免截断（中文reason字段需要更多tokens）
         
-        llm_client = LLMClient(config=llm_config)
+        llm_client = LLMClient(config=llm_config, log_dir=log_dir)
         
         # 初始化自定义评估器
         evaluator = CustomScenarioBEvaluator(

@@ -1,0 +1,28 @@
+{
+  "call_id": 19,
+  "timestamp": "2026-01-27T13:36:05.169732",
+  "model_name": "gemini-3-flash-preview",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是理性经济主体，目标是在不确定他人行为的情况下最大化你的期望效用。\n你必须输出严格JSON格式，不要包含任何额外的文本。"
+    },
+    {
+      "role": "user",
+      "content": "你是用户 18，正在参与一个数据市场。\n\n**你的个人信息**：\n- 平台给你的报价：p[18] = 0.5212\n- 你的隐私偏好（单位信息的成本）：v[18] = 0.689\n\n**决策框架**：\n- 如果你分享数据，你会得到补偿 p = 0.5212\n- 分享会产生隐私成本 = v × 边际信息泄露量\n- 你需要权衡：补偿收益 vs 隐私成本\n\n请输出严格JSON：\n{\n  \"share\": 0或1（0=不分享，1=分享），\n  \"reason\": \"简要说明你的决策理由（不超过150字）\"\n}"
+    }
+  ],
+  "response_format": {
+    "type": "json_object"
+  },
+  "generate_params": {
+    "temperature": 0.7,
+    "max_tokens": 1500
+  },
+  "response": {
+    "success": true,
+    "text": "{\n  \"share\": 0,\n  \"reason\": \"平台提供的补偿金额（0.5212）低于我的隐私单位成本（0.689）。作为一个理性经济主体，分享数据会导致期望效用为负，因此选择不分享。\"\n}",
+    "length": 100,
+    "error": null
+  }
+}
