@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/敏感度分析方案.md",
+                "file": "docs/场景B敏感度分析方案-3x3网格.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "敏感度分析方案"
+              "title": "场景B敏感度分析方案-3x3网格"
             }
           },
           {
@@ -92,7 +92,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "d45f51e2550d38f0",
@@ -199,24 +200,26 @@
   },
   "active": "0e3a17c1334eaf02",
   "lastOpenFiles": [
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0008_20260128_225511_093710.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0007_20260128_225437_975335.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0006_20260128_225409_589300.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0005_20260128_225338_709827.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0004_20260128_225302_923645.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0003_20260128_225210_591029.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0002_20260128_225145_791011.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954/call_0001_20260128_225104_958805.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v3_20260128_224954",
-    "evaluation_results/prompt_experiments_b/b_v2_gpt-5_20260128_224954.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v2_20260128_223254/call_0029_20260128_224951_984773.json",
+    "evaluation_results/prompt_experiments_b/llm_logs/b_v5_20260128_233113/call_0018_20260128_234452_899265.json",
+    "evaluation_results/prompt_experiments_b/llm_logs/b_v5_20260128_233113/call_0017_20260128_234359_735110.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.9_v0.9-1.2.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.9_v0.6-0.9.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.9_v0.3-0.6.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.6_v0.9-1.2.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.6_v0.6-0.9.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.6_v0.3-0.6.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.3_v0.9-1.2.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.3_v0.6-0.9.json",
+    "data/ground_truth/sensitivity_b/scenario_b_rho0.3_v0.3-0.6.json",
+    "docs/场景B敏感度分析-运行指南.md",
+    "docs/敏感度分析方案.md",
+    "docs/场景B敏感度分析方案-3x3网格.md",
     "evaluation_results/prompt_experiments_b/academic_comparison.png",
     "evaluation_results/prompt_experiments_b/dashboard_comparison.png",
     "evaluation_results/prompt_experiments_b/grouped_bars_comparison.png",
     "evaluation_results/prompt_experiments_b/heatmap_comparison.png",
     "evaluation_results/prompt_experiments_b/prompt_versions_comparison_all_models.png",
     "docs/场景C求解器修改方案.md",
-    "docs/敏感度分析方案.md",
     "CHANGELOG_scenario_c.md",
     "docs/场景C修改-一页纸总结.md",
     "docs/场景C修改完成总结.md",
@@ -241,8 +244,6 @@
     "场景C_理论最优解求解流程总结.md",
     "场景C_中介先动者实现完成报告.md",
     "场景C_代码实现范围与LLM角色分析.md",
-    "docs/design/LLM决策机制说明.md",
-    "docs/design/多智能体并行博弈设计讨论.md",
-    "docs/design/Benchmark有效性分析.md"
+    "docs/design/LLM决策机制说明.md"
   ]
 }

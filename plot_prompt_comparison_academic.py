@@ -61,7 +61,7 @@ version_labels_en = [
     "v2\n+Param\nExplanation",
     "v3\n+Inference\nExternality",
     "v4\n+Submodularity\n& Compensation",
-    "v5\n+Rational\nExpectation"
+    "v5\n+Completed\nFormulas"
 ]
 
 for filepath in summary_files:

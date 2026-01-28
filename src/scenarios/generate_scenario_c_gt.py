@@ -104,8 +104,8 @@ def generate_optimal_gt_common_preferences():
         optimization_method='hybrid',  # 混合方法：网格搜索找起点 + scipy优化
         m_bounds=(0.0, 3.0),
         num_mc_samples=30,  # MC样本数
-        max_iter=10,  # 固定点迭代次数
-        grid_size=11,  # 网格搜索点数
+        max_iter=20,  # 固定点迭代次数
+        grid_size=21,  # 网格搜索点数
         n_jobs=-1,  # 使用所有CPU核心并行加速
         verbose=True,
         seed=42
