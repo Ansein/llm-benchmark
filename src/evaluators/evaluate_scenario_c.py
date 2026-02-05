@@ -167,6 +167,31 @@ from src.evaluators.scenario_c_metrics import (
 )
 
 
+# ========================================================================
+# 辅助函数：带重试的API调用（全局函数，所有函数都可使用）
+# ========================================================================
+def call_llm_with_retry(client, model_name, messages, generate_args, max_attempts=5):
+    """带重试机制的LLM API调用"""
+    import time
+    for attempt in range(max_attempts):
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=messages,
+                **generate_args
+            )
+            return response
+        except Exception as e:
+            if attempt < max_attempts - 1:
+                wait_time = (attempt + 1) * 5  # 5秒、10秒、15秒、20秒
+                print(f"⚠️ API调用失败 (尝试 {attempt+1}/{max_attempts}): {str(e)[:100]}")
+                print(f"   等待 {wait_time} 秒后重试...")
+                time.sleep(wait_time)
+            else:
+                print(f"❌ API调用失败，已重试{max_attempts}次: {str(e)}")
+                raise
+
+
 @dataclass
 class LLMConsumerAgent:
     """LLM消费者代理的抽象接口"""
@@ -396,7 +421,12 @@ class ScenarioCEvaluator:
         delta_u = self.gt_A['optimal_strategy']['delta_u_star']
         
         if verbose:
-            print(f"\n理论最优策略: m*={m_star:.4f}, {anon_star}")
+            # 处理m_star（可能是向量）
+            if isinstance(m_star, (list, np.ndarray)):
+                m_mean = self.gt_A['optimal_strategy'].get('m_star_mean', np.mean(m_star))
+                print(f"\n理论最优策略: m*=向量(均值={m_mean:.4f}), {anon_star}")
+            else:
+                print(f"\n理论最优策略: m*={m_star:.4f}, {anon_star}")
             print(f"理论参与率: r*={r_star:.4f}")
         
         # 2. 获取消费者数据
@@ -408,18 +438,24 @@ class ScenarioCEvaluator:
             print(f"\n正在收集{N}个LLM消费者的决策...")
         
         llm_decisions = []
-        for consumer_params in consumers:
+        for i, consumer_params in enumerate(consumers):
+            # 处理m_star（可能是向量或标量）
+            if isinstance(m_star, (list, np.ndarray)):
+                m_i = m_star[i]  # 使用消费者i的个性化补偿
+            else:
+                m_i = m_star  # 统一补偿
+            
             # 调用LLM代理
             if callable(llm_consumer_agent):
                 decision = llm_consumer_agent(
                     consumer_params=consumer_params,
-                    m=m_star,
+                    m=m_i,
                     anonymization=anon_star
                 )
             else:
                 decision = llm_consumer_agent.decide(
                     consumer_params=consumer_params,
-                    m=m_star,
+                    m=m_i,
                     anonymization=anon_star
                 )
             
@@ -552,7 +588,12 @@ class ScenarioCEvaluator:
         r_star = self.gt_A['optimal_strategy']['r_star']
         
         if verbose:
-            print(f"\n理性中介策略: m*={m_star:.4f}, {anon_star}")
+            # 处理m_star（可能是向量）
+            if isinstance(m_star, (list, np.ndarray)):
+                m_mean = self.gt_A['optimal_strategy'].get('m_star_mean', np.mean(m_star))
+                print(f"\n理性中介策略: m*=向量(均值={m_mean:.4f}), {anon_star}")
+            else:
+                print(f"\n理性中介策略: m*={m_star:.4f}, {anon_star}")
         
         market_params = {
             'N': self.params_base['N'],
@@ -584,10 +625,16 @@ class ScenarioCEvaluator:
             for idx, consumer_params in enumerate(consumers):
                 consumer_params['consumer_id'] = idx
                 
+                # 处理m_star（可能是向量或标量）
+                if isinstance(m_star, (list, np.ndarray)):
+                    m_i = m_star[idx]  # 使用消费者i的个性化补偿
+                else:
+                    m_i = m_star  # 统一补偿
+                
                 # 构建消费者FP提示词
                 consumer_prompt = self.build_consumer_prompt_fp(
                     consumer_params=consumer_params,
-                    m=m_star,
+                    m=m_i,
                     anonymization=anon_star,
                     history=history,
                     consumer_belief_probs=consumer_belief_probs,
@@ -595,12 +642,13 @@ class ScenarioCEvaluator:
                     N=N
                 )
                 
-                # 调用消费者LLM
+                # 调用消费者LLM（使用重试机制）
                 try:
-                    response = llm_client.chat.completions.create(
-                        model=model_name,
+                    response = call_llm_with_retry(
+                        client=llm_client,
+                        model_name=model_name,
                         messages=[{"role": "user", "content": consumer_prompt}],
-                        **generate_args
+                        generate_args=generate_args
                     )
                     answer = response.choices[0].message.content.strip()
                     lines = [ln.strip() for ln in answer.splitlines() if ln.strip()]
@@ -620,7 +668,7 @@ class ScenarioCEvaluator:
                     elif "参与" in answer:
                         decision = True
                     else:
-                        decision = m_star > consumer_params['tau_i']
+                        decision = m_i > consumer_params['tau_i']
                     
                     llm_decisions.append(bool(decision))
                 except Exception as e:
@@ -781,7 +829,12 @@ class ScenarioCEvaluator:
         profit_star = self.gt_A['optimal_strategy']['intermediary_profit_star']
         
         if verbose:
-            print(f"\n理论最优策略: m*={m_star:.4f}, {anon_star}")
+            # 处理m_star（可能是向量）
+            if isinstance(m_star, (list, np.ndarray)):
+                m_mean = self.gt_A['optimal_strategy'].get('m_star_mean', np.mean(m_star))
+                print(f"\n理论最优策略: m*=向量(均值={m_mean:.4f}), {anon_star}")
+            else:
+                print(f"\n理论最优策略: m*={m_star:.4f}, {anon_star}")
             print(f"理论最优利润: {profit_star:.4f}")
         
         # 2. LLM选择策略
@@ -845,8 +898,16 @@ class ScenarioCEvaluator:
         }
         
         # 5. 计算所有指标
-        cost_llm = m_llm * result_llm.num_participants
-        cost_theory = m_star * self.gt_A['optimal_strategy'].get('num_participants_expected', 0)
+        # 处理m_llm（可能是向量）
+        m_llm_for_cost = np.mean(m_llm) if isinstance(m_llm, (list, np.ndarray)) else m_llm
+        cost_llm = m_llm_for_cost * result_llm.num_participants
+        
+        # 使用GT中的intermediary_cost，如果不存在则从m_star计算
+        if 'intermediary_cost' in self.gt_A.get('data_transaction', {}):
+            cost_theory = self.gt_A['data_transaction']['intermediary_cost']
+        else:
+            m_star_for_cost = np.mean(m_star) if isinstance(m_star, (list, np.ndarray)) else m_star
+            cost_theory = m_star_for_cost * self.gt_A['optimal_strategy'].get('num_participants_expected', 0)
         
         metrics = {
             "config": "C_llm_intermediary_rational_consumer",
@@ -1062,8 +1123,16 @@ class ScenarioCEvaluator:
             'intermediary_profit': self.gt_A['equilibrium']['intermediary_profit'],
         }
 
-        cost_llm = m_llm * result_best.num_participants
-        cost_theory = m_star * self.gt_A['optimal_strategy'].get('num_participants_expected', 0)
+        # 处理m_llm（可能是向量）
+        m_llm_for_cost = np.mean(m_llm) if isinstance(m_llm, (list, np.ndarray)) else m_llm
+        cost_llm = m_llm_for_cost * result_best.num_participants
+        
+        # 使用GT中的intermediary_cost，如果不存在则从m_star计算
+        if 'intermediary_cost' in self.gt_A.get('data_transaction', {}):
+            cost_theory = self.gt_A['data_transaction']['intermediary_cost']
+        else:
+            m_star_for_cost = np.mean(m_star) if isinstance(m_star, (list, np.ndarray)) else m_star
+            cost_theory = m_star_for_cost * self.gt_A['optimal_strategy'].get('num_participants_expected', 0)
 
         metrics = {
             "config": "C_llm_intermediary_rational_consumer_iterative",
@@ -1321,7 +1390,7 @@ class ScenarioCEvaluator:
                 "r_llm": float(np.mean(llm_decisions_arr)),
             },
             "vs_theory": {
-                "m_error": abs(m_llm - m_star),
+                "m_error": abs(m_llm - (np.mean(m_star) if isinstance(m_star, (list, np.ndarray)) else m_star)),
                 "anon_match": int(anon_llm == anon_star),
                 "r_error": abs(float(np.mean(llm_decisions_arr)) - self.gt_A['optimal_strategy']['r_star']),
             },
@@ -1415,12 +1484,13 @@ class ScenarioCEvaluator:
                 belief_window=belief_window
             )
             
-            # 调用中介LLM
+            # 调用中介LLM（使用重试机制）
             try:
-                response = llm_client.chat.completions.create(
-                    model=model_name,
+                response = call_llm_with_retry(
+                    client=llm_client,
+                    model_name=model_name,
                     messages=[{"role": "user", "content": intermediary_prompt}],
-                    **generate_args
+                    generate_args=generate_args
                 )
                 answer = response.choices[0].message.content.strip()
                 json_match = re.search(r'\{[^}]+\}', answer)
@@ -1625,17 +1695,23 @@ class ScenarioCEvaluator:
         N = self.params_base['N']
         
         llm_decisions = []
-        for consumer_params in consumers:
+        for i, consumer_params in enumerate(consumers):
+            # 处理m_llm（可能是向量或标量）
+            if isinstance(m_llm, (list, np.ndarray)):
+                m_i = m_llm[i]  # 使用消费者i的个性化补偿
+            else:
+                m_i = m_llm  # 统一补偿
+            
             if callable(llm_consumer_agent):
                 decision = llm_consumer_agent(
                     consumer_params=consumer_params,
-                    m=m_llm,
+                    m=m_i,
                     anonymization=anon_llm
                 )
             else:
                 decision = llm_consumer_agent.decide(
                     consumer_params=consumer_params,
-                    m=m_llm,
+                    m=m_i,
                     anonymization=anon_llm
                 )
             
@@ -2175,12 +2251,13 @@ class ScenarioCEvaluator:
                 belief_window=belief_window
             )
             
-            # 调用中介LLM（使用FP提示词）
+            # 调用中介LLM（使用FP提示词+重试机制）
             try:
-                response = llm_client.chat.completions.create(
-                    model=model_name,
+                response = call_llm_with_retry(
+                    client=llm_client,
+                    model_name=model_name,
                     messages=[{"role": "user", "content": intermediary_prompt}],
-                    **generate_args
+                    generate_args=generate_args
                 )
                 answer = response.choices[0].message.content.strip()
                 json_match = re.search(r'\{[^}]+\}', answer)
@@ -2223,12 +2300,13 @@ class ScenarioCEvaluator:
                     N=N
                 )
                 
-                # 调用消费者LLM（使用FP提示词）
+                # 调用消费者LLM（使用FP提示词+重试机制）
                 try:
-                    response = llm_client.chat.completions.create(
-                        model=model_name,
+                    response = call_llm_with_retry(
+                        client=llm_client,
+                        model_name=model_name,
                         messages=[{"role": "user", "content": consumer_prompt}],
-                        **generate_args
+                        generate_args=generate_args
                     )
                     answer = response.choices[0].message.content.strip()
                     lines = [ln.strip() for ln in answer.splitlines() if ln.strip()]
@@ -2390,37 +2468,45 @@ class ScenarioCEvaluator:
                 rounds = list(range(1, len(profit_traj) + 1))
                 
                 # 主轴：利润
-                ax1.plot(rounds, profit_traj, 'b-o', linewidth=2, markersize=4, label='中介利润')
-                ax1.set_xlabel('轮次', fontsize=12)
-                ax1.set_ylabel('中介利润', color='b', fontsize=12)
+                ax1.plot(rounds, profit_traj, 'b-o', linewidth=2, markersize=4, label='Intermediary Profit')
+                ax1.set_xlabel('Round', fontsize=12, fontfamily='Times New Roman')
+                ax1.set_ylabel('Intermediary Profit', color='b', fontsize=12, fontfamily='Times New Roman')
                 ax1.tick_params(axis='y', labelcolor='b')
                 ax1.grid(True, alpha=0.3)
+                
+                # 设置刻度字体
+                for label in ax1.get_xticklabels() + ax1.get_yticklabels():
+                    label.set_fontfamily('Times New Roman')
                 
                 # 次轴：参与率
                 if participation_traj:
                     ax2 = ax1.twinx()
                     ax2.plot(rounds, participation_traj, 'r-s', linewidth=2, markersize=4, 
-                            alpha=0.7, label='参与率')
-                    ax2.set_ylabel('参与率', color='r', fontsize=12)
+                            alpha=0.7, label='Participation Rate')
+                    ax2.set_ylabel('Participation Rate', color='r', fontsize=12, fontfamily='Times New Roman')
                     ax2.tick_params(axis='y', labelcolor='r')
                     ax2.set_ylim([0, 1])
+                    
+                    # 设置次轴刻度字体
+                    for label in ax2.get_yticklabels():
+                        label.set_fontfamily('Times New Roman')
                 
                 # 标注收敛点
                 if conv_analysis.get("converged"):
                     conv_round = conv_analysis.get("convergence_round")
                     if conv_round and conv_round < len(profit_traj):
                         ax1.axvline(x=conv_round + 1, color='g', linestyle='--', 
-                                   alpha=0.5, label=f'收敛点(第{conv_round + 1}轮)')
+                                   alpha=0.5, label=f'Convergence (Round {conv_round + 1})')
                 
                 # 图例
                 lines1, labels1 = ax1.get_legend_handles_labels()
                 if participation_traj:
                     lines2, labels2 = ax2.get_legend_handles_labels()
-                    ax1.legend(lines1 + lines2, labels1 + labels2, loc='best')
+                    legend = ax1.legend(lines1 + lines2, labels1 + labels2, loc='best', prop={'family': 'Times New Roman'})
                 else:
-                    ax1.legend(loc='best')
+                    legend = ax1.legend(loc='best', prop={'family': 'Times New Roman'})
                 
-                ax1.set_title('虚拟博弈：利润与参与率演化', fontsize=14, fontweight='bold')
+                ax1.set_title('Fictitious Play: Profit and Participation Rate Evolution', fontsize=14, fontweight='bold', fontfamily='Times New Roman')
                 
                 plt.tight_layout()
                 fig1_path = output_dir / f"{base_name}_profit_rate.png"
@@ -2440,15 +2526,19 @@ class ScenarioCEvaluator:
                 
                 # m的演化
                 ax_m.plot(rounds, m_traj, 'b-o', linewidth=2, markersize=3)
-                ax_m.set_xlabel('轮次', fontsize=12)
-                ax_m.set_ylabel('补偿金额 m', fontsize=12)
+                ax_m.set_xlabel('Round', fontsize=12, fontfamily='Times New Roman')
+                ax_m.set_ylabel('Compensation Amount m', fontsize=12, fontfamily='Times New Roman')
                 ax_m.grid(True, alpha=0.3)
-                ax_m.set_title('补偿金额演化', fontsize=12, fontweight='bold')
+                ax_m.set_title('Compensation Amount Evolution', fontsize=12, fontweight='bold', fontfamily='Times New Roman')
+                
+                # 设置刻度字体
+                for label in ax_m.get_xticklabels() + ax_m.get_yticklabels():
+                    label.set_fontfamily('Times New Roman')
                 
                 # 标注理论最优
                 m_star = results['ground_truth']['m_star']
-                ax_m.axhline(y=m_star, color='r', linestyle='--', alpha=0.5, label=f'理论最优 m={m_star:.3f}')
-                ax_m.legend()
+                ax_m.axhline(y=m_star, color='r', linestyle='--', alpha=0.5, label=f'Theoretical Optimal m={m_star:.3f}')
+                legend = ax_m.legend(prop={'family': 'Times New Roman'})
                 
                 # anonymization策略演化（用颜色块表示）
                 anon_values = [1 if a == 'identified' else 0 for a in anon_traj]
@@ -2458,12 +2548,16 @@ class ScenarioCEvaluator:
                 cmap = ListedColormap(['#90EE90', '#FF6B6B'])
                 im = ax_anon.imshow(anon_matrix, cmap=cmap, 
                                    aspect='auto', interpolation='none')
-                ax_anon.set_xlabel('轮次', fontsize=12)
-                ax_anon.set_ylabel('匿名化策略', fontsize=12)
+                ax_anon.set_xlabel('Round', fontsize=12, fontfamily='Times New Roman')
+                ax_anon.set_ylabel('Anonymization Strategy', fontsize=12, fontfamily='Times New Roman')
                 ax_anon.set_yticks([0])
-                ax_anon.set_yticklabels(['策略'])
-                ax_anon.set_title('匿名化策略演化 (绿=anonymized, 红=identified)', 
-                                 fontsize=12, fontweight='bold')
+                ax_anon.set_yticklabels(['Strategy'], fontfamily='Times New Roman')
+                ax_anon.set_title('Anonymization Strategy Evolution (Green=Anonymized, Red=Identified)', 
+                                 fontsize=12, fontweight='bold', fontfamily='Times New Roman')
+                
+                # 设置刻度字体
+                for label in ax_anon.get_xticklabels() + ax_anon.get_yticklabels():
+                    label.set_fontfamily('Times New Roman')
                 
                 plt.tight_layout()
                 fig2_path = output_dir / f"{base_name}_strategy_evolution.png"
@@ -2671,9 +2765,14 @@ def run_scenario_c_evaluation(
     model_name = selected_model_config['config_name']
     print(f"\n🎯 选择模型: {model_name}")
     
-    # 创建OpenAI客户端
+    # 创建OpenAI客户端（添加超时和重试配置）
+    from openai import OpenAI
+    import httpx
+    
     client = OpenAI(
         api_key=selected_model_config['api_key'],
+        timeout=httpx.Timeout(120.0, connect=30.0),  # 总超时120秒，连接超时30秒
+        max_retries=3,  # 最多重试3次
         **selected_model_config.get('client_args', {})
     )
     
@@ -2733,10 +2832,11 @@ def run_scenario_c_evaluation(
 第1行：你的决策理由（50-100字）
 第2行：决策：参与 或 决策：拒绝
 """
-            response = client.chat.completions.create(
-                model=model_name,
+            response = call_llm_with_retry(
+                client=client,
+                model_name=model_name,
                 messages=[{"role": "user", "content": prompt}],
-                **generate_args
+                generate_args=generate_args
             )
             answer = response.choices[0].message.content.strip()
             lines = [ln.strip() for ln in answer.splitlines() if ln.strip()]
@@ -2875,10 +2975,11 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
 上一轮 m = {m_prev:.2f}，本轮 m = max(m_prev + Δm, 0)（最小值为0，无最大值限制）。
 请给出你的选择。
 """
-            response = client.chat.completions.create(
-                model=model_name,
+            response = call_llm_with_retry(
+                client=client,
+                model_name=model_name,
                 messages=[{"role": "user", "content": prompt}],
-                **generate_args
+                generate_args=generate_args
             )
             answer = response.choices[0].message.content.strip()
             raw_answer = answer
@@ -2903,11 +3004,12 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
     print("✅ LLM代理创建成功")
     
     # ========================================================================
-    # 1. 初始化评估器（共同偏好 + 共同经历）
+    # 1. 初始化评估器（只评估共同偏好，跳过共同经历以节省时间）
     # ========================================================================
     gt_jobs = [
         ("common_preferences", "data/ground_truth/scenario_c_common_preferences_optimal.json"),
-        ("common_experience", "data/ground_truth/scenario_c_common_experience_optimal.json"),
+        # 注释掉common_experience以节省时间（如需要可以取消注释）
+        # ("common_experience", "data/ground_truth/scenario_c_common_experience_optimal.json"),
     ]
     
     summary = {
@@ -2925,7 +3027,16 @@ m0 ≈ max(0, 期望[商家利润(有数据) − 商家利润(无数据)])
             evaluator = ScenarioCEvaluator(gt_path)
             print(f"✅ 成功加载: {gt_path}")
             print(f"\n理论基准（配置A）:")
-            print(f"  m* = {evaluator.gt_A['optimal_strategy']['m_star']:.4f}")
+            
+            # 处理m_star（可能是标量或向量）
+            m_star = evaluator.gt_A['optimal_strategy']['m_star']
+            if isinstance(m_star, (list, np.ndarray)):
+                m_mean = evaluator.gt_A['optimal_strategy'].get('m_star_mean', np.mean(m_star))
+                m_std = evaluator.gt_A['optimal_strategy'].get('m_star_std', np.std(m_star))
+                print(f"  m* = 向量 (均值={m_mean:.4f}, std={m_std:.4f})")
+            else:
+                print(f"  m* = {m_star:.4f}")
+            
             print(f"  anonymization* = {evaluator.gt_A['optimal_strategy']['anonymization_star']}")
             print(f"  r* = {evaluator.gt_A['optimal_strategy']['r_star']:.4f}")
             print(f"  中介利润* = {evaluator.gt_A['optimal_strategy']['intermediary_profit_star']:.4f}")

@@ -1,0 +1,71 @@
+[
+  {
+    "scenario": "C",
+    "model_name": "qwen-plus-2025-12-01",
+    "result": {
+      "model": "qwen-plus-2025-12-01",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus-2025-12-01_20260205_185818_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus-2025-12-01_20260205_185818.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "qwen-plus",
+    "result": {
+      "model": "qwen-plus",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus_20260205_192639_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus_20260205_192639.csv"
+        },
+        {
+          "gt_tag": "common_experience",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_experience_qwen-plus_20260128_041759_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_experience_qwen-plus_20260128_041759.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "qwen3-max-2026-01-23",
+    "result": {
+      "model": "qwen3-max-2026-01-23",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen3-max-2026-01-23_20260205_195725_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen3-max-2026-01-23_20260205_195725.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "qwen3-max",
+    "result": {
+      "model": "qwen3-max",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen3-max_20260205_205347_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen3-max_20260205_205347.csv"
+        }
+      ]
+    }
+  }
+]

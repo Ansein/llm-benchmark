@@ -1,0 +1,50 @@
+[
+  {
+    "scenario": "C",
+    "model_name": "deepseek-v3.2",
+    "result": {
+      "model": "deepseek-v3.2",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3.2_20260204_021630_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3.2_20260204_021630.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "deepseek-v3.1",
+    "result": {
+      "model": "deepseek-v3.1",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3.1_20260204_024458_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3.1_20260204_024458.csv"
+        }
+      ]
+    }
+  },
+  {
+    "scenario": "C",
+    "model_name": "deepseek-v3-0324",
+    "result": {
+      "model": "deepseek-v3-0324",
+      "rounds": 20,
+      "status": "completed",
+      "scenario_c_reports": [
+        {
+          "gt_tag": "common_preferences",
+          "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3-0324_20260204_030433_detailed.json",
+          "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3-0324_20260204_030433.csv"
+        }
+      ]
+    }
+  }
+]

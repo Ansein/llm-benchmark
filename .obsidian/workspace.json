@@ -4,35 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "055d957511958652",
+        "id": "cb36f8e8497a24c6",
         "type": "tabs",
         "children": [
           {
-            "id": "0e3a17c1334eaf02",
+            "id": "e9d60cf89533c0d9",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/场景B敏感度分析方案-3x3网格.md",
-                "mode": "preview",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "场景B敏感度分析方案-3x3网格"
-            }
-          },
-          {
-            "id": "9b858ebebc4a1296",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "docs/design/场景.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "场景"
+              "title": "新标签页"
             }
           }
         ]
@@ -92,8 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "d45f51e2550d38f0",
@@ -198,27 +179,36 @@
       "bases:新建数据库": false
     }
   },
-  "active": "0e3a17c1334eaf02",
+  "active": "e9d60cf89533c0d9",
   "lastOpenFiles": [
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v5_20260128_233113/call_0018_20260128_234452_899265.json",
-    "evaluation_results/prompt_experiments_b/llm_logs/b_v5_20260128_233113/call_0017_20260128_234359_735110.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.9_v0.9-1.2.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.9_v0.6-0.9.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.9_v0.3-0.6.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.6_v0.9-1.2.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.6_v0.6-0.9.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.6_v0.3-0.6.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.3_v0.9-1.2.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.3_v0.6-0.9.json",
-    "data/ground_truth/sensitivity_b/scenario_b_rho0.3_v0.3-0.6.json",
+    "docs/场景B敏感度分析方案-3x3网格.md",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_best_by_region.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_stability_comparison.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_parameter_impact.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_radar_profiles.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_improvement_matrix.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_evolution_trends.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_overall_performance.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_evolution_heatmaps.png",
+    "sensitivity_results/scenario_b/gpt_family_comparison_plots",
+    "compare_gpt_models_sensitivity.py",
+    "sensitivity_results/scenario_b/summary_all_results_gpt-5_gpt-5.1_gpt-5.1-2025-11-13.json",
+    "sensitivity_results/scenario_b/summary_all_results_gpt-5_gpt-5.1_gpt-5.1-20251113.json",
+    "sensitivity_results/scenario_b/summary_all_results.json",
+    "docs/design/场景.md",
+    "docs/场景C个性化补偿修复说明.md",
+    "src/scenarios/__pycache__/scenario_c_social_data_optimization.cpython-313.pyc.1746470031632",
+    "src/scenarios/__pycache__/scenario_c_social_data.cpython-313.pyc.1746449181744",
+    "src/scenarios/__pycache__/generate_scenario_c_gt.cpython-313.pyc.1746407898416",
+    "src/scenarios/__pycache__/scenario_c_social_data_optimization.cpython-313.pyc.2504156320016",
+    "src/scenarios/__pycache__/scenario_c_social_data.cpython-313.pyc.2504119397424",
+    "sensitivity_results/scenario_b/model_comparison_plots/model_win_matrix.png",
+    "sensitivity_results/scenario_b/model_comparison_plots/model_stability_comparison.png",
+    "docs/场景C运行指南.md",
+    "docs/场景C中介提示词优化-完整实现.md",
+    "docs/场景C消费者理由关键词提取方案.md",
     "docs/场景B敏感度分析-运行指南.md",
     "docs/敏感度分析方案.md",
-    "docs/场景B敏感度分析方案-3x3网格.md",
-    "evaluation_results/prompt_experiments_b/academic_comparison.png",
-    "evaluation_results/prompt_experiments_b/dashboard_comparison.png",
-    "evaluation_results/prompt_experiments_b/grouped_bars_comparison.png",
-    "evaluation_results/prompt_experiments_b/heatmap_comparison.png",
-    "evaluation_results/prompt_experiments_b/prompt_versions_comparison_all_models.png",
     "docs/场景C求解器修改方案.md",
     "CHANGELOG_scenario_c.md",
     "docs/场景C修改-一页纸总结.md",
@@ -227,23 +217,14 @@
     "docs/场景C求解器修改方案-v2.md",
     "docs/场景C修正说明.md",
     "项目工作流-故事线.md",
-    "docs/design/场景.md",
     "项目完整工作流.md",
     "场景A论文对照分析.md",
     "场景C_Ground_Truth输出结构解析.md",
     "场景C_m0升级完成总结.md",
     "场景C_m0计算方法升级报告.md",
     "场景C_m0处理机制详解.md",
-    "analysis_results/scenario_c_result_convergence.png",
-    "analysis_results/compensation_sweep.png",
-    "analysis_results/welfare_decomposition.png",
-    "analysis_results/comparison_matrix.png",
     "场景C_中介先动者问题分析.md",
     "场景C_论文中的价格体系梳理.md",
-    "场景C_m0计算方法说明.md",
-    "场景C_理论最优解求解流程总结.md",
-    "场景C_中介先动者实现完成报告.md",
-    "场景C_代码实现范围与LLM角色分析.md",
-    "docs/design/LLM决策机制说明.md"
+    "场景C_m0计算方法说明.md"
   ]
 }

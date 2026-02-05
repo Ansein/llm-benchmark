@@ -1,0 +1,454 @@
+{
+  "model": "gpt-5.2",
+  "timestamp": "20260201_181503",
+  "gt_tag": "common_preferences",
+  "config_B": {
+    "config": "B_rational_intermediary_llm_consumer",
+    "participation": {
+      "r_llm": 0.0,
+      "r_theory": 0.03424390602811047,
+      "r_absolute_error": 0.03424390602811047,
+      "r_relative_error": 1.0,
+      "individual_accuracy": 0.95,
+      "true_positive_rate": 0.0,
+      "true_negative_rate": 1.0,
+      "false_positive_rate": 0.0,
+      "false_negative_rate": 1.0,
+      "confusion_matrix": {
+        "TP": 0.0,
+        "TN": 19.0,
+        "FP": 0.0,
+        "FN": 1.0
+      }
+    },
+    "consumer": {
+      "individual_accuracy": 0.95,
+      "decision_confusion_matrix": {
+        "TP": 0.0,
+        "TN": 19.0,
+        "FP": 0.0,
+        "FN": 1.0
+      },
+      "consumer_surplus_gap": 0.0,
+      "gini_consumer_surplus": 0.017643694111231012
+    },
+    "market": {
+      "social_welfare_llm": 209.4440290893279,
+      "social_welfare_theory": 209.4440290893279,
+      "social_welfare_diff": 0.0,
+      "consumer_surplus_llm": 76.55102813585835,
+      "consumer_surplus_theory": 76.55102813585835,
+      "consumer_surplus_diff": 0.0,
+      "producer_profit_llm": 131.18265041936823,
+      "producer_profit_theory": 131.18265041936823,
+      "producer_profit_diff": 0.0,
+      "intermediary_profit_llm": 1.7103505341013419,
+      "intermediary_profit_theory": 1.3113505341013418,
+      "intermediary_profit_diff": 0.399,
+      "social_welfare_ratio": 1.0,
+      "consumer_surplus_ratio": 1.0,
+      "producer_profit_ratio": 1.0,
+      "intermediary_profit_ratio": 1.3042664715681316,
+      "welfare_loss": 0.0,
+      "welfare_loss_percent": 0.0
+    },
+    "inequality": {
+      "gini_llm": 0.017643694111231012,
+      "gini_theory": 0.017643694111231012,
+      "gini_diff": 0.0,
+      "price_variance_llm": 0.0,
+      "price_variance_theory": 0.0,
+      "price_variance_diff": 0.0,
+      "price_discrimination_index_llm": 0.0,
+      "price_discrimination_index_theory": 0.0,
+      "pdi_diff": 0.0
+    }
+  },
+  "config_C": {
+    "config": "C_llm_intermediary_rational_consumer_iterative",
+    "strategy": {
+      "m_llm": 0.7,
+      "m_llm_std": 0.0,
+      "m_theory": 0.5999999999999999,
+      "m_theory_std": 1.1102230246251565e-16,
+      "m_absolute_error": 0.10000000000000009,
+      "m_relative_error": 0.16666666666666685,
+      "anon_llm": "anonymized",
+      "anon_theory": "identified",
+      "anon_match": 0,
+      "strategy_match": 0
+    },
+    "profit": {
+      "profit_llm": 1.1721564353464062,
+      "profit_theory": 1.7158879538828122,
+      "profit_diff": -0.543731518536406,
+      "profit_ratio": 0.6831194500165245,
+      "profit_loss": 0.543731518536406,
+      "profit_loss_percent": 31.688054998347553,
+      "cost_llm": 0.0,
+      "cost_theory": 0.3989999999999999,
+      "cost_efficiency": 0.0
+    },
+    "market": {
+      "social_welfare_llm": 209.77733499057302,
+      "social_welfare_theory": 209.4440290893279,
+      "social_welfare_diff": 0.3333059012451258,
+      "consumer_surplus_llm": 76.55102813585837,
+      "consumer_surplus_theory": 76.55102813585835,
+      "consumer_surplus_diff": 2.842170943040401e-14,
+      "producer_profit_llm": 131.18265041936823,
+      "producer_profit_theory": 131.18265041936823,
+      "producer_profit_diff": 0.0,
+      "intermediary_profit_llm": 1.1721564353464062,
+      "intermediary_profit_theory": 1.3113505341013418,
+      "intermediary_profit_diff": -0.1391940987549356,
+      "social_welfare_ratio": 1.0015913841167703,
+      "consumer_surplus_ratio": 1.0000000000000004,
+      "producer_profit_ratio": 1.0,
+      "intermediary_profit_ratio": 0.8938543927537085,
+      "welfare_loss": 0.0,
+      "welfare_loss_percent": -0.15913841167702653
+    },
+    "participation_given_llm_strategy": {
+      "r_given_llm": 0.06538230128851415,
+      "r_optimal": 0.03424390602811047,
+      "r_ratio": 1.9093120170007034
+    },
+    "learning_history": [
+      {
+        "round": 1,
+        "m": 0.7,
+        "anonymization": "anonymized",
+        "intermediary_reason": "在缺乏历史最优策略信息下，优先保参与率以做大m0。匿名化可显著降低参与门槛；同时下调补偿减少支出。N=20且τ均值1，m从1降至0.7仍较可能覆盖多数τ，利润更优。",
+        "intermediary_raw": "{\"delta_m\":-0.3,\"anonymization\":\"anonymized\",\"reason\":\"在缺乏历史最优策略信息下，优先保参与率以做大m0。匿名化可显著降低参与门槛；同时下调补偿减少支出。N=20且τ均值1，m从1降至0.7仍较可能覆盖多数τ，利润更优。\"}",
+        "participation_rate": 0.06538230128851415,
+        "num_participants": 1,
+        "m0": 2.0436564353464064,
+        "intermediary_cost": 0.8715,
+        "intermediary_profit": 1.1721564353464062,
+        "reasons": {
+          "participants": [
+            "（理性）参与：τ=0.22 <= ΔU=0.55"
+          ],
+          "rejecters": [
+            "（理性）拒绝：τ=1.60 > ΔU=0.55",
+            "（理性）拒绝：τ=0.68 > ΔU=0.55",
+            "（理性）拒绝：τ=1.36 > ΔU=0.55",
+            "（理性）拒绝：τ=0.81 > ΔU=0.55",
+            "（理性）拒绝：τ=1.26 > ΔU=0.55",
+            "（理性）拒绝：τ=1.24 > ΔU=0.55",
+            "（理性）拒绝：τ=1.29 > ΔU=0.55",
+            "（理性）拒绝：τ=1.02 > ΔU=0.55",
+            "（理性）拒绝：τ=0.94 > ΔU=0.55",
+            "（理性）拒绝：τ=1.85 > ΔU=0.55",
+            "（理性）拒绝：τ=0.94 > ΔU=0.55",
+            "（理性）拒绝：τ=0.87 > ΔU=0.55",
+            "（理性）拒绝：τ=0.60 > ΔU=0.55",
+            "（理性）拒绝：τ=1.12 > ΔU=0.55",
+            "（理性）拒绝：τ=1.27 > ΔU=0.55",
+            "（理性）拒绝：τ=0.77 > ΔU=0.55",
+            "（理性）拒绝：τ=0.92 > ΔU=0.55",
+            "（理性）拒绝：τ=0.63 > ΔU=0.55",
+            "（理性）拒绝：τ=0.61 > ΔU=0.55"
+          ]
+        },
+        "converged": true
+      },
+      {
+        "round": 2,
+        "m": 0.6,
+        "anonymization": "anonymized",
+        "intermediary_reason": "参与阈值ΔU=0.55下仅1人参与，说明τ均值偏高且补偿边际拉新弱；先小幅降m压低成本，保持匿名化以维持参与意愿，同时观察m0对参与变化的敏感度。",
+        "intermediary_raw": "{\"delta_m\":-0.1,\"anonymization\":\"anonymized\",\"reason\":\"参与阈值ΔU=0.55下仅1人参与，说明τ均值偏高且补偿边际拉新弱；先小幅降m压低成本，保持匿名化以维持参与意愿，同时观察m0对参与变化的敏感度。\"}",
+        "participation_rate": 0.03424390602811037,
+        "num_participants": 1,
+        "m0": 1.2203896737386544,
+        "intermediary_cost": 0.402,
+        "intermediary_profit": 0.8183896737386543,
+        "reasons": {
+          "participants": [
+            "（理性）参与：τ=0.22 <= ΔU=0.45"
+          ],
+          "rejecters": [
+            "（理性）拒绝：τ=1.60 > ΔU=0.45",
+            "（理性）拒绝：τ=0.68 > ΔU=0.45",
+            "（理性）拒绝：τ=1.36 > ΔU=0.45",
+            "（理性）拒绝：τ=0.81 > ΔU=0.45",
+            "（理性）拒绝：τ=1.26 > ΔU=0.45",
+            "（理性）拒绝：τ=1.24 > ΔU=0.45",
+            "（理性）拒绝：τ=1.29 > ΔU=0.45",
+            "（理性）拒绝：τ=1.02 > ΔU=0.45",
+            "（理性）拒绝：τ=0.94 > ΔU=0.45",
+            "（理性）拒绝：τ=1.85 > ΔU=0.45",
+            "（理性）拒绝：τ=0.94 > ΔU=0.45",
+            "（理性）拒绝：τ=0.87 > ΔU=0.45",
+            "（理性）拒绝：τ=0.60 > ΔU=0.45",
+            "（理性）拒绝：τ=1.12 > ΔU=0.45",
+            "（理性）拒绝：τ=1.27 > ΔU=0.45",
+            "（理性）拒绝：τ=0.77 > ΔU=0.45",
+            "（理性）拒绝：τ=0.92 > ΔU=0.45",
+            "（理性）拒绝：τ=0.63 > ΔU=0.45",
+            "（理性）拒绝：τ=0.61 > ΔU=0.45"
+          ]
+        },
+        "converged": true
+      }
+    ]
+  },
+  "config_D": {
+    "config": "D_llm_intermediary_llm_consumer_iterative",
+    "strategy": {
+      "m_llm": 0.7,
+      "anon_llm": "anonymized",
+      "r_llm": 0.1
+    },
+    "vs_theory": {
+      "m_error": 0.10000000000000009,
+      "anon_match": 0,
+      "r_error": 0.06575609397188953
+    },
+    "consumer": {
+      "individual_accuracy": 0.85,
+      "decision_confusion_matrix": {
+        "TP": 0.0,
+        "TN": 17.0,
+        "FP": 2.0,
+        "FN": 1.0
+      },
+      "consumer_surplus_gap": -5.048549481906321,
+      "gini_consumer_surplus": 0.021191290734557944
+    },
+    "market": {
+      "social_welfare_llm": 213.1559713947654,
+      "social_welfare_theory": 209.4440290893279,
+      "social_welfare_diff": 3.7119423054375034,
+      "consumer_surplus_llm": 71.50247865395205,
+      "consumer_surplus_theory": 76.55102813585835,
+      "consumer_surplus_diff": -5.048549481906292,
+      "producer_profit_llm": 139.45034181638982,
+      "producer_profit_theory": 131.18265041936823,
+      "producer_profit_diff": 8.267691397021594,
+      "intermediary_profit_llm": 2.2031509244235323,
+      "intermediary_profit_theory": 1.3113505341013418,
+      "intermediary_profit_diff": 0.8918003903221905,
+      "social_welfare_ratio": 1.0177228366049735,
+      "consumer_surplus_ratio": 0.934049880127718,
+      "producer_profit_ratio": 1.0630242747085168,
+      "intermediary_profit_ratio": 1.6800625516451513,
+      "welfare_loss": 0.0,
+      "welfare_loss_percent": -1.7722836604973635
+    },
+    "interaction": {
+      "vs_theory": {
+        "social_welfare_ratio": 1.0177228366049735,
+        "welfare_loss": 0.0,
+        "welfare_loss_percent": -1.7722836604973635,
+        "cs_ratio": 0.934049880127718,
+        "ip_ratio": 1.6800625516451513
+      },
+      "exploitation_indicator": 1.7986861166508867
+    },
+    "learning_history": [
+      {
+        "round": 1,
+        "m": 0.7,
+        "anonymization": "anonymized",
+        "intermediary_reason": "将补偿从1.00降至0.70以显著压低支出；在τ均值约1且波动不大时，匿名化仍可维持较高参与率，减少identified带来的退出风险，用人数优势支撑m0并提升净利润。",
+        "intermediary_raw": "{\"delta_m\":-0.3,\"anonymization\":\"anonymized\",\"reason\":\"将补偿从1.00降至0.70以显著压低支出；在τ均值约1且波动不大时，匿名化仍可维持较高参与率，减少identified带来的退出风险，用人数优势支撑m0并提升净利润。\"}",
+        "participation_rate": 0.1,
+        "num_participants": 2,
+        "m0": 3.258449074731021,
+        "intermediary_cost": 1.4,
+        "intermediary_profit": 1.8584490747310212,
+        "reasons": {
+          "participants": [
+            "参与：补偿0.70高于隐私成本0.22，净补偿为正；且在共同偏好结构下，你的信号较高但并非唯一决定因素。若为identified确有被更强定价风险，但总体看补偿仍足以覆盖隐私损失。",
+            "参与：补偿0.70高于隐私成本0.60，净直接收益为正；且共同偏好下你的信号虽偏高但个体噪声存在，商家从单个数据获益有限。若为identified仍有被更精准定价风险，但总体看收益略占优。"
+          ],
+          "rejecters": [
+            "拒绝：补偿仅0.70但参与即承担1.60隐私成本，净效用先为负。且θ_i=5.30偏好高，identified下更易被个性化提价压缩剩余；即便anonymized风险较小，也难抵消成本。",
+            "拒绝：补偿0.70高于隐私成本0.68，净补偿仅0.02；且你θ_i=5.30偏高，若为identified更易被识别并遭个性化定价，潜在损失可能超过0.02。匿名情形风险较小但不确定，整体不值得冒险。",
+            "拒绝：补偿0.70不足以覆盖隐私成本1.36的确定损失；且你偏好强度较高，若数据被identified更易被商家识别并个性化提价，预期市场结果对你不利，净效用偏负。",
+            "拒绝：补偿0.70不足以覆盖隐私成本0.81，净效用先天为负；且你偏好强度较高，若为identified更易被商家识别并实施不利的个性化定价，额外风险使参与更不划算。",
+            "拒绝：补偿0.70低于隐私成本1.26，单看净效用已为负。且你偏好强θ_i=5.30、信号5.43偏高，identified下更易被识别并遭更高个性化定价；即便anonymized也难弥补亏损。",
+            "拒绝：补偿0.70不足以覆盖隐私成本1.24，净值为负；且你偏好强度较高(5.30)，若数据被identified更易触发不利的个性化定价，进一步降低净效用；即便anonymized也难扭转。",
+            "拒绝：补偿0.70不足以覆盖隐私成本1.29，净值为负；且你偏好强度较高(θ_i=5.30)，若被identified更易遭个性化提价，额外损失风险上升。即便anonymized风险较小，仍难弥补隐私成本。",
+            "拒绝：补偿0.70不足以覆盖隐私成本1.02，净效用先为负；且你偏好强度较高(5.30)，identified下更易被识别并遭个性化高价，预期市场结果更不利，即使anonymized风险小也难扭转。",
+            "拒绝：补偿0.70不足以覆盖隐私成本0.94，净效用先为负。且你偏好θ_i=5.30较高，identified下更易被个性化定价“榨取”剩余；即使anonymized风险较小，也难扭转亏损。",
+            "拒绝：补偿m=0.70不足以覆盖隐私成本τ=1.85，净效用先为负。且θ_i=5.30偏高，若identified更易被个性化定价压榨，进一步降低收益；anonymized虽风险小但仍不抵成本。",
+            "拒绝：补偿0.70不足以覆盖隐私成本0.94，净效用先为负。且你偏好θ_i=5.30较高，若数据被identified更易遭个性化定价而受损；即便anonymized，补偿不变仍难抵成本与潜在不利市场影响。",
+            "拒绝：补偿0.70低于隐私成本0.87，净效用先为负；且你偏好θ_i=5.30较高，identified下更易被识别并遭个性化提价，进一步降低收益；即便anonymized风险小，也难抵消成本。",
+            "拒绝：补偿0.70低于隐私成本1.12，单看已为负；且你偏好θ_i=5.30较高，若identified更易被识别并被个性化抬价，净效用进一步下降；anonymized虽风险小但仍难抵消成本。",
+            "拒绝：补偿0.70低于你的隐私成本1.27，单看就净亏0.57；且你θ_i=5.30偏高，在identified下更易被识别并遭更不利的个性化定价，潜在损失可能进一步扩大。综合期望净效用为负。",
+            "拒绝：补偿0.70不足以覆盖隐私成本0.77，净值已为负；且你偏好强度较高，若为identified更易被个性化定价榨取剩余，市场结果可能更不利。即使anonymized风险较小，仍难弥补成本。",
+            "拒绝：补偿0.70不足以覆盖隐私成本0.92，净效用先天为负；且你偏好强度较高，若数据被identified更易遭个性化定价压榨，额外不利风险进一步降低参与价值。",
+            "拒绝：补偿0.70扣除隐私成本0.63后净得仅0.07。你偏好强且信号高，在common_preferences下identified更易被识别为高愿付者而遭更高定价，预期损失可能超过0.07；除非明确为anonymized，否则不值。",
+            "拒绝：补偿0.70需先扣除隐私成本0.61，净得仅0.09；你偏好强度较高，若为identified更易被识别并遭个性化抬价，预期损失可能超过0.09。匿名风险较小但不确定，整体不划算。"
+          ]
+        }
+      },
+      {
+        "round": 2,
+        "m": 0.8999999999999999,
+        "anonymization": "anonymized",
+        "intermediary_reason": "上轮m=0.70仅吸引低τ少数人，参与率偏低但m0仍可观；提高至0.90可覆盖更多中位隐私成本，预计显著抬升参与人数并提升m0，匿名化保持较高参与意愿，综合利润更可能上升。",
+        "intermediary_raw": "{\"delta_m\":0.2,\"anonymization\":\"anonymized\",\"reason\":\"上轮m=0.70仅吸引低τ少数人，参与率偏低但m0仍可观；提高至0.90可覆盖更多中位隐私成本，预计显著抬升参与人数并提升m0，匿名化保持较高参与意愿，综合利润更可能上升。\"}",
+        "participation_rate": 0.1,
+        "num_participants": 2,
+        "m0": 3.1000436792458483,
+        "intermediary_cost": 1.7999999999999998,
+        "intermediary_profit": 1.3000436792458485,
+        "reasons": {
+          "participants": [
+            "参与：补偿0.90显著高于隐私成本0.22，净得益约0.68；且共同偏好下我的高偏好并非独特信息，identified带来的额外个性化定价劣势相对有限，整体期望净效用为正。",
+            "参与：补偿0.90高于隐私成本0.63，净补偿为正；且在共同偏好下你的信号接近真实偏好，分享数据对市场结果的额外损失有限。若为identified存在高偏好被定价不利风险，但总体仍偏向参与。"
+          ],
+          "rejecters": [
+            "拒绝：补偿0.90不足以覆盖隐私成本1.60，净效用先为-0.70；且θ_i较高，identified下更易被个性化定价压榨，common偏好下数据更有用，额外风险偏大。",
+            "拒绝：补偿0.90高于隐私成本0.68，净补偿为正；且共同偏好下你的信号偏高意味着你更可能是高偏好者，identified下被个性化抬价风险更大，可能抵消净补偿，故不值得参与。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.36已为净负；且你偏好强度高(5.30)，在identified下更易被识别并遭个性化提价，预期市场损失更大，匿名化虽缓解但仍难扭转。",
+            "拒绝：补偿0.90虽可抵消隐私成本0.81并略有净收益，但你偏好强度较高(5.30)，identified下被识别后更易遭个性化抬价，潜在损失可能超过0.09；在common_preferences下你信号也偏高，风险更大。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.26，单看净效用已为负；且你偏好强度较高(5.30)，若为identified更易被识别并遭个性化高价，进一步压低参与收益；anonymized虽风险小但仍难抵成本。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.24，净值已为负；且你偏好强度较高(5.30)，在identified下更易被识别并遭遇更不利的个性化定价，预期市场结果可能进一步降低效用，故不值得参与。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.29，净效用已为负；且你偏好强θ_i较高，identified下更易被个性化定价榨取剩余，潜在损失更大，难以靠市场改进弥补。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.02，净值已为负；且你偏好强度较高，若为identified更易被识别并面临更不利的个性化定价风险，进一步降低期望效用，即使anonymized也难扭转。",
+            "拒绝：补偿0.90不足以覆盖隐私成本0.94，净效用已略为负；且你偏好强度较高、信号也偏高，在common_preferences下被identified更易触发不利个性化定价，额外风险使参与更不划算。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.85，净效用先为负；且你偏好强度较高(θ=5.30)，若数据被identified更易被个性化定价“抬价”侵蚀剩余收益。综合看参与不值得。",
+            "拒绝：补偿0.90不足以覆盖隐私成本0.94，净补偿为负；且你偏好强度较高，identified下更可能被个性化定价榨取消费者剩余，common_preferences也更利于商家推断，从而额外不利。",
+            "拒绝：补偿0.90可抵消隐私成本0.87且仍有小幅净收益；在共同偏好结构下你的高θ更易被识别后差别定价针对，潜在损失可能超过0.03的余量，因此不值得冒identified风险。",
+            "拒绝：补偿0.90高于隐私成本0.60，净直接收益为正；共同偏好下你的信号偏高，identified可能被推断为高偏好而遭更高定价，风险可能抵消补偿，故不值。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.12，净效用先为负。且在共同偏好下，你偏好强度高(5.30)，identified更易触发不利个性化定价，额外损失风险偏大。",
+            "拒绝：补偿0.90不足以覆盖隐私成本1.27，净值为负；且你偏好强度较高(5.30)，在identified下更易被识别并遭个性化定价压榨，预期市场结果对你不利，anonymized也难扭转。",
+            "拒绝：补偿0.90可抵扣隐私成本0.77，净补偿约0.13为正；但你偏好强(θ_i=5.30)且信号较高，identified下被个性化提价风险大，可能吞噬净收益，整体不划算。",
+            "拒绝：补偿0.90不足以覆盖隐私成本0.92，净值已为负；且你偏好θ_i=5.30较高，identified下更易被识别并遭个性化定价压榨，潜在损失进一步扩大，故不值得参与。",
+            "拒绝：补偿0.90高于隐私成本0.61，净得0.29；且在共同偏好结构下，你的信号5.12/偏好5.30较高，identified下被识别后更易遭个性化提价，可能抵消收益，故不值得参与。"
+          ]
+        }
+      }
+    ]
+  },
+  "report_rows": [
+    {
+      "Config": "A (Theory)",
+      "Intermediary": "Rational",
+      "Consumers": "Rational",
+      "m": [
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6
+      ],
+      "Anonymization": "identified",
+      "Participation Rate": 0.03424390602811047,
+      "Social Welfare": 209.4440290893279,
+      "Consumer Surplus": 76.55102813585835,
+      "Producer Profit": 131.18265041936823,
+      "Intermediary Profit": 1.3113505341013418,
+      "Intermediary Profit Loss (%)": 0.0,
+      "Individual Accuracy": NaN,
+      "TP": NaN,
+      "TN": NaN,
+      "FP": NaN,
+      "FN": NaN,
+      "Consumer Surplus Gap": NaN,
+      "Gini Consumer Surplus": NaN
+    },
+    {
+      "Config": "B",
+      "Intermediary": "Rational",
+      "Consumers": "LLM",
+      "m": [
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6,
+        0.6
+      ],
+      "Anonymization": "identified",
+      "Participation Rate": 0.0,
+      "Social Welfare": 209.4440290893279,
+      "Consumer Surplus": 76.55102813585835,
+      "Producer Profit": 131.18265041936823,
+      "Intermediary Profit": 1.7103505341013419,
+      "Intermediary Profit Loss (%)": -30.426647156813154,
+      "Individual Accuracy": 0.95,
+      "TP": 0.0,
+      "TN": 19.0,
+      "FP": 0.0,
+      "FN": 1.0,
+      "Consumer Surplus Gap": 0.0,
+      "Gini Consumer Surplus": 0.017643694111231012
+    },
+    {
+      "Config": "C",
+      "Intermediary": "LLM",
+      "Consumers": "Rational",
+      "m": 0.7,
+      "Anonymization": "anonymized",
+      "Participation Rate": 0.06538230128851415,
+      "Social Welfare": 209.77733499057302,
+      "Consumer Surplus": 76.55102813585837,
+      "Producer Profit": 131.18265041936823,
+      "Intermediary Profit": 1.1721564353464062,
+      "Intermediary Profit Loss (%)": 10.614560724629149,
+      "Individual Accuracy": NaN,
+      "TP": NaN,
+      "TN": NaN,
+      "FP": NaN,
+      "FN": NaN,
+      "Consumer Surplus Gap": NaN,
+      "Gini Consumer Surplus": NaN
+    },
+    {
+      "Config": "D",
+      "Intermediary": "LLM",
+      "Consumers": "LLM",
+      "m": 0.7,
+      "Anonymization": "anonymized",
+      "Participation Rate": 0.1,
+      "Social Welfare": 213.1559713947654,
+      "Consumer Surplus": 71.50247865395205,
+      "Producer Profit": 139.45034181638982,
+      "Intermediary Profit": 2.2031509244235323,
+      "Intermediary Profit Loss (%)": -68.00625516451512,
+      "Individual Accuracy": 0.85,
+      "TP": 0.0,
+      "TN": 17.0,
+      "FP": 2.0,
+      "FN": 1.0,
+      "Consumer Surplus Gap": -5.048549481906321,
+      "Gini Consumer Surplus": 0.021191290734557944
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "timestamp": "20260205_215334",
+  "model_name": "qwen3-max-2026-01-23",
+  "data_file": "sensitivity_results/scenario_b/summary_all_results_qwen3-max-2026-01-23.json",
+  "total_samples": 27,
+  "overall_eas": -0.36277805452845746,
+  "parameter_eas": {
+    "rho": {
+      "elasticities_llm": [
+        -0.027777777777777794,
+        -0.5555555555555554,
+        -0.2777777777777777
+      ],
+      "elasticities_bne": [
+        0.0,
+        0.0,
+        0.49999999999999983
+      ],
+      "eas_score": 0.03037283696153937,
+      "pearson_corr": 0.03037283696153937,
+      "pearson_p": 0.9806610772807391,
+      "spearman_corr": 0.0,
+      "spearman_p": 1.0,
+      "rmse": 0.5520724142875495,
+      "direction_consistency": 0.0,
+      "mean_elasticity_llm": -0.2870370370370369,
+      "mean_elasticity_bne": 0.1666666666666666
+    },
+    "v_mean": {
+      "elasticities_llm": [
+        -1.3888888888888888,
+        -1.6388888888888886,
+        -1.6388888888888886
+      ],
+      "elasticities_bne": [
+        -0.5833333333333333,
+        -0.41666666666666674,
+        -0.0833333333333334
+      ],
+      "eas_score": -0.7559289460184543,
+      "pearson_corr": -0.7559289460184543,
+      "pearson_p": 0.45437105165701036,
+      "spearman_corr": -0.8660254037844387,
+      "spearman_p": 0.3333333333333332,
+      "rmse": 1.2332207155790615,
+      "direction_consistency": 1.0,
+      "mean_elasticity_llm": -1.5555555555555554,
+      "mean_elasticity_bne": -0.36111111111111116
+    }
+  }
+}

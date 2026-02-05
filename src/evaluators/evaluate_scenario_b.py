@@ -45,7 +45,16 @@
    
    python -m src.evaluators.evaluate_scenario_b --mode both --model deepseek-v3.2
 
-4. 【为已有结果生成可视化】
+4. 【弹性对齐分数 (EAS) 分析】
+   基于敏感性分析结果，计算LLM对机制的理解能力：
+   
+   python -m src.evaluators.evaluate_scenario_b --eas sensitivity_results/scenario_b/summary_all_results_gpt-5.2.json
+   
+   输出：
+   - evaluation_results/eas_analysis/eas_analysis_YYYYMMDD_HHMMSS.json
+   - evaluation_results/eas_analysis/eas_visualization_YYYYMMDD_HHMMSS.png
+
+5. 【为已有结果生成可视化】
    从已保存的FP结果JSON文件生成图表：
    
    # 单个文件
@@ -105,7 +114,7 @@ import matplotlib
 matplotlib.use('Agg')  # 非交互式后端，避免GUI问题
 import matplotlib.pyplot as plt
 import seaborn as sns
-from typing import Dict, List, Any, Tuple, Set
+from typing import Dict, List, Any, Tuple, Set, Optional
 
 # 配置matplotlib中文显示
 plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'DejaVu Sans']
@@ -211,9 +220,81 @@ class ScenarioBEvaluator:
 你必须输出严格JSON格式，不要包含任何额外的文本。"""
     
     
-    def build_user_decision_prompt_fp(self, user_id: int, price: float, history: List[Dict[int, int]], belief_probs: Dict[int, float], current_round: int) -> str:
+    def _generate_mechanism_example(self) -> str:
         """
-        构建用户决策提示词（虚拟博弈版本）
+        生成次模性的具体数值示例
+        
+        注意：示例数值与实际参数接近但不完全一样，避免LLM直接套用
+        """
+        v_example = 0.80
+        p_example = 0.40
+        
+        # 低参与场景
+        low_participants = 2
+        low_base_leakage = 0.20
+        full_leakage = 0.85
+        low_marginal = full_leakage - low_base_leakage
+        low_cost = v_example * low_marginal
+        low_net = p_example - low_cost
+        
+        # 高参与场景
+        high_participants = 6
+        high_base_leakage = 0.60
+        high_marginal = full_leakage - high_base_leakage
+        high_cost = v_example * high_marginal
+        high_net = p_example - high_cost
+        
+        example_text = f"""
+### 具体示例（帮助理解因果关系）
+
+假设场景：n=10人，某用户v={v_example}，获得报价p={p_example}
+
+**场景A：低参与环境（只有{low_participants}人会分享）**
+- 基础泄露：约{low_base_leakage:.0%}（因为只有{low_participants}人的信息可以用来推断你）
+- 完全泄露：约{full_leakage:.0%}（你分享了，直接泄露）
+- **边际泄露** = {full_leakage:.0%} - {low_base_leakage:.0%} = **{low_marginal:.0%}**
+- **边际成本** = {v_example} × {low_marginal:.2f} = **{low_cost:.2f}**
+- **净收益** = {p_example} - {low_cost:.2f} = **{low_net:+.2f}**（亏损）
+- **最优选择**：不分享
+
+**场景B：高参与环境（已有{high_participants}人会分享）**
+- 基础泄露：约{high_base_leakage:.0%}（因为{high_participants}人的信息可以用来推断你）
+- 完全泄露：约{full_leakage:.0%}（你分享了，直接泄露）
+- **边际泄露** = {full_leakage:.0%} - {high_base_leakage:.0%} = **{high_marginal:.0%}**
+- **边际成本** = {v_example} × {high_marginal:.2f} = **{high_cost:.2f}**
+- **净收益** = {p_example} - {high_cost:.2f} = **{high_net:+.2f}**（盈利）
+- **最优选择**：分享
+
+### 关键洞察
+
+**同样的补偿p={p_example}，在不同环境下，最优决策不同！**
+- 低参与环境：边际成本高，不分享更优
+- 高参与环境：边际成本低，分享更优
+
+**这就是次模性的核心含义**：你的边际成本取决于其他人的行为。
+"""
+        return example_text
+    
+    def _get_cost_range_hint(self) -> str:
+        """
+        根据预期参与人数范围，给出边际泄露的粗略估计
+        
+        注意：这不是精确计算，只是基于次模性的合理估计
+        """
+        table = """
+| 预期参与人数 | 环境特征 | 边际泄露估计 | 边际成本 |
+|-------------|---------|------------|---------|
+| 0-2人       | 低参与   | 大（约60-70%） | 高 |
+| 3-4人       | 中参与   | 中（约40-50%） | 中 |
+| 5+人        | 高参与   | 小（约20-30%） | 低 |
+
+**注意**：这不是精确计算，而是基于次模性原理的合理估计。
+"""
+        return table
+    
+    def build_user_decision_prompt_fp(self, user_id: int, price: float, history: List[Dict[int, int]], belief_probs: Dict[int, float], current_round: int, user_decision_history: Optional[List[Dict]] = None) -> str:
+        """
+        构建用户决策提示词（虚拟博弈版本 - 改进版）
         
         Args:
             user_id: 用户ID
@@ -221,6 +302,7 @@ class ScenarioBEvaluator:
             history: 历史记录（最近若干轮）
             belief_probs: 基于历史的其他用户分享概率估计
             current_round: 当前轮数
+            user_decision_history: 该用户的历史决策记录（可选）
         
         Returns:
             提示文本
@@ -240,71 +322,152 @@ class ScenarioBEvaluator:
         else:
             v_description = "偏高"
         
-        # 构建历史观察部分
-        history_text = ""
+        # ===== 1. 构建历史参考部分 =====
+        history_section = ""
+        
         if len(history) == 0:
-            # 第1轮，没有历史
-            history_text = """【历史观察】
-这是第一轮决策，暂无历史记录。你可以假设其他用户各有50%的概率选择分享。"""
+            # 第一轮，无历史
+            history_section = """
+## 历史参考
+
+**这是第一次决策，暂无历史记录。**
+
+初始假设：其他用户各有50%的分享频率（均匀先验）。
+
+**提示**：基于这个假设，估计本次大约有一半用户会分享。
+"""
         else:
             # 有历史记录
+            # 1.1 所有人的分享记录
             history_lines = []
             for idx, round_decisions in enumerate(history):
                 share_set = sorted([uid for uid, decision in round_decisions.items() if decision == 1])
-                history_lines.append(f"- 轮次{idx+1}: {{{', '.join(map(str, share_set))}}}")
+                share_count = len(share_set)
+                share_rate = share_count / n
+                history_lines.append(
+                    f"  第{idx+1}次: {share_count}/{n}人分享 ({share_rate:.0%}) → {{{', '.join(map(str, share_set))}}}"
+                )
             
-            # 构建概率估计
-            prob_lines = []
+            # 1.2 其他用户的分享频率
+            prob_table_lines = ["| 用户 | 分享频率 |", "|------|---------|"]
             for uid in range(n):
-                if uid != user_id:  # 不显示自己的
+                if uid != user_id:
                     prob = belief_probs.get(uid, 0.5)
-                    prob_lines.append(f"- 用户{uid}: {prob:.0%}")
+                    prob_table_lines.append(f"| 用户{uid} | {prob:.0%} |")
             
-            history_text = f"""【历史观察】
-最近{len(history)}轮的分享情况：
+            # 1.3 个人决策历史（如果有）
+            personal_history_text = ""
+            if user_decision_history and len(user_decision_history) > 0:
+                personal_lines = ["| 轮次 | 你的选择 | 实际参与人数 | 你获得补偿 |",
+                                "|------|---------|-------------|-----------|"]
+                for record in user_decision_history:
+                    choice_text = "分享" if record["choice"] == 1 else "不分享"
+                    comp_text = f"+{record['compensation']:.2f}" if record['compensation'] > 0 else "0"
+                    personal_lines.append(
+                        f"| 第{record['round']}轮 | {choice_text} | {record['actual_participants']}人 | {comp_text} |"
+                    )
+                
+                personal_history_text = f"""
+
+### 你的历史决策记录
+
+{chr(10).join(personal_lines)}
+
+**说明**：
+- 这些只是历史事实记录，供你了解实际环境的分布
+- 你可以参考这些信息来校准你对环境的预期
+- 但每次决策都是独立的，基于当前的经验频率做最优反应
+
+**重要**：不要简单重复历史决策，而要基于当前信息理性推理。
+"""
+            
+            history_section = f"""
+## 历史参考（最近{len(history)}次）
+
+### 最近的分享记录
+
 {chr(10).join(history_lines)}
 
-基于历史的分享概率估计：
-{chr(10).join(prob_lines)}"""
+### 其他用户的分享频率（经验频率）
+
+{chr(10).join(prob_table_lines)}
+{personal_history_text}
+"""
         
-        prompt = f"""
-# 场景：数据市场决策（推断外部性）
+        # ===== 2. 获取机制示例和决策框架 =====
+        mechanism_example = self._generate_mechanism_example()
+        cost_range_hint = self._get_cost_range_hint()
+        
+        # ===== 3. 构建完整提示词 =====
+        prompt = f"""# 数据市场决策（推断外部性）
 
 你是用户 {user_id}，正在参与一个数据市场。
 
-## 你的私有信息：
-- 平台给你的报价：p[{user_id}] = {price:.4f}
-- 你的隐私偏好（单位信息的成本）：v[{user_id}] = {v_i:.3f}
+## 你的私有信息
 
-## 公共知识：
-- 用户总数：n = {n}
-- 用户间信息相关系数：ρ = {rho:.2f}
-  你的信息与其他用户的信息相关，相关系数为 {rho:.2f}，代表其他用户的信息用于推断你的信息的能力。ρ为0时他人的信息完全无法推断你的信息，ρ为1时他人的信息可以完美推断你的信息（这种推断是相互的），ρ越高推断能力越强。
-- 观测噪声：σ² = {sigma_noise_sq}
-  观测噪声表示数据本身的不确定性。σ²越大，数据的噪声越大，平台从数据中提取有效信息的能力越弱，你的信息泄露程度越低；σ²越小，数据越准确，平台的推断越精确，信息泄露程度越高。
-- 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
-（你的 v = {v_i:.3f}，相对位置：{v_description}）
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
 
-{history_text}
+## 市场环境
 
-## 核心机制：
-- **推断外部性**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
-- 如果你**分享**，你会得到来自平台的补偿 p = {price:.4f}，但你的信息会从间接部分泄露变成完全泄露
-- 如果你**不分享**，你可以保护未间接泄露的那部分信息，但代价是无法得到补偿
-- **次模性**：分享的人越多，你再分享带来的边际泄露越小（基础泄露越高，边际泄露越低）
-- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息），分享的真正成本是**边际泄露**带来的成本
-- 补偿价格旨在覆盖你的边际隐私损失
+**用户总数**：n = {n}
 
-## 决策框架：
-- 隐私成本 = v × 边际信息泄露量
-- 你需要权衡：补偿收益 p vs 隐私成本 v × 边际泄露量
-- 基于历史观察和其他用户的分享概率，估计你的期望效用
+**信息相关系数**：ρ = {rho:.2f}
+- 你的信息与其他用户相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+
+
+**观测噪声**：σ² = {sigma_noise_sq}
+- σ² 越大：噪声越大，泄露越低
+- σ² 越小：数据越准确，泄露越高
+
+**隐私偏好分布**：v ∈ [{v_min}, {v_max}]
+- 你的位置：v = {v_i:.3f}（{v_description}）
+
+{history_section}
+
+## 核心机制
+
+### 推断外部性
+
+**关键洞察**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
+
+**如果你分享**：
+- 获得补偿 p = {price:.4f}
+- 你的信息从间接部分泄露 → 完全泄露
+
+**如果你不分享**：
+- 无补偿
+- 保护未间接泄露的部分
+- 但仍有基础泄露（他人分享导致）
+
+### 次模性
+
+**分享的人越多 → 你的边际泄露越小**
+- 基础泄露越高 → 边际泄露越低
+- 其他人分享得多 → 你再分享的额外成本减少
+
+### 补偿逻辑
+
+**平台报价旨在覆盖边际隐私损失**
+- 报价 p = {price:.4f} 反映你的边际价值
+- 你需要判断：p 是否足以覆盖 v × 边际泄露
+
+## 决策框架
+
+**隐私成本** = v × 边际泄露量
+
+**权衡**：补偿收益 p vs 隐私成本 v × 边际泄露
+
+## 输出
 
 请输出严格JSON：
 {{
   "share": 0或1（0=不分享，1=分享），
-  "reason": "简要说明你的决策理由（不超过150字）"
-}}"""
+  "reason": "简要说明决策理由（不超过150字）"
+}}
+"""
         return prompt
     
     def build_user_decision_prompt(self, user_id: int, price: float) -> str:
@@ -576,8 +739,11 @@ class ScenarioBEvaluator:
             # 均衡审计信息
             diag = self.gt_numeric.get("diagnostics", {})
             if diag:
-                print(f"均衡裕度: min_margin_in={diag.get('min_margin_in'):.6f}, "
-                      f"max_margin_out={diag.get('max_margin_out'):.6f}")
+                min_margin_in = diag.get('min_margin_in')
+                max_margin_out = diag.get('max_margin_out')
+                if min_margin_in is not None and max_margin_out is not None:
+                    print(f"均衡裕度: min_margin_in={min_margin_in:.6f}, "
+                          f"max_margin_out={max_margin_out:.6f}")
             
             # 记录平台信息（用于结果构造）
             platform_info = {
@@ -904,6 +1070,7 @@ class ScenarioBEvaluator:
         
         # ===== 虚拟博弈迭代 =====
         history = []  # 记录每轮的决策 [{user_id: decision}, ...]
+        user_decision_histories = {uid: [] for uid in range(n)}  # 记录每个用户的决策历史
         
         for round_num in range(max_rounds):
             print(f"\n{'='*60}")
@@ -922,6 +1089,9 @@ class ScenarioBEvaluator:
                 # 获取历史（只传递窗口内的）
                 recent_history = history[-window:] if window > 0 else []
                 
+                # 获取该用户的个人决策历史（最近belief_window轮）
+                user_recent_history = user_decision_histories[user_id][-belief_window:] if len(user_decision_histories[user_id]) > 0 else None
+                
                 # 查询决策
                 decision_result = self.query_user_decision_fp(
                     user_id, 
@@ -929,7 +1099,8 @@ class ScenarioBEvaluator:
                     recent_history,
                     belief_probs,
                     round_num,
-                    num_trials=num_trials
+                    num_trials=num_trials,
+                    user_decision_history=user_recent_history  # 传入个人历史
                 )
                 
                 round_decisions[user_id] = decision_result["share"]
@@ -939,6 +1110,18 @@ class ScenarioBEvaluator:
             
             # 记录本轮结果
             history.append(round_decisions)
+            
+            # 计算本轮实际参与人数
+            actual_participants = sum(round_decisions.values())
+            
+            # 更新每个用户的个人决策历史
+            for user_id in range(n):
+                user_decision_histories[user_id].append({
+                    "round": round_num + 1,
+                    "choice": round_decisions[user_id],
+                    "actual_participants": actual_participants,
+                    "compensation": prices[user_id] if round_decisions[user_id] == 1 else 0.0
+                })
             
             # 计算本轮分享集合
             share_set = sorted([uid for uid, dec in round_decisions.items() if dec == 1])
@@ -990,6 +1173,20 @@ class ScenarioBEvaluator:
             "max_rounds": max_rounds,
             "actual_rounds": len(history),
             "belief_window": belief_window,
+            
+            # 参数信息（用于机制分析）
+            "params": {
+                "n": int(self.params.n),
+                "rho": float(self.params.rho),
+                "sigma_noise_sq": float(self.params.sigma_noise_sq),
+                "v_mean": float(np.mean(self.params.v)),
+                "v_std": float(np.std(self.params.v)),
+                "v_min": float(np.min(self.params.v)),
+                "v_max": float(np.max(self.params.v)),
+                "price_mean": float(np.mean(prices)),
+                "price_median": float(np.median(prices)),
+                "price_std": float(np.std(prices))
+            },
             
             # 平台数据
             "platform": {
@@ -1059,7 +1256,8 @@ class ScenarioBEvaluator:
         history: List[Dict[int, int]],
         belief_probs: Dict[int, float],
         current_round: int,
-        num_trials: int = 1
+        num_trials: int = 1,
+        user_decision_history: Optional[List[Dict]] = None
     ) -> Dict[str, Any]:
         """
         查询用户决策（虚拟博弈版本）
@@ -1070,6 +1268,7 @@ class ScenarioBEvaluator:
             history: 历史记录
             belief_probs: 信念概率
             current_round: 当前轮数
+            user_decision_history: 该用户的历史决策记录（可选）
             num_trials: 重复查询次数
         
         Returns:
@@ -1078,7 +1277,14 @@ class ScenarioBEvaluator:
                 "reason": str
             }
         """
-        prompt = self.build_user_decision_prompt_fp(user_id, price, history, belief_probs, current_round)
+        prompt = self.build_user_decision_prompt_fp(
+            user_id, 
+            price, 
+            history, 
+            belief_probs, 
+            current_round,
+            user_decision_history=user_decision_history
+        )
         
         decisions = []
         reasons = []
@@ -1320,38 +1526,46 @@ class ScenarioBEvaluator:
                 rounds = list(range(1, len(share_rate_traj) + 1))
                 
                 # 主轴：分享率
-                ax1.plot(rounds, share_rate_traj, 'b-o', linewidth=2, markersize=4, label='分享率')
-                ax1.set_xlabel('轮次', fontsize=12)
-                ax1.set_ylabel('分享率', color='b', fontsize=12)
+                ax1.plot(rounds, share_rate_traj, 'b-o', linewidth=2, markersize=4, label='Share Rate')
+                ax1.set_xlabel('Round', fontsize=12, fontfamily='Times New Roman')
+                ax1.set_ylabel('Share Rate', color='b', fontsize=12, fontfamily='Times New Roman')
                 ax1.tick_params(axis='y', labelcolor='b')
                 ax1.grid(True, alpha=0.3)
                 ax1.set_ylim([0, 1])
+                
+                # 设置刻度字体
+                for label in ax1.get_xticklabels() + ax1.get_yticklabels():
+                    label.set_fontfamily('Times New Roman')
                 
                 # 次轴：与理论均衡的相似度
                 if similarity_traj:
                     ax2 = ax1.twinx()
                     ax2.plot(rounds, similarity_traj, 'r-s', linewidth=2, markersize=4, 
-                            alpha=0.7, label='与均衡相似度')
-                    ax2.set_ylabel('Jaccard相似度', color='r', fontsize=12)
+                            alpha=0.7, label='Similarity to Equilibrium')
+                    ax2.set_ylabel('Jaccard Similarity', color='r', fontsize=12, fontfamily='Times New Roman')
                     ax2.tick_params(axis='y', labelcolor='r')
                     ax2.set_ylim([0, 1])
+                    
+                    # 设置次轴刻度字体
+                    for label in ax2.get_yticklabels():
+                        label.set_fontfamily('Times New Roman')
                 
                 # 标注收敛点
                 if conv_analysis.get("converged"):
                     conv_round = conv_analysis.get("convergence_round")
                     if conv_round and conv_round < len(share_rate_traj):
                         ax1.axvline(x=conv_round + 1, color='g', linestyle='--', 
-                                   alpha=0.5, label=f'收敛点(第{conv_round + 1}轮)')
+                                   alpha=0.5, label=f'Convergence (Round {conv_round + 1})')
                 
                 # 图例
                 lines1, labels1 = ax1.get_legend_handles_labels()
                 if similarity_traj:
                     lines2, labels2 = ax2.get_legend_handles_labels()
-                    ax1.legend(lines1 + lines2, labels1 + labels2, loc='best')
+                    legend = ax1.legend(lines1 + lines2, labels1 + labels2, loc='lower right', prop={'family': 'Times New Roman'})
                 else:
-                    ax1.legend(loc='best')
+                    legend = ax1.legend(loc='lower right', prop={'family': 'Times New Roman'})
                 
-                ax1.set_title('虚拟博弈：分享率与收敛过程', fontsize=14, fontweight='bold')
+                ax1.set_title('Fictitious Play: Share Rate and Convergence', fontsize=14, fontweight='bold', fontfamily='Times New Roman')
                 
                 plt.tight_layout()
                 fig1_path = output_dir / f"{base_name}_share_rate.png"
@@ -1371,18 +1585,24 @@ class ScenarioBEvaluator:
                     strategy_matrix[user_id_int, round_idx] = decision
             
             # 绘制热力图
-            sns.heatmap(strategy_matrix, 
+            cbar = sns.heatmap(strategy_matrix, 
                        cmap=['#f0f0f0', '#2E86AB'],  # 0=浅灰，1=蓝色
-                       cbar_kws={'label': '策略 (0=不分享, 1=分享)', 'ticks': [0, 1]},
+                       cbar_kws={'label': 'Strategy (0=No Share, 1=Share)', 'ticks': [0, 1]},
                        linewidths=0.5,
                        linecolor='white',
                        square=False,
                        ax=ax)
             
+            # 设置colorbar字体
+            cbar_obj = cbar.collections[0].colorbar
+            cbar_obj.set_label('Strategy (0=No Share, 1=Share)', fontfamily='Times New Roman')
+            for label in cbar_obj.ax.get_yticklabels():
+                label.set_fontfamily('Times New Roman')
+            
             # 设置坐标轴
-            ax.set_xlabel('轮次', fontsize=12)
-            ax.set_ylabel('用户ID', fontsize=12)
-            ax.set_title('虚拟博弈：用户策略演化热力图', fontsize=14, fontweight='bold')
+            ax.set_xlabel('Round', fontsize=12, fontfamily='Times New Roman')
+            ax.set_ylabel('User ID', fontsize=12, fontfamily='Times New Roman')
+            ax.set_title('Fictitious Play: User Strategy Evolution Heatmap', fontsize=14, fontweight='bold', fontfamily='Times New Roman')
             
             # 设置刻度
             ax.set_xticks(np.arange(0, len(history), max(1, len(history) // 20)) + 0.5)
@@ -1390,23 +1610,27 @@ class ScenarioBEvaluator:
             ax.set_yticks(np.arange(n) + 0.5)
             ax.set_yticklabels(range(n))
             
+            # 设置刻度标签字体
+            for label in ax.get_xticklabels() + ax.get_yticklabels():
+                label.set_fontfamily('Times New Roman')
+            
             # 标注理论均衡分享集合
             gt_share_set = set(results.get("gt_share_set", []))
             if gt_share_set:
-                # 在右侧添加标记
+                # 在右侧添加标记（使用*而不是★，避免字体问题）
                 for user_id in range(n):
                     if user_id in gt_share_set:
-                        ax.text(len(history) + 0.5, user_id + 0.5, '★', 
-                               ha='left', va='center', fontsize=12, color='red')
+                        ax.text(len(history) + 0.5, user_id + 0.5, '*', 
+                               ha='left', va='center', fontsize=16, color='red', fontweight='bold')
                 
-                ax.text(len(history) + 0.5, -1, '★=理论均衡', 
-                       ha='left', va='center', fontsize=10, color='red', fontweight='bold')
+                ax.text(len(history) + 0.5, -1, '*=Theoretical Equilibrium', 
+                       ha='left', va='center', fontsize=10, color='red', fontweight='bold', fontfamily='Times New Roman')
             
             plt.tight_layout()
             fig2_path = output_dir / f"{base_name}_strategy_heatmap.png"
             plt.savefig(fig2_path, dpi=150, bbox_inches='tight')
             plt.close(fig2)
-            print(f"📊 策略热力图已保存到: {fig2_path}")
+            print(f"[图表] 策略热力图已保存到: {fig2_path}")
             
         except Exception as e:
             print(f"[WARN] 可视化生成失败: {e}")
@@ -1435,8 +1659,14 @@ def main():
     parser.add_argument('--belief_window', type=int, default=10, help='虚拟博弈信念窗口大小')
     parser.add_argument('--num_trials', type=int, default=1, help='每个决策的重复查询次数')
     parser.add_argument('--visualize', type=str, nargs='+', help='为已有JSON文件生成可视化（支持文件路径或目录）')
+    parser.add_argument('--eas', type=str, help='计算EAS：指定敏感性分析结果JSON文件路径')
     
     args = parser.parse_args()
+    
+    # ===== EAS分析模式：计算弹性对齐分数 =====
+    if args.eas:
+        compute_eas_from_sensitivity_data(args.eas)
+        return
     
     # ===== 可视化模式：直接从JSON生成图表 =====
     if args.visualize:
@@ -1487,7 +1717,7 @@ def main():
                 
                 # 生成可视化
                 evaluator._visualize_fictitious_play(results, str(json_path))
-                print(f"  ✓ 可视化生成成功\n")
+                print(f"  [OK] 可视化生成成功\n")
                 
             except Exception as e:
                 print(f"  [ERROR] 处理失败: {e}\n")
@@ -1530,6 +1760,328 @@ def main():
         evaluator.print_evaluation_summary_fp(results)
         output_path = f"{output_dir}/eval_{timestamp}.json"
         evaluator.save_results(results, output_path)
+
+
+def compute_eas_from_sensitivity_data(
+    sensitivity_file: str,
+    output_dir: str = "evaluation_results/eas_analysis"
+) -> Dict:
+    """
+    从敏感性分析结果计算弹性对齐分数 (Elasticity Alignment Score, EAS)
+    
+    EAS衡量LLM和理论BNE对参数变化的响应一致性：
+    - 对每个参数（rho, v_min, v_max），计算其对share_rate的弹性
+    - 比较LLM和BNE的弹性，计算对齐分数
+    
+    参数:
+        sensitivity_file: 敏感性分析结果JSON文件路径
+        output_dir: 输出目录
+        
+    返回:
+        包含EAS分析结果的字典
+    """
+    import json
+    import os
+    from pathlib import Path
+    from datetime import datetime
+    from scipy.stats import spearmanr, pearsonr
+    from sklearn.linear_model import LinearRegression
+    import numpy as np
+    import pandas as pd
+    
+    print(f"\n{'='*60}")
+    print(f"弹性对齐分数 (EAS) 分析")
+    print(f"{'='*60}")
+    print(f"数据文件: {sensitivity_file}")
+    
+    # 读取敏感性数据
+    with open(sensitivity_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    print(f"加载 {len(data)} 组数据")
+    
+    # 提取数据
+    records = []
+    for d in data:
+        sp = d['sensitivity_params']
+        records.append({
+            'rho': sp['rho'],
+            'v_min': sp['v_min'],
+            'v_max': sp['v_max'],
+            'llm_sr': d['metrics']['llm']['share_rate'],
+            'bne_sr': d['metrics']['ground_truth']['share_rate']
+        })
+    
+    # 转换为DataFrame便于分析
+    df = pd.DataFrame(records)
+    
+    print(f"\n参数范围:")
+    print(f"  rho: {sorted(df['rho'].unique())}")
+    print(f"  v_min: {sorted(df['v_min'].unique())}")
+    print(f"  v_max: {sorted(df['v_max'].unique())}")
+    
+    # 检查v_min和v_max是否配对变化
+    v_pairs = df[['v_min', 'v_max']].drop_duplicates().sort_values(['v_min', 'v_max'])
+    print(f"\n(v_min, v_max) 配对:")
+    for _, row in v_pairs.iterrows():
+        print(f"  ({row['v_min']:.1f}, {row['v_max']:.1f})")
+    
+    # 创建v_mean作为隐私成本的代表变量
+    df['v_mean'] = (df['v_min'] + df['v_max']) / 2
+    print(f"\n注意: v_min和v_max是配对变化的，使用v_mean = (v_min + v_max) / 2 作为隐私成本的代表")
+    print(f"  v_mean: {sorted(df['v_mean'].unique())}")
+    
+    # 计算每个参数维度的弹性
+    eas_results = {}
+    
+    # 参数列表：rho（相关性）和 v_mean（隐私成本）
+    params_to_analyze = [
+        ('rho', '相关性强度'),
+        ('v_mean', '隐私成本水平')
+    ]
+    
+    for param, param_desc in params_to_analyze:
+        print(f"\n{'='*60}")
+        print(f"分析参数: {param} ({param_desc})")
+        print(f"{'='*60}")
+        
+        # 确定控制变量
+        if param == 'rho':
+            # 分析rho的影响：固定v_mean，让rho变化
+            control_var = 'v_mean'
+        else:  # param == 'v_mean'
+            # 分析v_mean的影响：固定rho，让v_mean变化
+            control_var = 'rho'
+        
+        # 按控制变量分组
+        groups = df.groupby(control_var, dropna=False)
+        
+        elasticities_llm = []
+        elasticities_bne = []
+        
+        for group_key, group_df in groups:
+            # 按当前参数排序
+            group_df = group_df.sort_values(by=param)
+            
+            x = group_df[param].values.reshape(-1, 1)
+            y_llm = group_df['llm_sr'].values
+            y_bne = group_df['bne_sr'].values
+            
+            # 打印调试信息
+            print(f"  固定 {control_var}={group_key:.2f}: {len(group_df)} 个数据点, {param}范围=[{x.min():.2f}, {x.max():.2f}]")
+            
+            # 线性回归估计斜率（弹性）
+            if len(x) >= 2 and np.std(x) > 1e-6:
+                # LLM弹性
+                reg_llm = LinearRegression()
+                reg_llm.fit(x, y_llm)
+                elasticity_llm = reg_llm.coef_[0]
+                
+                # BNE弹性
+                reg_bne = LinearRegression()
+                reg_bne.fit(x, y_bne)
+                elasticity_bne = reg_bne.coef_[0]
+                
+                elasticities_llm.append(elasticity_llm)
+                elasticities_bne.append(elasticity_bne)
+                
+                print(f"    -> LLM弹性={elasticity_llm:.4f}, BNE弹性={elasticity_bne:.4f}")
+            else:
+                print(f"    -> [SKIP] 数据点不足或无变化")
+        
+        # 计算弹性对齐分数
+        if len(elasticities_llm) > 0:
+            # 方法1: Pearson相关系数
+            pearson_corr, pearson_p = pearsonr(elasticities_llm, elasticities_bne)
+            
+            # 方法2: Spearman秩相关系数
+            spearman_corr, spearman_p = spearmanr(elasticities_llm, elasticities_bne)
+            
+            # 方法3: 均方根误差（归一化）
+            rmse = np.sqrt(np.mean((np.array(elasticities_llm) - np.array(elasticities_bne))**2))
+            
+            # 方法4: 方向一致性（符号是否相同）
+            signs_match = np.sum(np.sign(elasticities_llm) == np.sign(elasticities_bne))
+            direction_consistency = signs_match / len(elasticities_llm)
+            
+            # EAS = Pearson相关系数（主要指标）
+            eas_score = pearson_corr
+            
+            eas_results[param] = {
+                'elasticities_llm': elasticities_llm,
+                'elasticities_bne': elasticities_bne,
+                'eas_score': eas_score,
+                'pearson_corr': pearson_corr,
+                'pearson_p': pearson_p,
+                'spearman_corr': spearman_corr,
+                'spearman_p': spearman_p,
+                'rmse': rmse,
+                'direction_consistency': direction_consistency,
+                'mean_elasticity_llm': np.mean(elasticities_llm),
+                'mean_elasticity_bne': np.mean(elasticities_bne),
+            }
+            
+            print(f"\n  【{param} 弹性对齐分数】")
+            print(f"    EAS (Pearson): {eas_score:.4f} (p={pearson_p:.4f})")
+            print(f"    Spearman: {spearman_corr:.4f} (p={spearman_p:.4f})")
+            print(f"    RMSE: {rmse:.4f}")
+            print(f"    方向一致性: {direction_consistency:.2%}")
+            print(f"    平均弹性 (LLM): {np.mean(elasticities_llm):.4f}")
+            print(f"    平均弹性 (BNE): {np.mean(elasticities_bne):.4f}")
+    
+    # 综合EAS
+    param_keys = [p for p, _ in params_to_analyze]
+    overall_eas = np.mean([eas_results[p]['eas_score'] for p in param_keys])
+    
+    print(f"\n{'='*60}")
+    print(f"【综合弹性对齐分数】")
+    print(f"{'='*60}")
+    print(f"  Overall EAS: {overall_eas:.4f}")
+    for param, param_desc in params_to_analyze:
+        print(f"  {param} ({param_desc}) EAS: {eas_results[param]['eas_score']:.4f}")
+    
+    # 保存结果
+    os.makedirs(output_dir, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # 从数据文件中提取模型名称
+    model_name = 'unknown'
+    if len(data) > 0:
+        model_name = data[0].get('model_name', 'unknown')
+    
+    result_data = {
+        'timestamp': timestamp,
+        'model_name': model_name,
+        'data_file': sensitivity_file,
+        'total_samples': len(data),
+        'overall_eas': overall_eas,
+        'parameter_eas': eas_results,
+    }
+    
+    output_path = f"{output_dir}/eas_analysis_{model_name}_{timestamp}.json"
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump(result_data, f, indent=2, ensure_ascii=False)
+    print(f"\n结果已保存: {output_path}")
+    
+    # 可视化
+    _visualize_eas_results(eas_results, output_dir, timestamp, model_name)
+    
+    return result_data
+
+
+def _visualize_eas_results(
+    eas_results: Dict,
+    output_dir: str,
+    timestamp: str,
+    model_name: str = 'unknown'
+):
+    """
+    可视化EAS分析结果
+    """
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    
+    # 设置字体
+    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.rcParams['axes.unicode_minus'] = False
+    
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    fig.suptitle('Elasticity Alignment Score (EAS) Analysis', fontsize=16, fontweight='bold')
+    
+    params = list(eas_results.keys())
+    param_labels = {
+        'rho': r'$\rho$ (Correlation)',
+        'v_mean': r'$\bar{v}$ (Privacy Cost)'
+    }
+    
+    # 1. 弹性散点图（3个参数）
+    ax1 = axes[0, 0]
+    colors = ['#2E86AB', '#A23B72', '#F18F01']
+    
+    for i, param in enumerate(params):
+        llm_elast = eas_results[param]['elasticities_llm']
+        bne_elast = eas_results[param]['elasticities_bne']
+        ax1.scatter(bne_elast, llm_elast, alpha=0.7, s=100, 
+                   color=colors[i], label=param_labels[param], edgecolors='black', linewidth=0.5)
+    
+    # 添加对角线
+    all_values = []
+    for param in params:
+        all_values.extend(eas_results[param]['elasticities_llm'])
+        all_values.extend(eas_results[param]['elasticities_bne'])
+    min_val, max_val = min(all_values), max(all_values)
+    ax1.plot([min_val, max_val], [min_val, max_val], 'k--', alpha=0.3, linewidth=1)
+    
+    ax1.set_xlabel('BNE Elasticity', fontsize=12)
+    ax1.set_ylabel('LLM Elasticity', fontsize=12)
+    ax1.set_title('Elasticity Comparison', fontsize=13, fontweight='bold')
+    ax1.legend(fontsize=9)
+    ax1.grid(True, alpha=0.3)
+    
+    # 2. EAS柱状图
+    ax2 = axes[0, 1]
+    eas_scores = [eas_results[p]['eas_score'] for p in params]
+    bars = ax2.bar(range(len(params)), eas_scores, color=colors, alpha=0.8, edgecolor='black', linewidth=1)
+    ax2.set_xticks(range(len(params)))
+    ax2.set_xticklabels([param_labels[p] for p in params], fontsize=10)
+    ax2.set_ylabel('EAS Score (Pearson r)', fontsize=12)
+    ax2.set_title('EAS by Parameter', fontsize=13, fontweight='bold')
+    ax2.set_ylim(-1, 1)
+    ax2.axhline(0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
+    ax2.grid(True, alpha=0.3, axis='y')
+    
+    # 添加数值标签
+    for bar, score in zip(bars, eas_scores):
+        height = bar.get_height()
+        ax2.text(bar.get_x() + bar.get_width()/2., height,
+                f'{score:.3f}',
+                ha='center', va='bottom' if height > 0 else 'top', fontsize=10)
+    
+    # 3. 方向一致性
+    ax3 = axes[1, 0]
+    direction_scores = [eas_results[p]['direction_consistency'] for p in params]
+    bars = ax3.bar(range(len(params)), direction_scores, color=colors, alpha=0.8, edgecolor='black', linewidth=1)
+    ax3.set_xticks(range(len(params)))
+    ax3.set_xticklabels([param_labels[p] for p in params], fontsize=10)
+    ax3.set_ylabel('Direction Consistency', fontsize=12)
+    ax3.set_title('Direction Consistency by Parameter', fontsize=13, fontweight='bold')
+    ax3.set_ylim(0, 1)
+    ax3.grid(True, alpha=0.3, axis='y')
+    
+    # 添加数值标签
+    for bar, score in zip(bars, direction_scores):
+        height = bar.get_height()
+        ax3.text(bar.get_x() + bar.get_width()/2., height,
+                f'{score:.1%}',
+                ha='center', va='bottom', fontsize=10)
+    
+    # 4. 平均弹性对比
+    ax4 = axes[1, 1]
+    x = np.arange(len(params))
+    width = 0.35
+    
+    mean_llm = [eas_results[p]['mean_elasticity_llm'] for p in params]
+    mean_bne = [eas_results[p]['mean_elasticity_bne'] for p in params]
+    
+    bars1 = ax4.bar(x - width/2, mean_llm, width, label='LLM', color='#4ECDC4', alpha=0.8, edgecolor='black', linewidth=1)
+    bars2 = ax4.bar(x + width/2, mean_bne, width, label='BNE', color='#FF6B6B', alpha=0.8, edgecolor='black', linewidth=1)
+    
+    ax4.set_xlabel('Parameter', fontsize=12)
+    ax4.set_ylabel('Mean Elasticity', fontsize=12)
+    ax4.set_title('Mean Elasticity Comparison', fontsize=13, fontweight='bold')
+    ax4.set_xticks(x)
+    ax4.set_xticklabels([param_labels[p] for p in params], fontsize=10)
+    ax4.legend(fontsize=10)
+    ax4.axhline(0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
+    ax4.grid(True, alpha=0.3, axis='y')
+    
+    plt.tight_layout()
+    
+    # 保存图表
+    output_path = f"{output_dir}/eas_visualization_{model_name}_{timestamp}.png"
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    print(f"可视化已保存: {output_path}")
+    plt.close()
 
 
 if __name__ == "__main__":

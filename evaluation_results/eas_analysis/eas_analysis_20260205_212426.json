@@ -1,0 +1,50 @@
+{
+  "timestamp": "20260205_212426",
+  "data_file": "sensitivity_results/scenario_b/summary_all_results_gpt-5.2.json",
+  "total_samples": 27,
+  "overall_eas": 0.2687555464738396,
+  "parameter_eas": {
+    "rho": {
+      "elasticities_llm": [
+        -0.24999999999999992,
+        -1.3055555555555554,
+        -0.2777777777777777
+      ],
+      "elasticities_bne": [
+        0.0,
+        0.0,
+        0.49999999999999983
+      ],
+      "eas_score": 0.47987205117725507,
+      "pearson_corr": 0.47987205117725507,
+      "pearson_p": 0.6813661576732929,
+      "spearman_corr": 0.0,
+      "spearman_p": 1.0,
+      "rmse": 0.8891781936610368,
+      "direction_consistency": 0.0,
+      "mean_elasticity_llm": -0.611111111111111,
+      "mean_elasticity_bne": 0.1666666666666666
+    },
+    "v_mean": {
+      "elasticities_llm": [
+        -1.3888888888888888,
+        -1.583333333333333,
+        -1.4166666666666665
+      ],
+      "elasticities_bne": [
+        -0.5833333333333333,
+        -0.41666666666666674,
+        -0.0833333333333334
+      ],
+      "eas_score": 0.05763904177042406,
+      "pearson_corr": 0.05763904177042406,
+      "pearson_p": 0.9632854979982668,
+      "spearman_corr": -0.5,
+      "spearman_p": 0.6666666666666667,
+      "rmse": 1.1236560330717027,
+      "direction_consistency": 1.0,
+      "mean_elasticity_llm": -1.4629629629629628,
+      "mean_elasticity_bne": -0.36111111111111116
+    }
+  }
+}

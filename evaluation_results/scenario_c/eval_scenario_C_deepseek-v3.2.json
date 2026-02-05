@@ -1,0 +1,12 @@
+{
+  "model": "deepseek-v3.2",
+  "rounds": 20,
+  "status": "completed",
+  "scenario_c_reports": [
+    {
+      "gt_tag": "common_preferences",
+      "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3.2_20260204_021630_detailed.json",
+      "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_deepseek-v3.2_20260204_021630.csv"
+    }
+  ]
+}

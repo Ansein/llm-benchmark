@@ -20,7 +20,9 @@ from pathlib import Path
 from src.scenarios.scenario_c_social_data import (
     ScenarioCParams,
     generate_ground_truth,
-    generate_conditional_equilibrium
+    generate_conditional_equilibrium,
+    evaluate_intermediary_strategy,
+    generate_consumer_data
 )
 from src.scenarios.scenario_c_social_data_optimization import (
     optimize_intermediary_policy_personalized
@@ -150,45 +152,74 @@ def generate_optimal_gt_common_preferences():
             }
         }
     else:
+        # ✅ 调用 evaluate_intermediary_strategy 获取完整的均衡信息
+        print("\n评估最优策略的完整均衡信息...")
+        eval_result = evaluate_intermediary_strategy(
+            m=result['m_star_vector'],
+            anonymization=result['anonymization_star'],
+            params_base=params_base,
+            num_mc_samples=30,
+            max_iter=20,
+            seed=42
+        )
+        
+        # 生成样本数据（用于LLM评估）
+        params_optimal = ScenarioCParams(
+            m=result['m_star_vector'],
+            anonymization=result['anonymization_star'],
+            **params_base
+        )
+        rng_sample = np.random.default_rng(42)
+        sample_data = generate_consumer_data(params_optimal, rng=rng_sample)
+        
+        # 生成参与决策（基于delta_u阈值）
+        delta_u = eval_result.delta_u
+        if params_base['tau_dist'] == 'normal':
+            tau_samples = rng_sample.normal(params_base['tau_mean'], params_base['tau_std'], params_base['N'])
+            sample_participation = (tau_samples <= delta_u).tolist()
+        else:
+            sample_participation = [delta_u > 0] * params_base['N']
+        
         gt = {
+            "params_base": params_base,  # ✅ 添加params_base（评估器需要）
             "optimal_strategy": {
                 "m_star": result['m_star_vector'].tolist() if isinstance(result['m_star_vector'], np.ndarray) else result['m_star_vector'],
                 "m_star_mean": float(np.mean(result['m_star_vector'])),  # 添加均值用于对比
                 "m_star_std": float(np.std(result['m_star_vector'])),    # 添加标准差
                 "anonymization_star": result['anonymization_star'],
                 "intermediary_profit_star": float(result['profit_star']),
-                "r_star": float(result['r_star']),
-                "delta_u_star": float(result['delta_u_star']),
-                "m_0_star": float(result['m_0_star']),
+                "r_star": float(eval_result.r_star),
+                "delta_u_star": float(eval_result.delta_u),
+                "m_0_star": float(eval_result.m_0),
                 "optimization_method": "hybrid"  # 标记优化方法
             },
             "equilibrium": {
-                "consumer_surplus": float(result['consumer_surplus']),
-                "producer_profit": float(result['producer_profit']),
-                "intermediary_profit": float(result['profit_star']),
-                "social_welfare": float(result['social_welfare']),
-                "gini_coefficient": float(result['gini_coefficient']),
-                "price_discrimination_index": float(result['price_discrimination_index'])
+                "consumer_surplus": float(eval_result.consumer_surplus),
+                "producer_profit": float(eval_result.producer_profit_with_data),
+                "intermediary_profit": float(eval_result.intermediary_profit),
+                "social_welfare": float(eval_result.social_welfare),
+                "gini_coefficient": float(eval_result.gini_coefficient),
+                "price_discrimination_index": float(eval_result.price_discrimination_index)
             },
             "data_transaction": {
-                "m_0": float(result['m_0_star']),
-                "producer_profit_with_data": float(result['producer_profit']),
-                "producer_profit_no_data": 0.0,  # 需要从result获取
-                "producer_profit_gain": 0.0,
-                "expected_num_participants": float(result['num_participants']),
-                "intermediary_cost": float(result['intermediary_cost'])
+                "m_0": float(eval_result.m_0),
+                "producer_profit_with_data": float(eval_result.producer_profit_with_data),
+                "producer_profit_no_data": float(eval_result.producer_profit_no_data),
+                "producer_profit_gain": float(eval_result.producer_profit_gain),
+                "expected_num_participants": float(eval_result.num_participants),
+                "intermediary_cost": float(eval_result.intermediary_cost)
             },
             "sample_data": {
-                "w": result['sample_data_w'],
-                "s": result['sample_data_s'],
-                "theta": result.get('sample_data_theta'),
-                "epsilon": result.get('sample_data_epsilon'),
+                "w": sample_data.w.tolist(),
+                "s": sample_data.s.tolist(),
+                "theta": float(sample_data.theta) if sample_data.theta is not None else None,
+                "epsilon": float(sample_data.epsilon) if sample_data.epsilon is not None else None,
             },
-            "sample_participation": result['sample_participation'],
+            "sample_participation": sample_participation,
             "optimization_info": {
                 "method": "hybrid",
                 "m_bounds": [0.0, 3.0],
-                "convergence": result.get('convergence_info', {})
+                "convergence": result.get('results_by_policy', {}).get(result['anonymization_star'], {}).get('info', {})
             }
         }
     
@@ -263,40 +294,25 @@ def generate_conditional_equilibria_for_comparison():
 def main():
     """主函数：生成所有Ground Truth配置"""
     print("=" * 70)
-    print("场景C Ground Truth 生成器 - 完整模式")
+    print("场景C Ground Truth 生成器 - 简化模式")
     print("=" * 70)
-    print("\n将生成以下配置：")
-    # print("  1. 最优GT - Common Experience（论文理论解）")
-    print("  1. 最优GT - Common Preferences（论文理论解，使用混合优化）")
-    print("  2. 条件均衡 - 2x2对比（固定m=1.0，研究用）")
+    print("\n将生成：")
+    print("  • 最优GT - Common Preferences（论文理论解，使用混合优化+个性化补偿）")
     print()
     
     try:
-        # 1. 生成最优GT（只生成common_preferences）
+        # 只生成common_preferences最优GT
         print("\n" + "=" * 70)
-        print("第一步：生成最优Ground Truth（论文理论解）")
+        print("生成最优Ground Truth（论文理论解）")
         print("=" * 70)
         
-        # generate_optimal_gt_common_experience()  # 暂时不生成
         generate_optimal_gt_common_preferences()
         
-        # 2. 生成条件均衡（研究用）
         print("\n" + "=" * 70)
-        print("第二步：生成条件均衡（研究用）")
+        print("✅ Ground Truth生成完成！")
         print("=" * 70)
-        
-        generate_conditional_equilibria_for_comparison()
-        
-        print("\n" + "=" * 70)
-        print("✅ 所有Ground Truth生成完成！")
-        print("=" * 70)
-        print("\n生成文件列表：")
-        # print("  • scenario_c_common_experience_optimal.json（最优GT）")
-        print("  • scenario_c_common_preferences_optimal.json（最优GT）")
-        print("  • scenario_c_common_preferences_identified_m1.0.json（条件均衡）")
-        print("  • scenario_c_common_preferences_anonymized_m1.0.json（条件均衡）")
-        print("  • scenario_c_common_experience_identified_m1.0.json（条件均衡）")
-        print("  • scenario_c_common_experience_anonymized_m1.0.json（条件均衡）")
+        print("\n生成文件：")
+        print("  • scenario_c_common_preferences_optimal.json")
         print()
     
     except Exception as e:

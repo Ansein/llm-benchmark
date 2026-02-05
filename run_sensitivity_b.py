@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Tuple
 
-from src.evaluators.llm_client import create_llm_client
+from src.evaluators.llm_client import LLMClient, load_model_configs
 from run_prompt_experiments import CustomScenarioBEvaluator, PromptVersionParser
 
 
@@ -20,7 +20,8 @@ def run_sensitivity_experiment(
     prompt_version: str,
     model_names: List[str],
     num_trials: int = 3,
-    output_dir: str = "sensitivity_results/scenario_b"
+    output_dir: str = "sensitivity_results/scenario_b",
+    config_file: str = "configs/model_configs.json"
 ):
     """
     运行敏感度实验（方案D：多模型版本）
@@ -32,6 +33,7 @@ def run_sensitivity_experiment(
         model_names: 模型名称列表
         num_trials: 重复次数
         output_dir: 输出目录
+        config_file: 模型配置文件路径
     """
     print(f"\n{'='*80}")
     print(f"场景B敏感度分析 - 方案D（多模型×多试验）")
@@ -43,6 +45,15 @@ def run_sensitivity_experiment(
     print(f"模型列表: {model_names}")
     print(f"重复次数: {num_trials}")
     print(f"总实验数: {len(rho_values)} × {len(v_ranges)} × {len(model_names)} × {num_trials} = {len(rho_values) * len(v_ranges) * len(model_names) * num_trials}")
+    
+    # 加载模型配置
+    model_configs = load_model_configs(config_file)
+    
+    # 验证所有模型配置存在
+    for model_name in model_names:
+        if model_name not in model_configs:
+            available = list(model_configs.keys())
+            raise ValueError(f"模型 '{model_name}' 不存在。可用模型: {available}")
     
     # 创建输出目录
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -111,8 +122,13 @@ def run_sensitivity_experiment(
                     log_dir.mkdir(parents=True, exist_ok=True)
                     
                     try:
-                        # 创建LLM客户端
-                        llm_client = create_llm_client(model_name, log_dir=str(log_dir))
+                        # 创建LLM客户端（参考run_prompt_experiments.py的做法）
+                        llm_config = model_configs[model_name].copy()
+                        llm_config["generate_args"] = llm_config.get("generate_args", {}).copy()
+                        llm_config["generate_args"]["temperature"] = 0.7
+                        llm_config["generate_args"]["max_tokens"] = 1500
+                        
+                        llm_client = LLMClient(config=llm_config, log_dir=str(log_dir))
                         
                         # 创建评估器
                         evaluator = CustomScenarioBEvaluator(
@@ -228,6 +244,9 @@ def main():
     parser.add_argument("--output-dir", type=str, 
                         default="sensitivity_results/scenario_b",
                         help="输出目录")
+    parser.add_argument("--config-file", type=str,
+                        default="configs/model_configs.json",
+                        help="模型配置文件路径")
     
     args = parser.parse_args()
     
@@ -242,7 +261,8 @@ def main():
         prompt_version=args.prompt_version,
         model_names=args.models,
         num_trials=args.num_trials,
-        output_dir=args.output_dir
+        output_dir=args.output_dir,
+        config_file=args.config_file
     )
 
 

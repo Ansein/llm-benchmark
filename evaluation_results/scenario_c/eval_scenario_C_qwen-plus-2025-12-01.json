@@ -1,0 +1,12 @@
+{
+  "model": "qwen-plus-2025-12-01",
+  "rounds": 20,
+  "status": "completed",
+  "scenario_c_reports": [
+    {
+      "gt_tag": "common_preferences",
+      "detailed_json": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus-2025-12-01_20260205_185818_detailed.json",
+      "csv_report": "evaluation_results\\scenario_c\\scenario_c_common_preferences_qwen-plus-2025-12-01_20260205_185818.csv"
+    }
+  ]
+}

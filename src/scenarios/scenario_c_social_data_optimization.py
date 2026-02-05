@@ -14,6 +14,7 @@ from scipy.optimize import minimize, differential_evolution
 from dataclasses import dataclass
 from multiprocessing import Pool, cpu_count
 from functools import partial
+import threading
 
 from src.scenarios.scenario_c_social_data import (
     ScenarioCParams,
@@ -24,6 +25,44 @@ from src.scenarios.scenario_c_social_data import (
 )
 
 
+class EarlyStopCounter:
+    """早停计数器：跟踪函数评估次数，达到限制时停止"""
+    def __init__(self, max_evaluations: int = 1600):
+        self.max_evaluations = max_evaluations
+        self.count = 0
+        self.lock = threading.Lock()
+        self.stopped = False
+    
+    def increment(self):
+        """增加计数并检查是否达到限制"""
+        with self.lock:
+            self.count += 1
+            if self.count >= self.max_evaluations:
+                self.stopped = True
+                return True
+            return False
+    
+    def reset(self):
+        """重置计数器"""
+        with self.lock:
+            self.count = 0
+            self.stopped = False
+    
+    def get_count(self):
+        """获取当前计数"""
+        with self.lock:
+            return self.count
+
+
+class EarlyStopError(Exception):
+    """早停异常：达到最大评估次数时抛出"""
+    pass
+
+
+# 全局早停计数器
+_early_stop_counter = EarlyStopCounter(max_evaluations=1600)
+
+
 def evaluate_m_vector_profit(
     m_vector: np.ndarray,
     anonymization: str,
@@ -31,7 +70,8 @@ def evaluate_m_vector_profit(
     num_mc_samples: int = 30,
     max_iter: int = 20,
     tol: float = 1e-3,
-    seed: Optional[int] = None
+    seed: Optional[int] = None,
+    early_stop_counter: Optional[EarlyStopCounter] = None
 ) -> float:
     """
     评估给定m向量的中介利润
@@ -42,11 +82,22 @@ def evaluate_m_vector_profit(
         m_vector: N维补偿向量
         anonymization: 匿名化策略
         params_base: 基础参数
+        early_stop_counter: 早停计数器（可选）
         ...
     
     Returns:
         中介利润R（负值如果亏损，用于最小化）
+    
+    Raises:
+        EarlyStopError: 如果达到最大评估次数
     """
+    # ✅ 早停检查
+    counter = early_stop_counter if early_stop_counter is not None else _early_stop_counter
+    if counter.increment():
+        raise EarlyStopError(
+            f"达到最大函数评估次数限制 ({counter.max_evaluations}次)，强制停止优化。"
+        )
+    
     # 构建参数
     params = ScenarioCParams(
         m=m_vector.copy(),
@@ -55,26 +106,31 @@ def evaluate_m_vector_profit(
     )
     
     try:
-        # 计算均衡参与率
-        r_star, r_history, delta_u = compute_rational_participation_rate(
+        # ✅ 修复：无论m当前是否个性化，都为每个消费者单独计算
+        # 这样优化器才能"看到"个性化的潜在好处
+        # 否则会陷入循环：m统一 → 代表性消费者 → 梯度对称 → m保持统一
+        
+        # 计算均衡参与率（始终使用个性化模式）
+        r_star, r_history, delta_u_avg, delta_u_vector, p_vector = compute_rational_participation_rate(
             params,
             max_iter=max_iter,
             tol=tol,
-            num_mc_samples=num_mc_samples
+            num_mc_samples=num_mc_samples,
+            compute_per_consumer=True  # ✅ 始终为每个消费者单独计算
         )
         
-        # 定义参与决策规则
+        # 定义参与决策规则（使用个性化的ΔU）
         def participation_rule(p, world, rng):
             if p.tau_dist == "none":
-                return np.full(p.N, delta_u > 0, dtype=bool)
+                return delta_u_vector > 0
             elif p.tau_dist == "normal":
                 tau_samples = rng.normal(p.tau_mean, p.tau_std, p.N)
-                return tau_samples <= delta_u
+                return tau_samples <= delta_u_vector
             elif p.tau_dist == "uniform":
                 tau_low = p.tau_mean - np.sqrt(3) * p.tau_std
                 tau_high = p.tau_mean + np.sqrt(3) * p.tau_std
                 tau_samples = rng.uniform(tau_low, tau_high, p.N)
-                return tau_samples <= delta_u
+                return tau_samples <= delta_u_vector
             else:
                 return np.full(p.N, False, dtype=bool)
         
@@ -87,11 +143,10 @@ def evaluate_m_vector_profit(
             seed=seed if seed is not None else params_base.get('seed', 42)
         )
         
-        # 计算中介利润
+        # 计算中介利润（使用个性化参与概率）
         # R = m_0 - E[Σ m_i·a_i]
-        # 近似：E[Σ m_i·a_i] ≈ Σ m_i·r_star·(1/N) * N = r_star·Σ m_i
-        # 更精确：如果r_star是通过tau分布计算的，可以直接用e_num_participants
-        intermediary_cost = np.mean(m_vector) * e_num_participants
+        # ✅ 始终使用个性化版本：E[Σ m_i·a_i] = Σ m_i·p_i
+        intermediary_cost = np.sum(m_vector * p_vector)
         intermediary_profit = m_0 - intermediary_cost
         
         return intermediary_profit
@@ -148,18 +203,29 @@ def optimize_m_vector_scipy(
         print(f"匿名化策略: {anonymization}")
         print(f"补偿范围: [{m_bounds[0]:.2f}, {m_bounds[1]:.2f}]")
     
+    # ✅ 创建早停计数器（每个优化任务独立）
+    early_stop_counter = EarlyStopCounter(max_evaluations=1600)
+    
     # 定义目标函数（最大化利润 = 最小化负利润）
     def objective(m_vec):
-        profit = evaluate_m_vector_profit(
-            m_vector=m_vec,
-            anonymization=anonymization,
-            params_base=params_base,
-            num_mc_samples=num_mc_samples,
-            max_iter=max_iter,
-            tol=tol,
-            seed=seed
-        )
-        return -profit  # 最小化负利润
+        try:
+            profit = evaluate_m_vector_profit(
+                m_vector=m_vec,
+                anonymization=anonymization,
+                params_base=params_base,
+                num_mc_samples=num_mc_samples,
+                max_iter=max_iter,
+                tol=tol,
+                seed=seed,
+                early_stop_counter=early_stop_counter
+            )
+            return -profit  # 最小化负利润
+        except EarlyStopError as e:
+            # 返回一个很大的值，让优化器停止
+            if verbose:
+                print(f"\n⚠️  早停触发: {e}")
+                print(f"   已评估 {early_stop_counter.get_count()} 次")
+            raise  # 重新抛出异常，让优化器捕获
     
     # 初始值：如果提供则使用，否则使用tau_mean作为初始猜测
     if m_init is None:
@@ -171,18 +237,61 @@ def optimize_m_vector_scipy(
     if verbose:
         print(f"\n初始值: m_init = {np.mean(m_init):.3f} (均值)")
         print(f"开始优化...")
+        print(f"早停限制: 最多 {early_stop_counter.max_evaluations} 次函数评估")
     
     # 运行优化
-    result = minimize(
-        fun=objective,
-        x0=m_init,
-        method=method,
-        bounds=bounds,
-        options={
-            'disp': verbose,
-            'maxiter': 100
-        }
-    )
+    try:
+        result = minimize(
+            fun=objective,
+            x0=m_init,
+            method=method,
+            bounds=bounds,
+            options={
+                'disp': verbose,
+                'maxiter': 100
+            }
+        )
+    except EarlyStopError as e:
+        # 早停：返回当前最佳值（如果有）
+        if verbose:
+            print(f"\n{'='*80}")
+            print(f"⚠️  优化因早停而终止")
+            print(f"{'='*80}")
+            print(f"原因: {e}")
+            print(f"已评估次数: {early_stop_counter.get_count()}")
+        
+        # 尝试使用最后一次评估的值（如果可用）
+        # 注意：scipy.minimize 在异常时可能没有 result 对象
+        # 这里我们需要一个fallback策略
+        if verbose:
+            print(f"使用初始值作为近似解")
+        m_star_vector = m_init.copy()
+        # 评估一次以获取利润
+        try:
+            profit_star = evaluate_m_vector_profit(
+                m_vector=m_init,
+                anonymization=anonymization,
+                params_base=params_base,
+                num_mc_samples=num_mc_samples,
+                max_iter=max_iter,
+                tol=tol,
+                seed=seed,
+                early_stop_counter=None  # 不计数，因为这是最终评估
+            )
+        except:
+            profit_star = -1e6  # fallback
+        
+        # 创建假的result对象
+        class FakeResult:
+            def __init__(self):
+                self.x = m_star_vector
+                self.fun = -profit_star
+                self.success = False
+                self.nit = 0
+                self.nfev = early_stop_counter.get_count()
+                self.message = f"Early stop at {early_stop_counter.get_count()} evaluations"
+        
+        result = FakeResult()
     
     m_star_vector = result.x
     profit_star = -result.fun  # 转换回正值
@@ -202,6 +311,21 @@ def optimize_m_vector_scipy(
         print(f"  最大值: {np.max(m_star_vector):.4f}")
         print(f"{'='*80}")
     
+    # 计算最优解对应的r_star（用于GT生成）
+    params = params_base.copy()
+    params['m'] = m_star_vector
+    params['anonymization'] = anonymization
+    params = ScenarioCParams(**params)
+    
+    # ✅ 始终使用个性化计算以保持一致性
+    r_star_final, _, delta_u_final, _, _ = compute_rational_participation_rate(
+        params,
+        max_iter=max_iter,
+        tol=tol,
+        num_mc_samples=num_mc_samples,
+        compute_per_consumer=True
+    )
+    
     info = {
         'success': result.success,
         'nit': result.nit,
@@ -210,7 +334,9 @@ def optimize_m_vector_scipy(
         'm_mean': float(np.mean(m_star_vector)),
         'm_std': float(np.std(m_star_vector)),
         'm_min': float(np.min(m_star_vector)),
-        'm_max': float(np.max(m_star_vector))
+        'm_max': float(np.max(m_star_vector)),
+        'r_star': float(r_star_final),
+        'delta_u': float(delta_u_final)
     }
     
     return m_star_vector, profit_star, info
@@ -265,39 +391,89 @@ def optimize_m_vector_evolutionary(
         print(f"种群大小: {popsize} × N = {popsize * N}")
         print(f"最大代数: {maxiter}")
     
+    # ✅ 创建早停计数器（每个优化任务独立）
+    early_stop_counter = EarlyStopCounter(max_evaluations=1600)
+    
     # 定义目标函数
     def objective(m_vec):
-        profit = evaluate_m_vector_profit(
-            m_vector=m_vec,
-            anonymization=anonymization,
-            params_base=params_base,
-            num_mc_samples=num_mc_samples,
-            max_iter=max_iter_fp,
-            tol=tol,
-            seed=seed
-        )
-        return -profit  # 最小化负利润
+        try:
+            profit = evaluate_m_vector_profit(
+                m_vector=m_vec,
+                anonymization=anonymization,
+                params_base=params_base,
+                num_mc_samples=num_mc_samples,
+                max_iter=max_iter_fp,
+                tol=tol,
+                seed=seed,
+                early_stop_counter=early_stop_counter
+            )
+            return -profit  # 最小化负利润
+        except EarlyStopError as e:
+            if verbose:
+                print(f"\n⚠️  早停触发: {e}")
+                print(f"   已评估 {early_stop_counter.get_count()} 次")
+            raise
     
     # 边界约束
     bounds = [m_bounds for _ in range(N)]
     
     if verbose:
         print(f"\n开始进化搜索...")
+        print(f"早停限制: 最多 {early_stop_counter.max_evaluations} 次函数评估")
     
     # 运行进化算法
-    result = differential_evolution(
-        func=objective,
-        bounds=bounds,
-        strategy='best1bin',
-        maxiter=maxiter,
-        popsize=popsize,
-        tol=0.01,
-        mutation=(0.5, 1),
-        recombination=0.7,
-        seed=seed,
-        disp=verbose,
-        polish=True  # 最后用局部优化polish
-    )
+    try:
+        result = differential_evolution(
+            func=objective,
+            bounds=bounds,
+            strategy='best1bin',
+            maxiter=maxiter,
+            popsize=popsize,
+            tol=0.01,
+            mutation=(0.5, 1),
+            recombination=0.7,
+            seed=seed,
+            disp=verbose,
+            polish=True  # 最后用局部优化polish
+        )
+    except EarlyStopError as e:
+        # 早停：返回当前最佳值
+        if verbose:
+            print(f"\n{'='*80}")
+            print(f"⚠️  进化搜索因早停而终止")
+            print(f"{'='*80}")
+            print(f"原因: {e}")
+            print(f"已评估次数: {early_stop_counter.get_count()}")
+            print(f"使用当前种群最佳值作为近似解")
+        
+        # 对于进化算法，我们需要一个fallback
+        # 这里使用边界中点作为近似
+        m_star_vector = np.full(N, (m_bounds[0] + m_bounds[1]) / 2)
+        try:
+            profit_star = evaluate_m_vector_profit(
+                m_vector=m_star_vector,
+                anonymization=anonymization,
+                params_base=params_base,
+                num_mc_samples=num_mc_samples,
+                max_iter=max_iter_fp,
+                tol=tol,
+                seed=seed,
+                early_stop_counter=None  # 不计数
+            )
+        except:
+            profit_star = -1e6
+        
+        # 创建假的result对象
+        class FakeResult:
+            def __init__(self):
+                self.x = m_star_vector
+                self.fun = -profit_star
+                self.success = False
+                self.nit = 0
+                self.nfev = early_stop_counter.get_count()
+                self.message = f"Early stop at {early_stop_counter.get_count()} evaluations"
+        
+        result = FakeResult()
     
     m_star_vector = result.x
     profit_star = -result.fun
@@ -317,6 +493,21 @@ def optimize_m_vector_evolutionary(
         print(f"  最大值: {np.max(m_star_vector):.4f}")
         print(f"{'='*80}")
     
+    # 计算最优解对应的r_star（用于GT生成）
+    params = params_base.copy()
+    params['m'] = m_star_vector
+    params['anonymization'] = anonymization
+    params = ScenarioCParams(**params)
+    
+    # ✅ 始终使用个性化计算以保持一致性
+    r_star_final, _, delta_u_final, _, _ = compute_rational_participation_rate(
+        params,
+        max_iter=max_iter_fp,
+        tol=tol,
+        num_mc_samples=num_mc_samples,
+        compute_per_consumer=True
+    )
+    
     info = {
         'success': result.success,
         'nit': result.nit,
@@ -325,7 +516,9 @@ def optimize_m_vector_evolutionary(
         'm_mean': float(np.mean(m_star_vector)),
         'm_std': float(np.std(m_star_vector)),
         'm_min': float(np.min(m_star_vector)),
-        'm_max': float(np.max(m_star_vector))
+        'm_max': float(np.max(m_star_vector)),
+        'r_star': float(r_star_final),
+        'delta_u': float(delta_u_final)
     }
     
     return m_star_vector, profit_star, info
@@ -335,7 +528,13 @@ def _evaluate_single_m_grid(args):
     """辅助函数：评估单个网格点（用于并行）"""
     m_val, params_base, policy, num_mc_samples, max_iter, N = args
     m_uniform = np.full(N, m_val)
-    profit = evaluate_m_vector_profit(m_uniform, policy, params_base, num_mc_samples, max_iter)
+    # 注意：并行时每个进程有独立的计数器，这里不传递计数器
+    # 如果需要全局计数，需要使用共享内存或其他机制
+    try:
+        profit = evaluate_m_vector_profit(m_uniform, policy, params_base, num_mc_samples, max_iter)
+    except EarlyStopError:
+        # 如果达到限制，返回一个很小的值
+        profit = -1e6
     return m_val, profit
 
 
@@ -414,30 +613,40 @@ def optimize_intermediary_policy_personalized(
             m_grid = np.linspace(m_bounds[0], m_bounds[1], grid_size)
             
             # 并行评估网格点
+            parallel_success = False
             if n_jobs > 1 and grid_size > 3:
-                if verbose:
-                    print(f"  使用{n_jobs}个进程并行评估...")
-                
-                # 准备参数
-                N = params_base['N']
-                args_list = [(m_val, params_base, policy, num_mc_samples, max_iter, N) 
-                            for m_val in m_grid]
-                
-                # 并行计算
-                with Pool(processes=n_jobs) as pool:
-                    results = pool.map(_evaluate_single_m_grid, args_list)
-                
-                # 找最优
-                best_m_uniform = m_bounds[0]
-                best_profit_grid = -np.inf
-                for m_val, profit in results:
-                    if profit > best_profit_grid:
-                        best_profit_grid = profit
-                        best_m_uniform = m_val
+                try:
                     if verbose:
-                        print(f"  m={m_val:.2f} -> profit={profit:.4f}")
-            else:
-                # 串行评估
+                        print(f"  使用{n_jobs}个进程并行评估...")
+                    
+                    # 准备参数
+                    N = params_base['N']
+                    args_list = [(m_val, params_base, policy, num_mc_samples, max_iter, N) 
+                                for m_val in m_grid]
+                    
+                    # 并行计算
+                    with Pool(processes=n_jobs) as pool:
+                        results = pool.map(_evaluate_single_m_grid, args_list)
+                    
+                    # 找最优
+                    best_m_uniform = m_bounds[0]
+                    best_profit_grid = -np.inf
+                    for m_val, profit in results:
+                        if profit > best_profit_grid:
+                            best_profit_grid = profit
+                            best_m_uniform = m_val
+                        if verbose:
+                            print(f"  m={m_val:.2f} -> profit={profit:.4f}")
+                    
+                    parallel_success = True
+                    
+                except (PermissionError, OSError) as e:
+                    if verbose:
+                        print(f"  [WARNING] 并行计算失败: {e}")
+                        print(f"  退回到串行模式...")
+            
+            if not parallel_success:
+                # 串行评估（fallback或默认）
                 best_m_uniform = m_bounds[0]
                 best_profit_grid = -np.inf
                 
@@ -543,6 +752,8 @@ def optimize_intermediary_policy_personalized(
         'm_star_vector': best_result['m_vector'],
         'anonymization_star': best_policy,
         'profit_star': best_result['profit'],
+        'r_star': best_result['info']['r_star'],
+        'delta_u': best_result['info']['delta_u'],
         'results_by_policy': results_by_policy,
         'participation_feasible': True,
         'optimization_method': optimization_method

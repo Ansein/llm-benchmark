@@ -1744,8 +1744,9 @@ def compute_rational_participation_rate_ex_ante(
     max_iter: int = 100,
     tol: float = 1e-3,
     num_world_samples: int = 30,
-    num_market_samples: int = 20
-) -> Tuple[float, List[float]]:
+    num_market_samples: int = 20,
+    compute_per_consumer: bool = False
+) -> Tuple[float, List[float], float, np.ndarray, np.ndarray]:
     """
     Ex Ante固定点：消费者在不知道信号实现时决策
     
@@ -1753,75 +1754,127 @@ def compute_rational_participation_rate_ex_ante(
     1. 无异质性（tau_dist="none"）：r*通常为0或1
     2. 有异质性（tau_dist!="none"）：r* = F_τ(ΔU(r*))，可产生内点
     
+    ✅ 新增：支持个性化补偿m_i的真正计算
+    - 如果compute_per_consumer=True，为每个消费者单独计算ΔU_i(m_i)
+    - 返回每个消费者的ΔU_i和参与概率p_i
+    
     Args:
         params: 场景参数（不需要传入fixed data！）
         max_iter: 最大迭代次数
         tol: 收敛容差
         num_world_samples: 世界状态采样数
         num_market_samples: 市场采样数
+        compute_per_consumer: 是否为每个消费者单独计算（个性化补偿时需要）
         
     Returns:
-        (收敛的参与率, 参与率历史, ΔU)
+        (收敛的参与率, 参与率历史, 平均ΔU, ΔU向量, 参与概率向量)
     """
+    N = params.N
     r = 0.5  # 初始参与率
     r_history = [r]
-    delta_u = 0.0  # 保存最后的ΔU
+    delta_u_avg = 0.0  # 平均ΔU（向后兼容）
+    delta_u_vector = np.zeros(N)  # 每个消费者的ΔU
+    p_vector = np.zeros(N)  # 每个消费者的参与概率
     
     for iteration in range(max_iter):
-        # 计算代表性消费者的期望效用差（Ex Ante）
-        # 注意：由于对称性，只需计算一个代表性消费者即可
-        utility_accept = compute_expected_utility_ex_ante(
-            consumer_id=0,  # 代表性消费者
-            participates=True,
-            others_participation_rate=r,
-            params=params,
-            num_world_samples=num_world_samples,
-            num_market_samples=num_market_samples
-        )
-        
-        utility_reject = compute_expected_utility_ex_ante(
-            consumer_id=0,
-            participates=False,
-            others_participation_rate=r,
-            params=params,
-            num_world_samples=num_world_samples,
-            num_market_samples=num_market_samples
-        )
-        
-        delta_u = utility_accept - utility_reject  # m已经在效用中计入
-        
-        # 根据异质性设置计算新参与率
-        if params.tau_dist == "none":
-            # 无异质性：r*∈{0,1}
-            r_new = 1.0 if delta_u > 0 else 0.0
-        elif params.tau_dist == "normal":
-            # 异质性：r* = P(τ_i ≤ ΔU) = Φ((ΔU - μ_τ) / σ_τ)
-            from scipy.stats import norm
-            r_new = norm.cdf(delta_u, loc=params.tau_mean, scale=params.tau_std)
-        elif params.tau_dist == "uniform":
-            # τ_i ~ Uniform[μ_τ - √3·σ_τ, μ_τ + √3·σ_τ]
-            a = params.tau_mean - np.sqrt(3) * params.tau_std
-            b = params.tau_mean + np.sqrt(3) * params.tau_std
-            r_new = np.clip((delta_u - a) / (b - a), 0, 1)
+        if compute_per_consumer:
+            # 个性化模式：为每个消费者单独计算ΔU_i(m_i)
+            delta_u_vector = np.zeros(N)
+            for i in range(N):
+                utility_accept_i = compute_expected_utility_ex_ante(
+                    consumer_id=i,
+                    participates=True,
+                    others_participation_rate=r,
+                    params=params,
+                    num_world_samples=num_world_samples,
+                    num_market_samples=num_market_samples
+                )
+                
+                utility_reject_i = compute_expected_utility_ex_ante(
+                    consumer_id=i,
+                    participates=False,
+                    others_participation_rate=r,
+                    params=params,
+                    num_world_samples=num_world_samples,
+                    num_market_samples=num_market_samples
+                )
+                
+                delta_u_vector[i] = utility_accept_i - utility_reject_i
+            
+            delta_u_avg = np.mean(delta_u_vector)
+            
+            # 计算每个消费者的参与概率
+            if params.tau_dist == "none":
+                p_vector = (delta_u_vector > 0).astype(float)
+            elif params.tau_dist == "normal":
+                from scipy.stats import norm
+                p_vector = norm.cdf(delta_u_vector, loc=params.tau_mean, scale=params.tau_std)
+            elif params.tau_dist == "uniform":
+                a = params.tau_mean - np.sqrt(3) * params.tau_std
+                b = params.tau_mean + np.sqrt(3) * params.tau_std
+                p_vector = np.clip((delta_u_vector - a) / (b - a), 0, 1)
+            else:
+                raise ValueError(f"Unsupported tau_dist: {params.tau_dist}")
+            
+            # 平均参与率
+            r_new = np.mean(p_vector)
+            
         else:
-            raise ValueError(f"Unsupported tau_dist: {params.tau_dist}")
+            # 代表性消费者模式（向后兼容，用于统一补偿）
+            utility_accept = compute_expected_utility_ex_ante(
+                consumer_id=0,  # 代表性消费者
+                participates=True,
+                others_participation_rate=r,
+                params=params,
+                num_world_samples=num_world_samples,
+                num_market_samples=num_market_samples
+            )
+            
+            utility_reject = compute_expected_utility_ex_ante(
+                consumer_id=0,
+                participates=False,
+                others_participation_rate=r,
+                params=params,
+                num_world_samples=num_world_samples,
+                num_market_samples=num_market_samples
+            )
+            
+            delta_u_avg = utility_accept - utility_reject
+            delta_u_vector = np.full(N, delta_u_avg)  # 所有人相同
+            
+            # 根据异质性设置计算新参与率
+            if params.tau_dist == "none":
+                r_new = 1.0 if delta_u_avg > 0 else 0.0
+                p_vector = np.full(N, r_new)
+            elif params.tau_dist == "normal":
+                from scipy.stats import norm
+                r_new = norm.cdf(delta_u_avg, loc=params.tau_mean, scale=params.tau_std)
+                p_vector = np.full(N, r_new)
+            elif params.tau_dist == "uniform":
+                a = params.tau_mean - np.sqrt(3) * params.tau_std
+                b = params.tau_mean + np.sqrt(3) * params.tau_std
+                r_new = np.clip((delta_u_avg - a) / (b - a), 0, 1)
+                p_vector = np.full(N, r_new)
+            else:
+                raise ValueError(f"Unsupported tau_dist: {params.tau_dist}")
         
         r_history.append(r_new)
         
         # 检查收敛
         if abs(r_new - r) < tol:
-            print(f"  Ex Ante固定点收敛于迭代 {iteration + 1}, r* = {r_new:.4f}, ΔU = {delta_u:.4f}")
-            return r_new, r_history, delta_u
+            mode_str = "个性化" if compute_per_consumer else "代表性消费者"
+            print(f"  Ex Ante固定点收敛于迭代 {iteration + 1} ({mode_str}), r* = {r_new:.4f}, ΔU_avg = {delta_u_avg:.4f}")
+            if compute_per_consumer:
+                print(f"    ΔU范围: [{np.min(delta_u_vector):.4f}, {np.max(delta_u_vector):.4f}], std={np.std(delta_u_vector):.4f}")
+            return r_new, r_history, delta_u_avg, delta_u_vector, p_vector
         
         # 平滑更新
         r = 0.6 * r_new + 0.4 * r
     
-    # ⚠️ P1-2修正：Ground Truth必须收敛，否则不可用
-    # 未收敛说明算法参数不足（max_iter太小或tol太严格）或模型不稳定
-    # Ground Truth生成器不应返回未收敛的结果
+    # 未收敛
     raise RuntimeError(
         f"Ex Ante固定点未在{max_iter}次迭代内收敛！\n"
-        f"当前 r = {r:.4f}, 最后ΔU = {delta_u:.4f}\n"
+        f"当前 r = {r:.4f}, 最后ΔU_avg = {delta_u_avg:.4f}\n"
         f"建议：增加max_iter或放宽tol\n"
         f"历史：{[f'{x:.3f}' for x in r_history[-10:]]}"
     )
@@ -1908,8 +1961,9 @@ def compute_rational_participation_rate(
     data: ConsumerData = None,
     max_iter: int = 100,
     tol: float = 1e-3,
-    num_mc_samples: int = 50
-) -> Tuple[float, List[float]]:
+    num_mc_samples: int = 50,
+    compute_per_consumer: bool = False
+) -> Tuple[float, List[float], float, np.ndarray, np.ndarray]:
     """
     计算理性参与率的统一接口
     
@@ -1923,9 +1977,10 @@ def compute_rational_participation_rate(
         max_iter: 最大迭代次数
         tol: 收敛容差
         num_mc_samples: MC采样数（含义依时序而异）
+        compute_per_consumer: 是否为每个消费者单独计算（个性化补偿时需要）
         
     Returns:
-        (收敛的参与率, 参与率历史)
+        (收敛的参与率, 参与率历史, 平均ΔU, ΔU向量, 参与概率向量)
     """
     if params.participation_timing == "ex_ante":
         # Ex Ante: 对所有随机性取平均
@@ -1938,7 +1993,8 @@ def compute_rational_participation_rate(
             max_iter=max_iter,
             tol=tol,
             num_world_samples=num_world,
-            num_market_samples=num_market
+            num_market_samples=num_market,
+            compute_per_consumer=compute_per_consumer
         )
     
     elif params.participation_timing == "ex_post":
@@ -1946,13 +2002,18 @@ def compute_rational_participation_rate(
         if data is None:
             raise ValueError("Ex Post模式需要提供data参数")
         
-        return compute_rational_participation_rate_ex_post(
+        r_star, r_history = compute_rational_participation_rate_ex_post(
             data=data,
             params=params,
             max_iter=max_iter,
             tol=tol,
             num_mc_samples=num_mc_samples
         )
+        # Ex Post不支持个性化计算，返回统一值
+        delta_u_avg = 0.0  # Ex Post模式不返回ΔU
+        delta_u_vector = np.zeros(params.N)
+        p_vector = np.full(params.N, r_star)
+        return r_star, r_history, delta_u_avg, delta_u_vector, p_vector
     
     else:
         raise ValueError(f"Unsupported participation_timing: {params.participation_timing}")
@@ -2067,19 +2128,15 @@ def generate_conditional_equilibrium(
     
     delta_u = None  # 保存ΔU（用于基于τ_i的participation生成）
     
-    if params.participation_timing == "ex_post":
-        # Ex Post需要先生成数据
-        print(f"生成消费者数据...")
-        # Ex Post暂不返回delta_u（TODO: 可以返回平均delta_u）
-        result = compute_rational_participation_rate(
-            params, None, max_iter, tol, num_mc_samples
-        )
-        rational_rate, r_history = result if len(result) == 2 else result[:2]
-    else:
-        # Ex Ante不需要先生成数据
-        rational_rate, r_history, delta_u = compute_rational_participation_rate_ex_ante(
-            params, max_iter, tol, num_mc_samples, num_mc_samples
-        )
+    # 计算理性参与率（使用统一接口）
+    rational_rate, r_history, delta_u, delta_u_vector, p_vector = compute_rational_participation_rate(
+        params,
+        data=None,
+        max_iter=max_iter,
+        tol=tol,
+        num_mc_samples=num_mc_samples,
+        compute_per_consumer=False  # optimize_intermediary_policy使用代表性消费者
+    )
     
     # ========================================================================
     # 新增：计算内生m_0（生产者对数据的支付意愿）
@@ -2903,11 +2960,12 @@ def evaluate_intermediary_strategy(
     )
     
     # 内层：求解消费者均衡
-    r_star, r_history, delta_u = compute_rational_participation_rate(
+    r_star, r_history, delta_u, delta_u_vector, p_vector = compute_rational_participation_rate(
         params,
         max_iter=max_iter,
         tol=tol,
-        num_mc_samples=num_mc_samples
+        num_mc_samples=num_mc_samples,
+        compute_per_consumer=False  # 生成equilibrium结果时使用代表性消费者
     )
     
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

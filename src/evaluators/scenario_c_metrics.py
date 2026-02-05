@@ -209,22 +209,42 @@ def compute_strategy_metrics(
     计算中介策略指标
     
     Args:
-        m_llm: LLM选择的补偿
+        m_llm: LLM选择的补偿（标量或向量）
         anon_llm: LLM选择的匿名化策略
-        m_theory: 理论最优补偿
+        m_theory: 理论最优补偿（标量或向量）
         anon_theory: 理论最优匿名化策略
     
     Returns:
         策略指标字典
     """
-    m_absolute_error = abs(m_llm - m_theory)
-    m_relative_error = m_absolute_error / m_theory if m_theory > 0 else float('inf')
+    import numpy as np
+    
+    # 处理m_theory（可能是向量）
+    if isinstance(m_theory, (list, np.ndarray)):
+        m_theory_scalar = float(np.mean(m_theory))  # 使用均值对比
+        m_theory_std = float(np.std(m_theory))
+    else:
+        m_theory_scalar = float(m_theory)
+        m_theory_std = 0.0
+    
+    # 处理m_llm（可能是向量）
+    if isinstance(m_llm, (list, np.ndarray)):
+        m_llm_scalar = float(np.mean(m_llm))
+        m_llm_std = float(np.std(m_llm))
+    else:
+        m_llm_scalar = float(m_llm)
+        m_llm_std = 0.0
+    
+    m_absolute_error = abs(m_llm_scalar - m_theory_scalar)
+    m_relative_error = m_absolute_error / m_theory_scalar if m_theory_scalar > 0 else float('inf')
     anon_match = int(anon_llm == anon_theory)
     strategy_match = int((m_absolute_error < 0.01) and (anon_llm == anon_theory))
     
     return {
-        "m_llm": m_llm,
-        "m_theory": m_theory,
+        "m_llm": m_llm_scalar,
+        "m_llm_std": m_llm_std,
+        "m_theory": m_theory_scalar,
+        "m_theory_std": m_theory_std,
         "m_absolute_error": m_absolute_error,
         "m_relative_error": m_relative_error,
         
@@ -254,6 +274,23 @@ def compute_profit_metrics(
     Returns:
         利润指标字典
     """
+    import numpy as np
+    
+    # 处理成本（可能是向量，需要转换为标量）
+    if cost_llm is not None and isinstance(cost_llm, (list, np.ndarray)):
+        cost_llm_scalar = float(np.sum(cost_llm))  # 总成本
+    elif cost_llm is not None:
+        cost_llm_scalar = float(cost_llm)
+    else:
+        cost_llm_scalar = None
+        
+    if cost_theory is not None and isinstance(cost_theory, (list, np.ndarray)):
+        cost_theory_scalar = float(np.sum(cost_theory))  # 总成本
+    elif cost_theory is not None:
+        cost_theory_scalar = float(cost_theory)
+    else:
+        cost_theory_scalar = None
+    
     profit_diff = profit_llm - profit_theory
     profit_ratio = profit_llm / profit_theory if profit_theory != 0 else 0.0
     profit_loss = max(0.0, profit_theory - profit_llm)
@@ -269,10 +306,10 @@ def compute_profit_metrics(
     }
     
     # 添加成本指标（如果提供）
-    if cost_llm is not None and cost_theory is not None:
-        metrics["cost_llm"] = cost_llm
-        metrics["cost_theory"] = cost_theory
-        metrics["cost_efficiency"] = cost_llm / cost_theory if cost_theory > 0 else 0.0
+    if cost_llm_scalar is not None and cost_theory_scalar is not None:
+        metrics["cost_llm"] = cost_llm_scalar
+        metrics["cost_theory"] = cost_theory_scalar
+        metrics["cost_efficiency"] = cost_llm_scalar / cost_theory_scalar if cost_theory_scalar > 0 else 0.0
     
     return metrics
 

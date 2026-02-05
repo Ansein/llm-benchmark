@@ -11,7 +11,7 @@
    python run_evaluation.py --scenarios A --models deepseek-v3.2 --num-trials 3 --max-iterations 15
 
 3. 场景C批量评估（社会数据外部性）：
-   python run_evaluation.py --scenarios C --models gemini-3-flash-preview gpt-5-mini-2025-08-07 deepseek-v3.2 qwen-plus --max-iterations 20
+   python run_evaluation.py --scenarios C --models qwen-plus-2025-12-01 qwen-plus qwen3-max-2026-01-23 qwen3-max --max-iterations 20
 
 4. 同时评估多个场景：
    python run_evaluation.py --scenarios B C --models deepseek-v3.2 --num-trials 1 --max-iterations 15
