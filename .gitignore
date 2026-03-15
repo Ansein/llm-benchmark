@@ -33,6 +33,25 @@ wheels/
 # 配置文件（包含敏感信息）
 configs/model_configs.json
 
+# Phase 2 用户配置（含 API keys）
+phase2/config.json
+
+# Phase 2 workspace 运行时产物（可重新生成，不纳入版本控制）
+phase2/workspace/messages/
+phase2/workspace/paper_parse.json
+phase2/workspace/paradigm.yaml
+phase2/workspace/solver/
+phase2/workspace/market_config.yaml
+phase2/workspace/raw_results/
+phase2/workspace/metrics/
+phase2/workspace/hypothesis_status.json
+phase2/workspace/*_signoff.json
+phase2/workspace/gate*_request.json
+phase2/workspace/gate*_approved.json
+
+# Phase 2 input PDF（论文版权，不上传）
+phase2/workspace/input/
+
 # 测试和临时文件
 .pytest_cache/
 .coverage
