@@ -1,8 +1,1 @@
-{
-    "agent_llm": {
-        "provider": "openai",
-        "model": "gpt-5.2",
-        "api_key": "sk-AQYc5C2EnFsSF8ESYHfvzzabzVzWApD5dSv1ewvUtq0LItPo",
-        "base_url": "https://api.vectorengine.ai/v1"
-    }
-}
+
