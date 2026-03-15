@@ -1,0 +1,61 @@
+\section{Solver Algorithm}
+\label{app:scenario_b_solver_algorithm}
+
+
+
+\subsection{Algorithm: Stackelberg Solver with Supporting Prices}
+
+\begin{table}[t]
+  \centering
+  \caption{Algorithm D.1: Scenario-B Stackelberg solver (personalized pricing).}
+  \label{tab:alg_scenario_b_solver}
+  \small
+  \setlength{\tabcolsep}{5pt}
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabularx}{\linewidth}{p{0.2\linewidth}X}
+    \toprule
+    \textbf{Block} & \textbf{Specification} \\
+    \midrule
+    Inputs &
+    $\texttt{params}=(n,\Sigma,\sigma_{\text{noise}}^2,\alpha,v)$; \\
+    &
+    $\texttt{exact\_n\_limit}$, $\epsilon$, $\texttt{local\_search\_restarts}$, $\texttt{local\_search\_max\_iters}$. \\
+    \midrule
+    Definitions &
+    Posterior covariance:
+    $\Sigma_{\text{post}}(S)=\Sigma-\Sigma H^\top(H\Sigma H^\top+R)^{-1}H\Sigma$. \\
+    &
+    Leakage for user $i$ under set $S$:
+    $\texttt{leak}_i(S)=\Sigma_{ii}-\Sigma_{\text{post}}(S)_{ii}$. \\
+    &
+    Supporting price:
+    $\texttt{p}_i(S)=v_i\max(0,\texttt{leak}_i(S)-\texttt{leak}_i(S\setminus\{i\}))+\epsilon$ for $i\in S$,
+    and $\texttt{p}_i(S)=0$ for $i\notin S$. \\
+    &
+    Platform profit:
+    $\Pi(S)=\alpha\sum_i \texttt{leak}_i(S)-\sum_{i\in S}\texttt{p}_i(S)$. \\
+    &
+    Welfare:
+    $W(S)=\alpha\sum_i \texttt{leak}_i(S)-\sum_i v_i\texttt{leak}_i(S)$. \\
+    \midrule
+    Procedure \texttt{eval\_set}(S) &
+    (1) Compute leakage vector $\texttt{leak}(S)$ via posterior covariance. \\
+    &
+    (2) Build supporting prices $\texttt{p}(S)$ using marginal leakage $+\epsilon$. \\
+    &
+    (3) Compute $\texttt{total\_leakage}(S)$, $\texttt{platform\_value}(S)$, $\texttt{platform\_payment}(S)$, $\Pi(S)$, $W(S)$, and diagnostics. \\
+    &
+    (4) Return $(\Pi(S),\texttt{p}(S),\texttt{diagnostics},\texttt{outcome})$. \\
+    \midrule
+    Main solver &
+    If $n\le\texttt{exact\_n\_limit}$ (exact mode): enumerate all subsets $S\subseteq\{0,\dots,n-1\}$, evaluate each by \texttt{eval\_set}, and keep the subset with maximal profit. \\
+    &
+    Else (local-search mode): repeat random restarts; at each restart, iteratively check all one-flip neighbors
+    $S' = S\cup\{i\}$ or $S\setminus\{i\}$,
+    accept improving moves, and stop when no improvement or max iterations reached; keep the best local optimum globally. \\
+    \midrule
+    Outputs &
+    $\texttt{eq\_share\_set}$, $\texttt{eq\_prices}$, $\texttt{eq\_profit}$, $\texttt{eq\_W}$, $\texttt{eq\_total\_leakage}$, $\texttt{diagnostics}$, and $\texttt{solver\_mode}\in\{\texttt{\"exact\"},\texttt{\"local\_search\"}\}$. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}

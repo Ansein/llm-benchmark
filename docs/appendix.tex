@@ -1,0 +1,302 @@
+\documentclass[lettersize,journal]{IEEEtran}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{array}
+\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\usepackage{textcomp}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{booktabs}  
+\usepackage{xcolor}    
+\usepackage{colortbl}  
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage{placeins} 
+\usepackage[table]{xcolor}
+\newsavebox{\prompttablebox}
+\makeatletter
+\newcommand{\nesttable}[1]{%
+  \begin{tabular}{|p{1.2cm}|p{1.4cm}|p{1.8cm}|p{3cm}|p{3cm}|}
+    \hline
+    #1
+  \end{tabular}%
+}
+\makeatother
+% \usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{threeparttable}
+
+\hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
+\newsavebox{\agenteconsumerbox}
+\newsavebox{\agentefirmbox}
+\begin{document}
+
+\title{From Outcomes to Mechanisms: A Benchmark for Diagnosing LLM's Mechanism Hallucination on Data Inference Externalities}
+
+\author{Xuanyi Li,Ankun Feng,Nianze Jing,Zeyan Li Yaxin Li, Keman Huang*}
+
+% \author{\IEEEauthorblockN{1\textsuperscript{st} Zeyan Li}
+% \IEEEauthorblockA{\textit{School of Statistics} \\
+% \textit{Renmin University of China}\\
+% Beijing, China \\
+% lzy0305@ruc.edu.cn}
+% \and
+% \IEEEauthorblockN{2\textsuperscript{nd} Nianze Jing}
+% \IEEEauthorblockA{\textit{School of Information} \\
+% \textit{Renmin University of China}\\
+% Beijing, China \\
+% 2024201535@ruc.edu.cn}
+% \and
+% \IEEEauthorblockN{3\textsuperscript{rd} Qilin Yuan}
+% \IEEEauthorblockA{\textit{School of Statistics} \\
+% \textit{Renmin University of China}\\
+% Beijing, China \\
+% email address or ORCID}
+% \and
+% \IEEEauthorblockN{4\textsuperscript{th} Yaxin Li}
+% \IEEEauthorblockA{\textit{School of Applied Economics} \\
+% \textit{Renmin University of China}\\
+% Beijing, China \\
+% email address or ORCID}
+% \and
+% \IEEEauthorblockN{5\textsuperscript{th} Keman Huang}
+% \IEEEauthorblockA{\textit{School of Information} \\
+% \textit{Renmin University of China}\\
+% Beijing, China \\
+% email address or ORCID}
+% \and
+% \IEEEauthorblockN{6\textsuperscript{th} Xiaoyong Du}
+% \IEEEauthorblockA{\textit{School of Information} \\
+% \textit{Renmin University of China}\\
+% Beijing, China \\
+% email address or ORCID}
+% }
+
+% \author{IEEE Publication Technology,~\IEEEmembership{Staff,~IEEE,}
+%         % <-this % stops a space
+% % \thanks{This paper was produced by the IEEE Publication Technology Group. They are in Piscataway, NJ.}% <-this % stops a space
+% % \thanks{Manuscript received April 19, 2021; revised August 16, 2021.}
+% }
+
+% The paper headers
+\markboth{IEEE Transactions on Knowledge and Data Engineering,~Vol.~*, No.~*, ~2026}%
+{Shell \MakeLowercase{\textit{et al.}}: A Sample Article Using IEEEtran.cls for IEEE Journals}
+
+% \IEEEpubid{0000--0000/00\$00.00~\copyright~2021 IEEE}
+% Remember, if you use this you must call \IEEEpubidadjcol in the second
+% column for its text to clear the IEEEpubid mark.
+
+\maketitle
+
+\appendices
+\appendix
+\section{Convergence Proof for Finite Memory Fictitious Play}
+\label{app:fp_proof}
+
+In Section 3.3.3 (Test 3), we utilize Finite Memory Fictitious Play (FP) as a mechanism feedback intervention. To ensure the validity of this diagnostic test, we formally establish that the data market game with inference externalities constitutes a \textit{supermodular game}. Consequently, based on the theory of adaptive learning, FP dynamics (even with finite memory) are guaranteed to converge to the bounds of the set of pure Nash Equilibria.
+
+\subsection{Game Theoretic Properties}
+
+We adopt the framework of Acemoglu et al. [2], where user $i$'s utility given sharing profile $a$ and price vector $p$ is:
+\begin{equation}
+    u_i(a_i, a_{-i}, p) = p_i a_i - v_i \mathcal{I}_i(a)
+\end{equation}
+Here, $\mathcal{I}_i(a)$ denotes the information leakage about user $i$. The critical structural property of this game arises from the nature of information inference.
+
+\begin{lemma}[Submodularity of Leakage and Increasing Differences]
+\label{lemma:submodularity}
+As established in \textbf{Lemma 1} of Acemoglu et al. [2], the leaked information function $\mathcal{I}_i(a)$ is monotone increasing and \textbf{submodular}. Specifically, for any user $i$ and any two opposing profiles $a_{-i}, a'_{-i} \in \{0,1\}^{n-1}$ such that $a'_{-i} \geq a_{-i}$ (component-wise):
+\begin{equation}
+    \mathcal{I}_i(1, a_{-i}) - \mathcal{I}_i(0, a_{-i}) \geq \mathcal{I}_i(1, a'_{-i}) - \mathcal{I}_i(0, a'_{-i})
+\end{equation}
+This inequality implies that the marginal privacy loss from sharing, $\Delta \mathcal{I}_i(a_{-i}) \triangleq \mathcal{I}_i(1, a_{-i}) - \mathcal{I}_i(0, a_{-i})$, is non-increasing in the sharing decisions of others. Consequently, the user's incentive to share (net utility gain), defined as $p_i - v_i \Delta \mathcal{I}_i(a_{-i})$, satisfies the property of \textbf{Increasing Differences} in $(a_i, a_{-i})$.
+\end{lemma}
+
+\begin{theorem}[Supermodularity and Lattice Structure]
+\label{thm:lattice}
+Based on Lemma \ref{lemma:submodularity}, the user subgame for any fixed price vector $p$ is a \textbf{supermodular game}. According to Tarski's Fixed Point Theorem and \textbf{Lemma 2} of Acemoglu et al. [2], the set of pure strategy Nash Equilibria, denoted as $\mathcal{A}(p)$, is non-empty and forms a \textbf{complete lattice}.
+\end{theorem}
+
+This implies that while the equilibrium may not be unique (as shown in Example 1 of [2]), there always exist a "smallest" equilibrium $\underline{a}$ and a "largest" equilibrium $\overline{a}$ (in terms of the partial order of sharing sets).
+
+\subsection{Convergence of Learning Dynamics}
+
+We now address the convergence of Finite Memory Fictitious Play within this supermodular structure.
+
+\begin{proposition}[Convergence to the Equilibrium Set]
+In the data market game with inference externalities, the sequence of actions generated by Finite Memory Fictitious Play converges to the interval $[\underline{a}, \overline{a}]$, bounded by the smallest and largest pure Nash Equilibria of the game.
+\end{proposition}
+
+\begin{proof}
+The proof relies on the general theory of adaptive learning in supermodular games developed by Milgrom and Roberts [1991].
+
+\textbf{Step 1: Finite Memory FP as Adaptive Learning.}
+Milgrom and Roberts define a sequence of plays $\{a^t\}$ as consistent with \textit{adaptive learning} if agents eventually choose strategies that are justifiable (undominated) responses to the opponents' past behavior over some history window. 
+Finite Memory FP forms beliefs $\mu_i^t$ based strictly on the empirical frequency of the last $W$ rounds. As $t \to \infty$, if opponents' play stabilizes, the belief converges to the true distribution. Crucially, it assigns zero probability to strategies not played within the window, satisfying the "vanishing weight on distant past" condition required for adaptive forecasters. Thus, Finite Memory FP generates a sequence consistent with adaptive learning.
+
+\textbf{Step 2: Convergence Theorem for Supermodular Games.}
+\textbf{Theorem 5} in Milgrom and Roberts [1991] states that for any supermodular game, any sequence of plays consistent with adaptive learning will eventually lie within the bounds defined by the iterated elimination of strictly dominated strategies. For supermodular games, these bounds correspond exactly to the smallest ($\underline{a}$) and largest ($\overline{a}$) pure Nash Equilibria.
+
+\textbf{Conclusion.}
+Since the data market game is supermodular (Theorem \ref{thm:lattice}) and Finite Memory FP is an adaptive learning process (Step 1), the dynamics are theoretically guaranteed to converge to the set $[\underline{a}, \overline{a}]$.
+\end{proof}
+
+\begin{remark}[Uniqueness and Pointwise Convergence in Experiments]
+While the general theory guarantees convergence to the set $[\underline{a}, \overline{a}]$, in our specific experimental instances (Section 4), the equilibrium is \textbf{unique} (i.e., $\underline{a} = \overline{a} = a^E$). This is ensured by three design choices in our simulation:
+\begin{enumerate}
+    \item \textbf{Generic Parameters:} Privacy valuations $v_i$ are drawn from a continuous uniform distribution, breaking parameter symmetry and making the platform's profit function almost surely have a unique global maximum.
+    \item \textbf{Strict Preferences:} The pricing mechanism includes a strict margin $p_i = v_i \Delta \mathcal{I}_i + \epsilon$ (where $\epsilon > 0$), which eliminates user indifference and collapses the user-subgame lattice to a singleton.
+    \item \textbf{Stackelberg Selection:} The platform explicitly optimizes over the equilibrium set to select the profit-maximizing outcome.
+\end{enumerate}
+Therefore, in our experiments, Finite Memory FP is guaranteed to exhibit \textbf{pointwise convergence} to the unique ground truth $a^E$.
+\end{remark}
+\section{Rational-Agent Solver Details for Scenario}
+\label{app:rational_agent_solver}
+
+This appendix provides the closed-form objects and the exact solver used to generate ground truth for Scenario~1.
+
+\subsection{Gaussian posterior leakage in closed form}
+Let $T=S(a)$ denote the set of sharing users and $S_a=(S_j)_{j\in T}$.
+Under the Gaussian linear model with $S_i=X_i+Z_i$ and $Z_i\sim\mathcal{N}(0,1)$,
+the leakage information in Eq.~\eqref{eq:leak_def} admits the closed form
+\begin{equation}
+I_i(a)=\Sigma_{i,T}\big(\Sigma_{T,T}+I\big)^{-1}\Sigma_{T,i},
+\label{eq:leak_closed_form_app}
+\end{equation}
+where $\Sigma_{i,T}$ denotes the $i$-to-$T$ covariance row vector, $\Sigma_{T,T}$ the principal submatrix, and $I$ the identity of appropriate dimension.
+
+\subsection{Baseline leakage, incremental leakage, and a closed-form relationship}
+Baseline leakage and incremental leakage are defined in Eqs.~\eqref{eq:baseline_leak}--\eqref{eq:delta_def}.
+Moreover, $\Delta I_i(\cdot)$ can be written as a closed-form function of $I_i^{0}(\cdot)$:
+\begin{equation}
+\Delta I_i(a_{-i})
+=
+\frac{\big(\sigma_i^2-I_i^{0}(a_{-i})\big)^2}{(\sigma_i^2+1)-I_i^{0}(a_{-i})},
+\label{eq:deltaI_closed_form_app}
+\end{equation}
+which implies that as $I_i^{0}(a_{-i})$ increases, $\Delta I_i(a_{-i})$ decreases monotonically.
+
+\subsection{Platform objective and exact Stackelberg selection}
+In the baseline model, the platform's marginal value of information is normalized to 1 and the platform payoff is
+\begin{equation}
+U(a,p)=\sum_{i\in\mathcal{N}} I_i(a)\;-\;\sum_{i:a_i=1} p_i.
+\label{eq:platform_obj_app}
+\end{equation}
+Under Stackelberg timing, the platform can implement any desired user equilibrium $a$ by setting $p=p^a$ (Eq.~\eqref{eq:min_support_price}), and then selects the one maximizing $U(a,p^a)$.
+
+For small $n$, we compute an exact ground truth via full enumeration:
+\begin{enumerate}
+\item Enumerate $a\in\{0,1\}^n$ (equivalently, enumerate sharing sets $T=S(a)$).
+\item For each $a$, compute $I_i(a)$ by Eq.~\eqref{eq:leak_closed_form_app}, then compute $I_i^{0}(a_{-i})$ and $\Delta I_i(a_{-i})$ (via Eq.~\eqref{eq:delta_def} or Eq.~\eqref{eq:deltaI_closed_form_app}).
+\item Construct $p^a$ by Eq.~\eqref{eq:min_support_price} and evaluate
+\begin{equation}
+U(a,p^a)=\sum_{i\in\mathcal{N}} I_i(a)\;-\;\sum_{i:a_i=1} v_i\Delta I_i(a_{-i}).
+\label{eq:implementable_payoff_app}
+\end{equation}
+\item Select
+\begin{equation}
+a^{E}\in\arg\max_{a\in\{0,1\}^n} U(a,p^a),
+\qquad p^{E}=p^{a^{E}},
+\label{eq:eq_selection_app}
+\end{equation}
+with a fixed tie-breaking rule to ensure uniqueness and reproducibility.
+\end{enumerate}
+
+The outputs $(a^{E},p^{E})$, together with $\{I_i(a^{E}),I_i^{0}(a^{E}_{-i}),\Delta I_i(a^{E}_{-i})\}$, serve as verifiable ground truth for mechanism-level diagnostics.
+% appendix.tex
+
+\section{Supplementary Material}
+
+\subsection{Sensitivity Analysis for Scenario B}
+\label{app:sensitivity_b}
+\input{support material/appendix_b_sensitivity}
+
+\subsection{Fixed-Point Characterization}
+\label{app:fp_b}
+\input{support material/appendix_c_fp}
+
+\subsection{Solver Implementation Details}
+\label{app:solver}
+\input{support material/appendix_d_solver}
+
+\subsection{Scenario Specifications}
+\label{app:scenario_specs}
+\input{support material/appendix_e_scenario}
+\input{support material/appendix_f_scenario}
+
+\subsection{Prompt Templates}
+\label{app:prompts}
+\input{support material/appendix_prompts}
+A
+
+% \section{Extensible Scenario Design}
+
+% \paragraph{Scenario 2: Price-Transmission Externalities in Platform--Consumer Interaction.}
+% This scenario studies privacy externalities that arise endogenously through product-market pricing.
+% Consumers first decide whether to disclose their personal data, after which the firm conditions its pricing and product offerings on the available information.
+% As a result, data disclosure by a subset of consumers affects not only the personalized terms faced by disclosers, but also the price structure offered to anonymous consumers, thereby generating privacy-choice externalities.
+
+% The core mechanism operates through the firm's strategic \emph{distortion of the public option}.
+% To extract additional surplus from data-sharing consumers via personalization, the firm optimally degrades the quality or pricing of the non-personalized (uniform) offer.
+% This degradation worsens the outside option faced by anonymous consumers and imposes a negative externality on them, even though they do not disclose data themselves.
+% Hence, individual disclosure decisions propagate through equilibrium pricing, inducing cross-consumer spillovers via a price-transmission channel.
+
+% Formally, disclosure incentives depend on the endogenous interaction between disclosure rates and equilibrium prices.
+% In the continuous formulation, let $\sigma$ denote the disclosure rate.
+% The net gain from disclosure is given by
+% \[
+% \Delta(\sigma;\tau) \equiv V_s(\sigma) - V_a(\sigma) - \tau,
+% \]
+% where $V_s(\sigma)$ and $V_a(\sigma)$ denote the expected surplus of disclosers and anonymous consumers respectively, and $\tau$ is the individual privacy cost.
+% The equilibrium disclosure rate $\sigma^\ast$ is characterized by a fixed point condition.
+% In finite-agent implementations, the equilibrium disclosure set is defined by a no-profitable-deviation condition, and welfare is decomposed into platform profit, consumer surplus, and total surplus.
+
+% The rational-agent baseline computes the equilibrium disclosure set, the induced equilibrium price faced by anonymous consumers, and the corresponding welfare decomposition.
+% Diagnostic objects include the directional relationship between disclosure rates, equilibrium prices, and anonymous-consumer surplus, which serve as anchors for evaluating mechanism consistency.
+% LLMs are evaluated on whether their disclosure decisions reproduce these structural relationships, rather than merely matching terminal welfare outcomes.
+
+% \paragraph{Scenario 3: Social Data Externalities and Intermediary Mechanism Design.}
+% This scenario introduces a data intermediary as an institutional hub that mediates between consumers and producers.
+% The intermediary collects consumer signals and chooses a data policy—\emph{identifiable disclosure} versus \emph{anonymization}—which determines the producer’s informational advantage and the scope of feasible price discrimination.
+% Through this channel, the intermediary reallocates surplus between consumers and producers and reshapes participation incentives.
+
+% Anonymization is modeled as a stochastic permutation of consumer signals.
+% Under anonymization, producers can only condition prices on aggregate information rather than individual-level data, which restricts fine-grained price discrimination.
+% This policy may reduce the value of granular data for producers, but can simultaneously lower the intermediary’s data acquisition and processing costs, potentially increasing intermediary profit within its policy space.
+
+% A key feature of this scenario is the existence of a sharp welfare criterion.
+% In environments with homogeneous consumers, the intermediary’s profit-maximizing choice of anonymization aligns with social efficiency:
+% anonymization is privately optimal if and only if it increases total surplus.
+% This alignment creates a nontrivial test of institutional inference, as correct decisions require understanding how policy choices alter price discrimination, participation constraints, and welfare decomposition.
+
+% The rational-agent baseline solves for the optimal data policy, compensation scheme, equilibrium participation rate, and the tightness of participation constraints.
+% It reports intermediary profit and a full welfare decomposition, as well as comparative statics across policy regimes.
+% LLMs are evaluated under multiple configurations—as consumers, as the intermediary, or both—to assess their ability to infer institutional effects, design mechanisms, and achieve stable outcomes under multi-agent interaction.
+% This scenario therefore serves as a stringent testbed for \emph{institutional inference and mechanism design capability}, extending evaluation beyond individual decision-making to policy-level reasoning.
+
+
+
+
+% %\usepackage{float}
+
+
+
+
+% %\usepackage{float}
+
+
+% %\usepackage{float}
+
+
+
+\end{document}
+
+

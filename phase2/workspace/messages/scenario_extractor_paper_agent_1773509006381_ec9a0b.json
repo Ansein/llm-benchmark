@@ -1,0 +1,10 @@
+{
+  "id": "scenario_extractor_paper_agent_1773509006381_ec9a0b",
+  "from": "scenario_extractor",
+  "to": "paper_agent",
+  "type": "query",
+  "content": "How does the leaked information function Iᵢ(aᵢ, a₋ᵢ) exhibit submodularity? What is the mathematical form of this function and how does it depend on the correlation structure?",
+  "reply_to": null,
+  "status": "done",
+  "timestamp": 1773509006.3811984
+}

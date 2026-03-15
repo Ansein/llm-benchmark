@@ -1,0 +1,8 @@
+{
+    "agent_llm": {
+        "provider": "anthropic",
+        "model": "claude-opus-4-6",
+        "api_key": "sk-ant-YOUR_KEY_HERE",
+        "base_url": null
+    }
+}

@@ -1,0 +1,381 @@
+% Auto-generated from run_prompt_experiments.py
+% v5 here maps to script version b.v6 as requested.
+\section{Appendix A: Prompt Templates (Scenario B)}
+\label{app:prompt_templates_b}
+
+This appendix reports prompt templates in boxed tables. We list versions v0--v5, where v5 corresponds to script version \texttt{b.v6}.
+
+\begin{table*}[t]
+  \centering
+  \caption{Shared System Prompt for Scenario B prompt versions.}
+  \label{tab:app_prompt_system}
+  \fbox{\begin{minipage}{0.97\textwidth}
+\begin{verbatim}
+你是理性经济主体，目标是在不确定他人行为的情况下最大化你的期望效用。
+
+【重要】你必须只输出一个有效的JSON对象，不要包含任何额外的文本、解释或markdown标记。
+JSON必须包含 "share" 和 "reason" 两个字段。
+确保 "reason" 字段的字符串正确闭合（以引号结束）。
+\end{verbatim}
+  \end{minipage}}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Prompt template v0 (source: \texttt{b.v0}).}
+  \label{tab:app_prompt_v0}
+  \fbox{\begin{minipage}{0.97\textwidth}
+\begin{verbatim}
+# 数据市场决策
+
+你是用户 {user_id}，正在参与一个数据市场。
+
+## 你的信息
+
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 决策
+
+如果分享数据：
+- 获得补偿 p = {price:.4f}
+- 产生隐私成本 = v × 边际泄露量
+
+**请权衡：补偿 vs 隐私成本**
+
+## 输出
+
+请输出严格JSON：
+{{
+  "share": 0或1（0=不分享，1=分享），
+  "reason": "简要说明决策理由（不超过150字）"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Prompt template v1 (source: \texttt{b.v1}).}
+  \label{tab:app_prompt_v1}
+  \fbox{\begin{minipage}{0.97\textwidth}
+\begin{verbatim}
+# 数据市场决策
+
+你是用户 {user_id}，正在参与一个数据市场。
+
+## 你的私有信息
+
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 市场环境
+
+- 用户总数：n = {n}
+- 信息相关系数：ρ = {rho:.2f}
+- 观测噪声：σ² = {sigma_noise_sq}
+- 隐私偏好分布：所有用户的v ∈ [{v_min}, {v_max}]
+
+你的位置：v = {v_i:.3f}（{v_description}）
+
+## 决策框架
+
+如果分享数据：
+- 获得补偿 p = {price:.4f}
+- 产生隐私成本 = v × 边际泄露量
+
+**请权衡：补偿 vs 隐私成本**
+
+## 输出
+
+请输出严格JSON：
+{{
+  "share": 0或1（0=不分享，1=分享），
+  "reason": "简要说明决策理由（不超过150字）"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Prompt template v2 (source: \texttt{b.v2}).}
+  \label{tab:app_prompt_v2}
+  \fbox{\begin{minipage}{0.97\textwidth}
+\begin{verbatim}
+# 数据市场决策
+
+你是用户 {user_id}，正在参与一个数据市场。
+
+## 你的私有信息
+
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 市场环境
+
+**用户总数**：n = {n}
+
+**信息相关系数**：ρ = {rho:.2f}
+- 你的类型与其他用户的类型相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+- 当前 ρ = {rho:.2f}，推断能力{rho_level}
+
+**观测噪声**：σ² = {sigma_noise_sq}
+- σ² 越大：数据噪声越大，泄露程度越低
+- σ² 越小：数据越准确，泄露程度越高
+
+**隐私偏好分布**：v ∈ [{v_min}, {v_max}]
+- 你的位置：v = {v_i:.3f}（{v_description}）
+
+## 决策框架
+
+如果分享数据：
+- 获得补偿 p = {price:.4f}
+- 产生隐私成本 = v × 边际泄露量
+
+**请权衡：补偿 vs 隐私成本**
+
+## 输出
+
+请输出严格JSON：
+{{
+  "share": 0或1（0=不分享，1=分享），
+  "reason": "简要说明决策理由（不超过150字）"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Prompt template v3 (source: \texttt{b.v3}).}
+  \label{tab:app_prompt_v3}
+  \fbox{\begin{minipage}{0.97\textwidth}
+\begin{verbatim}
+# 数据市场决策（推断外部性）
+
+你是用户 {user_id}，正在参与一个数据市场。
+
+## 你的私有信息
+
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 市场环境
+
+**用户总数**：n = {n}
+
+**信息相关系数**：ρ = {rho:.2f}
+- 你的类型与其他用户的类型相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+- 当前 ρ = {rho:.2f}，推断能力{rho_level}
+
+**观测噪声**：σ² = {sigma_noise_sq}
+- σ² 越大：数据噪声越大，泄露程度越低
+- σ² 越小：数据越准确，泄露程度越高
+
+**隐私偏好分布**：v ∈ [{v_min}, {v_max}]
+- 你的位置：v = {v_i:.3f}（{v_description}）
+
+## 关键机制
+
+**推断泄露**：即使你不分享，平台也能通过其他人的数据推断你的信息
+
+**两种泄露**：
+- **基础泄露**：其他人分享导致你的信息间接泄露
+- **边际泄露**：你自己分享带来的额外泄露
+
+**分享的真正成本 = 边际泄露**
+
+## 决策框架
+
+**如果分享**：
+- 获得补偿：p = {price:.4f}
+- 隐私成本：v × 边际泄露量
+- 你的信息从部分泄露变为完全泄露
+
+**如果不分享**：
+- 无补偿
+- 保护未间接泄露的部分信息
+- 但仍有基础泄露
+
+**请权衡：补偿 vs 边际隐私成本**
+
+## 输出
+
+请输出严格JSON：
+{{
+  "share": 0或1（0=不分享，1=分享），
+  "reason": "简要说明决策理由（不超过150字）"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Prompt template v4 (source: \texttt{b.v4}).}
+  \label{tab:app_prompt_v4}
+  \fbox{\begin{minipage}{0.97\textwidth}
+\begin{verbatim}
+# 数据市场决策（推断外部性）
+
+你是用户 {user_id}，正在参与一个数据市场。
+
+## 你的私有信息
+
+- **报价**：p[{user_id}] = {price:.4f}
+- **隐私偏好**：v[{user_id}] = {v_i:.3f}（单位信息成本）
+
+## 市场环境
+
+**用户总数**：n = {n}
+
+**信息相关系数**：ρ = {rho:.2f}
+- 你的信息与其他用户相关
+- ρ = 0：他人信息无法推断你
+- ρ = 1：他人信息完美推断你
+- 当前 ρ = {rho:.2f}，推断能力{rho_level}
+
+**观测噪声**：σ² = {sigma_noise_sq}
+- σ² 越大：噪声越大，泄露越低
+- σ² 越小：数据越准确，泄露越高
+
+**隐私偏好分布**：v ∈ [{v_min}, {v_max}]
+- 你的位置：v = {v_i:.3f}（{v_description}）
+
+## 核心机制
+
+### 推断外部性
+
+**关键洞察**：泄露信息量不仅取决于你是否分享，还取决于其他人是否分享。任何人的分享都会增加所有人（包括不分享者）的信息泄露量。
+
+**如果你分享**：
+- 获得补偿 p = {price:.4f}
+- 你的信息从间接部分泄露 → 完全泄露
+
+**如果你不分享**：
+- 无补偿
+- 保护未间接泄露的部分
+- 但仍有基础泄露（他人分享导致）
+
+### 次模性
+
+**分享的人越多 → 你的边际泄露越小**
+- 基础泄露越高 → 边际泄露越低
+- 其他人分享得多 → 你再分享的额外成本减少
+
+### 补偿逻辑
+
+**平台报价旨在覆盖边际隐私损失**
+- 报价 p = {price:.4f} 反映你的边际价值
+- 你需要判断：p 是否足以覆盖 v × 边际泄露
+
+## 决策框架
+
+**隐私成本** = v × 边际泄露量
+
+**权衡**：补偿收益 p vs 隐私成本 v × 边际泄露
+
+## 输出
+
+请输出严格JSON：
+{{
+  "share": 0或1（0=不分享，1=分享），
+  "reason": "简要说明决策理由（不超过150字）"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table*}
+
+\begin{table*}[t]
+  \centering
+  \caption{Prompt template v5 (source: \texttt{b.v6}).}
+  \label{tab:app_prompt_v5}
+  \fbox{\begin{minipage}{0.97\textwidth}
+\begin{verbatim}
+# 场景：数据市场静态博弈（推断外部性）
+
+你是用户 {user_id}，正在参与一个**一次性的数据市场决策**。
+
+## 基本信息
+
+**你的私有信息**：
+- 你的隐私偏好：v[{user_id}] = {v_i:.3f}
+- 平台给你的报价：p[{user_id}] = {price:.4f}
+
+**公共知识**（所有人都知道）：
+- 用户总数：n = {n}
+- 类型相关系数：ρ = {rho:.2f}
+  （你的类型与其他用户的类型相关，相关系数为 {rho:.2f}）
+- 观测噪声：σ² = {sigma_noise_sq}
+- 隐私偏好分布：所有用户的 v 均匀分布在 [{v_min}, {v_max}]
+  （你的 v = {v_i:.3f}，相对位置：{v_description}，属于{v_level}隐私偏好群体）
+
+**你不知道的信息**：
+- 其他用户的具体 v 值（你只知道分布）
+- 其他用户会如何决策（因为是同时决策）
+
+## 推断外部性机制
+
+**关键概念**：即使你不分享数据，平台也能通过其他人的数据推断你的信息。
+
+**泄露信息量 I_i(a)**：
+- 给定分享集合 S，平台对你的推断精度提升量
+- 通过贝叶斯更新计算：I_i(S) = σ_i² - Var(X_i | S)
+- **核心外部性**：I_i 不仅取决于你是否分享，还取决于其他人是否分享
+
+**你的效用函数**：
+- 如果你**分享**：u_i = p_i - v_i × I_i(你分享, 其他人的决策)
+- 如果你**不分享**：u_i = 0 - v_i × I_i(你不分享, 其他人的决策)
+
+**关键洞察**：
+- 不分享也会有**基础泄露**（因为其他人分享会泄露你的信息）
+- 分享的真正成本是**边际泄露** = I_i(分享) - I_i(不分享)
+- 补偿价格 p_i 旨在覆盖你的边际隐私损失
+
+## 理性预期决策框架
+
+因为你不知道其他人会如何选择，你需要：
+
+**1. 基于分布推测其他人的行为**：
+- v 值较低的用户更可能分享（隐私成本低）
+- v 值较高的用户更不可能分享（隐私成本高）
+- 你的 v = {v_i:.3f}，处于{v_level}水平
+
+**2. 计算期望效用**：
+- E[u_i | 分享] = E[p_i - v_i × I_i(1, a_{{-i}})]
+- E[u_i | 不分享] = E[- v_i × I_i(0, a_{{-i}})]
+
+**3. 理解次模性**：
+- 分享的人越多，你的边际信息价值越低
+- 基础泄露越高（别人分享多），你分享的边际泄露越小
+
+**4. 做出最佳反应**：
+- 如果 E[u_i | 分享] > E[u_i | 不分享]，则分享
+- 否则不分享
+
+## 你的任务
+
+基于上述机制，在**不知道其他人具体决策**的情况下，通过**理性预期**判断是否分享数据。
+
+**思考要点**：
+1. 你的 v 值在分布中的位置如何？（v = {v_i:.3f}，属于{v_level}群体）
+2. 预期会有多少比例的用户分享？
+3. 在那个预期下，你分享的边际价值是多少？
+4. 报价 p = {price:.4f} 能否覆盖你的边际隐私损失？
+5. 相关性 ρ = {rho:.2f} 如何影响外部性？
+
+## 输出格式
+
+请输出严格JSON：
+{{
+  "share": 0或1（0=不分享，1=分享），
+  "reason": "简要说明你的权衡与信念依据（不超过150字）"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table*}

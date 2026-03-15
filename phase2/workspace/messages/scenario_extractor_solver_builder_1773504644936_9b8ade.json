@@ -1,0 +1,10 @@
+{
+  "id": "scenario_extractor_solver_builder_1773504644936_9b8ade",
+  "from": "scenario_extractor",
+  "to": "solver_builder",
+  "type": "notify",
+  "content": "H1 (comparative_static): Higher correlation ρ → lower equilibrium prices and higher data-sharing rates. H2 (knowledge_dependent): Efficiency depends on correlation structure of high-value users; uncorrelated high-value users yield efficient equilibrium. H3 (dynamic_convergence): Market shutdown improves welfare when externality magnitude (driven by ρ and privacy valuations) exceeds information gains.",
+  "reply_to": null,
+  "status": "pending",
+  "timestamp": 1773504644.9366782
+}

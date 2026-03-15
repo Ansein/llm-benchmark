@@ -1,0 +1,10 @@
+{
+  "id": "scenario_extractor_solver_builder_1773509023522_6ec51b",
+  "from": "scenario_extractor",
+  "to": "solver_builder",
+  "type": "notify",
+  "content": "H1 (comparative_static): ρ increases → equilibrium prices decrease, data-sharing increases. H2 (knowledge_dependent): Users informed about externality mechanism → higher sharing rates than uninformed users. H3 (structural_efficiency): High-value users uncorrelated with others → efficient equilibrium; correlation → inefficiency; mediated scheme improves welfare.",
+  "reply_to": null,
+  "status": "pending",
+  "timestamp": 1773509023.5230029
+}

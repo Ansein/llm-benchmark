@@ -11,10 +11,12 @@
             "id": "e9d60cf89533c0d9",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
+              "type": "pdf",
+              "state": {
+                "file": "phase2/PROGRESS.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "PROGRESS"
             }
           }
         ]
@@ -181,6 +183,8 @@
   },
   "active": "e9d60cf89533c0d9",
   "lastOpenFiles": [
+    "phase2/PROGRESS.md",
+    "phase2/PROGRESS.pdf",
     "docs/场景B敏感度分析方案-3x3网格.md",
     "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_best_by_region.png",
     "sensitivity_results/scenario_b/gpt_family_comparison_plots/gpt_stability_comparison.png",
@@ -201,7 +205,6 @@
     "src/scenarios/__pycache__/scenario_c_social_data.cpython-313.pyc.1746449181744",
     "src/scenarios/__pycache__/generate_scenario_c_gt.cpython-313.pyc.1746407898416",
     "src/scenarios/__pycache__/scenario_c_social_data_optimization.cpython-313.pyc.2504156320016",
-    "src/scenarios/__pycache__/scenario_c_social_data.cpython-313.pyc.2504119397424",
     "sensitivity_results/scenario_b/model_comparison_plots/model_win_matrix.png",
     "sensitivity_results/scenario_b/model_comparison_plots/model_stability_comparison.png",
     "docs/场景C运行指南.md",

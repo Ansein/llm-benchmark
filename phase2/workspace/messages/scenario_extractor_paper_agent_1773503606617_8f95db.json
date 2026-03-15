@@ -1,0 +1,10 @@
+{
+  "id": "scenario_extractor_paper_agent_1773503606617_8f95db",
+  "from": "scenario_extractor",
+  "to": "paper_agent",
+  "type": "query",
+  "content": "In the equilibrium definition, is this a Stackelberg game where the platform moves first (setting prices) and users respond? Or is there simultaneous-move equilibrium? What is the exact equilibrium concept being used?",
+  "reply_to": null,
+  "status": "done",
+  "timestamp": 1773503606.6176586
+}

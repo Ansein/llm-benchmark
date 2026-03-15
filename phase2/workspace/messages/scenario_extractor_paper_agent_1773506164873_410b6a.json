@@ -1,0 +1,10 @@
+{
+  "id": "scenario_extractor_paper_agent_1773506164873_410b6a",
+  "from": "scenario_extractor",
+  "to": "paper_agent",
+  "type": "query",
+  "content": "What is the exact equilibrium concept used in this model? Is it a Stackelberg game where the platform moves first, or are there other equilibrium refinements discussed?",
+  "reply_to": null,
+  "status": "done",
+  "timestamp": 1773506164.8736298
+}

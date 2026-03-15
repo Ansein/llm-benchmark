@@ -1,0 +1,74 @@
+\section{Appendix D: Scenario B Solver Algorithm}
+\label{app:scenario_b_solver_algorithm}
+
+This appendix presents the core solver used in Scenario B, corresponding to
+\texttt{solve\_stackelberg\_personalized} in
+\texttt{src/scenarios/scenario\_b\_too\_much\_data.py}.
+
+\subsection{Algorithm: Stackelberg Solver with Supporting Prices}
+
+\begin{verbatim}
+Algorithm D.1  Scenario-B Stackelberg Solver (Personalized Pricing)
+
+Input:
+  params = (n, Sigma, sigma_noise_sq, alpha, v)
+  exact_n_limit, epsilon, local_search_restarts, local_search_max_iters
+
+Definitions:
+  posterior covariance:
+    Sigma_post(S) = Sigma - Sigma H^T (H Sigma H^T + R)^(-1) H Sigma
+  leakage for user i under set S:
+    leak_i(S) = Sigma[i,i] - Sigma_post(S)[i,i]
+  supporting price for i in S:
+    p_i(S) = v_i * max(0, leak_i(S) - leak_i(S \ {i})) + epsilon
+    p_i(S) = 0 for i not in S
+  platform profit under S:
+    Pi(S) = alpha * sum_i leak_i(S) - sum_{i in S} p_i(S)
+  welfare under S:
+    W(S) = alpha * sum_i leak_i(S) - sum_i v_i * leak_i(S)
+
+Procedure eval_set(S):
+  1) Compute leakage vector leak(S) via posterior covariance.
+  2) Build supporting prices p(S) by marginal leakage + epsilon.
+  3) Compute:
+       total_leakage(S), platform_value(S), platform_payment(S),
+       Pi(S), W(S), diagnostics.
+  4) Return (Pi(S), p(S), diagnostics, outcome).
+
+Main solver:
+  If n <= exact_n_limit:   # exact mode
+    best_profit <- -inf
+    For each subset S of {0,...,n-1}:      # 2^n enumeration by bitmask
+      (profit, prices, diag, outcome) <- eval_set(S)
+      If profit > best_profit:
+        update best solution with S, prices, diag, outcome
+    Return:
+      eq_share_set = sorted(best_S)
+      eq_prices = best_prices
+      eq_profit = best_profit
+      eq_W = best_outcome.welfare
+      eq_total_leakage = best_outcome.total_leakage
+      diagnostics = best_diag
+      solver_mode = "exact"
+
+  Else:                   # local_search mode
+    best_global_profit <- -inf
+    Repeat local_search_restarts times:
+      Initialize S randomly
+      Evaluate current S
+      improved <- True
+      iter <- 0
+      While improved and iter < local_search_max_iters:
+        improved <- False
+        Check all one-flip neighbors of S:
+          S' = S U {i} or S \ {i}
+          Evaluate S'
+          If Pi(S') > Pi(best_local) + 1e-12:
+            take S' as best_local and mark improved
+        Move to best_local
+        iter <- iter + 1
+      If current local optimum is better than global best:
+        update global best
+    Return best global solution with solver_mode = "local_search"
+\end{verbatim}
+

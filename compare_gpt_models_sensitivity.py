@@ -8,11 +8,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
+from matplotlib import font_manager
 
-# Set style
-plt.rcParams['font.family'] = 'Arial'
-plt.rcParams['axes.unicode_minus'] = False
-sns.set_style("whitegrid")
+def configure_fonts():
+    candidates = ['Microsoft YaHei', 'SimHei', 'Noto Sans CJK SC', 'Arial Unicode MS']
+    available = {f.name for f in font_manager.fontManager.ttflist}
+    chosen = [f for f in candidates if f in available]
+    if not chosen:
+        chosen = ['DejaVu Sans']
+    plt.rcParams['font.family'] = 'sans-serif'
+    plt.rcParams['font.sans-serif'] = chosen + ['DejaVu Sans']
+    plt.rcParams['axes.unicode_minus'] = False
+    sns.set_theme(
+        style='whitegrid',
+        rc={
+            'font.family': 'sans-serif',
+            'font.sans-serif': chosen + ['DejaVu Sans'],
+            'axes.unicode_minus': False,
+        },
+    )
+
+
+configure_fonts()
 
 # Load results
 print('Loading data...')
@@ -86,7 +103,7 @@ model_colors = {
 # Figure 1: Model Evolution Heatmaps - Jaccard Similarity
 # ============================================================================
 fig, axes = plt.subplots(2, 2, figsize=(18, 16))
-fig.suptitle('GPT Model Evolution: Jaccard Similarity Across Versions (Higher is Better)', 
+fig.suptitle('GPT 系列演化：各版本 Jaccard 相似度（越高越好）', 
              fontsize=18, fontweight='bold', y=0.995)
 
 for idx, (model_name, color) in enumerate(model_colors.items()):
@@ -108,8 +125,8 @@ for idx, (model_name, color) in enumerate(model_colors.items()):
     ax.set_yticks(range(3))
     ax.set_xticklabels(rho_labels, fontsize=11)
     ax.set_yticklabels(v_labels, fontsize=11)
-    ax.set_xlabel('Correlation Coefficient ρ', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Privacy Preference Range v', fontsize=12, fontweight='bold')
+    ax.set_xlabel('相关系数 ρ', fontsize=12, fontweight='bold')
+    ax.set_ylabel('隐私偏好区间 v', fontsize=12, fontweight='bold')
     
     # Annotate values
     for i in range(3):
@@ -131,15 +148,16 @@ plt.close()
 # Figure 2: Overall Performance Comparison - Grouped Bar Chart
 # ============================================================================
 fig, axes = plt.subplots(2, 2, figsize=(18, 14))
-fig.suptitle('GPT Model Family: Overall Performance Metrics', 
+fig.suptitle('GPT 家族总体性能指标', 
              fontsize=20, fontweight='bold', y=0.995)
 
 metrics_to_compare = [
-    ('jaccard', 'Average Jaccard Similarity', 'higher', [0, 1]),
-    ('profit_mae', 'Average Profit MAE', 'lower', None),
-    ('welfare_mae', 'Average Welfare MAE', 'lower', None),
-    ('correct_eq', 'Correct Equilibrium Rate', 'higher', [0, 1])
+    ('jaccard', '平均 Jaccard 相似度', 'higher', [0, 1]),
+    ('profit_mae', '平均利润 MAE', 'lower', None),
+    ('welfare_mae', '平均社会福利 MAE', 'lower', None),
+    ('correct_eq', '均衡命中率', 'higher', [0, 1])
 ]
+direction_zh = {'higher': '越高越好', 'lower': '越低越好'}
 
 for idx, (metric_key, title, direction, ylim_range) in enumerate(metrics_to_compare):
     ax = axes[idx // 2, idx % 2]
@@ -161,9 +179,9 @@ for idx, (metric_key, title, direction, ylim_range) in enumerate(metrics_to_comp
     bars = ax.bar(x_pos, means, yerr=stds, capsize=10,
                   color=colors, edgecolor='black', linewidth=2, alpha=0.8)
     
-    ax.set_xlabel('Model Version', fontsize=13, fontweight='bold')
+    ax.set_xlabel('模型版本', fontsize=13, fontweight='bold')
     ax.set_ylabel(title, fontsize=13, fontweight='bold')
-    ax.set_title(f'{title} ({direction.capitalize()} is Better)', 
+    ax.set_title(f'{title}（{direction_zh.get(direction, direction)}）', 
                  fontsize=14, fontweight='bold', pad=10)
     ax.set_xticks(x_pos)
     ax.set_xticklabels(model_names_list, fontsize=10, rotation=20, ha='right')
@@ -192,7 +210,7 @@ plt.close()
 # Figure 3: Performance Evolution Line Chart
 # ============================================================================
 fig, axes = plt.subplots(3, 3, figsize=(20, 16))
-fig.suptitle('GPT Model Evolution: Performance Trends by Parameter Combinations', 
+fig.suptitle('GPT 版本演化：按参数组合的性能趋势', 
              fontsize=20, fontweight='bold', y=0.995)
 
 model_names_list = ['gpt-5', 'gpt-5.1', 'gpt-5.1-2025-11-13', 'gpt-5.2']
@@ -217,7 +235,7 @@ for row_idx, (v_min, v_max) in enumerate(v_ranges_vals):
                    marker='o', markersize=10, linewidth=2.5,
                    capsize=8, capthick=2, color='#2E86C1',
                    markerfacecolor='#3498DB', markeredgecolor='black',
-                   markeredgewidth=1.5, label='Mean ± Std')
+                   markeredgewidth=1.5, label='均值 ± 标准差')
         
         # Plot individual trials as scatter
         for i, model_name in enumerate(model_names_list):
@@ -236,9 +254,9 @@ for row_idx, (v_min, v_max) in enumerate(v_ranges_vals):
         ax.axhline(y=0.8, color='green', linestyle='--', linewidth=1.5, alpha=0.4)
         
         if row_idx == 2:
-            ax.set_xlabel('Model Version', fontsize=11, fontweight='bold')
+            ax.set_xlabel('模型版本', fontsize=11, fontweight='bold')
         if col_idx == 0:
-            ax.set_ylabel('Jaccard Similarity', fontsize=11, fontweight='bold')
+            ax.set_ylabel('Jaccard 相似度', fontsize=11, fontweight='bold')
 
 plt.tight_layout()
 evolution_path = output_dir / 'gpt_evolution_trends.png'
@@ -250,7 +268,7 @@ plt.close()
 # Figure 4: Model Improvement Matrix
 # ============================================================================
 fig, axes = plt.subplots(1, 3, figsize=(20, 7))
-fig.suptitle('GPT Model Evolution: Version-to-Version Improvement Analysis', 
+fig.suptitle('GPT 版本迭代改进分析', 
              fontsize=18, fontweight='bold')
 
 # Compare: gpt-5 vs gpt-5.1, gpt-5.1 vs gpt-5.1-2025-11-13, gpt-5.1-2025-11-13 vs gpt-5.2
@@ -282,9 +300,9 @@ for idx, (base_model, new_model, title) in enumerate(comparisons):
     ax.set_yticks(range(3))
     ax.set_xticklabels(rho_labels, fontsize=11)
     ax.set_yticklabels(v_labels, fontsize=11)
-    ax.set_xlabel('Correlation Coefficient ρ', fontsize=12, fontweight='bold')
+    ax.set_xlabel('相关系数 ρ', fontsize=12, fontweight='bold')
     if idx == 0:
-        ax.set_ylabel('Privacy Preference Range v', fontsize=12, fontweight='bold')
+        ax.set_ylabel('隐私偏好区间 v', fontsize=12, fontweight='bold')
     
     # Annotate values
     for i in range(3):
@@ -301,7 +319,7 @@ for idx, (base_model, new_model, title) in enumerate(comparisons):
     
     cbar = plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     cbar.ax.tick_params(labelsize=10)
-    cbar.set_label('Improvement (ΔJaccard)', fontsize=11, fontweight='bold')
+    cbar.set_label('改进幅度（ΔJaccard）', fontsize=11, fontweight='bold')
 
 plt.tight_layout()
 improvement_path = output_dir / 'gpt_improvement_matrix.png'
@@ -313,11 +331,11 @@ plt.close()
 # Figure 5: Radar Chart Comparison
 # ============================================================================
 fig, axes = plt.subplots(1, 4, figsize=(22, 6))
-fig.suptitle('GPT Model Family: Comprehensive Performance Profiles', 
+fig.suptitle('GPT 家族综合性能画像', 
              fontsize=18, fontweight='bold', y=1.02)
 
-categories = ['Jaccard\nSimilarity', 'Profit\nAccuracy\n(1-MAE/20)', 
-              'Welfare\nAccuracy\n(1-MAE/2)', 'Share Rate\nAccuracy', 'Correctness\nRate']
+categories = ['Jaccard\\n相似度', '利润\\n准确度\\n(1-MAE/20)', 
+              '福利\\n准确度\\n(1-MAE/2)', '分享率\\n准确度', '正确率']
 N = len(categories)
 angles = np.linspace(0, 2 * np.pi, N, endpoint=False).tolist()
 angles += angles[:1]
@@ -363,10 +381,10 @@ plt.close()
 # Figure 6: Parameter Impact Comparison
 # ============================================================================
 fig, axes = plt.subplots(1, 2, figsize=(18, 7))
-fig.suptitle('Parameter Impact on GPT Model Family Performance', 
+fig.suptitle('参数变化对 GPT 家族性能的影响', 
              fontsize=18, fontweight='bold')
 
-# Impact of ρ
+# Impact of 蟻
 ax1 = axes[0]
 width = 0.2
 x_pos = np.arange(len(rho_vals))
@@ -388,9 +406,9 @@ for i, (model_name, color) in enumerate(model_colors.items()):
                    capsize=5, label=model_name, color=color,
                    edgecolor='black', linewidth=1.5, alpha=0.8)
 
-ax1.set_xlabel('Correlation Coefficient ρ', fontsize=13, fontweight='bold')
-ax1.set_ylabel('Average Jaccard Similarity', fontsize=13, fontweight='bold')
-ax1.set_title('Impact of ρ on Model Performance', fontsize=14, fontweight='bold', pad=15)
+ax1.set_xlabel('相关系数 ρ', fontsize=13, fontweight='bold')
+ax1.set_ylabel('平均 Jaccard 相似度', fontsize=13, fontweight='bold')
+ax1.set_title('ρ 对模型性能的影响', fontsize=14, fontweight='bold', pad=15)
 ax1.set_xticks(x_pos)
 ax1.set_xticklabels([f'ρ={rho}' for rho in rho_vals], fontsize=12)
 ax1.set_ylim(0, 1.05)
@@ -419,9 +437,9 @@ for i, (model_name, color) in enumerate(model_colors.items()):
                    capsize=5, label=model_name, color=color,
                    edgecolor='black', linewidth=1.5, alpha=0.8)
 
-ax2.set_xlabel('Privacy Preference Range v', fontsize=13, fontweight='bold')
-ax2.set_ylabel('Average Jaccard Similarity', fontsize=13, fontweight='bold')
-ax2.set_title('Impact of v Range on Model Performance', fontsize=14, fontweight='bold', pad=15)
+ax2.set_xlabel('隐私偏好区间 v', fontsize=13, fontweight='bold')
+ax2.set_ylabel('平均 Jaccard 相似度', fontsize=13, fontweight='bold')
+ax2.set_title('v 区间对模型性能的影响', fontsize=14, fontweight='bold', pad=15)
 ax2.set_xticks(x_pos)
 ax2.set_xticklabels([f'[{v[0]},{v[1]}]' for v in v_ranges_vals], fontsize=12)
 ax2.set_ylim(0, 1.05)
@@ -445,7 +463,7 @@ model_cv_data = {model: [] for model in model_colors.keys()}
 
 for key in sorted(model_stats['gpt-5'].keys()):
     rho, v_min, v_max = key
-    param_labels.append(f'ρ={rho}\nv=[{v_min},{v_max}]')
+    param_labels.append(f'蟻={rho}\nv=[{v_min},{v_max}]')
     
     for model_name in model_colors.keys():
         trials = model_stats[model_name][key]
@@ -464,9 +482,9 @@ for i, (model_name, color) in enumerate(model_colors.items()):
                   label=model_name, color=color,
                   edgecolor='black', linewidth=1.5, alpha=0.8)
 
-ax.set_xlabel('Parameter Combination', fontsize=13, fontweight='bold')
-ax.set_ylabel('Coefficient of Variation (%)', fontsize=13, fontweight='bold')
-ax.set_title('GPT Model Stability Analysis (Lower CV = More Stable)', 
+ax.set_xlabel('参数组合', fontsize=13, fontweight='bold')
+ax.set_ylabel('变异系数 CV（%）', fontsize=13, fontweight='bold')
+ax.set_title('GPT 模型稳定性分析（CV 越低越稳定）', 
              fontsize=16, fontweight='bold', pad=20)
 ax.set_xticks(x_pos)
 ax.set_xticklabels(param_labels, fontsize=11)
@@ -510,18 +528,18 @@ for i in range(3):
                ha='center', va='center', fontsize=10, fontweight='bold')
         ax.text(j + 0.5, 2-i + 0.35, f'{best_score:.3f}',
                ha='center', va='center', fontsize=9)
-        ax.text(j + 0.5, 2-i + 0.08, f'ρ={rho}, v=[{v_min},{v_max}]',
+        ax.text(j + 0.5, 2-i + 0.08, f'蟻={rho}, v=[{v_min},{v_max}]',
                ha='center', va='center', fontsize=7, style='italic')
 
 ax.set_xlim(0, 3)
 ax.set_ylim(0, 3)
 ax.set_xticks([0.5, 1.5, 2.5])
-ax.set_xticklabels(['Low v\n[0.3,0.6]', 'Medium v\n[0.6,0.9]', 'High v\n[0.9,1.2]'], 
+ax.set_xticklabels(['低 v\\n[0.3,0.6]', '中 v\\n[0.6,0.9]', '高 v\\n[0.9,1.2]'], 
                    fontsize=12, fontweight='bold')
 ax.set_yticks([0.5, 1.5, 2.5])
-ax.set_yticklabels(['High ρ=0.9', 'Medium ρ=0.6', 'Low ρ=0.3'], 
+ax.set_yticklabels(['高 ρ=0.9', '中 ρ=0.6', '低 ρ=0.3'], 
                    fontsize=12, fontweight='bold')
-ax.set_title('Best Performing GPT Model by Parameter Region\n(Color = Model, Intensity = Performance)', 
+ax.set_title('各参数区域最优 GPT 模型\\n（颜色=模型，深浅=性能）', 
              fontsize=14, fontweight='bold', pad=20)
 ax.set_aspect('equal')
 ax.invert_yaxis()
@@ -575,3 +593,4 @@ print('  6. gpt_parameter_impact.png - Parameter impact comparison')
 print('  7. gpt_stability_comparison.png - Stability analysis')
 print('  8. gpt_best_by_region.png - Best model by parameter region')
 print('='*90)
+

@@ -1,0 +1,200 @@
+\section{机制导向的隐私外部性场景设计（Scenarios \& Solver-backed Ground Truth）}
+\label{sec:mechanism_scenarios_main}
+
+本节从“机制可计算、评测可诊断”的原则出发，构造三个具有代表性的隐私外部性经济学场景，并给出与之配套的 solver-backed ground truth（GT）生成方法。与仅以终局指标（如分享率、平台利润或社会福利）衡量模型表现的做法不同，我们将评测对象明确为\emph{机制一致性}：模型在战略环境中的行为是否遵循外部性机制所蕴含的比较静态与均衡结构。为此，每个场景均由（i）明确的玩家集合、行动空间与信息结构定义战略环境；（ii）少量但闭环的机制公式刻画外部性如何进入效用与利润；（iii）一个可复现的理论求解器输出结构性解与福利分解，作为后续诊断指标的对照基准。场景编号约定：Scenario~1 = 原场景B（推断外部性，主案例）；Scenario~2 = 原场景A（价格传导外部性）；Scenario~3 = 原场景C（社会数据外部性 + 中介机制设计）。
+
+\subsection{统一设定：机制—博弈—GT 接口}
+\label{subsec:unified_interface}
+
+我们将 LLM 视为可执行策略的代理，并在可计算的经济机制中对其进行行为评测。三个场景共享两点约束。第一，\textbf{机制可计算}：外部性由可验证的结构方程刻画，均衡或最优响应可由确定的数值程序求解，从而避免人工标注与主观评分。第二，\textbf{评测可诊断}：除比较终局结果外，我们还保留可用于定位误差来源的结构对象（例如均衡集合、价格—参与映射与参与约束的紧绑定性），并允许在不改变经济环境与 GT 的条件下改变模型可见的信息结构与交互反馈方式，以区分“终局正确”与“机制正确”。
+
+
+\noindent\textbf{符号约定.}
+记用户集合为 $\mathcal{N}=\{1,\dots,n\}$。用户 $i$ 的隐私偏好/隐私成本记为 $v_i$。分享/披露决策记为 $a_i\in\{0,1\}$（$a_i=1$ 表示分享），$\mathbf{a}=(a_1,\dots,a_n)$，分享集合 $S(\mathbf{a})=\{i:a_i=1\}$，分享率 $\sigma(\mathbf{a})=\frac{1}{n}\sum_i a_i$。对每个场景，我们均提供一个\textbf{理性求解器}：给定参数与机制，输出可复现的均衡/最优响应（结构对象）以及利润、消费者剩余与社会福利等分解量（结果对象）作为 GT；在涉及动态协议的实验中，求解器还输出过程对象（如收敛与稳定性记录），用于后续诊断。
+
+\subsection{Scenario 1：推断外部性数据市场（主案例；原场景B）}
+\label{subsec:scenarioB}
+
+\subsubsection{机制与战略环境}
+\label{subsubsec:B_game}
+
+Scenario~1 对齐 \emph{Too Much Data: Prices and Inefficiencies in Data Markets} 的推断外部性框架。该机制的关键在于：在相关信号结构下，他人分享的数据会提高平台对未分享者特征的推断精度，从而对未分享者造成隐私泄露；同时，这种“可被推断”会降低个体数据的边际信息贡献，使平台愿意支付的价格随分享集合扩大而下降（在信息泄露满足次模性时，价格对集合非增）。因此，在该场景中，表面上“分享率合理”并不足以表明模型理解了机制；只有当其决策对相关性、噪声与集合结构变化呈现正确的比较静态响应时，才能认为其具有机制一致性。
+
+我们采用可计算的两阶段平台—用户博弈实例：
+平台面对 $n$ 个用户（实验默认 $n=8$），每个用户选择是否分享 $a_i\in\{0,1\}$。用户真实特征 $x_i$ 服从高斯先验，协方差矩阵 $\Sigma$ 取等相关结构（相关系数 $\rho$），分享者提供带噪观测
+\begin{equation}
+y_i = x_i + \varepsilon_i,\qquad \varepsilon_i\sim\mathcal{N}(0,\sigma^2_{\text{noise}}).
+\label{eq:B_observation}
+\end{equation}
+平台从信息增益中获得价值（系数 $\alpha$），并以\emph{最小支持价格}（reservation prices）诱导特定分享集合，从而将“外部性 $\rightarrow$ 价格 $\rightarrow$ 参与/集合”的闭环变为可计算对象。
+
+\subsubsection{机制闭环公式：后验学习、泄露度量与最小支持价格}
+\label{subsubsec:B_formula}
+
+为将“可推断性”落到可计算量，我们将用户 $i$ 的泄露量实例化为后验方差减少。对任意分享集合 $S\subseteq\mathcal{N}$，令观测矩阵 $H(S)$ 选取集合 $S$ 的坐标，噪声矩阵 $R=\sigma^2_{\text{noise}}I$，高斯线性更新给出后验协方差
+\begin{equation}
+\Sigma_{\text{post}}(S) \;=\; \Sigma \;-\; \Sigma H(S)^\top \big(H(S)\Sigma H(S)^\top + R\big)^{-1} H(S)\Sigma .
+\label{eq:B_posterior}
+\end{equation}
+据此定义泄露量为
+\begin{equation}
+\mathrm{leak}_i(S)\;\triangleq\; \Sigma_{ii} - \big(\Sigma_{\text{post}}(S)\big)_{ii}.
+\label{eq:B_leak}
+\end{equation}
+该定义与文献的机制方向一致：当相关性更强或分享集合更大时，未分享者的 $\mathrm{leak}_i(S)$ 通常上升，从而体现推断外部性。
+
+文献指出，对任意目标行动剖面（分享集合）$S$，平台实现该 $S$ 的最小均衡价格等于使分享者在 ``share / not share'' 间无差异的保留价格，且其核心形式为“价格 = 隐私价值 $\times$ 额外泄露”。在我们的实现中，对 $i\in S$ 定义最小支持价格为
+\begin{equation}
+p_i(S) \;=\; v_i\cdot \Big(\mathrm{leak}_i(S)-\mathrm{leak}_i(S\setminus\{i\})\Big),\qquad i\in S,
+\label{eq:B_price}
+\end{equation}
+并令 $p_i(S)=0$ 当 $i\notin S$。式 \eqref{eq:B_price} 将外部性通过边际信息贡献进入支付规则，为 GT 的可复现性提供了关键锚点。
+
+平台从信息中获得价值写为
+\begin{equation}
+V(S) \;=\; \alpha \sum_{i\in\mathcal{N}} \mathrm{leak}_i(S),
+\label{eq:B_value}
+\end{equation}
+从而平台利润与社会福利为
+\begin{equation}
+\Pi(S) \;=\; V(S) - \sum_{i\in S} p_i(S),
+\qquad
+W(S) \;=\; V(S) - \sum_{i\in\mathcal{N}} v_i\cdot \mathrm{leak}_i(S),
+\label{eq:B_profit_welfare}
+\end{equation}
+其中支付在社会福利中作为转移项被抵消，仅保留隐私损失与信息价值的权衡。上述口径在代码中固定，保证对同一参数配置的输出可复现。
+
+\subsection{Scenario 2：个性化与隐私选择（价格传导外部性；原场景A）}
+\label{subsec:scenarioA}
+
+\subsubsection{机制与战略环境}
+\label{subsubsec:A_game}
+
+Scenario~2 隐私披露比例会改变平台在产品市场中的定价结构（个性化 vs 统一价），从而通过价格传导影响匿名者与披露者的期望效用，形成外部性。与 Scenario~1 的推断外部性不同，该场景的外部性经由市场均衡内生生成，要求模型能够进行“第一阶段隐私选择 $\rightarrow$ 第二阶段定价反应 $\rightarrow$ 福利变化”的前向推断。
+
+为适配 LLM 评测并保持可计算性，我们实现一个有限 $n$ 的离散化实例：披露者被个性化定价（剩余被榨取）并承担隐私成本；匿名者面对依赖披露集合的统一价 $p_u(\cdot)$，从而外部性通过价格传导作用于匿名者。
+
+\subsubsection{机制闭环公式：cutoff 固定点与价格均衡方程}
+\label{subsubsec:A_formula}
+
+在 \emph{Privacy Choice} 的结构中，给定披露比例 $\sigma$，披露者与匿名者的期望剩余分别为 $V_s(\sigma)$ 与 $V_a(\sigma)$，从而隐私选择的净增益为
+\begin{equation}
+\Delta(\sigma;\tau)\;\triangleq\; V_s(\sigma)-V_a(\sigma)-\tau,
+\label{eq:A_delta}
+\end{equation}
+其中 $\tau$ 为个体隐私成本。均衡披露比例满足阈值/固定点：
+\begin{equation}
+\sigma^\star \;=\; \Pr_{\tau}\!\left[\Delta(\sigma^\star;\tau)\ge 0\right].
+\label{eq:A_fp}
+\end{equation}
+同时，论文给出在个性化定价应用中，给定 $\sigma$ 的对称均衡列表价 $p(\sigma)$ 可由一维方程刻画：
+\begin{equation}
+p-c \;=\; \frac{1-H_p(0)}{h_p(0)} \;+\; \frac{\sigma}{1-\sigma}\cdot \frac{1-H_c(p-c)}{h_p(0)}.
+\label{eq:A_p_sigma}
+\end{equation}
+式 \eqref{eq:A_fp}--\eqref{eq:A_p_sigma} 体现了该场景的机制闭环：隐私选择通过 $\sigma$ 改变市场均衡价格，价格变化反过来改变 $V_s(\sigma),V_a(\sigma)$，从而影响隐私选择激励。
+
+\subsubsection{Solver-backed GT：枚举披露集合、平台定价与单边偏离检验}
+\label{subsubsec:A_solver}
+
+为获得结构化 GT，我们在有限 $n$ 实例中以披露集合 $D\subseteq\mathcal{N}$ 为均衡对象。给定 $D$，平台对披露者 $i\in D$ 设个性化价 $p_i=\theta_i$ 并使其净效用仅为隐私成本的负值；对匿名者 $U=\mathcal{N}\setminus D$，平台在候选集合上枚举统一价以最大化利润，得到 $p_u(D)$。消费者效用在实现中写为
+\begin{equation}
+u_i(D)=
+\begin{cases}
+ -c_i^{\text{privacy}}, & i\in D, \\[2pt]
+ \max\{\theta_i - p_u(D), 0\}, & i\notin D .
+\end{cases}
+\label{eq:A_utility_impl}
+\end{equation}
+据此可计算 $\Pi(D)$、$CS(D)=\sum_i u_i(D)$ 与 $W(D)=CS(D)+\Pi(D)$。均衡披露集合由单边偏离检验给出：
+\begin{equation}
+D_{\text{eq}} \in \Big\{D\subseteq\mathcal{N}:\ 
+u_i(D)\ge u_i(D\triangle \{i\}),\ \forall i\in\mathcal{N}\Big\},
+\label{eq:A_nash_check}
+\end{equation}
+若存在多均衡则采用固定 tie-breaking 规则（如选择社会福利最高者）确保 GT 唯一可复现。同时输出社会最优对照
+\begin{equation}
+D_{\text{fb}} \in \arg\max_{D\subseteq\mathcal{N}} W(D).
+\label{eq:A_firstbest}
+\end{equation}
+该场景的设计使得模型不仅要“方向正确”，还必须在集合结构与由 $p_u(D)$ 诱导的福利分解上与机制一致，才能取得较高的机制一致性得分。
+
+\subsection{Scenario 3：社会数据外部性与中介机制设计}
+\label{subsec:scenarioC}
+
+\subsubsection{机制与制度：中介、匿名化与三方时序}
+\label{subsubsec:C_game}
+
+Scenario~3 该机制强调社会数据的外溢价值与搭便车问题，并引入中介在制度层面的选择（可识别 vs 匿名化）与合同设计（补偿与收费）。匿名化政策限制生产者将信号与具体个体匹配，从而改变个性化定价能力；补偿设计则通过参与约束决定数据供给规模。与前两个场景相比，该场景引入多主体、跨阶段反馈与制度约束，是检验模型在复杂机制下推断与稳定执行能力的关键环境。
+
+文献中中介利润写为
+\begin{equation}
+R \;\equiv\; m_0 - \sum_{i=1}^N m_i,
+\label{eq:C_profit_paper}
+\end{equation}
+其中 $m_i$ 为对消费者的补偿，$m_0$ 为生产者支付给中介的费用。匿名化可理解为对信号向量的随机置换以阻断“信号 $\rightarrow$ 个体”的匹配，从而约束个性化定价。
+
+\subsubsection{机制闭环公式：参与约束、外部性分解与参与率固定点}
+\label{subsubsec:C_formula}
+
+消费者是否披露由参与约束决定。记中介的数据流入策略为 $X$，数据出流（政策）为 $Y(\cdot)$，消费者 $i$ 的效用为 $U_i(\cdot)$。若消费者披露，其获得补偿 $m_i$；参与约束可写为
+\begin{equation}
+m_i \;\ge\; U_i\big((S_i, X_{-i}), X_{-i}\big)\;-\;U_i\big((S_i, X), X\big).
+\label{eq:C_PC}
+\end{equation}
+当约束紧绑定时，最小补偿可分解为“总影响”与“外部性”两部分：
+\begin{equation}
+m_i^\star(X)
+= -\underbrace{\big(U_i((S_i,X),X)-U_i(S_i,\emptyset)\big)}_{\Delta U_i(X)}
+\;+\;
+\underbrace{\big(U_i((S_i,X_{-i}),X_{-i})-U_i(S_i,\emptyset)\big)}_{DE_i(X)},
+\label{eq:C_decomp}
+\end{equation}
+其中
+\begin{equation}
+DE_i(X)\;\triangleq\; U_i\big((S_i,X_{-i}),X_{-i}\big)-U_i(S_i,\emptyset)
+\label{eq:C_externality}
+\end{equation}
+定义他人披露对 $i$ 的数据外部性。为对齐我们的实操评估，内层参与在实现中采用 ex ante（Monte Carlo）方式计算期望效用差异，并用固定点刻画均衡参与率：对每个消费者定义
+\begin{equation}
+\Delta U_i(r;m,X)\;=\;\mathbb{E}[u_i\mid a_i=1,r] - \mathbb{E}[u_i\mid a_i=0,r],
+\label{eq:C_deltaU}
+\end{equation}
+并与隐私成本 $\tau_i$ 比较得到参与决策，均衡参与率满足
+\begin{equation}
+  r^{\ast} \;=\; \Pr_{\tau}\!\left[\tau_i \le \Delta U_i\bigl(r^{\ast};m,X\bigr)\right].
+  \label{eq:C_fp}
+\end{equation}
+
+\subsubsection{Solver-backed GT：policy 枚举与补偿向量的混合优化}
+\label{subsubsec:C_solver}
+
+我们将 GT 生成写为分层的 Stackelberg 求解器。外层中介先动，选择数据政策 $X\in\{\text{identified},\text{anonymized}\}$ 与补偿向量 $m\in[0,3]^N$；内层消费者对给定 $(m,X)$ 通过 \eqref{eq:C_fp} 形成均衡参与率 $r^{\ast}$；随后在该信息结构下计算生产者最优反应与费用 $m_0$，得到中介利润 $R$。外层优化在实操中采用“粗网格初始化 + 连续优化”的混合策略：先在均匀补偿 $m_i\equiv m$ 上粗搜索选择初始化点，再用 L-BFGS-B 在盒约束 $m\in[0,3]^N$ 下优化 $R(m,X)$；对两种政策分别求解并取利润最高者。若最优利润不为正，则 GT 返回 no\_participation 基线。形式化地，
+\begin{equation}
+(X^{\ast},m^{\ast}) \in \arg\max_{X\in\{\text{identified},\text{anonymized}\},\ m\in[0,3]^N} R(m,X),
+\qquad \text{s.t. } R(m,X)>0.
+\label{eq:C_outer}
+\end{equation}
+需要强调的是，虽然求解器允许个性化补偿并在连续空间优化，但在部分基准参数下最优解可能数值上接近均匀补偿；本文在报告 GT 时同时给出补偿向量的统计量（例如均值与离散度）以提高可解释性与复现透明度。
+
+\subsection{小结：机制覆盖、互补性与后续评测接口}
+\label{subsec:scenario_summary}
+
+三个场景在机制维度上互补：Scenario~1 强调\textbf{相关性驱动的推断外部性}，并以“最小支持价格 + 集合结构”形成可检验的机制闭环；Scenario~2 强调\textbf{产品市场反应导致的价格传导外部性}，使隐私选择与市场均衡通过固定点耦合；Scenario~3 强调\textbf{中介的信息传输与合同外部性}，在匿名化制度约束与补偿优化下检验多主体系统的稳定性边界。更重要的是，每个场景均提供 solver-backed GT：即便模型在终局指标上表现良好，我们仍可借助均衡集合结构、价格—参与映射、参与约束是否紧绑定以及（在动态协议下）收敛路径等对象检验其是否真正沿机制链条推断，而非依赖启发式或提示词诱导。下一节将基于这些 GT 对照对象，给出统一的 LLM-as-agent 评测协议与诊断性指标体系。
+
+
+
+
+
+\label{sec:mechanism_scenarios}
+
+本节目标：用\textbf{可计算的经济学机制}构造三个“战略环境”评测场景，并给出每个场景的少量核心公式（来自原论文的机制闭环关系）与我们在实验中实现的\textbf{理论解求解器}（solver-backed ground truth, GT）构建过程，从而为后续“机制正确性诊断”提供可复现的对照基准。场景编号约定：Scenario~1 = 原场景B（推断外部性，主案例）；Scenario~2 = 原场景A（价格传导外部性）；Scenario~3 = 原场景C（社会数据外部性 + 中介机制设计）。
+
+
+
+
+
+
+\label{sec:framework}
+
+本节介绍我们提出的机制导向隐私外部性 LLM benchmark 的总体设计。该基准的目标不是复现某一特定平台的工程流程，而是在可计算的经济学模型上构造一组可复现、可比较且具诊断能力的评测环境，使得模型的“终局表现”与“机制一致性”可以被显式区分，并进一步刻画模型在动态交互与机制反馈下的稳定性边界。

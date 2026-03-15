@@ -34,9 +34,9 @@
       "num_rounds": 1
     },
     "b.v4": {
-      "share_rate_mean": 0.7,
+      "share_rate_mean": 0.8,
       "share_rate_std": 0.0,
-      "decision_distance_mean": 0.125,
+      "decision_distance_mean": 0.0,
       "decision_distance_std": 0.0,
       "num_rounds": 1
     },

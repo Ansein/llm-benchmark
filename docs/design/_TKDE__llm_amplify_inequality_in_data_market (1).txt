@@ -1,0 +1,863 @@
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 1
+Beyond Equilibrium: Quantifying and Explaining
+Inequality in LLM-Driven Data Markets with
+Privacy Choice Externalities
+Zeyan Li, Nianze Jing, Qilin Yuan, Xuanyi Li, Ankun Feng, Yaxin Li, Keman Huang*, Xiaoyong Du
+APPENDIX A
+ADDITIONAL RESULTS FOR RQ2
+APPENDIX B
+PROMPT FOR LLM- DRIVEN MULTI -AGENT DATA MARKET
+SYSTEM
+Table VIII presents the system prompts we designed for
+consumer and firm agents, while Table IV shows the prompts
+for firms when setting prices. The uppercase NOTE empha-
+sizes guidance for firm agents regarding consumers’ data shar-
+ing behavior, product purchasing decisions, and corporate rev-
+enue, aiding them in making more informed decisions.Tables
+VII, V , and III present the prompts for consumers regarding
+whether to continue searching, whether to share data, and
+whether to make a purchase, respectively.
+TABLE III
+PROMPT FOR CONSUMER PURCHASING DECISION
+purchase_decision prompt
+{self.get_memory_for_prompt()}
+You have the following valuations and prices for all firms:
+{opts_str}.
+The format is (Idx: Firm Index, Val: Your Valuation, Prc: Price
+Offered, Prft: Your Profit).
+Your historical decisions are: {self.memory}.
+Please choose a firm to purchase from or decide not to purchase.
+If you want to purchase, please provide the index of the firm.
+If you want to leave (stop searching and not purchase), please provide
+-1.
+Please provide your choice (only a number) and extremely brief
+reason.
+Format 1 (purchase)(Example which you must strictly follow its
+format):
+Decision:
+I’ll purchase Firm 1 (choose number 1) because:
+- ...
+- ...
+Format 2 (leave) (Example which you must strictly follow its format):
+Decision:
+I’ll leave (choose number -1) because:
+- ...
+- ...
+TABLE IV
+PRICING PROMPTS USED FOR FIRM
+Pricing Prompts
+Your goal is to maximize your total profit.
+Your cost is: {self.firm_cost} per product.
+The consumers’ valuations for every firm’s product are independently
+uniformly distributed between 0 and 1.
+There are {self.num_firms} firms in the market, including you.
+The more firms in the market, the more competition you will face.
+Your predicted share rate for this round is:
+{self.share_rate_predicted}.
+NOTE:THE MORE CONSUMERS SHARE DATA, THE
+MORE LIKELY THEY ARE TO RECEIVE PERSONALIZED
+RECOMMENDATIONS (EVERY FIRM HAS EQUAL CHANCE
+TO BE RECOMMENDED).
+THE MORE CONSUMERS RECEIVE PERSONALIZED
+RECOMMENDATIONS, THE LESS LIKELY THEY ARE TO
+SEARCH FOR OTHER FIRMS (IF OTHER FIRMS EXIST).
+THE LESS LIKELY THEY ARE TO SEARCH FOR OTHER
+FIRMS, THE MORE LIKELY THEY ARE TO BUY YOUR
+PRODUCT.
+THE MORE LIKELY THEY ARE TO BUY YOUR PRODUCT,
+THE MORE LIKELY YOU ARE TO SET A HIGHER PRICE.
+The more competition you face, the more valuable personalized
+recommendations become, as they help consumers find the best
+product more efficiently.
+With more firms, consumers are more likely to rely on personalized
+recommendations, reducing their search efforts and increasing their
+likelihood of purchasing your product.
+Your historical decisions are{self.get_memory_for_prompt()}
+Your basic price is: {self.basic_price}.
+Please provide a new price for your product and extremely brief
+reason.
+Format: ’Change price: xxx, reason: xxx’.
+Note: If you want to keep the basic price, then set the Change price
+to 0.
+If you want to increase the price, then set the Change price to a
+positive number.
+If you want to decrease the price, then set the Change price to a
+negative number.
+Be sure to keep the price positive and round to two decimal places
+(like 0.00).
+TABLE V
+PROMPT FOR CONSUMER SHARING DECISION
+share_decision prompt
+{self.get_memory_for_prompt()}
+If you share your data, you will receive personalized recommendations.
+The personalized recommendations will be sorted by your valuation
+from high to low.
+The more firms in the market, the more valuable the recommendations
+will be.
+Now there are {self.num_firms} firms to choose from, which is
+the maximum number of firms you can search.
+Do you want to share your data? Please answer ’yes’ or ’no’ with
+your extremely brief reason.
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 2
+TABLE I
+AGGREGATE CONSUMER SURPLUS (↑) BY FIRM COUNT (n) UNDER HETEROGENEOUS DEPLOYMENTS
+Setting n=1 n=2 n=3 n=4 n=5 n=6 n=7 n=8 n=9 n=10
+Homogeneous
+WW weak firm + weak consumer 1.12 0.00 1.84 2.43 2.89 2.31 2.22 2.81 2.26 2.38
+SS strong firm + strong consumer 3.98 3.05 2.89 3.00 1.67 2.41 2.97 2.64 2.61 3.05
+RR(BNE) rational firm + rational consumer 2.50 4.67 5.49 3.73 2.28 2.18 2.07 1.97 1.87 1.78
+Heterogeneous
+RW rational firm + weak consumer 2.56 1.83 1.80 2.51 1.61 2.60 1.29 1.72 2.28 2.00
+RS rational firm + strong consumer 3.48 2.95 3.16 2.87 2.49 2.49 4.69 1.58 1.65 1.89
+SW strong firm + weak consumer 2.50 2.15 1.57 3.20 2.06 4.70 6.92 2.62 1.97 5.79
+SR strong firm + rational consumer 2.05 3.80 6.11 3.79 6.21 6.56 6.51 6.38 7.23 7.30
+WS weak firm + strong consumer 2.00 1.71 1.45 2.30 1.70 3.53 4.46 4.46 2.24 3.19
+WR weak firm + rational consumer 3.54 5.84 3.62 3.95 3.60 1.34 2.30 1.71 1.80 1.11
+* Bold values denote the highest (best) consumer surplus, while underlined italicized values denote the second-best.
+TABLE II
+AGGREGATE SOCIAL WELFARE BY FIRM COUNT (n) UNDER HETEROGENEOUS DEPLOYMENTS
+Setting n=1 n=2 n=3 n=4 n=5 n=6 n=7 n=8 n=9 n=10
+Homogeneous
+WW weak firm + weak consumer 4.72 7.35 12.03 14.40 14.02 13.58 16.42 15.99 16.15 15.29
+SS strong firm + strong consumer 11.47 10.03 13.51 14.58 12.75 16.40 16.11 16.68 15.65 17.25
+RR(BNE) rational firm + rational consumer 7.50 8.24 8.23 6.32 4.61 4.24 3.93 3.66 3.42 3.21
+Heterogeneous
+RW rational firm + weak consumer 7.06 11.07 10.61 13.21 12.09 15.62 12.43 15.40 17.77 17.74
+RS rational firm + strong consumer 9.48 8.11 11.64 13.47 14.41 14.86 14.29 14.59 15.20 14.46
+SW strong firm + weak consumer 7.50 7.14 8.54 12.70 11.63 14.30 17.02 16.70 15.94 17.35
+SR strong firm + rational consumer 7.55 10.93 12.64 15.24 16.21 16.56 16.01 16.38 17.23 17.29
+WS weak firm + strong consumer 7.45 10.96 9.34 12.97 15.17 15.77 17.19 17.97 15.61 17.96
+WR weak firm + rational consumer 10.54 11.84 13.49 15.40 14.38 13.28 13.57 15.29 14.74 13.16
+* Bold values denote the highest (best) social welfare, while underlined italicized values denote the second-best.
+TABLE VI
+PROMPTS USED FOR FIRM AND CONSUMER AGENTS
+System Prompts
+firm prompt:
+You are a firm. You will set the price of your product. Your goal is to
+maximize your profit. Your profit is the product of the number of consumers
+who choose to buy your product and the price, minus the cost. Please
+consider the number of consumers, the share rate of consumers who share
+data, and your historical decisions.
+consumer prompt:
+You are a consumer. You will search for products to purchase.
+You have a privacy value of {self.privacy_cost}.
+There are {self.num_firms} firms to choose from.
+Please consider whether to share your data.
+If you share your data, you will receive personalized recommendations (your
+search sequence of products will be sorted from highest value to lowest
+value), which will reduce your total search cost. (The total search cost is the
+product of the number of searches and the search cost. Sharing your data
+can significantly reduce the number of searches to make a good deal.)
+If you don’t share your data, you won’t receive any recommendations, which
+will increase your total search cost on average. (In the worse case, the total
+search cost is the product of the number of searches and the search cost,
+which is {self.num_firms - 1} × {self.search_cost}.)
+Your goal is to maximize your total revenue.
+Your total revenue is the sum of the valuation of the product you purchase,
+minus the price of the product, minus the total search cost, minus the privacy
+value.
+When deciding whether to share your data, consider the trade-off between
+the privacy value and the potential reduction in search cost.
+If you choose to search more than a certain number, then it’s impossible for
+you to get a positive profit.
+When deciding whether to search, consider the trade-off between the search
+cost and the potential revenue.
+Given the search cost is {self.search_cost} per search while the net
+profit from purchasing a product is less than 1, you should be cautious.
+The first search is free, but each subsequent search will cost you
+{self.search_cost}.
+TABLE VII
+PROMPT FOR CONSUMER SEARCHING DECISION
+search_decision prompt
+{self.share and ’you have decided to share your
+data’ or ’you have decided not to share your
+data’}
+You have searched {len(self.searched_firms)} firms.
+The indices, valuations and prices of these firms are:
+{searched_firms_list}.
+Format: (index, valuation, price)
+And their potential profit (valuation - price) is: {profits}.
+{self.get_memory_for_prompt()}
+So far, your total search cost is {self.total_search_cost}.
+You are rational: if any searched firm offers positive profit, you won’t
+leave without buying.
+Please choose one action:
+1. Purchase : Choose the index of a firm you already searched (from
+the list above).
+2. Search : Choose {self.num_firms} to search the next firm
+(this will cost {platform.search_cost}).
+3. Leave: Choose -1 (stop searching, buy nothing).
+Provide your choice (only the number) and extremely brief reason.
+Format Examples (Strictly follow one):
+Decision:
+I’ll purchase Firm X (choose number X) because:
+- Reason 1
+- Reason 2
+Decision:
+I’ll search another firm (choose number {self.num_firms})
+because:
+- Reason 1
+- Reason 2
+Decision: I’ll leave (choose number -1) because:
+- Reason 1
+- Reason 2
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 3
+TABLE VIII
+PROMPTS USED FOR FIRM AND CONSUMER AGENTS
+System Prompts
+firm prompt:
+You are a firm. You will set the price of your product. Your goal
+is to maximize your profit. Your profit is the product of the number
+of consumers who choose to buy your product and the price, minus
+the cost. Please consider the number of consumers, the share rate of
+consumers who share data, and your historical decisions.
+consumer prompt:
+You are a consumer. You will search for products to purchase.
+You have a privacy value of {self.privacy_cost}.
+There are {self.num_firms} firms to choose from.
+Please consider whether to share your data.
+If you share your data, you will receive personalized recommenda-
+tions (your search sequence of products will be sorted from highest
+value to lowest value), which will reduce your total search cost. (The
+total search cost is the product of the number of searches and the
+search cost. Sharing your data can significantly reduce the number
+of searches to make a good deal.)
+If you don’t share your data, you won’t receive any recommenda-
+tions, which will increase your total search cost on average. (In the
+worse case, the total search cost is the product of the number of
+searches and the search cost, which is {self.num_firms - 1}
+× {self.search_cost}.)
+Your goal is to maximize your total revenue.
+Your total revenue is the sum of the valuation of the product you
+purchase, minus the price of the product, minus the total search cost,
+minus the privacy value.
+When deciding whether to share your data, consider the trade-off
+between the privacy value and the potential reduction in search cost.
+If you choose to search more than a certain number, then it’s
+impossible for you to get a positive profit.
+When deciding whether to search, consider the trade-off between the
+search cost and the potential revenue.
+Given the search cost is {self.search_cost} per search while
+the net profit from purchasing a product is less than 1, you should
+be cautious.
+The first search is free, but each subsequent search will cost you
+{self.search_cost}.
+APPENDIX C
+ALGORITHM FOR SIMULATION FRAMEWORK
+APPENDIX D
+PROMPTS FOR CORE F RAMEWORK
+Table IX and Table XI represent the prompts for the
+Decision Factor Importance Ranking (Agent rank), while Ta-
+ble X and Table XII represent the prompts for Decision
+Chain (Agent matrix). Table XIII and Table XIV represent
+the prompts for the expert agent (Agent audit) when judging
+the validity of the extraction. Table XV presents the prompts
+for the extraction and supplementation of decision factors
+(Agentextract).
+Algorithm 1 Heterogeneous Multi-Agent Simulation for Data
+Markets
+Require: Environment E = {N, n, s, c, Tmax};
+Valuation v ∼ F on [v, v];
+Privacy cost τi ∼ T(·);
+Reservation r s.t.
+Rv
+r (1 − F(v))dv = s;
+Backends {BC
+i }, {BF
+j };
+Switches ρShare, ρPrice, ρSearch ∈ {0, 1};
+Functions: Net Benefit ∆(r, n), Demand
+Ds(pi, p), Da(pi, p).
+Ensure: Series {σt, pt
+avg, SCt, St
+c, St
+f , SWt, Rt
+CS }Tmax
+t=1 .
+1: Init: σ0 ∼ U[0, 1], p0
+avg, t ← 1.
+2: if Benchmark then
+3: Update σ0 ← 1
+N
+PI{∆(p0
+avg) > τi} iteratively until
+convergence.
+4: end if
+5: while t ≤ Tmax do
+6: // Stage 1: Consumer Sharing
+7: It
+i,share ← I{∆(r, n) > τ i} if ρShare else
+LLM_Sharei(τi, n, s, r), ∀i.
+8: σt ← 1
+N
+PN
+i=1 It
+i,share
+9: // Stage 2: Firm Pricing
+10: if ρPrice = 1 then
+11: Initialize guess prices {pj}n
+j=1
+12: repeat
+13: pavg ← 1
+n
+Ppj
+14: for j = 1 to n do
+15: pnew
+j ← arg maxp≥c(p−c)[σtDs(p, pavg)+(1 −
+σt)Da(p, pavg)]
+16: end for
+17: Update prices {pj} ← {pnew
+j }
+18: until prices converge
+19: pt
+j ← pj, ∀j
+20: else
+21: for j = 1 to n do
+22: pt
+j ← LLM_Pricej(σt, n, c)
+23: end for
+24: end if
+25: pt
+avg ← 1
+n
+Pn
+j=1 pt
+j
+26: // Stage 3: Search and Purchase
+27: for i = 1 to N do
+28: Gen vi; Oi ← sort({j}, vij) if It
+i,share else
+permute({j}).
+29: if ρSearch = 1 then
+30: Search Oi for first j∗ s.t. vij − pt
+j ≥ r − pt
+avg.
+31: if j∗ exists then Buy j∗; else Buy arg max(v −p)
+if > 0, else Leave.
+32: else
+33: Actioni ← LLM_SearchBuyi(Oi, {pt
+j}j∈Oi , r, s).
+34: end if
+35: end for
+36: Compute Metrics {σt, pt
+avg, SCt, St
+c, St
+f , SWt, Rt
+CS };
+t ← t + 1.
+37: end while
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 4
+TABLE IX
+Agentrank CONSUMER FACTOR PROMPT CONFIGURATION
+Title Agentrank consumer factor prompt
+Content You are a structured data analysis assistant. Please read the following single line of CSV data and summarize two outputs according to our
+factor rules below:
+Step 1: For each Factor, list the evidence found in the file.
+Step 2: Based on the evidence, evaluate and assign an importance ranking (ties allowed, three levels in total: 1 = directly drives decision, 2
+= secondary influence, 3 = marginal impact). The generated ranking must include 1, 2, and 3, with roughly equal proportions.
+Step 3: Output a pure vector (no extra text), with a fixed dimension equal to the number of factors (8D), formatted as: [1,2,1,3,2,1,3,2]. The
+order of factors follows the table below.
+Rows correspond to factor pairs, with both rows and columns ordered according to the table below.
+Major Cat-
+egory
+Factor Definition Influence on Sharing Decision Influence on Purchase Decision
+Benefits Search Cost
+Savings
+Reduction in search
+cost due to personal-
+ized recommendations
+after sharing
+High savings promote sharing
+(“significant reduction...outweighs
+privacy” → share=True);
+low savings suppress sharing
+(“minimal...privacy outweighs”
+→ share=False).
+High savings promote BestProfit
+and encourage purchase
+(“positive 0.21...purchase”);
+low savings push search/exit
+(“minimal...negative...leave”).
+Positive
+Profit
+Perceived positive
+profit
+Positive profit promotes sharing
+(“expect positive...outweighs privacy”
+→ share=True); lack of positive
+profit suppresses sharing (“no
+positive...privacy outweighs” →
+share=False).
+Positive profit promotes purchase
+(“positive 0.23...buy”); lack of
+profit drives search/exit (“no
+positive...leave”).
+Drawbacks Privacy
+Loss
+Value and immediate
+perception of privacy
+loss
+High loss suppresses sharing (“pri-
+vacy 0.051 incurs...outweighs” →
+share=False); low loss promotes
+sharing (“low privacy 0.026...share”
+→ share=True).
+High loss + negative profit drive exit
+(“privacy 0.055...negative...leave”);
+low loss promotes purchase (“low
+privacy...positive...buy”).
+Negative
+Profit
+Perceived negative
+profit
+Negative profit suppresses sharing
+(“expect negative...privacy outweighs”
+→ share=False); no negative
+profit promotes sharing (“no nega-
+tive...share” → share=True).
+Negative profit drives exit (“nega-
+tive...leave”); no negative profit pro-
+motes purchase (“positive...buy”); un-
+certainty drives search (“zero...search
+further”).
+Search
+Contin-
+uation
+Cost
+Additional cost of
+continued search
+(e.g., “incurs 0.02
+per search...no
+improvement”)
+High cost promotes sharing (“share to
+avoid 0.02 costs” → share=True);
+low cost reduces sharing incentive.
+High cost promotes purchase/exit
+(“incurs 0.02...purchase positive”);
+low cost promotes search (“low
+cost...search further”).
+Trade-offs Net Benefit Compare savings
+vs. privacy cost
+to calculate
+BestProfit
+net value (e.g.,
+“outweighs” +
+“positive/negative
+profit”)
+Positive net promotes sharing (“sig-
+nificant outweighs privacy...positive
+net” → share=True); negative
+net suppresses sharing (“privacy
+outweighs...negative net” →
+share=False).
+Positive net benefit promotes purchase
+(“positive 0.23...purchase”); negative
+net benefit drives exit/search (“nega-
+tive -0.14...leave”).
+Profit Max-
+imization
+Integration of pros and
+cons based on “maxi-
+mize revenue”
+Rational behavior promotes sharing
+(“rational to share...maximize” →
+share=True); suppresses sharing
+(“not share to maximize”).
+Rational behavior promotes purchase
+(“rational...buy positive”); drives exit
+(“rational...leave”).
+Loss Mini-
+mization
+Integration of pros and
+cons based on “mini-
+mize loss”
+High loss suppresses sharing (“ra-
+tional to minimize...not share” →
+share=False); low loss promotes
+sharing (“no loss...share”).
+Rational behavior drives
+exit/search (“minimize loss...leave”;
+“zero...search further”).
+{ “result”: “<your extracted importance vector>” }
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 5
+TABLE X
+Agentmatrix CONSUMER LOGIC PROMPT CONFIGURATION
+Title Agentmatrix consumer Logic prompt
+Content You are a structured data analysis assistant. Please read the following single line of CSV data and summarize two outputs according to our
+factor rules below:
+Step 1: For each Factor, list the evidence found in the file.
+Step 2: Based on the above factor analysis, first list the relationships supported by evidence, then generate an 8×8 undirected adjacency matrix
+(the matrix must be symmetric), representing the logical relationships between factors.
+Values: 0 = no significant logical relationship, 1 = clear logical relationship
+Format: [[0,1,0,...],[1,0,...],...]
+Rows correspond to factor pairs, with both rows and columns ordered according to the table below.
+Major Cat-
+egory
+Factor Definition Influence on Sharing Decision Influence on Purchase Decision
+Benefits Search Cost
+Savings
+Reduction in search
+cost due to personal-
+ized recommendations
+after sharing
+High savings promote sharing
+(“significant reduction...outweighs
+privacy” → share=True);
+low savings suppress sharing
+(“minimal...privacy outweighs”
+→ share=False).
+High savings promote BestProfit
+and encourage purchase
+(“positive 0.21...purchase”);
+low savings push search/exit
+(“minimal...negative...leave”).
+Positive
+Profit
+Perceived positive
+profit
+Positive profit promotes sharing
+(“expect positive...outweighs privacy”
+→ share=True); lack of positive
+profit suppresses sharing (“no
+positive...privacy outweighs” →
+share=False).
+Positive profit promotes purchase
+(“positive 0.23...buy”); lack of
+profit drives search/exit (“no
+positive...leave”).
+Drawbacks Privacy
+Loss
+Value and immediate
+perception of privacy
+loss
+High loss suppresses sharing (“pri-
+vacy 0.051 incurs...outweighs” →
+share=False); low loss promotes
+sharing (“low privacy 0.026...share”
+→ share=True).
+High loss + negative profit drive exit
+(“privacy 0.055...negative...leave”);
+low loss promotes purchase (“low
+privacy...positive...buy”).
+Negative
+Profit
+Perceived negative
+profit
+Negative profit suppresses sharing
+(“expect negative...privacy outweighs”
+→ share=False); no negative
+profit promotes sharing (“no nega-
+tive...share” → share=True).
+Negative profit drives exit (“nega-
+tive...leave”); no negative profit pro-
+motes purchase (“positive...buy”); un-
+certainty drives search (“zero...search
+further”).
+Search
+Contin-
+uation
+Cost
+Additional cost of
+continued search
+(e.g., “incurs 0.02
+per search...no
+improvement”)
+High cost promotes sharing (“share to
+avoid 0.02 costs” → share=True);
+low cost reduces sharing incentive.
+High cost promotes purchase/exit
+(“incurs 0.02...purchase positive”);
+low cost promotes search (“low
+cost...search further”).
+Trade-offs Net Benefit Compare savings
+vs. privacy cost
+to calculate
+BestProfit
+net value (e.g.,
+“outweighs” +
+“positive/negative
+profit”)
+Positive net promotes sharing (“sig-
+nificant outweighs privacy...positive
+net” → share=True); negative
+net suppresses sharing (“privacy
+outweighs...negative net” →
+share=False).
+Positive net benefit promotes purchase
+(“positive 0.23...purchase”); negative
+net benefit drives exit/search (“nega-
+tive -0.14...leave”).
+Profit Max-
+imization
+Integration of pros and
+cons based on “maxi-
+mize revenue”
+Rational behavior promotes sharing
+(“rational to share...maximize” →
+share=True); suppresses sharing
+(“not share to maximize”).
+Rational behavior promotes purchase
+(“rational...buy positive”); drives exit
+(“rational...leave”).
+Loss Mini-
+mization
+Integration of pros and
+cons based on “mini-
+mize loss”
+High loss suppresses sharing (“ra-
+tional to minimize...not share” →
+share=False); low loss promotes
+sharing (“no loss...share”).
+Rational behavior drives
+exit/search (“minimize loss...leave”;
+“zero...search further”).
+{“Matrix”: “<your extracted full adjacency matrix>” }
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 6
+TABLE XI
+Agentrank FIRM F ACTOR PROMPT CONFIGURATION
+Title Agentrank firm Factor prompt
+Content You are a structured data analysis assistant. Please read the following single line of CSV data and summarize two outputs according to our
+factor rules below:
+Step 1: For each Factor, list the evidence found in the file.
+Step 2: Based on the evidence, evaluate and assign an importance ranking (ties allowed, three levels in total: 1 = directly drives decision, 2
+= secondary influence, 3 = marginal impact). The generated ranking must include 1, 2, and 3, with roughly equal proportions.
+Step 3: Output a pure vector (no extra text), with a fixed dimension equal to the number of factors (8D), formatted as: [1,2,1,3,2,1,3,2]. The
+order of factors follows the table below.
+Rows correspond to factor pairs, with both rows and columns ordered according to the table below.
+Major
+Category
+Factor Definition Influence on Pricing Decision (High/Mid/Low Pricing)
+Benefits Profit Margin Increase in unit
+profit from higher
+pricing
+High margin drives high price (“high margin...maximizes profit” →
+high); low margin drives low price (“low margin...reduce price to
+attract” → low).
+Customer
+Loyalty
+Dependence of
+data-sharing
+consumers on
+recommendations
+Loyalty drives high price (“loyal sharing base...sustain high price”
+→ high); low loyalty drives low price (“no loyalty...lower price to
+compete” → low).
+Drawbacks Competitive
+Pressure
+Market competition
+leading to price
+wars
+High competition suppresses high prices (“intense competition...reduce
+price” → low); low competition allows high prices (“no competi-
+tion...high price” → high).
+Customer
+Churn Risk
+Risk of customers
+leaving due to high
+pricing
+High risk suppresses high price (“leave risk...lower price” → low);
+low risk allows high price (“low leave risk...high price” → high).
+Demand Un-
+certainty
+Demand fluctuation
+leading to pricing
+errors
+High uncertainty suppresses high price (“uncertain...adjust to mid
+price” → mid); low uncertainty drives high price (“stable de-
+mand...high price” → high).
+Trade-offs Net Profit Compare pricing
+returns vs. cost
+risk to calculate
+expected profit
+Positive net drives high price (“high outweighs low risk...positive
+net” → high); negative net drives low price (“competition out-
+weighs...negative net” → low).
+Profit
+Maximization
+Integration of
+pros and cons
+based on “ratio-
+nal...maximize
+profit”
+Drives high price (“rational to high price...maximize” → high);
+suppresses high price (“not high to maximize” → low).
+Loss
+Minimization
+Integration of pros
+and cons based on
+“rational...minimize
+loss”
+Suppresses high price (“rational to minimize...not high price” → low);
+drives high price (“no loss...high price”).
+Please output only JSON in the following format:
+{ “result”: “<your extracted importance vector>”}
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 7
+TABLE XII
+Agentmatrix FIRM LOGIC PROMPT CONFIGURATION
+Title Agentmatrix firm Logic prompt
+Content You are a structured data analysis assistant. Please read the following single line of CSV data and summarize two outputs according to our
+factor rules below:
+Step 1: For each Factor, list the evidence found in the file.
+Step 2: Based on the above factor analysis, first list the relationships supported by evidence, then generate an 8×8 undirected adjacency matrix
+(the matrix must be symmetric), representing the logical relationships between factors.
+Values: 0 = no significant logical relationship, 1 = clear logical relationship
+Format: [[0,1,0,...],[1,0,...],...]
+Rows correspond to factor pairs, with both rows and columns ordered according to the table below.
+Major
+Category
+Factor Definition Influence on Pricing Decision (High/Mid/Low Pricing)
+Benefits Profit Margin Increase in unit
+profit from higher
+pricing
+High margin drives high price (“high margin...maximizes profit” →
+high); low margin drives low price (“low margin...reduce price to
+attract” → low).
+Customer
+Loyalty
+Dependence of
+data-sharing
+consumers on
+recommendations
+Loyalty drives high price (“loyal sharing base...sustain high price”
+→ high); low loyalty drives low price (“no loyalty...lower price to
+compete” → low).
+Drawbacks Competitive
+Pressure
+Market competition
+leading to price
+wars
+High competition suppresses high prices (“intense competition...reduce
+price” → low); low competition allows high prices (“no competi-
+tion...high price” → high).
+Customer
+Churn Risk
+Risk of customers
+leaving due to high
+pricing
+High risk suppresses high price (“leave risk...lower price” → low);
+low risk allows high price (“low leave risk...high price” → high).
+Demand Un-
+certainty
+Demand fluctuation
+leading to pricing
+errors
+High uncertainty suppresses high price (“uncertain...adjust to mid
+price” → mid); low uncertainty drives high price (“stable de-
+mand...high price” → high).
+Trade-offs Net Profit Compare pricing
+returns vs. cost
+risk to calculate
+expected profit
+Positive net drives high price (“high outweighs low risk...positive
+net” → high); negative net drives low price (“competition out-
+weighs...negative net” → low).
+Profit
+Maximization
+Integration of
+pros and cons
+based on “ratio-
+nal...maximize
+profit”
+Drives high price (“rational to high price...maximize” → high);
+suppresses high price (“not high to maximize” → low).
+Loss
+Minimization
+Integration of pros
+and cons based on
+“rational...minimize
+loss”
+Suppresses high price (“rational to minimize...not high price” → low);
+drives high price (“no loss...high price”).
+Please output only JSON in the following format:
+{“Matrix”: “<your extracted full adjacency matrix>” }
+TABLE XIII
+Agentaudit CONSUMER PROMPT CONFIGURATION
+Title Agentaudit consumer prompt
+Content You are a rigorous annotation expert specializing in “decision logic”, responsible for verifying whether the [Decision Factor Importance Vector]
+and [Factor Relationship Adjacency Matrix] provided by another model (Agent 1) are consistent with the textual rationale.
+1. Explanation of Decision Factors (fixed order; all vectors/matrices follow this sequence):
+F1: Search Cost Savings — Search cost savings resulting from privacy sharing /
+search behavior
+F2: Positive Profit — Importance of positive profit ( > 0)
+F3: Privacy Loss — Privacy loss or privacy risk
+F4: Negative Profit — Negative profit ( < 0) or losses
+F5: Search Continuation Cost — Cost of continuing the search process
+F6: Net Benefit — Net benefit (benefits minus costs/risks)
+F7: Profit Maximization — Objective of profit maximization
+F8: Loss Minimization — Loss minimization / risk aversion
+2. Input Text and Scenario Information
+You will see key information about the consumer: Whether privacy was shared and the rationale ( share_reason); Final decision to
+purchase/leave and the rationale ( final_reason). Collectively referred to as [Raw Input Data] .
+[Raw Input Data]: {input_data}
+3. Candidate Annotation Results from Agent 1
+1. importance_vector: List of length 8 (F1–F8). Values: 1=Primary, 2=Secondary, 3=Weak/Irrelevant.
+2. adjacency_matrix: 8×8 binary matrix. matrix[i][j]=1 indicates a clear decision relationship between Fi and Fj.
+[Extraction Results to be Reviewed]: {output_data}
+4. Your Review Task and Criteria
+Determine if results are “generally reasonable” based only on [Raw Input Data].
+- Output 1 (Valid): Align with rationale; minor discrepancies acceptable.
+- Output 0 (Invalid): Do not align, logical fallacies, or significant errors.
+5. Output Format
+- Output ONLY a single number: 0 or 1.
+- Do NOT output any explanations or additional comments.
+
+IEEE TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING, VOL. *, NO. *, 2026 8
+TABLE XIV
+Agentaudit FIRM PROMPT CONFIGURATION
+Title Agentaudit firm prompt
+Content You are a rigorous annotation expert specializing in “decision logic”, responsible for verifying whether the [Decision Factor Importance Vector]
+and [Factor Relationship Adjacency Matrix] provided by another model (Agent 1) are consistent with the textual rationale.
+1. Explanation of Decision Factors (fixed order; all vectors/matrices follow this sequence):
+F1: Profit Margin : Increase in unit profit from higher pricing.
+F2: Customer Loyalty : Dependence of data-sharing consumers on recommenda-
+tions.
+F3: Competitive Pressure : Market rivalry driving price competition.
+F4: Customer Churn Risk : Risk of customers leaving due to high pricing.
+F5: Demand Uncertainty : Demand fluctuation leading to pricing errors.
+F6: Net Profit : Comparison (pricing returns vs. cost risk).
+F7: Profit Maximization : Drive toward maximizing revenue.
+F8: Loss Minimization : Drive toward mitigating risk/loss.
+2. Input Text and Scenario Information
+You will be provided with key information about the company: Price adjustments and pricing rationale ( price_reason). Collectively
+referred to as [Raw Input Data] .
+[Raw Input Data]: {input_data}
+3. Candidate Annotation Results from Agent 1
+1. importance_vector: List of length 8 (F1–F8). Values: 1=Primary, 2=Secondary, 3=Weak/Irrelevant.
+2. adjacency_matrix: 8 ×8 binary matrix. matrix[i][j]=1 indicates a clear decision-making relationship between Factor Fi and Factor
+Fj.
+[Extraction Results to be Reviewed]: {output_data}
+4. Your Review Task and Criteria
+Determine if results are “generally reasonable” based only on the textual rationale in the [Raw Input Data].
+- Output 1 (Valid): Align with rationale; minor discrepancies acceptable.
+- Output 0 (Invalid): Do not align, logical fallacies, or significant errors.
+5. Output Format
+- Output ONLY a single number: 0 or 1.
+- Do NOT output any explanations or additional comments.
+TABLE XV
+PROMPT FOR INDUCTIVE CODING AND TAXONOMY CONSTRUCTION
+Component Content
+Role You are an expert researcher in Behavioral Economics and Data Privacy.
+Task Perform an Inductive Coding process to extract decision factors from LLM Agent rationales.
+Context We are building a taxonomy of factors influencing data market decisions. Our initial framework includes: {initial_framework}.
+Input "{agent_rationale}"
+Instructions 1. Analyze the input rationale to identify decision drivers.
+2. Validate if the initial factors exist in this rationale.
+3. Inductively identify any emerging factors not covered by the initial list.
+4. Categorize all identified factors into three dimensions: Benefits, Drawbacks, and Trade-offs.
+Output Format Please output in the following JSON structure:
+{
+"validated_factors": [],
+"emerging_factors": [],
+"final_taxonomy_segment": {
+"Benefits": [],
+"Drawbacks": [],
+"Trade-offs": []
+},
+"evidence_quote": "..."
+}

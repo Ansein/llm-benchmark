@@ -1,0 +1,72 @@
+\section{LLM评测协议与实验设计（LLM-as-Agent Evaluation）}
+\label{sec:evaluation}
+
+本节形式化给出将 LLM 作为策略主体嵌入机制环境的评测协议，并定义与 ground truth（GT）对照的核心评测量。评测目标在于区分 ``终局一致性'' 与 ``机制一致性''：前者刻画福利与利润等结果量的偏离，后者刻画策略结构与动态过程是否与机制约束相容。
+
+\subsection{统一评测协议：信息集与结构化动作}
+\label{subsec:protocol}
+
+对每个场景，LLM 被置于某一角色 $r$ 的信息结构之下，接收与该角色一致的信息集（information set）$I_r$，并输出属于动作空间 $\mathcal{A}_r$ 的结构化动作 $a_r$。输出被限制为可解析的离散决策（例如是否分享/披露，或中介的机制参数选择），从而使行为评估完全建立在可计算的策略对象与终局分解之上。
+
+\subsection{实验设计：三个场景的 LLM-as-Agent 评测框架}
+\label{subsec:design}
+
+三类外部性机制场景在角色分工、策略对象与反馈结构上存在系统差异。评测框架据此分别定义 LLM 的角色、信息集、动作空间与机制一致性判据。
+
+\subsubsection{Scenario 1（推断外部性，主案例）：用户侧理性预期决策}
+\label{subsec:design-s1}
+
+场景 1 中，LLM 扮演用户 $i$。私有信息为隐私偏好参数 $v_i$ 及平台给出的个性化报价 $p_i$；公共信息为机制参数（市场规模、相关性强度与噪声水平）。动作空间为二元决策 $a_i \in \{0,1\}$（是否分享）。机制一致性要求体现在两层：其一，终局上分享率与 GT 的偏离应受控；其二，策略结构上分享集合与 GT 的一致性应显著高于仅匹配总体分享率的基线，并在参数变化下保持正确的方向性响应。
+
+\subsubsection{Scenario 2（价格传导外部性）：消费者披露与均衡一致性}
+\label{subsec:design-s2}
+
+场景 2 中，LLM 扮演消费者 $i$，观测其愿付与隐私成本等个体信息，并在给定他人披露集合的条件下评估披露与不披露的预期收益差异。动作空间为二元披露决策 $d_i \in \{0,1\}$。评测以披露集合 $D$ 为核心策略对象，并以均衡结构一致性作为机制一致性的主要判据：披露集合与 GT 的结构一致性应较高，动态更新过程应表现为收敛或可解释的稳定状态，而非持续振荡或高度路径依赖。
+
+\subsubsection{Scenario 3（社会数据外部性）：中介机制设计与双侧交互}
+\label{subsec:design-s3}
+
+场景 3 中存在两类主体：中介与用户。中介接收市场统计摘要并选择机制参数（补偿水平与匿名化策略），用户接收个体信息与机制条款并选择是否参与。该场景的机制一致性不仅要求终局分解接近 GT，更要求多轮交互下避免振荡、崩溃等系统性失效。为定位误差来源，评测在四种主体配置下分别进行：
+\begin{itemize}
+  \item \textbf{配置A（理性 $\times$ 理性）}：中介与消费者均为理论理性策略，作为 GT 基准。
+  \item \textbf{配置B（理性中介 $\times$ LLM消费者）}：中介固定为 GT 最优策略，消费者由 LLM 决策，诊断 ``消费者侧机制理解''。
+  \item \textbf{配置C（LLM中介 $\times$ 理性消费者）}：消费者为理性最佳反应，中介由 LLM 选择策略，诊断 ``中介侧机制设计能力''。
+  \item \textbf{配置D（LLM中介 $\times$ LLM消费者）}：双方均为 LLM，多轮交互以检验系统层面的稳定性边界。
+\end{itemize}
+多轮交互过程中，记录每轮策略对象与终局分解，并据此刻画收敛、振荡与崩溃等过程性质。
+
+\subsection{指标体系：终局偏差、结构一致性与动态过程}
+\label{subsec:metrics}
+
+指标体系覆盖 ``结果''、``结构'' 与 ``过程'' 三个层次。记 LLM 输出的策略为 $a_{\text{LLM}}$，GT 对照策略为 $a_{\text{GT}}$；在相同机制环境下诱导的终局结果分别为 $x_{\text{LLM}}$ 与 $x_{\text{GT}}$。所有指标均由 $(a_{\text{LLM}}, a_{\text{GT}}, x_{\text{LLM}}, x_{\text{GT}})$ 及多轮轨迹构造。
+
+\paragraph{终局偏差（terminal outcome deviation）}
+对任一标量终局量 $x$（如利润、社会福利、消费者剩余），采用相对误差刻画偏离：
+\begin{equation}
+\mathrm{Err}_{\mathrm{rel}}(x) \;=\; \frac{\left|x_{\text{LLM}} - x_{\text{GT}}\right|}{\left|x_{\text{GT}}\right| + \epsilon},
+\end{equation}
+其中 $\epsilon>0$ 为数值稳定项。对 ``效率'' 口径，采用比率 $x_{\text{LLM}}/x_{\text{GT}}$。对归一化比例量 $r \in [0,1]$（如分享率、参与率、披露率），采用绝对差 $\left|r_{\text{LLM}}-r_{\text{GT}}\right|$。
+当 GT 提供个体层动作标签（即 $a_{\text{GT}} \in \{0,1\}^{n}$）时，采用个体准确率：
+\begin{equation}
+\mathrm{Acc}(a) \;=\; \frac{1}{n}\sum_{i=1}^{n} \mathbf{1}\!\left[a^{\text{LLM}}_i = a^{\text{GT}}_i\right].
+\end{equation}
+消费者剩余差异用于刻画对消费者的净影响：
+\begin{equation}
+\Delta CS \;=\; CS_{\text{LLM}} - CS_{\text{GT}},
+\end{equation}
+其中 $\Delta CS < 0$ 表示消费者相对 GT 受损，$\Delta CS > 0$ 表示消费者相对 GT 受益。
+
+\paragraph{结构一致性（strategic-structure consistency）}
+当策略对象可表示为集合（如分享集合 $S$、披露集合 $D$、参与集合 $P$）时，采用 Jaccard 相似度：
+\begin{equation}
+J(S_{\text{LLM}}, S_{\text{GT}}) \;=\;
+\frac{\left|S_{\text{LLM}}\cap S_{\text{GT}}\right|}{\left|S_{\text{LLM}}\cup S_{\text{GT}}\right|}.
+\end{equation}
+该指标能区分 ``分享率正确'' 与 ``分享集合结构正确''，从而更直接检验机制一致性。
+
+\paragraph{动态过程（process-level properties）}
+对多轮交互过程，定义收敛性与稳定性。记第 $t$ 轮的结构化策略对象为 $S^{(t)}$（集合或二元向量）。若存在 $t^\ast$ 使得之后策略保持不变：
+\begin{equation}
+S^{(t)} = S^{(t^\ast)}\quad \forall\, t \ge t^\ast,
+\end{equation}
+则判定过程收敛，收敛轮数为 $t^\ast$。末段稳定性用波动强度摘要刻画；对二元向量策略，可用最近若干轮两两之间的平均 Hamming 距离（归一化到 $[0,1]$）作为稳定性度量。

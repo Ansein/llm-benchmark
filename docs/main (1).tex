@@ -1,0 +1,785 @@
+﻿%%
+%% This is file `sample-sigconf.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% samples.dtx  (with options: `all,proceedings,bibtex,sigconf')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from sample-sigconf.tex.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file samples.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%%
+%%
+%% Commands for TeXCount
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+%%
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For submission and review of your manuscript please change the
+%% command to \documentclass[manuscript, screen, review]{acmart}.
+%%
+%% When submitting camera ready or to TAPS, please change the command
+%% to \documentclass[sigconf]{acmart} or whichever template is required
+%% for your publication.
+%%
+%%
+% Force non-draft image rendering even in review workflows.
+\PassOptionsToPackage{final}{graphicx}
+% \documentclass[sigconf]{acmart}
+\documentclass[sigconf,anonymous,review]{acmart}
+
+
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+% \AtBeginDocument{%
+%   \providecommand\BibTeX{{%
+%     Bib\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+% %% complete the rights form.
+% \setcopyright{acmlicensed}
+% \copyrightyear{2018}
+% \acmYear{2018}
+% \acmDOI{XXXXXXX.XXXXXXX}
+% %% These commands are for a PROCEEDINGS abstract or paper.
+% \acmConference[Conference acronym 'XX]{Make sure to enter the correct
+%   conference title from your rights confirmation email}{June 03--05,
+%   2018}{Woodstock, NY}
+% %%
+%%  Uncomment \acmBooktitle if the title of the proceedings is different
+%%  from ``Proceedings of ...''!
+%%
+%%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
+%%  June 03--05, 2018, Woodstock, NY}
+% \acmISBN{978-1-4503-XXXX-X/2018/06}
+\usepackage{float}
+\setlength{\textfloatsep}{6pt}
+\setlength{\floatsep}{6pt}
+\setlength{\intextsep}{6pt}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{threeparttable}
+\usepackage{adjustbox}
+\sisetup{detect-all}
+\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{xcolor}
+\usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+% ===== Appendix preamble patch list (add only if not already loaded) =====
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{amsthm}
+\usepackage[final]{graphicx}
+\setkeys{Gin}{draft=false}
+\graphicspath{{./}{pic/}{appendix_assets/}{support_material/appendix_assets/}}
+\usepackage{verbatim}
+% % If appendix inputs include tables:
+\usepackage{booktabs,array,tabularx,multirow,makecell,threeparttable}
+\usepackage[table]{xcolor}
+% % If algorithm environment is used in appendix inputs:
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% % Theorem-like environments (define only if your main preamble has not defined them):
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+%%
+%% Submission ID.
+%% Use this when submitting an article to a sponsored event. You'll
+%% receive a unique submission ID from the organizers
+%% of the event, and this ID should be used as the parameter to this command.
+%%\acmSubmissionID{123-A56-BU3}
+
+%%
+%% For managing citations, it is recommended to use bibliography
+%% files in BibTeX format.
+%%
+%% You can then either use BibTeX with the ACM-Reference-Format style,
+%% or BibLaTeX with the acmnumeric or acmauthoryear sytles, that include
+%% support for advanced citation of software artefact from the
+%% biblatex-software package, also separately available on CTAN.
+%%
+%% Look at the sample-*-biblatex.tex files for templates showcasing
+%% the biblatex styles.
+%%
+
+%%
+%% The majority of ACM publications use numbered citations and
+%% references.  The command \citestyle{authoryear} switches to the
+%% "author year" style.
+%%
+%% If you are preparing content for an event
+%% sponsored by ACM SIGGRAPH, you must use the "author year" style of
+%% citations and references.
+%% Uncommenting
+%% the next command will enable that style.
+%%\citestyle{acmauthoryear}
+
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title{From Outcomes to Mechanisms: A Benchmark for Diagnosing LLM's Mechanism Hallucination on Data Inference Externalities}
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+%% Of note is the shared affiliation of the first two authors, and the
+%% "authornote" and "authornotemark" commands
+%% used to denote shared contribution to the research.
+\author{Xuanyi Li}
+\authornote{Both authors contributed equally to this research. Keman Huang is the corresponding author.}
+\email{lixuanyi2023201916@ruc.edu.cn}
+\author{Ankun Feng}
+\authornotemark[1]
+\email{fak2023201876@ruc.edu.cn}
+\affiliation{%
+  \institution{Renmin University of China}
+  \city{Beijing}
+  \country{China}}
+
+\author{Nianze Jing}
+\affiliation{%
+  \institution{Renmin University of China}
+  \city{Beijing}
+  \country{China}}
+\email{larst@affiliation.org}
+
+\author{Zeyan Li}
+\affiliation{%
+ \institution{Renmin University of China}
+  \city{Beijing}
+  \country{China}}
+
+\author{Yaxin Li}
+\affiliation{%
+  \institution{Renmin University of China}
+  \city{Beijing}
+  \country{China}}
+
+\author{Keman Huang}
+\affiliation{%
+  \institution{Renmin University of China}
+  \city{Beijing}
+  \country{China}
+\email{cpalmer@prl.com}
+}
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+% \renewcommand{\shortauthors}{Trovato et al.}
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+Large language models (LLMs) are increasingly deployed as decision-making agents in economic environments with strategic interaction and tightly coupled causal mechanisms. Yet most existing evaluations remain outcome-centric, making it hard to distinguish genuine mechanism understanding from prompt-induced compliance or surface pattern matching. We propose a solver-backed, mechanism-oriented benchmark methodology for evaluating LLM-as-agent decision competence in computable economic mechanisms. As a testbed, we instantiate a data-market game with \emph{inference-driven privacy externalities}: correlated user types imply that others' sharing raises an individual’s base leakage, lowers marginal leakage, and endogenously depresses the platform’s minimum supporting compensation, yielding a Stackelberg pricing--sharing equilibrium. We implement a reproducible rational-agent solver that generates verifiable ground truth (equilibrium sharing set, prices, and welfare decomposition), and embed LLMs as users under an isomorphic information structure and action space. Our diagnostic metrics go beyond terminal outcome deviation by separating \emph{outcome correctness} from \emph{mechanism correctness} via (i) strategic-structure consistency, (ii) directional consistency under parameter perturbations, and (iii) dynamic stability under mechanism feedback.
+Evaluating 12 frontier models across GPT, DeepSeek, and Qwen families, we find that terminal metrics often overestimate mechanism understanding: some models achieve near-zero welfare deviation yet violate theoretically correct comparative statics, exhibiting a reproducible \emph{mechanism hallucination} pattern—``looking right'' without internalizing the externality chain. Prompt-complexity ladder tests reveal substantial heterogeneity in prompt dependence, and multi-round structured feedback improves stability and reduces errors, suggesting a practical path from diagnosis to intervention.
+\end{abstract}
+
+\keywords{LLM-as-agent; mechanism understanding;mechanism Hallucination;inference externality; data markets; Stackelberg game}
+
+%%
+%% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+%% Please copy and paste the code instead of the example below.
+%%
+% \begin{CCSXML}
+% <ccs2012>
+%  <concept>
+%   <concept_id>00000000.0000000.0000000</concept_id>
+%   <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%   <concept_significance>500</concept_significance>
+%  </concept>
+%  <concept>
+%   <concept_id>00000000.00000000.00000000</concept_id>
+%   <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%   <concept_significance>300</concept_significance>
+%  </concept>
+%  <concept>
+%   <concept_id>00000000.00000000.00000000</concept_id>
+%   <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%   <concept_significance>100</concept_significance>
+%  </concept>
+%  <concept>
+%   <concept_id>00000000.00000000.00000000</concept_id>
+%   <concept_desc>Do Not Use This Code, Generate the Correct Terms for Your Paper</concept_desc>
+%   <concept_significance>100</concept_significance>
+%  </concept>
+% </ccs2012>
+% \end{CCSXML}
+
+% \ccsdesc[500]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+% \ccsdesc[300]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+% \ccsdesc{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+% \ccsdesc[100]{Do Not Use This Code~Generate the Correct Terms for Your Paper}
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+
+%% A "teaser" image appears between the author and affiliation
+%% information and the body of the document, and typically spans the
+%% page.
+% \begin{teaserfigure}
+%   \includegraphics[width=\textwidth]{sampleteaser}
+%   \caption{Seattle Mariners at Spring Training, 2010.}
+%   \Description{Enjoying the baseball game from the third-base
+%   seats. Ichiro Suzuki preparing to bat.}
+%   \label{fig:teaser}
+% \end{teaserfigure}
+
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+\section{Introduction}
+In recent years, large language models (LLMs) have evolved from ``text generators'' into executable decision-making agents and are increasingly deployed in interactive environments with feedback loops, including recommendation, pricing, negotiation, and policy advisory \citep{gao2024large,park2023generative,aher2023using,horton2023large}. In these settings, success requires more than plausible one-shot choices: an agent must track how actions propagate through an economic mechanism—shaping information, incentives, and other agents' behavior—and how these effects feed back into its own payoffs and risks \citep{kiciman2023causal,richens2024robust,abdulaal2024causal}. Accordingly, evaluation should treat \emph{mechanism understanding} as a first-class criterion, since it governs robustness under perturbations, distribution shift, and long-horizon interaction \citep{huang2025far,akata2025repeatedgames}.
+
+Privacy-externality data markets are a canonical testbed for mechanism understanding. Individuals' sharing decisions are strategically coupled through informational spillovers and data externalities \citep{acemoglu2022too,ichihashi2021economics,choi2019privacy,bergemann2022economics}, while platform inference and personalization link ``information--price--welfare'' into a cross-stage causal chain \citep{bergemann2019markets,goldfarb2023economics,fainmesser2023digital}. This coupling creates a sharp evaluation pitfall: a model may match welfare or aggregate sharing at a benchmark point while misunderstanding the mechanism objects that rational behavior depends on (e.g., marginal leakage and diminishing marginal information gains) \citep{acemoglu2022too}. Such \emph{mechanism hallucination}—\emph{looking right} on terminal metrics without internalizing the causal externality chain—tends to surface as brittle reversals once correlation, noise, or disclosure changes.
+
+To \textcolor{red}{diagnose such a mechanism hallucination in LLMs}, we propose a solver-backed, \emph{mechanism-oriented} benchmark \emph{system} and a general recipe for constructing such systems in computable economic mechanisms. Rather than assembling a one-off task suite, our methodology turns a mechanism into a diagnosable evaluation environment by (i) formalizing the externality pathway into a small set of closed-loop structural objects, (ii) implementing a theoretical solver that produces verifiable ground truth (equilibrium strategies, supporting payments, and welfare decomposition), and (iii) defining a systematic approach to distinguish \emph{mechanism correctness} from \emph{outcome correctness}. We instantiate the recipe in an inference-induced privacy-externality Stackelberg data market \citep{acemoglu2022too}, embedding LLM agents and the rational baseline under an isomorphic information structure and action space, and evaluating against solver-backed ground truth to avoid manual labeling and subjective preference \citep{liu2023agentbench,duan2024gtbench}.
+
+Our approach goes beyond terminal deviations (e.g., profit or social surplus) and targets the signatures that mechanism hallucination tends to evade: (i) \emph{strategic-structure consistency} (e.g., set alignment beyond aggregate rates), (ii) \emph{directional consistency} under perturbations that probe mechanism-implied comparative statics, and (iii) \emph{process-level stability} under repeated interaction and feedback \citep{akata2025repeatedgames}. We include three complementary diagnostics that turn evaluation into explanation: a prompt information-density ladder that locates the mechanism-visibility boundary; sensitivity analysis that distinguishes mechanism inference from instance-specific guessing; and structured feedback intervention that tests whether mechanism feedback can reduce hallucination and improve stability without revealing the ground-truth action set.
+
+\paragraph{Benchmark System and Mechanism Hallucination.}
+Systematic experiments on 12 frontier models across GPT, DeepSeek, and Qwen validate \emph{both} the end-to-end benchmark system and its construction recipe. The solver-backed pipeline operationalizes a computable mechanism into three layers of verifiable supervision—equilibrium-level ground truth, mechanism-level core objects, and perturbation/interaction probes—under a unified protocol and multi-level diagnostic metrics; thus \emph{our contribution is a portable benchmarking system, beyond a single benchmark instance}. Empirically, this system exposes mechanism hallucination in a reproducible way: multiple models appear strong on terminal metrics (near-zero welfare deviation or high set overlap) yet systematically violate mechanism-implied comparative statics under correlation/noise shifts, leading to brittle reversals as the environment changes. By separating outcome deviation from structure-, direction-, and process-consistency, the benchmark system converts these gaps into measurable signals and supports targeted interventions (prompt scaffolding or mechanism feedback) whose effects are attributable to specific mechanism objects rather than incidental prompt compliance. \textcolor{red}{Hence,...}
+
+\section{Related Work}
+\label{sec:related_work}
+
+\paragraph{Privacy Externalities and Data Market Mechanisms}
+Our benchmark is grounded in privacy economics, where correlated consumer data creates negative externalities via inference mechanisms \cite{acemoglu2022too, ichihashi2021economics, choi2019privacy}. The ``social dimension'' of data lowers acquisition costs for intermediaries \cite{bergemann2022economics, bergemann2019markets}, while ``privacy-choice externalities'' in personalized markets can actively harm non-sharers \cite{rhodes2024personalization, baik2023price}. Although theoretical literature characterizes these market failures \cite{goldfarb2023economics, acquisti2016economics, fainmesser2023digital}, emerging research suggests autonomous agents may exacerbate such inefficiencies \cite{sashihara2025llm, zhang2025fairshare, fish2024algorithmic}. We utilize these computable mechanisms as a rigorous testbed for diagnosing the economic reasoning depth of LLMs.
+
+\paragraph{LLMs as Economic Decision Makers}
+LLMs are increasingly deployed to simulate economic agents \cite{gao2024large}, ranging from replicating social dynamics \cite{park2023generative, aher2023using, wang2025user} to macroeconomic forecasting \cite{horton2023large, li2023econagent} and specific tasks like trust games \cite{xie2024can} or privacy management \cite{sun2024empowering, williams2023epidemic}. While some studies suggest advanced models can approximate rational behavior \cite{guo2023gpt, li2024econagent}, substantial evidence highlights instability in their social preferences \cite{hu2025generative, lee2024language}, psychological traits \cite{petrov2024limited}, and strategic robustness \cite{ma2024game, wang2025limits}. This unreliability in complex interactions necessitates diagnostic evaluation beyond simple behavioral imitation.
+
+\paragraph{Strategic Reasoning Benchmarks: From Outcomes to Mechanisms}
+Evaluation benchmarks have shifted from general task frameworks like \textit{AgentBench} \cite{liu2023agentbench} to game-theoretic suites such as \textit{GAMA-Bench} \cite{huang2025far}, \textit{GTBench} \cite{duan2024gtbench}, \textit{SmartPlay} \cite{wu2024smartplay}, and \textit{MAgIC} \cite{xu2024magic}, alongside behavioral analyses in classic games \cite{fan2024can, brookins2024playing, akata2025repeatedgames, fontana2025nicer, mao2025alympics}. However, these benchmarks predominantly rely on \textbf{outcome-centric} metrics. Given that LLMs often lack internal causal models \cite{richens2024robust, kiciman2023causal, abdulaal2024causal} or exhibit flawed chain-of-thought reasoning despite correct outputs \cite{stechly2024chain, goldblum2024position}, pure outcome evaluation cannot distinguish genuine understanding from hallucination. Our benchmark bridges this gap by explicitly measuring \textbf{mechanism consistency}—alignment with incentive compatibility and externality pricing—against a rational solver.
+
+
+
+
+
+\section{A Benchmark Framework for Mechanism Understanding under Inference Externalities}
+% \section{A Mechanism-Oriented Privacy-Externality Benchmark Framework}
+\label{sec:framework}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{framework.png}
+    \caption{The Benchmark Framework. (Left) a computable data market with inference externalities; (Middle) a dual-agent protocol benchmarking LLM actions against a rational solver via outcome and structural metrics; and (Right) a diagnostic suite comprising prompt ladders, sensitivity analysis, and fictitious play to isolate mechanism hallucinations.}
+    \label{fig:placeholder_framework}
+\end{figure}
+In canonical complex decision environments such as data markets and platform governance, LLM decision capability should not be evaluated solely by outcome-level metrics such as participation rate, profit, and welfare. It should further be examined in terms of whether the model \emph{understands and follows the incentive structure and comparative-statics regularities induced by the mechanism itself}. Accordingly, LLM decision capability should be characterized by \emph{mechanism consistency}: after entering a computable multi-agent game as a strategic agent, whether the model-induced behavior remains aligned with the equilibrium structure, binding constraints, and comparative-statics directions implied by the mechanism.
+
+\begin{definition}[Mechanism Consistency]
+Given a computable decision environment and its theoretical benchmark solution, a model is said to exhibit better mechanism understanding in this environment if, under the same information structure, its induced strategic structure is consistent with the theoretical benchmark on key structural objects, and it exhibits the same comparative statics under changes in key parameters.
+\end{definition}
+
+Based on this definition, we instantiate a mechanism-oriented benchmark in the privacy-externality setting. A solver-backed rational agent provides reproducible ground truth under the same information structure and action space used by LLM-as-agent, enabling direct comparison. Evaluation then separates outcome correctness from mechanism correctness through a progressive diagnostic suite (prompt ladder, parameter sensitivity, and mechanism-feedback intervention), testing whether models converge under attributable signals rather than merely matching outcomes.
+
+% \subsection{Scenario Selection: Inference Externality}
+ % as a Canonical Case
+
+ \subsection{Scenario Selection}
+ % as a Canonical Case
+\label{subsec:scenario_selection}
+
+\paragraph{\textbf{Principles for Scenario Selection: Operationalizing Computable Mechanism and Diagnosable Evaluation.}}
+We propose two principles for scenario selections: computable mechanism ensures generable ground truth, and diagnosable evaluation ensures localizable errors. Together, they make the benchmark both evaluative and explanatory of mechanism understanding.
+
+First, \textbf{computable mechanism}. The scenario must be representable as an \emph{executable settlement-and-solution pipeline}, so the theoretical benchmark is not based on subjective annotation. Concretely, the externality pathway is fully specified by structural equations (or equivalent program rules), so that for any parameter setting and action profile \(a\):  
+(i) \emph{agent-level payoffs are decomposable and computable} (e.g., compensation, privacy loss, net utility, platform information value, payment cost);  
+(ii) \emph{equilibrium or best response is solvable by deterministic procedures} (e.g., enumeration, optimization, fixed-point iteration), yielding reproducible \(a^E\) and \(p^E\);  
+(iii) \emph{benchmark solutions are batch-generable across instances}, enabling statistical evaluation and sensitivity analysis.  
+Thus, benchmark ``correct answers'' come from reproducible solver computation under the same mechanism, not manual scoring or heuristics.
+
+Second, \textbf{diagnosable evaluation}. The benchmark should not only score proximity to theoretical outcomes, but also identify where deviation occurs along the mechanism causal chain and what structural misunderstanding it implies. Therefore, beyond outcome metrics, the scenario must expose \emph{intermediate mechanism evidence} directly comparable to solver benchmarks. This enables detection of pseudo-understanding (correct outcomes but incorrect mechanisms) and anchors model differences to interpretable mechanism dimensions.
+
+
+% \paragraph{\textbf{Scenario Description: Data Sharing and Pricing under Inference Externality.}}
+% Under the two principles above, we select the inference externality data market as a canonical evaluation scenario. This scenario captures a market in which the platform infers user types from data and then prices/profits accordingly: users decide whether to share data in a one-shot static game; sharing yields personalized compensation but incurs privacy loss associated with information leakage. Because user types are correlated, any user's sharing not only increases self-leakage but also improves the platform's inference accuracy about other users, creating a negative externality on non-sharers. This externality further endogenously shapes data compensation: when others' sharing has already improved inference precision for a user, the marginal privacy protection the user can gain from ``not sharing'' decreases, and the compensation required by the platform to induce sharing correspondingly declines, eventually leading to an equilibrium distortion of ``suppressed compensation--excessive sharing.'' We use this scenario as the canonical case for subsequent evaluations under a unified protocol, including static mechanism-consistency assessment, prompt-ladder diagnosis, sensitivity testing, and dynamic feedback-intervention evaluation.
+
+\paragraph{\textbf{Scenario Description: Data Sharing and Pricing under Inference Externality.}}
+Following the principles above, we use an inference-externality data market as the canonical scenario. In this data market, a platform offers take-it-or-leave-it, personalized compensation for users' data; users then decide in a one-shot game whether to share. Sharing increases privacy loss via information leakage, as user types are correlated and each user’s sharing improves the platform’s inference about others, imposing negative externalities on non-sharers. This feedback endogenously shapes compensation: as others share more, a user’s baseline leakage rises and the marginal privacy protection from ``not sharing'' falls, allowing the platform to lower the minimum supporting price and yielding the equilibrium pattern of \emph{suppressed compensation and excessive sharing}. This scenario serves as the common testbed for static mechanism-consistency evaluation, prompt-ladder diagnosis, sensitivity tests, and dynamic feedback interventions.
+
+\paragraph{\textbf{Why Data Inference Externality as the Scenario.}}
+As a canonical evaluation setting, the inference-externality data market jointly satisfies the requirements of computability and diagnosability, while providing a clear externality chain and precisely characterizable mechanism objects. First, externalities in this setting arise from correlation and statistical inference: when user types are correlated, data sharing by others improves the platform's inference precision about an individual's type, thereby spilling privacy loss onto non-sharers. This process can be computed through explicit statistical structure and settlement rules, and both equilibrium sharing sets and platform pricing can be reproducibly obtained by a solver. Second, the setting naturally provides diagnosable structural objects: an individual's ``baseline leakage'' and ``marginal leakage'' can be decomposed; whether platform compensation covers marginal loss can be directly tested. Meanwhile, the submodularity of leakage information induces clear comparative statics: as more others share, the marginal privacy-protection gain from additional non-sharing declines, which lowers the compensation required by the platform and induces excessive sharing. These structural regularities allow us to evaluate, beyond outcome metrics, whether a model captures the externality feedback loop and key comparative statics, rather than merely outputting superficially plausible share/non-share decisions.
+
+
+
+% \subsection{Multi-Agent Decision Design: Rational Agent and LLM-as-Agent}
+\subsection{Agent Implementation}
+
+\subsubsection{Rational Agent}
+\label{subsubsec:rational_agent_tmd}
+
+To evaluate LLM \emph{mechanism understanding} rather than outcome matching, we implement a solver-backed rational agent as the theoretical baseline in the same environment. The rational agent deterministically computes the Stackelberg equilibrium of an inference-induced privacy-externality data market: the platform posts take-it-or-leave-it prices, and users then decide whether to share. The model boundaries are explicit: (i) the platform updates beliefs only via Gaussian posterior inference from observed sharing signals; (ii) each user trades off compensation $p_i$ against leakage loss $v_i I_i(\cdot)$; (iii) offers are one-shot; and (iv) externalities arise solely from type correlation and statistical inference (excluding preference interdependence, network effects, reputation, etc.). \textit{Under these boundaries, ``mechanism understanding'' reduces to internalizing the causal chain: others' data \(\rightarrow\) my leakage \(\rightarrow\) my participation threshold \(\rightarrow\) platform price suppression.}
+
+\paragraph{Information structure and actions.}
+Let $\mathcal{N}=\{1,\ldots,n\}$ and $X=(X_1,\ldots,X_n)\sim\mathcal{N}(0,\Sigma)$.
+User $i$'s tradable data is a noisy signal $S_i=X_i+Z_i$ with $Z_i\sim\mathcal{N}(0,1)$.
+Each user chooses $a_i\in\{0,1\}$ (share iff $a_i=1$), inducing the sharing set
+$S(a)=\{i\in\mathcal{N}:a_i=1\}$.
+The platform chooses a price vector $p=(p_1,\ldots,p_n)$ and anticipates users' rational responses.
+
+\paragraph{Mechanism objects: leakage, baseline leakage, and incremental leakage.}
+Given a sharing profile $a$, the platform updates via a Gaussian posterior and we define user $i$'s \emph{leakage information} as the posterior MSE reduction:
+\begin{equation}
+I_i(a)\triangleq \sigma_i^2-\min_{\hat x_i}\mathbb{E}\big[(X_i-\hat x_i(S_a))^2\big].
+\label{eq:leak_def}
+\end{equation}
+We isolate inference externalities by defining \emph{baseline leakage},
+\begin{equation}
+I_i^{0}(a_{-i})\triangleq I_i(a_i=0,a_{-i}),
+\label{eq:baseline_leak}
+\end{equation}
+and \emph{incremental leakage} (the additional loss from sharing),
+\begin{equation}
+\Delta I_i(a_{-i})\triangleq I_i(a_i=1,a_{-i})-I_i^{0}(a_{-i}).
+\label{eq:delta_def}
+\end{equation}
+Under Gaussian learning, $I_i^{0}(a_{-i})$ increases with others' sharing while $\Delta I_i(a_{-i})$ decreases (diminishing marginal impact); solver closed forms are deferred to the appendix.
+
+\paragraph{Utility, participation constraint, and minimum supporting price.}
+Let $v_i\ge 0$ be user $i$'s privacy preference. The utility is
+\begin{equation}
+u_i(a_i,a_{-i},p)=
+\begin{cases}
+p_i - v_i I_i(a_i=1,a_{-i}), & a_i=1,\\
+- v_i I_i^{0}(a_{-i}), & a_i=0.
+\end{cases}
+\label{eq:user_utility}
+\end{equation}
+Thus user $i$ shares iff the participation constraint holds:
+\begin{equation}
+p_i \;\ge\; v_i\Delta I_i(a_{-i}),
+\label{eq:participation_constraint}
+\end{equation}
+where $v_i\Delta I_i(a_{-i})$ is the reservation price. For any target action profile $a$, take-it-or-leave-it allows the platform to compress payments to the component-wise minimum supporting level:
+\begin{equation}
+p_i^{a}=
+\begin{cases}
+v_i\Delta I_i(a_{-i}), & a_i=1,\\
+0, & a_i=0,
+\end{cases}
+\label{eq:min_support_price}
+\end{equation}
+which operationalizes the testable price-suppression chain:
+others' sharing $\Rightarrow I_i^{0}(a_{-i})\uparrow \Rightarrow \Delta I_i(a_{-i})\downarrow \Rightarrow p_i^{a}\downarrow$.
+\paragraph{Platform objective and exact Stackelberg selection}
+In the baseline model, the platform's marginal value of information is normalized to 1 and the platform payoff is
+\begin{equation}
+U(a,p)=\sum_{i\in\mathcal{N}} I_i(a)\;-\;\sum_{i:a_i=1} p_i.
+\label{eq:platform_obj_app}
+\end{equation}
+Under Stackelberg timing, the platform can implement any desired user equilibrium $a$ by setting $p=p^a$ (Eq.~\eqref{eq:min_support_price}), and then selects the one maximizing $U(a,p^a)$.
+\paragraph{Welfare anchor (social surplus).}
+Since prices are pure transfers, utilitarian social surplus is
+\begin{equation}
+SS(a)=U(a,p)+\sum_{i\in\mathcal{N}}u_i(a,p)
+=\sum_{i\in\mathcal{N}}(1-v_i)I_i(a),
+\label{eq:social_surplus}
+\end{equation}
+which serves as an outcome-level anchor (e.g., $SS(a^{E})$) against the rational baseline, while $(I_i^{0},\Delta I_i)$ provide mechanism-level anchors for diagnosing how agents translate inference externalities into thresholds and price suppression.
+
+
+\paragraph{Solver-backed equilibrium selection and GT outputs.}
+Given any $a$, the solver computes the leakage objects $\{I_i(a),I_i^{0}(a_{-i}),\Delta I_i(a_{-i})\}$ and the implementable prices $p^a$, then selects the platform-optimal implementable equilibrium $(a^E,p^E)$ under the Stackelberg timing. We implement this selection deterministically (exact for small $n$) and record both outcome-level anchors (equilibrium prices, profit, and welfare decomposition) and mechanism-level anchors ($I_i^{0}$ and $\Delta I_i$) for subsequent diagnosis. Full closed forms and the enumeration-based solver procedure are provided in Appendix.
+
+
+
+\subsubsection{LLM-as-Agent Implementation}
+\label{subsubsec:llm_agent_impl_tmd}
+We implement LLM-as-agent with the same decision structure as the theoretical model: each user \(i\in\mathcal{N}\) outputs a binary action \(a_i\in\{0,1\}\) under information set \(I_i\), forming \(a^{\mathrm{LLM}}\) and the sharing set \(S(a^{\mathrm{LLM}})\). These outputs are then passed to the benchmark evaluator, which settles outcomes under the same structural equations and compares them with rational-baseline ground truth \((a^{E},p^{E})\), so observed differences are attributable to mechanism understanding.
+
+
+\paragraph{(1) Information-Set Design.}
+For user \(i\), \(I_i\) includes:
+\begin{enumerate}
+\item \textbf{Public parameters}: \(n\), \(\rho\), \(\Sigma\), noise structure, and \(\alpha\);
+\item \textbf{Private parameters}: \(v_i\) and user identity \(i\);
+\item \textbf{Platform offer}: \(p_i\), with \(p\) taken from the rational baseline (main evaluation uses \(p^{E}=p^{a^{E}}\)).
+\end{enumerate}
+Thus, the LLM receives the same price signal and privacy trade-off structure as the rational model.
+
+\paragraph{(2) Output Interface and Action Space.}
+Each LLM user agent is instantiated as
+\begin{equation}
+a_i=\pi^{\mathrm{LLM}}(I_i)\in\{0,1\},
+\end{equation}
+where \(a_i=1\) denotes sharing and \(a_i=0\) denotes non-sharing. To avoid unparsable noise from free-form natural language outputs, we enforce a structured output constraint: the LLM must return strict JSON:
+\texttt{\{"share":0/1,"reason":"..."\}}.
+The evaluator reads only the \texttt{share} field and maps it to action \(a_i\); \texttt{reason} is retained for subsequent qualitative analysis but is not used in settlement.
+
+\paragraph{(3) Synchronous Multi-Agent Interaction.}
+We adopt one-shot static synchronous decision-making: all \(i\in\mathcal{N}\) independently output \(a_i\) in the same round based on their own \(I_i\), consistent with the stage game in the rational model where users simultaneously decide whether to share given prices. We then concatenate all outputs into \(a^{\mathrm{LLM}}\) and obtain \(S(a^{\mathrm{LLM}})\).
+
+\paragraph{(4) Settlement and Metric Computation.}
+Given \(a^{\mathrm{LLM}}\), the evaluator computes leakage and utility decomposition under exactly the same structure as in the previous subsection:
+\begin{enumerate}
+\item \textbf{Leakage information}: for each \(i\), compute \(I_i(a^{\mathrm{LLM}})\) , where \(S=S(a^{\mathrm{LLM}})\).
+\item \textbf{User utility and platform payoff}: under price vector \(p\) (with \(p^{E}\) in the main evaluation), compute \(u_i(a_i,a_{-i},p)\) by the user-utility definition, and obtain platform payoff \(U(a^{\mathrm{LLM}},p)\) via Eq.~\eqref{eq:platform_obj_app}.
+\item \textbf{Social surplus}: compute
+$
+SS(a^{\mathrm{LLM}})=\sum_{i\in\mathcal{N}}(1-v_i)I_i(a^{\mathrm{LLM}})
+$
+by Eq.~\eqref{eq:social_surplus}, and compare it against \(SS(a^{E})\) from the rational baseline.
+\end{enumerate}
+
+\subsubsection{Comparison Metrics between the LLM-as-agent and Rational Baseline.}
+Under a unified settlement protocol, we evaluate LLM outputs along two dimensions:
+\begin{enumerate}
+\item \textbf{Outcome deviation}: relative social-surplus deviation
+\begin{equation}
+Deviation_{SS} = \lvert \frac{SS(a^{\text{LLM}})-SS(a^{\text{E}})}{SS(a^{\text{E}})}\rvert,
+\end{equation}
+\item \textbf{Structural consistency}: focusing on action structure, we compare the set-level consistency between \(a^{\mathrm{LLM}}\) and \(a^{E}\), using Jaccard similarity to diagnose whether the model follows the comparative statics implied by the participation constraint in Eq.~\eqref{eq:participation_constraint}, rather than being ``correct by chance'' at a single point.
+\end{enumerate}
+
+\begin{definition}[Jaccard Similarity]
+For any two non-empty sets \(A,B\), Jaccard similarity is defined as
+\begin{equation}
+J(A,B) \;=\; \frac{|A\cap B|}{|A\cup B|},
+\end{equation}
+with range \([0,1]\): \(J(A,B)=1\) indicates exact set match, and \(J(A,B)=0\) indicates disjoint sets.
+\end{definition}
+
+The implementation above ensures that differences between LLM agent and rational agent originate only from whether the strategy mapping \(\pi^{\mathrm{LLM}}(\cdot)\) correctly internalizes the mechanism, rather than from mismatched symbol conventions, settlement formulas, or information structures.
+
+
+% \subsection{Three Diagnostic Experiments and Feedback Intervention for Mechanism Understanding}
+\subsection{Mechanism Hallucination Diagnostic Suite}
+% \subsection{Diagnostic Framework}
+\label{subsec:part3_diagnosis}
+
+To further measure the extent to which LLMs understand the underlying mechanism, our benchmark introduces three complementary experiments to distinguish ``understanding'' from ``coincidence''.
+% \begin{itemize}
+%     \item Test~1: prompt experiments, using information-density variation to identify whether concept injection triggers mechanism inference;
+%     \item Test~2: parameter sensitivity analysis, examining how LLM performance changes under different parameter configurations;
+%     \item Test~3: multi-round fictitious play (FP), examining how LLM strategies adjust after receiving historical information.
+% \end{itemize}
+
+\subsubsection{\textbf{Test~1: Prompt-Complexity Ladder Experiment}}
+\label{subsubsec:rq1}
+
+Holding the mechanism environment, parameter instances, and GT \textbf{fixed}, we vary only the explicitness and information density of the mechanism description by constructing a prompt ladder from simple to complex. We illustrate the design using the inference-driven privacy-externality data-market scenario.
+
+\paragraph{\textbf{Objective}}
+In this scenario, equilibrium sharing is not pinned down by a purely local comparison of $(p_i,v_i)$: it depends on how correlation $\rho$ and noise $\sigma^2$ map others' sharing into \emph{baseline leakage} and reshape \emph{marginal leakage} (via diminishing marginal information gains). The prompt ladder tests whether LLM behavior exhibits a systematic transition when these mechanism concepts are progressively surfaced, versus remaining in a heuristic ``compensation vs.\ cost'' frame when only numeric detail is increased.
+
+\paragraph{\textbf{Evaluation Instances}}
+We evaluate one-shot static games. Each instance is defined by
+\[
+I=\bigl(n,\rho,\sigma^2,\{v_i\}_{i=1}^n,\{p_i\}_{i=1}^n\bigr),
+\]
+where $n$ is the number of users, $\rho$ is type correlation, $\sigma^2$ is observation noise, $v_i$ is user $i$'s privacy preference, and $p_i$ is the personalized offer. For each $I$, the rational-agent solver provides the benchmark equilibrium sharing set $S^\ast(I)$ and settlement outputs, which serve as GT for consistency evaluation.
+
+\paragraph{\textbf{Multi-Version Prompt Design}}
+Across versions, we keep instances, numeric inputs, and the output protocol identical, and apply only minimal incremental edits between adjacent versions so that performance changes can be attributed to mechanism visibility:
+
+\textbf{v0 (minimal baseline)}: only $(v_i,p_i)$ and a bare scenario description; measures baseline behavior under a local cost--benefit narrative.
+
+\textbf{v1 (parameters added, no meaning)}: adds $(n,\rho,\sigma^2)$ and the range $[v_{\min},v_{\max}]$ without semantic explanation or externality cues; tests whether models infer meaning from symbols alone.
+
+\textbf{v2 (parameter semantics)}: explains $\rho$ (inference strength) and $\sigma^2$ (precision) but still omits externality concepts (marginal leakage); isolates ``knowing parameters'' from ``knowing the mechanism.''
+
+\textbf{v3 (mechanism cue)}: introduces inference-externality intuition by cueing baseline leakage (others can leak you even if you do not share) and marginal leakage (your sharing adds incremental leakage); this is the key boundary where mechanism visibility begins.
+
+\textbf{v4 (full mechanism + pricing logic)}: makes the causal chain explicit and adds the pricing rule that compensation targets marginal privacy loss (e.g., cost $\propto v_i \times \Delta \mathrm{leak}_i$); enables direct tests of applying mechanism logic.
+
+\textbf{v5 (structured presentation)}: keeps the information set unchanged from v4 but formats it structurally and adds explicit formulas; tests whether structure lowers reasoning cost under equivalent information.
+
+For each model $m$ and version $v$, we query users $i=1,\ldots,n$ independently on the same instance $I$, obtaining binary actions $a_i\in\{0,1\}$ and the induced sharing set
+\[
+S_{m,v}(I)=\{i: a_i=1\}.
+\]
+Agents are instructed that they do not observe others' current actions, ruling out observational learning and isolating the effect of prompt information.
+
+
+\subsubsection{\textbf{Test~2: Key-Parameter Sensitivity Analysis}}
+\label{subsubsec:rq2}
+Mechanism understanding should be robust beyond a single setting: when key parameters change, model responses should follow theory-consistent comparative statics. If a model mainly relies on memorized patterns or prompt heuristics, its behavior is typically unstable under perturbation and may show directional errors. We therefore conduct sensitivity analysis on representative versions from each model family to test whether their responses match mechanism-implied directional predictions.
+
+\paragraph{\textbf{Perturbation Dimensions and Setup.}}
+In the privacy-externality data-market scenario, we perturb key parameters along the inference-externality chain:
+\begin{itemize}
+  \item \textbf{Correlation strength \(\rho\)}: higher \(\rho\) should increase inferability and externality, thus changing the marginal impact of others' sharing on individual decisions;
+  \item \textbf{Privacy-preference distribution \(\{v_i\}\)}: varying heterogeneity and level tests whether individual marginal trade-offs remain consistent (higher \(v_i\) should reduce sharing, lower \(v_i\) should increase sharing, and this ordering should remain stable under perturbations).
+\end{itemize}
+We construct instances under a same-mechanism, cross-setting grid (or stratified sampling) and run repeated trials for each setting to reduce sampling noise.
+
+
+\paragraph{\textbf{Mechanism-Consistency Criterion.}}
+For LLM behavior under parameter sensitivity analysis, we introduce an arc-elasticity-based Elasticity Alignment Score (EAS):
+\begin{definition}[Elasticity]
+Let \(\mathcal{K}\) be the set of perturbation dimensions, \(\theta_k\) the perturbed parameter, and \(y\) the mechanism response variable. For each \(k\in\mathcal{K}\), define arc elasticities for the LLM and theoretical solution as
+\[
+\varepsilon_k^{\mathrm{llm}}
+=
+\frac{\Delta y_k^{\mathrm{llm}}/y_{k,0}^{\mathrm{llm}}}{\Delta \theta_k/\theta_{k,0}},
+\qquad
+\varepsilon_k^{\mathrm{th}}
+=
+\frac{\Delta y_k^{\mathrm{th}}/y_{k,0}^{\mathrm{th}}}{\Delta \theta_k/\theta_{k,0}}.
+\]
+\end{definition}
+
+\begin{definition}[Elasticity Alignment Score (EAS)]
+Define the elasticity ratio \(r_k\triangleq \varepsilon_k^{\mathrm{llm}}/\varepsilon_k^{\mathrm{th}}\). Given threshold \(\tau>0\), retain only dimensions satisfying
+\(|\varepsilon_k^{\mathrm{th}}|>\tau\), and denote the valid set by \(\mathcal{K}_{\mathrm{valid}}\). Let
+\[
+a_k \triangleq \operatorname{sgn}(r_k)\cdot \min\!\left(|r_k|,\;|r_k|^{-1}\right)\in[-1,1].
+\]
+Then
+\[
+\mathrm{EAS}
+=
+\frac{1}{|\mathcal{K}_{\mathrm{valid}}|}
+\sum_{k\in\mathcal{K}_{\mathrm{valid}}} a_k.
+\]
+Here, \(\mathrm{EAS}=1\) indicates full agreement with theoretical elasticity, \(\mathrm{EAS}<0\) indicates systematic reverse response, and \(\mathrm{EAS}\approx 0\) indicates weak alignment.
+\end{definition}
+
+Based on the above definitions, we adopt a joint criterion over outcome-level and directional behavior: average Jaccard similarity measures outcome-level structural alignment, while average EAS measures mechanism-level directional consistency.
+
+\subsubsection{\textbf{Test~3: Mechanism Feedback Intervention and Multi-Round Fictitious Play}}
+\label{subsubsec:rq3}
+
+A single-shot static decision is insufficient to distinguish between \emph{accidental correctness} and \emph{sustained mechanism learning}.
+For static games that satisfy supermodularity, a standard adaptive learning dynamic—multi-round fictitious play—can be introduced as an intervention.
+Given a fixed parameter instance, the same model makes decisions over $T$ consecutive rounds.
+After each round, the environment returns a \textbf{structured feedback summary} computed by the mechanism settlement, while \textbf{not directly revealing the ground-truth (GT) equilibrium set}.
+LLM agents can observe the decision history from previous rounds.
+If both terminal outcome deviation and structural deviation decrease over rounds, we interpret this as evidence that the LLM learns from historical feedback and updates its strategy accordingly.
+This design mirrors real-world settings, where agents repeatedly face similar environments and accumulate experience.
+Analogously, in multi-round fictitious play, LLM agents receive historical market information (in the privacy-externality data market, the decision histories of all users) and may use it to update beliefs about other agents’ behavior.
+
+\begin{definition}[Fictitious Play (FP)]
+Consider a finite $N$-player game with player set $\mathcal{N}=\{1,\dots,N\}$.
+Player $i$ has action set $A_i$ and payoff function $u_i(a_i,a_{-i})$.
+At round $t$, player $i$ forms an empirical belief over opponents’ actions based on past observations:
+\begin{equation}
+    \mu_{-i}^{(t)}(a_{-i})
+    =
+    \frac{1}{t}\sum_{\tau=1}^{t}\mathbf{1}\!\left\{a_{-i}^{(\tau)}=a_{-i}\right\}.
+\end{equation}
+In round $t\!+\!1$, player $i$ chooses a best response to this empirical distribution:
+\begin{equation}
+    a_i^{(t+1)}
+    \in
+    \arg\max_{a_i\in A_i}
+    \mathbb{E}_{a_{-i}\sim \mu_{-i}^{(t)}}\!\big[u_i(a_i,a_{-i})\big].
+\end{equation}
+That is, players treat opponents’ future behavior as following their historical empirical distribution and iteratively update their strategies.
+The limit points of this dynamic are closely related to static Nash equilibria.
+In particular, the inference-externality model constitutes a supermodular game, for which fictitious play is guaranteed to converge to equilibrium (see Appendix for proof).
+\end{definition}
+
+We extend the one-shot simultaneous decision in our setting to a \textbf{finite-horizon fictitious play} process to test whether models can improve their strategies \textbf{without access to theoretical answers}, relying solely on mechanism-induced feedback.
+This variant preserves convergence to equilibrium in supermodular games (see Appendix).
+Given a fixed scenario instance and settlement rules, the following closed-loop procedure is executed for each round $t=1,\ldots,T$:
+\begin{enumerate}
+  \item \textbf{Belief update:} Using the most recent $w$ rounds of history (default $w=10$), compute empirical-frequency beliefs; in particular, estimate each user $j$’s sharing probability $\hat{p}^{(t)}_j$.
+  \item \textbf{Synchronous decision:} All user agents simultaneously output binary actions $a_i^{(t)}\in\{0,1\}$, without observing others’ actions in the same round.
+  \item \textbf{Mechanism settlement:} The environment computes leakage, compensation, platform profit, and social welfare according to the true mechanism, and records round-level trajectories.
+  \item \textbf{Structured feedback:} Observable statistics (historical participation structures and payoff consequences) are provided for the next round, while the theoretical equilibrium set itself remains hidden.
+  \item \textbf{Early stopping:} If the complete action profile is identical for three consecutive rounds, the process terminates early; otherwise, it runs for at most $T=50$ rounds.
+\end{enumerate}
+
+Building on the above components, this section establishes a \textbf{complete benchmark framework}.
+From constructing complementary mechanism scenarios, to implementing rational agents and LLM-as-agents, and finally to introducing information-expression gradients, parameter sensitivity analyses, and mechanism feedback interventions, we develop a \textbf{diagnostic evaluation framework}.
+This framework ensures that even when an LLM closely matches GT outcomes on terminal metrics, we can still assess—via structural and process-level objects—whether its behavior truly follows the mechanism-implied causal loop, thereby explicitly separating \emph{outcome correctness} from \emph{mechanism correctness}.
+
+
+\section{Benchmark Results}
+\label{sec:results}
+
+This study adopts a fixed-mechanism, stratified-perturbation parameter design to ensure that mechanism-consistency evaluation is both identifiable and attributable. Specifically, we fix the user population at \(n=20\), balancing observability of externality network effects and computational tractability; set correlation strength to \(\rho\in\{0.3,0.6,0.9\}\) to cover weak, medium, and strong inference-externality regimes; and set privacy-preference intervals to \([0.3,0.6]\), \([0.6,0.9]\), and \([0.9,1.2]\) to systematically test comparative-statics robustness under changing heterogeneity levels. We fix observation noise variance at \(\sigma^2_{\text{noise}}=0.1\) to avoid identification confounding from simultaneous multi-parameter perturbations; each parameter combination is repeated \(3\) times, and a unified random seed is used to generate theoretical baselines so as to reduce sampling fluctuation. During evaluation, we uniformly use the v4 mechanism prompt and set sampling temperature to \(0\) (maximum output length: 1500 tokens), thereby isolating model randomness as much as possible so that performance differences primarily reflect genuine mechanism understanding rather than decoding noise.
+
+\subsection{Rational Agent VS LLM-as-Agent}
+\label{subsec:static_results}
+We select 12 LLMs spanning three major families (GPT, DeepSeek, Qwen) and multiple release-time variants within each family, which lets us separate family-level differences from version-iteration effects on mechanism consistency and mitigates bias from single-model or single-snapshot comparisons. We then evaluate one-shot performance in the privacy-externality data-market scenario using two complementary metrics: economic \emph{outcome deviation} (relative social-welfare error) and strategic \emph{structural consistency} (Jaccard similarity between the predicted sharing set and the theoretical equilibrium set).
+
+
+% Preamble (ensure these are loaded)
+% \usepackage{booktabs,threeparttable}
+% \usepackage{siunitx}
+% \usepackage{caption} % usually available in acmart
+%
+% Recommended siunitx setup (optional but helps centering/consistency)
+% \sisetup{detect-weight=true,detect-family=true,table-number-alignment=center}
+
+\begin{table}[t]
+  \centering
+  % Make caption wrap to the column width (ACM/KDD two-column)
+  \captionsetup{width=\columnwidth}
+  \caption{Jaccard similarity and social surplus deviation across model families.}
+  \label{tab:jaccard_swdev_all_models}
+  \setlength{\tabcolsep}{4pt}
+  \renewcommand{\arraystretch}{1.05}
+
+  \begin{threeparttable}
+    \footnotesize
+    % Constrain the model column so long names don't blow up table width
+    \begin{tabular}{p{0.42\columnwidth}
+                    S[table-format=1.3]
+                    S[table-format=1.3]
+                    S[table-format=2.0]}
+      \toprule
+      \multicolumn{1}{c}{Model} &
+      \multicolumn{1}{c}{Jaccard $\uparrow$} &
+      \multicolumn{1}{c}{SS Dev. $\downarrow$} &
+      \multicolumn{1}{c}{AAII $\uparrow$} \\
+      \midrule
+
+      \texttt{gpt-5.2} & 1.000 & 0.000 & 51 \\
+      \texttt{gpt-5.1} & 1.000 & 0.000 & {\textemdash} \\
+      \texttt{gpt-5}   & 0.688 & 0.237 & 45 \\
+      \texttt{gpt-4.1} & 0.812 & 0.132 & 26 \\
+      \midrule
+
+      \texttt{deepseek-v3.2}    & 1.000 & 0.000 & 32 \\
+      \texttt{deepseek-v3.1}    & 1.000 & 0.000 & 28 \\
+      \texttt{deepseek-r1}      & 0.438 & 0.472 & 27 \\
+      \texttt{deepseek-v3-0324} & 0.750 & 0.156 & 22 \\
+      \midrule
+
+      \texttt{qwen-plus}            & 1.000 & 0.000 & {\textemdash} \\
+      \texttt{qwen3-max}            & 1.000 & 0.000 & 31 \\
+      \texttt{qwen-plus-2025-12-01} & 1.000 & 0.000 & {\textemdash} \\
+      \texttt{qwen3-max-2026-01-23} & 0.938 & 0.008 & 31 \\
+      \bottomrule
+    \end{tabular}
+
+    \begin{tablenotes}[flushleft]
+      \footnotesize
+      \item $\uparrow/\downarrow$ indicate the direction of better performance.
+      \item SS deviation is the relative error:
+      $\lvert SS(a^{\text{LLM}})-SS(a^{E})\rvert/\lvert SS(a^{E})\rvert$.
+      \item AAII denotes the \emph{Artificial Analysis Intelligence Index} (higher is better);
+      entries are shown when a matching public model card is available, otherwise \textemdash.
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+
+Table~\ref{tab:jaccard_swdev_all_models} shows that most models attain near-perfect (often perfect) set-level alignment in this scenario, with correspondingly small social-welfare deviation. Yet some models still display sizable structural errors (e.g., Jaccard as low as 0.438) together with large welfare deviation. Thus, even in a one-shot static setting, models differ meaningfully in structural understanding, and these gaps can be masked by outcome-only metrics.
+
+Table~\ref{tab:jaccard_swdev_all_models} is grouped by model family and ordered by release time within each family. If later releases were uniformly stronger, Jaccard would rise and SS deviation would fall monotonically over time. Instead, we see a systematic asymmetry: \textbf{version iteration often suppresses outcome deviation more readily, while structural consistency remains non-monotone in release time.}
+
+
+\subsection{Test~1: Prompt Information-Density Ladder}
+\label{subsec:prompt_gradient}
+Within three model families (GPT, DeepSeek, and Qwen), we evaluate multiple released versions under a prompt ladder \(v0\)--\(v5\) on the same set of instances. For model \(m\) and prompt version \(v\), we compute the decision distance
+\(
+d_{\text{dec}}(m,v)=1-J\!\big(S_{m,v}(I),S^\ast(I)\big),
+\)
+where smaller values indicate closer alignment between the model-induced sharing set and the theoretical equilibrium set. Fig.~\ref{fig:prompt experiments} plots the resulting ``prompt version \(\rightarrow\) decision distance'' curves.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\linewidth]{pic/prompt experiments.png}
+    \caption{Prompt-complexity ladder results in Test~1 across three model families (DeepSeek, GPT, and Qwen).}
+    \label{fig:prompt experiments}
+\end{figure}
+
+Fig.~\ref{fig:prompt experiments} reveals clear within-family stratification. In DeepSeek, v3.x stays near zero across the ladder (minor drift only at the highest version), whereas deepseek-r1 is strongly non-monotone and rebounds once mechanism language becomes explicit, consistent with mechanism-term misuse rather than stable mechanism execution. In GPT, gpt-5.2 reaches near-zero early and remains stable; gpt-5.1 shows a threshold pattern, converging only after explicit mechanism scaffolding is provided; gpt-5 exhibits pronounced rebounds in the mid ladder and only partial recovery. Qwen shows a similar threshold behavior: qwen3-max variants remain higher at \(v0\)--\(v3\) and drop sharply only after the mechanism is made explicit, while qwen-plus variants enter the low-distance regime earlier and more smoothly in newer releases.
+
+Across families, improvements are not a monotone ``more details lead to better'' effect: the main transition occurs when prompts start to expose executable mechanism objects (roughly \(v3/v4\)), while earlier semantic enrichment (\(v0\) to \(v2\)) yields limited and unstable gains. This complements Table~\ref{tab:jaccard_swdev_all_models}: although many latest models appear nearly indistinguishable under outcome-only metrics at equilibrium, the prompt ladder separates them by \emph{mechanism dependence and robustness}. Models such as DeepSeek v3.x and gpt-5.2 remain aligned even under low-information prompts, suggesting internalized mechanism representations; others converge mainly when prompts provide explicit causal scaffolds (prompt-dependent correctness); and the weakest models show non-monotone rebounds despite richer prompts, indicating fragile mechanism consistency.
+
+\subsection{Test~2: Key-Parameter Sensitivity Analysis}
+\label{subsec:sensitivity}
+To jointly evaluate outcome accuracy and mechanism-level directional consistency, we use a two-axis criterion: average Jaccard similarity for outcome-level structural alignment (x-axis) and average EAS for directional consistency (y-axis). Using medians \(J_{\mathrm{med}}=0.894\) and \(EAS_{\mathrm{med}}=0.040\) as thresholds, we obtain a four-quadrant capability map. This extends sensitivity analysis beyond single outcome error: models that keep high Jaccard under perturbations in \(\rho\), \(\sigma^2_{\text{noise}}\), and \(\{v_i\}\) but fail to improve EAS are treated as surface fitting rather than mechanism inference.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\linewidth]{pic/step2.png}
+    \caption{Quadrant analysis under the joint criterion of outcome-level structural alignment and mechanism-level directional consistency.}
+    \label{fig:step2}
+\end{figure}
+
+Figure~\ref{fig:step2} shows a clear decoupling between outcome-level alignment and mechanism-level consistency. Since \(J_{\mathrm{med}}=0.894\) is much higher than \(EAS_{\mathrm{med}}=0.040\), obtaining a near-correct final set is easier than maintaining correct comparative-statics directions under perturbation. \emph{Strong Models} are limited (e.g., qwen3-max, qwen-plus-2025-12-01), while \emph{Surface Fitting} includes several high-Jaccard but low/negative-EAS models (e.g., deepseek-v3.2, gpt-5.1-2025-11-13), indicating that good outcome fit does not guarantee mechanism correctness. \emph{Potential Models} (e.g., gpt-5, gpt-5.2) show positive mechanism signals but weaker outcome alignment, suggesting bottlenecks in set-boundary identification rather than directional reasoning.
+
+Across release-time variants within families, updates do not monotonically move models from lower-left to upper-right: newer versions often improve Jaccard, while EAS may stagnate or decline. This implies that outcome-only evaluation can systematically overestimate mechanism-level decision capability.
+
+More importantly, we identify a reproducible and quantifiable \textbf{mechanism illusion}: a model can produce a seemingly correct final set (high Jaccard) while persistently violating theoretical elasticity directions under parameter perturbations (low or negative EAS). This is not isolated model noise, but a structural pattern recurring across families and versions, suggesting that current general capability scaling paths are more effective at optimizing result fitting than mechanism inference. Therefore, \textbf{the proposed joint criterion is not merely metric stacking; it empirically disentangles ``guessing the right result'' from ``understanding causal mechanisms,'' and provides an operational diagnostic target for future mechanism-alignment training and evaluation.}
+
+\subsection{Test~3: Multi-Round Fictitious Play and Convergence Properties}
+\label{subsec:fictitious_play}
+We use GPT-5 and deepseek-r1 in Test~3 because both still show relatively large structural deviation under the \(v4\) prompt in Test~1, making them suitable for testing whether mechanism feedback yields substantive correction. At round \(t\), we compute \(J(S^{(t)},S^\ast)\) and form the trajectory \(\{J(S^{(t)},S^\ast)\}_{t=1}^{T}\); if early stopping is triggered, the trajectory is truncated at the stopping round and the terminal value is retained for stability comparison.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{pic/fp_similarity_gpt5_vs_deepseek-r1_side_by_side.png}
+    \caption{Fictitious play similarity and strategy evolution under two models.}
+    \label{fig:fp}
+\end{figure}
+
+Figure~\ref{fig:fp} shows that both models move from imperfect alignment to high-consistency regions, confirming that structured feedback can turn one-shot errors into learnable signals. GPT-5 follows a ``rise--rebound--restabilization'' path (from \(\sim 0.56\) to \(0.8+\), with mid-course pullbacks to \(\sim 0.62\), then near-perfect alignment), whereas deepseek-r1 is smoother (\(0.88\sim 1.0\)) and reaches stable high consistency in fewer rounds. Both are feedback-correctable, but differ in convergence speed, trajectory smoothness, and stability retention.
+
+The main implication is that, \textbf{in mechanism-centric tasks, \emph{final attainability} and \emph{convergence dynamics} are separable capability dimensions}. Final Jaccard alone can therefore understate true model differences. Jointly evaluating FP convergence properties and final consistency better distinguishes ``correctable but unstable'' from ``correctable and stable'' models.
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Our research concludes that evaluating LLM-as-agent decision capability should go beyond outcome proximity to a ``correct answer'' but to directly test whether models follow the mechanism-implied causal chain and comparative-statics logic. We thus propose a \emph{mechanism understanding oriented} benchmark construction framework including \emph{scenario selection, agent implementation and mechanism hallucination diagnostic suite}. Following this framework, we choose the inference-externality data market as a representative scenario. Then we formalize the externality pathway as computable structural equations and a reproducible equilibrium solver to generate ground truth, and embed LLM agents under the same information structure and action space. A unified diagnostic suite then disentangles \emph{outcome correctness}  from \emph{structural consistency, directional consistency, and dynamic stability}.
+
+Across 12 frontier models, we obtain four main findings. (i) Outcome-only evaluation can overstate mechanism competence. (ii) Models differ sharply in prompt dependence: some align stably under low-information prompts, while others converge only when externality, marginal leakage, and compensation logic are made explicit, and weaker models may even regress when mechanism language is strengthened. (iii) Outcome-level alignment can decouple from mechanism-level directional consistency: certain models achieve high set overlap at a single operating point yet violate theoretical elasticity directions under perturbations in correlation, noise, or privacy-preference distributions, yielding a reproducible \emph{mechanism hallucination} pattern. (iv) Structured mechanism feedback in repeated interaction can turn one-shot errors into learnable signals and substantially improve consistency for weaker models.
+
+Overall, the proposed mechanism hallucination diagnosis offers a practical path to characterize and improve LLM decision robustness, by anchoring model differences to interpretable and reproducible mechanism dimensions rather than terminal outcomes alone.
+
+
+\bibliographystyle{plainnat}  % or ACM-Reference-Format
+\bibliography{references}     % references.bib
+
+
+\clearpage
+\input{appendix_content}
+
+
+
+\end{document}
+\endinput
+%%
+%% End of file `sample-sigconf.tex'.

@@ -1,0 +1,380 @@
+﻿% Auto-generated from run_prompt_experiments.py
+\section{Prompt Templates}
+\label{app:prompt_templates_b}
+
+This appendix reports prompt templates in boxed tables. We list versions v0--v5.
+
+\begin{table}[t]
+  \centering
+  \caption{Shared System Prompt for Scenario B prompt versions.}
+  \label{tab:app_prompt_system}
+  \fbox{\begin{minipage}{0.97\linewidth}
+\begin{verbatim}
+You are a rational economic agent. Your objective is to maximize your expected utility under uncertainty about other agents' actions.
+
+[IMPORTANT] Output only one valid JSON object. Do not include any extra text, explanation, or markdown.
+The JSON must contain exactly two fields: "share" and "reason".
+Make sure the string in "reason" is properly closed with a quotation mark.
+\end{verbatim}
+  \end{minipage}}
+\end{table}
+
+\begin{table*}[t]
+  \centering
+  \caption{Prompt template v0.}
+  \label{tab:app_prompt_v0}
+  \fbox{\begin{minipage}{0.97\linewidth}
+\begin{verbatim}
+# Data Market Decision
+
+You are user {user_id}, participating in a data market.
+
+## Your Information
+
+- **Offer**: p[{user_id}] = {price:.4f}
+- **Privacy Preference**: v[{user_id}] = {v_i:.3f} (unit information cost)
+
+## Decision
+
+If you share data:
+- You receive compensation p = {price:.4f}
+- You incur privacy cost = v * marginal leakage
+
+**Please weigh: compensation vs privacy cost**
+
+## Output
+
+Output strict JSON:
+{{
+  "share": 0 or 1 (0 = do not share, 1 = share),
+  "reason": "Briefly explain your decision (within 150 words)"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table*}
+
+\begin{table}[t]
+  \centering
+  \caption{Prompt template v1.}
+  \label{tab:app_prompt_v1}
+  \fbox{\begin{minipage}{0.97\linewidth}
+\begin{verbatim}
+# Data Market Decision
+
+You are user {user_id}, participating in a data market.
+
+## Your Private Information
+
+- **Offer**: p[{user_id}] = {price:.4f}
+- **Privacy Preference**: v[{user_id}] = {v_i:.3f} (unit information cost)
+
+## Market Environment
+
+- Number of users: n = {n}
+- Correlation coefficient: rho = {rho:.2f}
+- Observation noise: sigma^2 = {sigma_noise_sq}
+- Privacy preference distribution: v of all users is in [{v_min}, {v_max}]
+
+Your position: v = {v_i:.3f} ({v_description})
+
+## Decision Framework
+
+If you share data:
+- You receive compensation p = {price:.4f}
+- You incur privacy cost = v * marginal leakage
+
+**Please weigh: compensation vs privacy cost**
+
+## Output
+
+Output strict JSON:
+{{
+  "share": 0 or 1 (0 = do not share, 1 = share),
+  "reason": "Briefly explain your decision (within 150 words)"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Prompt template v2.}
+  \label{tab:app_prompt_v2}
+  \fbox{\begin{minipage}{0.97\linewidth}
+\begin{verbatim}
+# Data Market Decision
+
+You are user {user_id}, participating in a data market.
+
+## Your Private Information
+
+- **Offer**: p[{user_id}] = {price:.4f}
+- **Privacy Preference**: v[{user_id}] = {v_i:.3f} (unit information cost)
+
+## Market Environment
+
+**Number of users**: n = {n}
+
+**Correlation coefficient**: rho = {rho:.2f}
+- Your type is correlated with other users' types
+- rho = 0: others' information cannot infer you
+- rho = 1: others' information perfectly infers you
+- Current rho = {rho:.2f}, inference strength {rho_level}
+
+**Observation noise**: sigma^2 = {sigma_noise_sq}
+- Larger sigma^2: noisier data, lower leakage
+- Smaller sigma^2: more accurate data, higher leakage
+
+**Privacy preference distribution**: v in [{v_min}, {v_max}]
+- Your position: v = {v_i:.3f} ({v_description})
+
+## Decision Framework
+
+If you share data:
+- You receive compensation p = {price:.4f}
+- You incur privacy cost = v * marginal leakage
+
+**Please weigh: compensation vs privacy cost**
+
+## Output
+
+Output strict JSON:
+{{
+  "share": 0 or 1 (0 = do not share, 1 = share),
+  "reason": "Briefly explain your decision (within 150 words)"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Prompt template v3.}
+  \label{tab:app_prompt_v3}
+  \fbox{\begin{minipage}{0.97\linewidth}
+\begin{verbatim}
+# Data Market Decision (Inference Externality)
+
+You are user {user_id}, participating in a data market.
+
+## Your Private Information
+
+- **Offer**: p[{user_id}] = {price:.4f}
+- **Privacy Preference**: v[{user_id}] = {v_i:.3f} (unit information cost)
+
+## Market Environment
+
+**Number of users**: n = {n}
+
+**Correlation coefficient**: rho = {rho:.2f}
+- Your type is correlated with other users' types
+- rho = 0: others' information cannot infer you
+- rho = 1: others' information perfectly infers you
+- Current rho = {rho:.2f}, inference strength {rho_level}
+
+**Observation noise**: sigma^2 = {sigma_noise_sq}
+- Larger sigma^2: noisier data, lower leakage
+- Smaller sigma^2: more accurate data, higher leakage
+
+**Privacy preference distribution**: v in [{v_min}, {v_max}]
+- Your position: v = {v_i:.3f} ({v_description})
+
+## Key Mechanism
+
+**Inference leakage**: Even if you do not share, the platform may infer your information from others' data.
+
+**Two kinds of leakage**:
+- **Baseline leakage**: others' sharing indirectly leaks your information
+- **Marginal leakage**: extra leakage caused by your own sharing
+
+**True cost of sharing = marginal leakage**
+
+## Decision Framework
+
+**If you share**:
+- Compensation: p = {price:.4f}
+- Privacy cost: v * marginal leakage
+- Your information moves from partial leakage to full leakage
+
+**If you do not share**:
+- No compensation
+- You protect the part not indirectly leaked
+- But baseline leakage still exists
+
+**Please weigh: compensation vs marginal privacy cost**
+
+## Output
+
+Output strict JSON:
+{{
+  "share": 0 or 1 (0 = do not share, 1 = share),
+  "reason": "Briefly explain your decision (within 150 words)"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Prompt template v4.}
+  \label{tab:app_prompt_v4}
+  \fbox{\begin{minipage}{0.97\linewidth}
+\begin{verbatim}
+# Data Market Decision (Inference Externality)
+
+You are user {user_id}, participating in a data market.
+
+## Your Private Information
+
+- **Offer**: p[{user_id}] = {price:.4f}
+- **Privacy Preference**: v[{user_id}] = {v_i:.3f} (unit information cost)
+
+## Market Environment
+
+**Number of users**: n = {n}
+
+**Correlation coefficient**: rho = {rho:.2f}
+- Your information is correlated with other users
+- rho = 0: others' information cannot infer you
+- rho = 1: others' information perfectly infers you
+- Current rho = {rho:.2f}, inference strength {rho_level}
+
+**Observation noise**: sigma^2 = {sigma_noise_sq}
+- Larger sigma^2: more noise, lower leakage
+- Smaller sigma^2: more accurate data, higher leakage
+
+**Privacy preference distribution**: v in [{v_min}, {v_max}]
+- Your position: v = {v_i:.3f} ({v_description})
+
+## Core Mechanism
+
+### Inference Externality
+
+**Key insight**: The amount of leaked information depends not only on whether you share, but also on whether others share. Any user's sharing can increase leakage for everyone (including non-sharers).
+
+**If you share**:
+- You receive compensation p = {price:.4f}
+- Your information moves from partially leaked to fully leaked
+
+**If you do not share**:
+- No compensation
+- You preserve the not-yet-indirectly-leaked part
+- But baseline leakage remains (caused by others sharing)
+
+### Submodularity
+
+**More sharers -> smaller marginal leakage for you**
+- Higher baseline leakage -> lower marginal leakage
+- If many others share, your additional leakage cost from sharing is smaller
+
+### Compensation Logic
+
+**The platform offer is designed to cover marginal privacy loss**
+- Offer p = {price:.4f} reflects your marginal value
+- You must judge whether p is enough to cover v * marginal leakage
+
+## Decision Framework
+
+**Privacy cost** = v * marginal leakage
+
+**Tradeoff**: compensation gain p vs privacy cost v * marginal leakage
+
+## Output
+
+Output strict JSON:
+{{
+  "share": 0 or 1 (0 = do not share, 1 = share),
+  "reason": "Briefly explain your decision (within 150 words)"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table}
+
+\begin{table}[t]
+  \centering
+  \caption{Prompt template v5.}
+  \label{tab:app_prompt_v5}
+  \fbox{\begin{minipage}{0.97\linewidth}
+\begin{verbatim}
+# Scenario: Static Data-Market Game (Inference Externality)
+
+You are user {user_id}, making a **one-shot data market decision**.
+
+## Basic Information
+
+**Your private information**:
+- Your privacy preference: v[{user_id}] = {v_i:.3f}
+- Platform offer to you: p[{user_id}] = {price:.4f}
+
+**Public knowledge** (known by everyone):
+- Number of users: n = {n}
+- Type correlation coefficient: rho = {rho:.2f}
+  (your type is correlated with others, with coefficient {rho:.2f})
+- Observation noise: sigma^2 = {sigma_noise_sq}
+- Privacy preference distribution: all users' v is uniformly distributed on [{v_min}, {v_max}]
+  (your v = {v_i:.3f}, relative position: {v_description}, in the {v_level} privacy-preference group)
+
+**Information you do not know**:
+- Exact v values of other users (you only know the distribution)
+- How other users will decide (because decisions are simultaneous)
+
+## Inference-Externality Mechanism
+
+**Key concept**: Even if you do not share data, the platform can infer your information from others' data.
+
+**Leaked information I_i(a)**:
+- Given sharing set S, this is the increase in platform inference precision about you
+- Computed via Bayesian updating: I_i(S) = sigma_i^2 - Var(X_i | S)
+- **Core externality**: I_i depends on both your sharing decision and others' sharing decisions
+
+**Your utility**:
+- If you **share**: u_i = p_i - v_i * I_i(you share, others' decisions)
+- If you **do not share**: u_i = 0 - v_i * I_i(you do not share, others' decisions)
+
+**Key insights**:
+- Not sharing still incurs **baseline leakage** (others' sharing can leak your information)
+- True cost of sharing is **marginal leakage** = I_i(share) - I_i(not share)
+- Compensation p_i is designed to cover your marginal privacy loss
+
+## Rational-Expectation Decision Framework
+
+Because you do not know others' exact choices, you should:
+
+**1. Infer others' behavior from the distribution**:
+- Users with lower v are more likely to share (lower privacy cost)
+- Users with higher v are less likely to share (higher privacy cost)
+- Your v = {v_i:.3f}, at {v_level} level
+
+**2. Evaluate expected utility**:
+- E[u_i | share] = E[p_i - v_i * I_i(1, a_{{-i}})]
+- E[u_i | not share] = E[- v_i * I_i(0, a_{{-i}})]
+
+**3. Use submodularity insight**:
+- More sharers -> lower marginal information value from your own sharing
+- Higher baseline leakage (more others sharing) -> lower marginal leakage from your sharing
+
+**4. Choose best response**:
+- If E[u_i | share] > E[u_i | not share], then share
+- Otherwise, do not share
+
+## Your Task
+
+Based on the mechanism above, decide whether to share data under **uncertainty about others' exact decisions**, using **rational expectations**.
+
+**Checklist**:
+1. Where is your v in the distribution? (v = {v_i:.3f}, in {v_level} group)
+2. What share rate of other users do you expect?
+3. Under that expectation, what is your marginal value/cost of sharing?
+4. Can offer p = {price:.4f} cover your marginal privacy loss?
+5. How does rho = {rho:.2f} affect externalities?
+
+## Output Format
+
+Output strict JSON:
+{{
+  "share": 0 or 1 (0 = do not share, 1 = share),
+  "reason": "Briefly state your tradeoff and belief basis (within 150 words)"
+}}
+\end{verbatim}
+  \end{minipage}}
+\end{table}

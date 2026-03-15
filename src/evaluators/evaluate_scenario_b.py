@@ -38,8 +38,7 @@
    
    输出：
    - evaluation_results/fp_deepseek-v3/eval_YYYYMMDD_HHMMSS.json
-   - evaluation_results/fp_deepseek-v3/eval_YYYYMMDD_HHMMSS_share_rate.png
-   - evaluation_results/fp_deepseek-v3/eval_YYYYMMDD_HHMMSS_strategy_heatmap.png
+   - evaluation_results/fp_deepseek-v3/eval_YYYYMMDD_HHMMSS_similarity_heatmap.png
 
 3. 【同时运行两种模式】
    
@@ -1516,121 +1515,171 @@ class ScenarioBEvaluator:
                 print("[WARN] 没有历史数据，跳过可视化")
                 return
             
-            # === 可视化1：分享率曲线 ===
-            fig1, ax1 = plt.subplots(figsize=(10, 6))
-            
-            share_rate_traj = conv_analysis.get("share_rate_trajectory", [])
+            # === 合并可视化：上1/4相似度折线，下3/4策略热力图 ===
             similarity_traj = conv_analysis.get("similarity_trajectory", [])
-            
-            if share_rate_traj:
-                rounds = list(range(1, len(share_rate_traj) + 1))
-                
-                # 主轴：分享率
-                ax1.plot(rounds, share_rate_traj, 'b-o', linewidth=2, markersize=4, label='Share Rate')
-                ax1.set_xlabel('Round', fontsize=12, fontfamily='Times New Roman')
-                ax1.set_ylabel('Share Rate', color='b', fontsize=12, fontfamily='Times New Roman')
-                ax1.tick_params(axis='y', labelcolor='b')
-                ax1.grid(True, alpha=0.3)
-                ax1.set_ylim([0, 1])
-                
-                # 设置刻度字体
-                for label in ax1.get_xticklabels() + ax1.get_yticklabels():
-                    label.set_fontfamily('Times New Roman')
-                
-                # 次轴：与理论均衡的相似度
-                if similarity_traj:
-                    ax2 = ax1.twinx()
-                    ax2.plot(rounds, similarity_traj, 'r-s', linewidth=2, markersize=4, 
-                            alpha=0.7, label='Similarity to Equilibrium')
-                    ax2.set_ylabel('Jaccard Similarity', color='r', fontsize=12, fontfamily='Times New Roman')
-                    ax2.tick_params(axis='y', labelcolor='r')
-                    ax2.set_ylim([0, 1])
-                    
-                    # 设置次轴刻度字体
-                    for label in ax2.get_yticklabels():
-                        label.set_fontfamily('Times New Roman')
-                
-                # 标注收敛点
+            model_name = results.get("model_name") or results.get("model") or "unknown-model"
+            model_name_str = str(model_name)
+            display_model_name = "deepseek-r1" if model_name_str.lower() == "deepseek-r1" else model_name_str.upper()
+            # 统一科研风格配色
+            color_line = '#4B2E83'          # deep purple
+            color_line_accent = '#3C7D3E'   # subdued green
+            color_star = '#C13F4A'
+            color_heat_0 = '#EEF2F7'        # very light blue-gray
+            color_heat_1 = '#2F5D8A'        # deep academic blue
+            color_grid = '#9AA0A6'
+            color_title = '#1F2937'
+            color_subtitle = '#4B5563'
+
+            fig = plt.figure(figsize=(max(12, len(history) * 0.28), max(8.5, n * 0.5)))
+            fig.patch.set_facecolor('white')
+            # 让右侧Theo列近似等宽于左侧单个时间单元格
+            main_col_ratio = max(20, len(history))
+            gs = fig.add_gridspec(
+                nrows=2,
+                ncols=2,
+                height_ratios=[1, 3.5],
+                width_ratios=[main_col_ratio, 1],
+                hspace=0.0
+            )
+            ax_top = fig.add_subplot(gs[0, 0])
+            ax_heat = fig.add_subplot(gs[1, 0], sharex=ax_top)
+            ax_theo = fig.add_subplot(gs[1, 1])
+            ax_top_right = fig.add_subplot(gs[0, 1])
+            ax_top_right.axis('off')
+
+            # 上图：仅保留相似度折线
+            if similarity_traj:
+                sim_rounds = np.arange(len(similarity_traj)) + 0.5
+                ax_top.plot(
+                    sim_rounds,
+                    similarity_traj,
+                    color=color_line,
+                    marker='o',
+                    linewidth=1.8,
+                    markersize=3.0,
+                    alpha=0.85,
+                    label='与理论均衡的相似度'
+                )
+
                 if conv_analysis.get("converged"):
                     conv_round = conv_analysis.get("convergence_round")
-                    if conv_round and conv_round < len(share_rate_traj):
-                        ax1.axvline(x=conv_round + 1, color='g', linestyle='--', 
-                                   alpha=0.5, label=f'Convergence (Round {conv_round + 1})')
-                
-                # 图例
-                lines1, labels1 = ax1.get_legend_handles_labels()
-                if similarity_traj:
-                    lines2, labels2 = ax2.get_legend_handles_labels()
-                    legend = ax1.legend(lines1 + lines2, labels1 + labels2, loc='lower right', prop={'family': 'Times New Roman'})
-                else:
-                    legend = ax1.legend(loc='lower right', prop={'family': 'Times New Roman'})
-                
-                ax1.set_title('Fictitious Play: Share Rate and Convergence', fontsize=14, fontweight='bold', fontfamily='Times New Roman')
-                
-                plt.tight_layout()
-                fig1_path = output_dir / f"{base_name}_share_rate.png"
-                plt.savefig(fig1_path, dpi=150, bbox_inches='tight')
-                plt.close(fig1)
-                print(f"[图表] 分享率曲线已保存到: {fig1_path}")
-            
-            # === 可视化2：用户策略热力图 ===
-            fig2, ax = plt.subplots(figsize=(max(12, len(history) * 0.3), max(6, n * 0.5)))
-            
-            # 构建策略矩阵：行=用户，列=轮次
+                    if conv_round is not None and conv_round < len(similarity_traj):
+                        ax_top.axvline(
+                            x=conv_round + 0.5,
+                            color=color_line_accent,
+                            linestyle='--',
+                            alpha=0.6,
+                            label=f'收敛轮次（第 {conv_round + 1} 轮）'
+                        )
+
+                ax_top.legend(loc='lower right', frameon=False, prop={'size': 12})
+            else:
+                ax_top.text(
+                    0.5, 0.5, '暂无相似度轨迹',
+                    transform=ax_top.transAxes, ha='center', va='center',
+                    fontsize=11
+                )
+
+            ax_top.set_ylim([0, 1.25])
+            ax_top.set_xlim([0, len(history)])
+            ax_top.set_yticks([0.0, 0.5, 1.0])
+            ax_top.set_facecolor(color_heat_0)
+            ax_top.set_ylabel('Jaccard 相似度', color=color_line, fontsize=16)
+            ax_top.tick_params(axis='y', labelcolor=color_line)
+            ax_top.grid(axis='y', linestyle='--', color=color_grid, linewidth=0.8, alpha=0.22)
+            ax_top.tick_params(axis='x', labelbottom=False)
+            # 上图去边框
+            for spine in ax_top.spines.values():
+                spine.set_visible(False)
+            for label in ax_top.get_yticklabels():
+                label.set_fontfamily('Microsoft YaHei')
+            ax_top.set_title(
+                f'虚拟博弈：相似度与策略演化（{display_model_name}）',
+                fontsize=16, fontweight='semibold', color=color_title
+            )
+            ax_top.tick_params(axis='y', labelsize=16)
+
+            # 下图：用户策略热力图
             strategy_matrix = np.zeros((n, len(history)))
             for round_idx, round_decisions in enumerate(history):
                 for user_id, decision in round_decisions.items():
-                    # 确保user_id是整数（从JSON读取时可能是字符串）
                     user_id_int = int(user_id) if isinstance(user_id, str) else user_id
                     strategy_matrix[user_id_int, round_idx] = decision
-            
-            # 绘制热力图
-            cbar = sns.heatmap(strategy_matrix, 
-                       cmap=['#f0f0f0', '#2E86AB'],  # 0=浅灰，1=蓝色
-                       cbar_kws={'label': 'Strategy (0=No Share, 1=Share)', 'ticks': [0, 1]},
-                       linewidths=0.5,
-                       linecolor='white',
-                       square=False,
-                       ax=ax)
-            
-            # 设置colorbar字体
-            cbar_obj = cbar.collections[0].colorbar
-            cbar_obj.set_label('Strategy (0=No Share, 1=Share)', fontfamily='Times New Roman')
-            for label in cbar_obj.ax.get_yticklabels():
-                label.set_fontfamily('Times New Roman')
-            
-            # 设置坐标轴
-            ax.set_xlabel('Round', fontsize=12, fontfamily='Times New Roman')
-            ax.set_ylabel('User ID', fontsize=12, fontfamily='Times New Roman')
-            ax.set_title('Fictitious Play: User Strategy Evolution Heatmap', fontsize=14, fontweight='bold', fontfamily='Times New Roman')
-            
-            # 设置刻度
-            ax.set_xticks(np.arange(0, len(history), max(1, len(history) // 20)) + 0.5)
-            ax.set_xticklabels(np.arange(1, len(history) + 1, max(1, len(history) // 20)))
-            ax.set_yticks(np.arange(n) + 0.5)
-            ax.set_yticklabels(range(n))
-            
-            # 设置刻度标签字体
-            for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_fontfamily('Times New Roman')
-            
-            # 标注理论均衡分享集合
+
+            sns.heatmap(
+                strategy_matrix,
+                cmap=[color_heat_0, color_heat_1],  # 0=浅蓝灰，1=深蓝
+                cbar=False,
+                linewidths=0.0,
+                square=False,
+                ax=ax_heat
+            )
+            ax_heat.set_facecolor('#FAFBFD')
+
+            ax_heat.set_xlabel('轮次', fontsize=16, labelpad=14)
+            ax_heat.set_ylabel('用户ID', fontsize=16)
+
+            last_round_idx = max(0, len(history) - 1)
+            ax_heat.set_xticks([0.5, len(history) - 0.5])
+            ax_heat.set_xticklabels([0, last_round_idx])
+            ax_heat.set_yticks(np.arange(n) + 0.5)
+            ax_heat.set_yticklabels(range(n))
+            ax_heat.set_xlim([0, len(history)])
+
+            for label in ax_heat.get_xticklabels() + ax_heat.get_yticklabels():
+                label.set_fontfamily('Microsoft YaHei')
+            ax_heat.tick_params(axis='x', labelsize=16)
+            ax_heat.tick_params(axis='y', labelsize=10)
+            ax_heat.yaxis.set_tick_params(labelleft=True)
+
             gt_share_set = set(results.get("gt_share_set", []))
-            if gt_share_set:
-                # 在右侧添加标记（使用*而不是★，避免字体问题）
-                for user_id in range(n):
-                    if user_id in gt_share_set:
-                        ax.text(len(history) + 0.5, user_id + 0.5, '*', 
-                               ha='left', va='center', fontsize=16, color='red', fontweight='bold')
-                
-                ax.text(len(history) + 0.5, -1, '*=Theoretical Equilibrium', 
-                       ha='left', va='center', fontsize=10, color='red', fontweight='bold', fontfamily='Times New Roman')
-            
-            plt.tight_layout()
-            fig2_path = output_dir / f"{base_name}_strategy_heatmap.png"
-            plt.savefig(fig2_path, dpi=150, bbox_inches='tight')
-            plt.close(fig2)
-            print(f"[图表] 策略热力图已保存到: {fig2_path}")
+            # 理论均衡单独色条（0/1），替代星号
+            theo_col = np.zeros((n, 1))
+            for user_id in gt_share_set:
+                user_id_int = int(user_id)
+                if 0 <= user_id_int < n:
+                    theo_col[user_id_int, 0] = 1
+            sns.heatmap(
+                theo_col,
+                cmap=[color_heat_0, color_star],
+                vmin=0, vmax=1,
+                cbar=False,
+                linewidths=0.0,
+                square=False,
+                ax=ax_theo
+            )
+            # 与左侧热力图对齐（不共享坐标轴，避免影响User ID刻度）
+            ax_theo.set_ylim(ax_heat.get_ylim())
+            ax_theo.set_xticks([])
+            ax_theo.set_xticklabels([])
+            ax_theo.set_yticks([])
+            ax_theo.set_ylabel('')
+            ax_theo.tick_params(axis='x', bottom=False, labelbottom=False, length=0)
+            for spine in ax_theo.spines.values():
+                spine.set_visible(False)
+
+            # 底部统一图例说明（单行）
+            import matplotlib.patches as mpatches
+            patch_no_share = mpatches.Patch(color=color_heat_0, ec='#CBD5E1', label='浅色 = 不分享 (0)')
+            patch_share = mpatches.Patch(color=color_heat_1, label='蓝色 = 分享 (1)')
+            patch_theo = mpatches.Patch(color=color_star, label='理论均衡 = 分享 (1)')
+            fig.legend(
+                handles=[patch_no_share, patch_share, patch_theo],
+                loc='lower center',
+                ncol=3,
+                frameon=False,
+                bbox_to_anchor=(0.5, 0.01),
+                prop={'size': 16}
+            )
+
+            fig.subplots_adjust(left=0.07, right=0.96, top=0.915, bottom=0.14, wspace=0.0)
+            fig_path = output_dir / f"{base_name}_similarity_heatmap.png"
+            fig_pdf_path = output_dir / f"{base_name}_similarity_heatmap.pdf"
+            plt.savefig(fig_path, dpi=300, bbox_inches='tight')
+            plt.savefig(fig_pdf_path, bbox_inches='tight')
+            plt.close(fig)
+            print(f"[图表] 合并图已保存到: {fig_path}")
+            print(f"[图表] 合并图(PDF)已保存到: {fig_pdf_path}")
             
         except Exception as e:
             print(f"[WARN] 可视化生成失败: {e}")
@@ -1982,7 +2031,8 @@ def _visualize_eas_results(
     import seaborn as sns
     
     # 设置字体
-    plt.rcParams['font.family'] = 'Times New Roman'
+    plt.rcParams['font.family'] = 'sans-serif'
+    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Noto Sans CJK SC', 'Arial Unicode MS', 'DejaVu Sans']
     plt.rcParams['axes.unicode_minus'] = False
     
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))

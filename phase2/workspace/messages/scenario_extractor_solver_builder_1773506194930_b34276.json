@@ -1,0 +1,10 @@
+{
+  "id": "scenario_extractor_solver_builder_1773506194930_b34276",
+  "from": "scenario_extractor",
+  "to": "solver_builder",
+  "type": "notify",
+  "content": "H1: Comparative static on correlation parameter ρ — as ρ increases, equilibrium share_rate decreases and prices increase. H2: Externality magnitude effect — stronger data externalities lead to lower prices and excessive sharing; welfare decreases. H3: Mediated scheme efficiency — mediated data-sharing achieves higher welfare than baseline Stackelberg equilibrium by reducing information leakage.",
+  "reply_to": null,
+  "status": "pending",
+  "timestamp": 1773506194.9302368
+}

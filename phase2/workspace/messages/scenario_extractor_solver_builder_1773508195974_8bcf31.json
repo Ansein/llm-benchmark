@@ -1,0 +1,10 @@
+{
+  "id": "scenario_extractor_solver_builder_1773508195974_8bcf31",
+  "from": "scenario_extractor",
+  "to": "solver_builder",
+  "type": "notify",
+  "content": "H1 (comparative_static): ρ increases → share_rate decreases, prices decrease. H2 (knowledge_dependent): v_i < 1 threshold triggers data sharing; information submodularity verified. H3 (dynamic_convergence): Efficiency loss when high-value users correlated with others; efficiency restored when uncorrelated. All three hypotheses are numerically testable via equilibrium computation with parameter variation.",
+  "reply_to": null,
+  "status": "pending",
+  "timestamp": 1773508195.974197
+}

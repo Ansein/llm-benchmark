@@ -1,0 +1,12 @@
+# Phase 2 dependencies
+# Install with: pip install -r requirements.txt
+
+# Agent API — install the provider(s) you need
+anthropic>=0.40.0     # if provider = "anthropic"
+openai>=1.0.0         # if provider = "openai" or any compatible endpoint
+
+# PDF parsing
+pdfplumber>=0.10.0
+
+# Config / workspace
+pyyaml>=6.0

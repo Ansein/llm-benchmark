@@ -1,0 +1,32 @@
+{
+  "experiment_type": "sensitivity_analysis",
+  "design": "3x3_grid",
+  "rho_values": [
+    0.3,
+    0.6,
+    0.9
+  ],
+  "v_ranges": [
+    [
+      0.3,
+      0.6
+    ],
+    [
+      0.6,
+      0.9
+    ],
+    [
+      0.9,
+      1.2
+    ]
+  ],
+  "prompt_version": "b.v4",
+  "models": [
+    "gpt-5.1",
+    "gpt-5.1-2025-11-13",
+    "deepseek-v3.1",
+    "deepseek-v3-0324"
+  ],
+  "num_trials": 3,
+  "timestamp": "20260207_182244"
+}

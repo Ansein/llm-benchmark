@@ -1,0 +1,14 @@
+{
+  "agent": "solver_builder",
+  "signed": true,
+  "validation_results": {
+    "test1": true,
+    "test1_detail": "rho=0 reproducible: 1.000",
+    "test2": true,
+    "test2_detail": "rho=0.3 share=1.000, rho=0.9 share=1.000",
+    "test3": true,
+    "test3_detail": "N=8,rho=0.6: share=1.000, profit=103.277",
+    "all_passed": true
+  },
+  "timestamp": 1773509037.4558334
+}

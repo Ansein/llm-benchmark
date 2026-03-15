@@ -1,223 +1,140 @@
-"""
-学术风格提示词对比可视化
+﻿import json
+import re
+from pathlib import Path
 
-只展示三个系列的趋势图，纵向排列，学术配色
-"""
-
-import json
 import matplotlib.pyplot as plt
 import numpy as np
-from pathlib import Path
-import re
+from matplotlib import font_manager
 
-# 设置学术风格
-plt.rcParams['font.family'] = 'serif'
-plt.rcParams['font.serif'] = ['Times New Roman', 'DejaVu Serif']
-plt.rcParams['font.size'] = 11
-plt.rcParams['axes.linewidth'] = 1.2
-plt.rcParams['grid.alpha'] = 0.3
-plt.rcParams['grid.linestyle'] = '--'
 
-# ============================================================================
-# 数据加载
-# ============================================================================
+def zh(s: str) -> str:
+    return s.encode('utf-8').decode('utf-8')
 
-def extract_model_name(filepath):
-    """从文件名中提取模型名称"""
+
+def configure_fonts() -> None:
+    candidates = ['Microsoft YaHei', 'SimHei', 'Noto Sans CJK SC', 'Arial Unicode MS']
+    available = {f.name for f in font_manager.fontManager.ttflist}
+    chosen = [f for f in candidates if f in available]
+    if not chosen:
+        chosen = ['DejaVu Sans']
+
+    plt.rcParams['font.family'] = 'sans-serif'
+    plt.rcParams['font.sans-serif'] = chosen + ['DejaVu Sans']
+    plt.rcParams['axes.unicode_minus'] = False
+    plt.rcParams['font.size'] = 11
+    plt.rcParams['axes.linewidth'] = 1.2
+    plt.rcParams['grid.alpha'] = 0.3
+    plt.rcParams['grid.linestyle'] = '--'
+
+
+def extract_model_name(filepath: Path) -> str:
     filename = Path(filepath).stem
     match = re.match(r'summary_(.+?)_\d{8}_\d{6}', filename)
     if match:
         return match.group(1)
     return filename.replace('summary_', '')
 
-def classify_model(model_name):
-    """根据模型名称分类"""
+
+def classify_model(model_name: str) -> str:
     lower_name = model_name.lower()
     if 'gpt' in lower_name:
         return 'GPT'
-    elif 'deepseek' in lower_name:
+    if 'deepseek' in lower_name:
         return 'DeepSeek'
-    elif 'qwen' in lower_name:
+    if 'qwen' in lower_name:
         return 'Qwen'
-    else:
-        return 'Other'
+    return 'Other'
 
-# 扫描所有summary文件
-results_dir = Path("evaluation_results/prompt_experiments_b")
-summary_files = list(results_dir.glob("summary_*.json"))
 
-print(f"📂 Loading {len(summary_files)} model result files\n")
+def main() -> None:
+    configure_fonts()
 
-# 提取数据（跳过v5）
-models_data = {}
-model_names = []
-raw_versions = ["b.v0", "b.v1", "b.v2", "b.v3", "b.v4", "b.v6"]
-display_versions = ["v0", "v1", "v2", "v3", "v4", "v5"]
+    results_dir = Path('evaluation_results/prompt_experiments_b')
+    summary_files = sorted(results_dir.glob('summary_*.json'))
+    print(f"\u52a0\u8f7d {len(summary_files)} \u4e2a\u6a21\u578b\u7ed3\u679c\u6587\u4ef6\n")
 
-# 英文标签（带变动说明）
-version_labels_en = [
-    "v0\nBaseline",
-    "v1\n+Market\nParams",
-    "v2\n+Param\nExplanation",
-    "v3\n+Inference\nExternality",
-    "v4\n+Submodularity\n& Compensation",
-    "v5\n+Completed\nFormulas"
-]
+    raw_versions = ['b.v0', 'b.v1', 'b.v2', 'b.v3', 'b.v4', 'b.v6']
+    display_versions = ['v0', 'v1', 'v2', 'v3', 'v4', 'v5']
+    version_labels = [
+        'v0\n\u57fa\u7ebf',
+        'v1\n+\u5e02\u573a\n\u53c2\u6570',
+        'v2\n+\u53c2\u6570\n\u89e3\u91ca',
+        'v3\n+\u63a8\u65ad\n\u5916\u90e8\u6027',
+        'v4\n+\u6b21\u6a21\u6027\n\u4e0e\u8865\u507f',
+        'v5\n+\u5b8c\u6574\n\u516c\u5f0f',
+    ]
 
-for filepath in summary_files:
-    model_name = extract_model_name(filepath)
-    model_names.append(model_name)
-    
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        share_rates = []
-        decision_distances = []
-        
-        for version in raw_versions:
-            version_data = data["versions"].get(version, {})
-            share_rates.append(version_data.get("share_rate_mean", 0))
-            decision_distances.append(version_data.get("decision_distance_mean", 1))
-        
-        models_data[model_name] = {
-            "share_rates": share_rates,
-            "decision_distances": decision_distances,
-            "series": classify_model(model_name)
-        }
-        
-        print(f"✓ {model_name}")
-        
-    except Exception as e:
-        print(f"✗ {model_name}: {str(e)}")
+    models_data = {}
+    for filepath in summary_files:
+        model_name = extract_model_name(filepath)
+        try:
+            data = json.loads(Path(filepath).read_text(encoding='utf-8'))
+            distances = [data['versions'].get(v, {}).get('decision_distance_mean', 1) for v in raw_versions]
+            models_data[model_name] = {
+                'decision_distances': distances,
+                'series': classify_model(model_name),
+            }
+            print(f'[OK] {model_name}')
+        except Exception as e:
+            print(f'[ERR] {model_name}: {e}')
 
-print(f"\n✅ Successfully loaded {len(models_data)} models\n")
+    print(f"\n\u6210\u529f\u52a0\u8f7d {len(models_data)} \u4e2a\u6a21\u578b\n")
 
-# 按系列分组
-series_models = {}
-for model_name, data in models_data.items():
-    series = data['series']
-    if series not in series_models:
-        series_models[series] = []
-    series_models[series].append(model_name)
+    series_models = {}
+    for model_name, info in models_data.items():
+        series_models.setdefault(info['series'], []).append(model_name)
 
-# ============================================================================
-# 绘制学术风格的三个系列折线图（纵向排列）
-# ============================================================================
+    colors = ['#6094ce', '#4dbe93', '#f5cc2f', '#4c2e90', '#FF5252']
+    fig, axes = plt.subplots(3, 1, figsize=(10, 12))
+    fig.subplots_adjust(hspace=0.35)
+    x = np.arange(len(display_versions))
 
-# 学术配色方案（更柔和、专业）
-academic_colors = {
-    'GPT': {
-        'colors': ['#6094ce', '#4dbe93', '#f5cc2f', '#4c2e90', '#FF5252'],
-        'main': '#6094ce'
-    },
-    'DeepSeek': {
-        'colors': ['#6094ce', '#4dbe93', '#f5cc2f', '#4c2e90', '#FF5252'],
-        'main': '#6094ce'
-    },
-    'Qwen': {
-        'colors': ['#6094ce', '#4dbe93', '#f5cc2f', '#4c2e90', '#FF5252'],
-        'main': '#6094ce'
-    }
-}
+    for idx, (series, model_list) in enumerate(sorted(series_models.items())):
+        ax = axes[idx]
+        for i, model in enumerate(sorted(model_list)):
+            d = models_data[model]['decision_distances']
+            ax.plot(
+                x,
+                d,
+                marker='o',
+                color=colors[i % len(colors)],
+                linewidth=2.5,
+                markersize=6,
+                label=model,
+                markeredgewidth=1.0,
+                markeredgecolor='white',
+                alpha=0.85,
+            )
 
-# 创建图表（纵向排列，3行1列）
-fig, axes = plt.subplots(3, 1, figsize=(10, 12))
-fig.subplots_adjust(hspace=0.35)
+        ax.set_title(f"{series} \u7cfb\u5217", fontsize=14, fontweight='bold', pad=15)
+        ax.set_xlabel('\u63d0\u793a\u8bcd\u7248\u672c', fontsize=12, fontweight='bold')
+        ax.set_ylabel('\u51b3\u7b56\u8ddd\u79bb', fontsize=12, fontweight='bold')
+        ax.set_xticks(x)
+        ax.set_xticklabels(version_labels, fontsize=9, ha='center')
+        ax.set_ylim(-0.05, 1.05)
+        ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.8)
+        ax.axhline(
+            y=0,
+            color='#2E7D32',
+            linestyle='--',
+            linewidth=2,
+            alpha=0.6,
+            label='\u7406\u8bba\u6700\u4f18\u5bf9\u9f50',
+            zorder=0,
+        )
+        ax.legend(loc='best', fontsize=9, framealpha=0.95, edgecolor='gray', fancybox=False, shadow=False)
 
-x_positions = np.arange(len(display_versions))
+        for spine in ax.spines.values():
+            spine.set_linewidth(1.2)
+            spine.set_color('#333333')
 
-# 为每个系列绘制子图
-for idx, (series, models) in enumerate(sorted(series_models.items())):
-    ax = axes[idx]
-    colors = academic_colors.get(series, {}).get('colors', ['#757575'] * 5)
-    
-    # 按模型名称排序
-    sorted_models = sorted(models)
-    
-    for i, model in enumerate(sorted_models):
-        if model not in models_data:
-            continue
-        
-        data = models_data[model]
-        distances = data["decision_distances"]
-        
-        # 选择颜色
-        color = colors[i % len(colors)]
-        
-        # 绘制折线（统一使用小圆点标记）
-        ax.plot(x_positions, distances,
-               marker='o',  # 统一使用圆形标记
-               color=color,
-               linewidth=2.5,
-               markersize=6,  # 更小的标记
-               label=model,
-               markeredgewidth=1.0,
-               markeredgecolor='white',
-               alpha=0.85)
-    
-    # 设置标题和标签
-    ax.set_title(f'{series} Series', fontsize=14, fontweight='bold', pad=15)
-    ax.set_xlabel('Prompt Version', fontsize=12, fontweight='bold')
-    ax.set_ylabel('Decision Distance', fontsize=12, fontweight='bold')
-    
-    # 设置x轴刻度和标签
-    ax.set_xticks(x_positions)
-    ax.set_xticklabels(version_labels_en, fontsize=9, ha='center')
-    
-    # 设置y轴范围
-    ax.set_ylim(-0.05, 1.05)
-    
-    # 添加网格
-    ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.8)
-    
-    # 添加理论最优线
-    ax.axhline(y=0, color='#2E7D32', linestyle='--', linewidth=2, 
-              alpha=0.6, label='Perfect Alignment', zorder=0)
-    
-    # 设置图例
-    ax.legend(loc='best', fontsize=9, framealpha=0.95, 
-             edgecolor='gray', fancybox=False, shadow=False)
-    
-    # 添加边框
-    for spine in ax.spines.values():
-        spine.set_linewidth(1.2)
-        spine.set_color('#333333')
+    fig.suptitle('\u4e0d\u540c\u6a21\u578b\u7cfb\u5217\u7684\u63d0\u793a\u8bcd\u5de5\u7a0b\u8868\u73b0', fontsize=16, fontweight='bold', y=0.995)
 
-# 添加总标题
-fig.suptitle('Prompt Engineering Performance Across Model Series', 
-            fontsize=16, fontweight='bold', y=0.995)
+    output_path = Path('evaluation_results/prompt_experiments_b/academic_comparison.png')
+    plt.tight_layout(rect=[0, 0.01, 1, 0.99])
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
+    print(f"\n\u5b66\u672f\u98ce\u683c\u56fe\u5df2\u4fdd\u5b58: {output_path}\n")
 
-# 保存图表
-plt.tight_layout(rect=[0, 0.01, 1, 0.99])
-output_path = "evaluation_results/prompt_experiments_b/academic_comparison.png"
-plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
-print(f"\n✅ Academic style figure saved: {output_path}\n")
 
-# 输出统计信息
-print("="*80)
-print("Statistical Summary")
-print("="*80)
-
-for series in sorted(series_models.keys()):
-    print(f"\n{series} Series:")
-    models = sorted(series_models[series])
-    
-    for model in models:
-        if model not in models_data:
-            continue
-        
-        data = models_data[model]
-        distances = data["decision_distances"]
-        
-        best_idx = np.argmin(distances)
-        best_version = display_versions[best_idx]
-        best_distance = distances[best_idx]
-        
-        improvement = distances[0] - distances[-1]
-        
-        print(f"  {model:25s} | Best: {best_version} ({best_distance:.3f}) | Δ(v0→v5): {improvement:+.3f}")
-
-print("\n" + "="*80 + "\n")
-
-plt.show()
+if __name__ == '__main__':
+    main()

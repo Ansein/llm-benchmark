@@ -1,0 +1,764 @@
+﻿% !TEX program = xelatex
+% NOTE: 为了更好的 Unicode 支持，请使用 XeLaTeX（或 LuaLaTeX）编译。
+%%
+%% This is file `sample-sigconf.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% samples.dtx  (with options: `all,proceedings,bibtex,sigconf')
+%% 
+%% IMPORTANT NOTICE:
+%% 
+%% For the copyright see the source file.
+%% 
+%% Any modified versions of this file must be renamed
+%% with new filenames distinct from sample-sigconf.tex.
+%% 
+%% For distribution of the original source see the terms
+%% for copying and modification in the file samples.dtx.
+%% 
+%% This generated file may be distributed as long as the
+%% original source files, as listed above, are part of the
+%% same distribution. (The sources need not necessarily be
+%% in the same archive or directory.)
+%%
+%%
+%% Commands for TeXCount
+%TC:macro \cite [option:text,text]
+%TC:macro \citep [option:text,text]
+%TC:macro \citet [option:text,text]
+%TC:envir table 0 1
+%TC:envir table* 0 1
+%TC:envir tabular [ignore] word
+%TC:envir displaymath 0 word
+%TC:envir math 0 word
+%TC:envir comment 0 0
+%%
+%% The first command in your LaTeX source must be the \documentclass
+%% command.
+%%
+%% For submission and review of your manuscript please change the
+%% command to \documentclass[manuscript, screen, review]{acmart}.
+%%
+%% When submitting camera ready or to TAPS, please change the command
+%% to \documentclass[sigconf]{acmart} or whichever template is required
+%% for your publication.
+%%
+%%
+\documentclass[sigconf]{acmart}
+
+\usepackage{fontspec}
+\usepackage{xeCJK}
+
+% Table support (required by Table~\ref{tab:all_models_key_metrics})
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{threeparttable}
+\usepackage{adjustbox}
+\sisetup{detect-all}
+\usepackage{subcaption}
+\usepackage{natbib}   % 最常用、最稳
+\usepackage{xcolor}
+
+% Guard against stray control characters (e.g., ^B / U+0002) that can break math.
+\catcode`\^^B=9
+
+\setmainfont{CMU Serif}
+\IfFontExistsTF{Noto Serif CJK SC}{\setCJKmainfont{Noto Serif CJK SC}}{%
+  \IfFontExistsTF{Source Han Serif SC}{\setCJKmainfont{Source Han Serif SC}}{%
+    \setCJKmainfont{FandolSong-Regular}% TeX Live fallback
+  }
+}
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+
+%% Rights management information.  This information is sent to you
+%% when you complete the rights form.  These commands have SAMPLE
+%% values in them; it is your responsibility as an author to replace
+%% the commands and values with those provided to you when you
+%% complete the rights form.
+\setcopyright{acmlicensed}
+\copyrightyear{2018}
+\acmYear{2018}
+\acmDOI{XXXXXXX.XXXXXXX}
+%% These commands are for a PROCEEDINGS abstract or paper.
+\acmConference[Conference acronym 'XX]{Make sure to enter the correct
+  conference title from your rights confirmation email}{June 03--05,
+  2018}{Woodstock, NY}
+%%
+%%  Uncomment \acmBooktitle if the title of the proceedings is different
+%%  from ``Proceedings of ...''!
+%%
+%%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
+%%  June 03--05, 2018, Woodstock, NY}
+\acmISBN{978-1-4503-XXXX-X/2018/06}
+
+
+%%
+%% Submission ID.
+%% Use this when submitting an article to a sponsored event. You'll
+%% receive a unique submission ID from the organizers
+%% of the event, and this ID should be used as the parameter to this command.
+%%\acmSubmissionID{123-A56-BU3}
+
+%%
+%% For managing citations, it is recommended to use bibliography
+%% files in BibTeX format.
+%%
+%% You can then either use BibTeX with the ACM-Reference-Format style,
+%% or BibLaTeX with the acmnumeric or acmauthoryear sytles, that include
+%% support for advanced citation of software artefact from the
+%% biblatex-software package, also separately available on CTAN.
+%%
+%% Look at the sample-*-biblatex.tex files for templates showcasing
+%% the biblatex styles.
+%%
+
+%%
+%% The majority of ACM publications use numbered citations and
+%% references.  The command \citestyle{authoryear} switches to the
+%% "author year" style.
+%%
+%% If you are preparing content for an event
+%% sponsored by ACM SIGGRAPH, you must use the "author year" style of
+%% citations and references.
+%% Uncommenting
+%% the next command will enable that style.
+%%\citestyle{acmauthoryear}
+
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title{From Outcomes to Mechanisms: A Benchmark for Diagnosing LLM Understanding of Privacy Externalities in Data Markets}
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+%% Of note is the shared affiliation of the first two authors, and the
+%% "authornote" and "authornotemark" commands
+%% used to denote shared contribution to the research.
+\author{Ben Trovato}
+\authornote{Both authors contributed equally to this research.}
+\email{trovato@corporation.com}
+\orcid{1234-5678-9012}
+\author{G.K.M. Tobin}
+\authornotemark[1]
+\email{webmaster@marysville-ohio.com}
+\affiliation{%
+  \institution{Institute for Clarity in Documentation}
+  \city{Dublin}
+  \state{Ohio}
+  \country{USA}
+}
+
+
+%%
+%% By default, the full list of authors will be used in the page
+%% headers. Often, this list is too long, and will overlap
+%% other information printed in the page headers. This command allows
+%% the author to define a more concise list
+%% of authors' names for this purpose.
+\renewcommand{\shortauthors}{Trovato et al.}
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+  Decision-making in data markets typically features multi-agent strategic interaction, cross-stage feedback, and tightly coupled causal structure, making it a natural and demanding testbed for evaluating the decision competence of large language models (LLMs). Recent work has begun to study LLM behavior in privacy-related data-sharing decisions from game-theoretic and economic perspectives. However, most existing evaluations remain outcome-centric—focusing on metrics such as sharing rates, platform profit, or social welfare—which makes it difficult to distinguish whether seemingly reasonable behavior arises from genuine understanding of the underlying economic mechanisms, or instead from linguistic heuristics, pattern matching to training data, or prompt-induced compliance.
+
+We propose a \textbf{mechanism-oriented benchmark for privacy externalities} to systematically assess LLMs’ mechanism understanding and inference capabilities. The benchmark instantiates three distinct economic environments, each grounded in a computable externality mechanism, and provides a reproducible theoretical solver for each scenario to generate verifiable ground truth. LLMs are embedded as strategic agents within the induced games via a multi-agent natural-language interaction protocol, and are evaluated with a unified diagnostic metric suite that jointly measures terminal outcome deviation, strategic-structure consistency with the theoretical equilibrium , and dynamic properties such as convergence and path dependence.
+
+We evaluate 12 frontier LLMs from three model families—GPT, DeepSeek, and Qwen—including GPT-5.2, GPT-5.1, deepseek-v3.2, deepseek-v3.1, qwen-plus, and qwen3-max. Furthermore, for selected models that initially perform poorly, we introduce multi-round fictitious play to test whether mechanism feedback can substantially improve convergence and agreement with the theoretical equilibrium. Overall, our benchmark explicitly separates “outcome correctness” from “mechanism correctness,” providing a solver-backed, diagnostic evaluation tool for characterizing and comparing LLMs’ mechanism understanding, robustness, and dynamic convergence in privacy-externality data markets.
+\end{abstract}
+
+%%
+%% The code below is generated by the tool at http://dl.acm.org/ccs.cfm.
+%% Please copy and paste the code instead of the example below.
+%%
+
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\keywords{Do, Not, Use, This, Code, Put, the, Correct, Terms, for,
+  Your, Paper}
+%% A "teaser" image appears between the author and affiliation
+%% information and the body of the document, and typically spans the
+%% page.
+% \begin{teaserfigure}
+%   \includegraphics[width=\textwidth]{sampleteaser}
+%   \caption{Seattle Mariners at Spring Training, 2010.}
+%   \Description{Enjoying the baseball game from the third-base
+%   seats. Ichiro Suzuki preparing to bat.}
+%   \label{fig:teaser}
+% \end{teaserfigure}
+
+\received{20 February 2007}
+\received[revised]{12 March 2009}
+\received[accepted]{5 June 2009}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+\section{Introduction}
+近年来，大语言模型（LLMs）正从“文本生成器”走向“决策主体”，被用于推荐、定价、谈判与政策咨询等存在利益博弈和反馈循环的复杂决策当中。在这类场景，模型不仅要响应局部任务信息，还要理解行动如何经由经济机制影响他人，并反馈到自身收益与风险。数据市场中的隐私决策是一个\textcolor{red}{检验这种决策能力的}天然测试床：个体收益依赖多主体互动，平台又通过数据推断与个性化决策，使“信息—价格—福利”形成跨阶段因果链与隐蔽外部性。
+
+近期研究已从博弈论和经济学视角考察 LLM 的隐私决策（如用户是否共享、平台如何定价、系统利润与福利如何变化），但主流评估仍偏向终局指标，例如分享率、利润或社会福利是否提升。问题在于：当行为“看起来正确”时，我们难以区分模型是理解了外部性机制，还是依赖语言启发式、语料模式匹配或提示诱导“碰巧做对”。在隐私外部性场景下，这种不可区分性尤其危险，因为外部性常常隐蔽、反直觉且对扰动和交互路径敏感，终局正确可能掩盖机制偏差，并在环境变化时导致失稳甚至市场失败。换言之，“结果正确”不等于“机制正确”。
+
+\textcolor{red}{针对}这一缺口，本文\textcolor{red}{以隐私外部性作为一个典型场景}，提出一套\textcolor{red}{检验 LLM 理解机制能力的 benchmark}。核心立场是：评估中心应从“输出像不像人/结果好不好看”转向“机制是否被理解”。据此，我们构建三个难度递进的\textcolor{red}{决策}场景：\textcolor{red}{[这三个场景都有么？]场景一关注推断外部性（inference externality）下的数据定价与过度分享（主案例）；场景二关注价格传导型外部性下的双侧互动与均衡一致性；场景三引入中介与机制设计，考察复杂制度下多主体系统的动态稳定性与失效边界。每个场景都配备可复现的理论求解器，生成可验证的 ground truth（均衡策略、价格与福利分解等），避免依赖人工标注与主观偏好。} \textcolor{red}{在此基础上}，我们将 LLM 嵌入决策过程，使其负责不同场景中消费者、平台或中介等策略主体的决策行为，并在统一管线下比较其行为与理论解。除终局偏差（outcome deviation）外，\textcolor{red}{[这个有么？这里应该解释三个步骤的测试，怎么做层层递进的]我们进一步引入两类诊断维度：策略结构一致性（structural consistency，如预测分享集合与理论均衡集合的一致性）与动态过程性质（process properties，如收敛速度、稳定性、路径依赖），用于识别“高分但机制错”的伪理解，并评估模型是否能在重复交互中形成稳定策略。此外，我们在主案例中设计“提示词信息密度梯度”实验（v0–v5）：在经济环境与理论解不变的前提下，逐步从基础规则说明提升到机制概念注入、结构化解释与公式框架，观察模型行为随信息结构变化的响应曲线，从而诊断其是机制推断还是文本诱导下的表面正确。}
+
+我们在 GPT、DeepSeek、Qwen 三个家族的 12 个前沿模型上进行了系统评测。结果显示：仅增加参数与细节并不会稳定提升机制一致性，反而可能诱发“结果合理但结构偏离”的伪理解；引入“推断外部性”这一关键机制概念后，模型与理论解的一致性出现显著跃迁。对部分弱模型引入多轮虚拟博弈（fictitious play）后，其机制学习能力、动态收敛性与均衡一致性均有改善。整体上，机制导向的诊断评测能揭示传统终局指标掩盖的差异，更准确刻画模型在机制理解、鲁棒性与动态稳定性上的能力边界。
+
+\textcolor{red}{[调整一下表述：强调对机制理解能力是大模型决策能力的重要性指标，以隐私外部性机制为例，提出了体系化分析方法，建立统一的多主体自然语言交互协议与诊断指标体系，并纳入动态收敛与稳定性评估，显式区分“终局正确”与“机制正确”，在12个模型上的测试，证明了有效性，也为后续研究和模型改进提供了基础]
+综上，本文贡献包括：第一，提出机制导向的隐私外部性 LLM benchmark，并构建三类可计算评测场景；第二，为各场景提供可复现理论求解器与可验证 ground truth，提升评测客观性与可复现性；第三，建立统一的多主体自然语言交互协议与诊断指标体系，显式区分“终局正确”与“机制正确”，并纳入动态收敛与稳定性评估；第四，在 12 个前沿模型上给出关于“参数≠理解”、机制概念注入拐点及虚拟博弈学习效果的实证结论，为后续研究与模型改进提供可解释基准。}
+
+
+% Preamble
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage{siunitx}
+% \usepackage{threeparttable}
+% \usepackage{adjustbox} % or \usepackage{graphicx} for \resizebox
+% \sisetup{
+%   detect-all,
+%   table-number-alignment=center,
+%   round-mode=places,
+%   round-precision=3
+% }
+
+% Preamble:
+% \usepackage{booktabs}
+% \usepackage{multirow}
+% \usepackage{threeparttable}
+% \usepackage{adjustbox}
+
+
+
+
+
+\section{机制导向隐私外部性 Benchmark 框架}
+\label{sec:framework}
+
+我们的核心立场是：在数据市场与平台治理等机制环境中，评估 LLM 不应仅以“终局是否好看”为中心，而应以“机制是否被理解”为中心。为此，我们将评测对象明确为\emph{机制一致性}：
+
+\textcolor{red}{[这个定义还挺重要的，可以换行。另外就是最后“与比较静态规律，这句话不好理解，重新整理一下”]Definition: 模型作为\textcolor{red}{决策}主体进入可计算的决策场景后，其行为是否遵循决策机制（如外部性机制）所蕴含的均衡结构[与比较静态规律]。}
+
+\textcolor{red}{为此，我们以隐私外部性场景下的决策为例，构建一个面向决策机制理解能力的LLM benchmark构建框架。} 框架由三部分组成。第一，构造三个覆盖互补隐私外部性机制的经济学场景，形式化刻画外部性在数据市场中的生成路径及其对个体效用与平台利润的作用。第二，在每个场景中同时实现理论求解器支持的理性基准（rational agent）与 LLM-as-agent，并据此构建统一指标体系，对终局偏差与策略结构一致性进行对照评测。第三，为诊断机制理解并区分“理解”与“猜对”，我们依次开展提示词复杂度梯度实验、关键参数敏感性分析，并在此基础上设计机制反馈干预以提升模型的机制一致性，\textcolor{red}{进一步验证实验结果的正确性}。
+
+\textcolor{red}{[这里应该有一个总体的框架图，可以参考投稿TKDE的图]}
+
+\subsection{三个互补隐私外部性场景}
+\label{subsec:unified_interface}
+\paragraph{\textbf{设计原则.}}
+三类场景共同满足两点约束：其一，\textbf{机制可计算}，即外部性由明确的结构方程刻画，均衡或最优响应可由确定的数值程序得到，从而避免人工标注与主观评分；其二，\textbf{评测可诊断}，即除终局结果外，机制本身诱导的结构对象（例如均衡集合、价格—参与映射、参与约束是否紧绑定）可被直接对照，从而支持机制一致性诊断。
+
+在上述原则下，我们将隐私外部性按"隐私外部性机制”进行分类，构造三个结构差异显著且难度递进的场景。
+
+\paragraph{\textbf{场景一.}}
+推断外部性下的数据分享与定价。该场景刻画平台通过数据推断用户类型的市场：当用户偏好存在相关性时，一人的数据共享会泄露与其相关的他人信息，从而将隐私损失外溢给未共享者，并诱发负外部性。该机制进一步内生塑造数据价格：一旦他人共享已部分“暴露”个体信息，个体保护隐私的激励下降，平台支付的数据价格被压低，进而导致过度共享。本场景中压价的根源归结为泄露信息的次模性：他人共享越多，新增共享的边际隐私保护收益越小。
+
+\paragraph{\textbf{场景二.}}
+价格传导型外部性下的平台–消费者双侧互动。本场景强调隐私选择通过产品市场机制内生生成外部性：消费者先决定是否披露数据，随后企业基于可得数据进行个性化供给/定价；因此，一部分消费者分享数据会影响企业对他们的报价，也可能改变企业对其他消费者的报价结构，即隐私选择外部性。核心机制在于企业的策略性“公共选项扭曲”：为从分享者处提取更多剩余，企业会通过扭曲公共产品的设计与价格来降级公共供给，从而使分享者对匿名者施加负外部性。
+
+\paragraph{\textbf{场景三.}}
+社会数据外部性与中介机制设计。本场景引入数据中介作为制度性枢纽：中介收集消费者信号并选择数据政策（可识别 vs 匿名化），政策改变生产者的信息优势与可实施的价格歧视，从而在消费者剩余与生产者剩余之间重新分配，并影响参与激励。本场景将匿名化刻画为对消费者信号的随机置换，使生产者仅能基于“总体”信息定价，从而限制个体层面价格歧视。在该制度下，匿名化既可能降低生产者对细粒度数据的价值，也可能显著降低中介的数据获取成本，并在其政策集合内带来更高利润。更关键的是，匿名化选择具有清晰的福利判据：在同质消费者情形下，中介选择匿名化在利润性上与社会效率对齐——匿名化更有利可图当且仅当匿名化提高社会剩余。这使该场景成为检验“制度推断与机制设计能力”的关键环境：模型需要识别政策如何改变价格歧视能力、参与约束与社会福利分解，并据此稳定选择机制参数。
+
+\textcolor{red}{[这三个场景是否有有结果？如果只有一个场景，那么就不要都讲？]}
+
+\subsection{多主体决策设计：Rational Agent 与 LLM-as-Agent}
+
+% solver-backed GT 求解器即为我们所称的
+\textcolor{red}{为了度量LLM agent的机制理解能力，除了构建llm agent以模拟决策场景之外，我们同步构建完全按照机制设计进行决策的rational agent作为基准：}
+
+\emph{rational agent}：它不依赖语言推断，而是由机制的结构方程与数值程序确定地计算得到的各方帕累托最优均衡策略。相应地，LLM-as-agent 被实现为一类可执行的策略映射 $a_r=\pi_{\text{LLM}}(I_r)$：给定角色 $r$ 的信息集 $I_r$ 输出可解析的离散动作，从而在同一可计算机制下与 rational agent 进行对照评测。三个场景共享两点实现约束：（i）\textbf{机制可计算}：外部性由可验证结构方程刻画，最优响应可由确定的数值程序求解；（ii）\textbf{评测可诊断}：结果保留结构对象（均衡集合、价格—参与映射、参与约束紧绑定性等），并允许在不改变机制与 rational agent 输出的前提下改变 LLM 可见信息与反馈结构，以区分“终局正确”与“机制正确”。
+
+\paragraph{\textbf{符号约定.}}
+用户集合 $\mathcal{N}=\{1,\dots,n\}$。用户 $i$ 的隐私偏好/隐私成本记为 $v_i$。分享/披露/参与等二元决策统一记为 $a_i\in\{0,1\}$，$\mathbf{a}=(a_1,\dots,a_n)$；集合表示为 $S(\mathbf{a})=\{i:a_i=1\}$，分享率 $\sigma(\mathbf{a})=\frac{1}{n}\sum_i a_i$。
+
+\subsubsection{Scenario 1：推断外部性数据市场}
+\label{subsubsec:ra_s1}
+\paragraph{\textbf{Rational agent}}
+Scenario~1 的机制核心是 ``相关性驱动的推断''：他人分享提高平台对未分享者的后验精度，形成隐私泄露；同时信息的边际贡献递减使得平台愿付价格随分享集合扩大而下降。rational agent 的关键结构对象是目标分享集合 $S$ 及其诱导的最小支持价格（reservation prices），以及由此得到的利润与福利分解。
+
+\paragraph{（1）后验学习与泄露度量.}
+设真实特征 $x\sim\mathcal{N}(0,\Sigma)$，等相关结构由相关系数 $\rho$ 参数化；分享者提供观测
+\begin{equation}
+y_i=x_i+\varepsilon_i,\qquad \varepsilon_i\sim\mathcal{N}(0,\sigma^2_{\mathrm{noise}}).
+\end{equation}
+给定分享集合 $S\subseteq\mathcal{N}$，高斯线性更新得到后验协方差
+\begin{equation}
+\Sigma_{\mathrm{post}}(S)=
+\Sigma-\Sigma H(S)^\top\big(H(S)\Sigma H(S)^\top+ \sigma^2_{\mathrm{noise}}I\big)^{-1}H(S)\Sigma,
+\end{equation}
+并以 ``后验方差减少'' 定义个体泄露量
+\begin{equation}
+\mathrm{leak}_i(S)\triangleq \Sigma_{ii}-\big(\Sigma_{\mathrm{post}}(S)\big)_{ii}.
+\end{equation}
+进一步定义个体数据的边际泄露，以衡量外部性强弱
+\begin{equation}
+\Delta \mathrm{leak}_i(S)\triangleq \mathrm{leak}_i(S)-\mathrm{leak}_i(S\setminus\{i\}).
+\end{equation}
+
+\paragraph{（2）最小支持价格与平台价值.}
+对任意目标集合 $S$，rational agent 使用 ``价格 = 隐私偏好 $\times$ 额外泄露'' 的最小支持价格：
+\begin{equation}
+p_i(S)=
+\begin{cases}
+v_i\cdot \Delta\mathrm{leak}_i(S), & i\in S,\\
+0, & i\notin S.
+\end{cases}
+\end{equation}
+平台从信息获得价值：
+\begin{equation}
+V(S)=\alpha\sum_{i\in\mathcal{N}}\mathrm{leak}_i(S).
+\end{equation}
+
+\paragraph{（3）利润、消费者剩余与社会福利分解.}
+平台利润、社会福利分别为
+\begin{equation}
+\Pi(S)=V(S)-\sum_{i\in S}p_i(S),\qquad
+W(S)=V(S)-\sum_{i\in\mathcal{N}} v_i\cdot \mathrm{leak}_i(S).
+\end{equation}
+消费者剩余为
+\begin{equation}
+CS(S)= -\sum_{i\in\mathcal{N}} v_i\cdot \mathrm{leak}_i(S)+\sum_{i\in S}p_i(S),
+\end{equation}
+从而 $W(S)=CS(S)+\Pi(S)$。
+
+\paragraph{（4）Rational baseline 输出.}
+rational agent 输出 $S^{\ast}$（例如平台利润最大化的目标集合）及对应的 $\{p_i(S^\ast)\},\Pi(S^\ast),CS(S^\ast),W(S^\ast)$，并保留 $\Delta\mathrm{leak}_i(S^\ast)$和价格随集合扩张的变化等比较静态对象，作为 ``机制一致性'' 的诊断锚点。
+
+
+\paragraph{\textbf{LLM-as-agent 实现.}}
+Scenario~1 中 LLM 扮演用户 $i$，实现为可执行映射 $a_i=\pi_{\text{LLM}}(I_i)$。信息集 $I_i$ 至少包含：公共机制参数（$n,\rho,\sigma^2_{\text{noise}},\alpha$）、个体隐私偏好 $v_i$、平台给出的报价 $p_i$（由 $\mathbf{p}(S^\ast)$ 生成）。动作空间为二元决策 $a_i\in\{0,1\}$（share / not share），输出格式被约束为可解析结构化为JSON中的 \texttt{share:0/1}）。将 LLM 对所有 $i$ 的输出拼接为 $\mathbf{a}^{\text{LLM}}$ 后，机制环境用同一组结构方程结算得到 $S^\ast$ 及 $\Pi,CS,W$，并与 $(S^\ast,\Pi^\ast,W^\ast)$ 做终局偏差与结构一致性对照。
+
+\subsubsection{Scenario 2：个性化与隐私选择}
+\label{subsubsec:ra_s2}
+
+Scenario~2 的外部性经由产品市场定价内生生成：披露比例改变平台定价结构，价格变化反过来影响匿名者与披露者效用。关键结构对象是均衡披露比例 $\sigma^\ast$）、平台均衡价格与福利分解。
+
+\paragraph{（1）披露激励与 cutoff/固定点.}
+在连续型表述中，给定披露比例 $\sigma$，披露者与匿名者的期望剩余为 $V_s(\sigma)$ 与 $V_a(\sigma)$，隐私成本为 $\tau$，则披露净增益
+\begin{equation}
+\Delta(\sigma;\tau)\triangleq V_s(\sigma)-V_a(\sigma)-\tau,
+\end{equation}
+均衡披露比例满足阈值/固定点：
+\begin{equation}
+\sigma^\ast=\Pr_{\tau}\big[\Delta(\sigma^\ast;\tau)\ge 0\big].
+\end{equation}
+
+\paragraph{（2）价格均衡方程}
+在个性化定价应用中，给定 $\sigma$ 的对称均衡列表价 $p(\sigma)$ 可由一维方程刻画：
+\begin{equation}
+p-c=\frac{1-H_p(0)}{h_p(0)}+\frac{\sigma}{1-\sigma}\cdot \frac{1-H_c(p-c)}{h_p(0)},
+\end{equation}
+它体现 ``隐私选择 $\rightarrow$ 均衡价格 $\rightarrow$ 福利变化 $\rightarrow$ 隐私选择'' 的闭环。
+
+\paragraph{（3）有限 $n$ 实例下的效用与福利口径}
+在离散化实现中，以披露集合 $D\subseteq\mathcal{N}$ 为策略对象。披露者承担隐私成本并被剩余榨取；匿名者以统一价购买：
+\begin{equation}
+u_i(D)=
+\begin{cases}
+-c_i^{\mathrm{privacy}}, & i\in D,\\
+\max\{\theta_i-p_u(D),0\}, & i\notin D,
+\end{cases}
+\end{equation}
+其中 $p_u(D)$ 为平台对匿名者的利润最大化统一价反应。由此定义
+\begin{equation}
+CS(D)=\sum_{i\in\mathcal{N}}u_i(D),\qquad
+W(D)=CS(D)+\Pi(D),
+\end{equation}
+并以 ``无单边偏离'' 给出均衡集合：
+\begin{equation}
+u_i(D)\ge u_i(D\triangle\{i\}),\quad \forall i\in\mathcal{N}.
+\end{equation}
+同时可报告 first-best $D_{\mathrm{fb}}\in\arg\max_{D} W(D)$ 作为效率上界参照。
+
+\paragraph{（4）Rational baseline 输出.}
+rational agent 输出 $D^\ast$（均衡披露集合）、对应的 $p_u(D^\ast)$ 以及 $\Pi(D^\ast),CS(D^\ast),W(D^\ast)$，并保留 ``披露比例变化 $\rightarrow$ 价格变化 $\rightarrow$ 匿名者剩余变化'' 的方向性对象，用于机制一致性诊断。
+
+\paragraph{LLM-as-agent 实现（要改）}
+Scenario~2 中 LLM 分别扮演消费者 $i$，输出披露决策 $d_i\in\{0,1\}$与平台。信息集 $I_i$ 至少包含：个体价值/愿付 $\theta_i$、隐私成本 $c_i^{\text{privacy}}$，以及公共机制描述（定价规则、平台会对匿名者选择统一价等）；在更强信息设定下，可额外提供他人披露的聚合统计（如 $\sigma$）或给定的 $D_{-i}$。环境将 LLM 输出拼接成 $D^{\text{LLM}}$，并用与 GT 相同的“平台对 $D$ 的最优反应”模块计算 $p_u(D^{\text{LLM}})$ 与 $(\Pi,CS,W)$，从而对比 $D^{\text{LLM}}$ 与 $D^\ast$ 的集合结构一致性，以及终局分解偏差。
+
+
+\subsubsection{Scenario 3：社会数据外部性与中介机制设计}
+\label{subsubsec:ra_s3}
+
+Scenario~3 引入中介作为制度与合同设计者：其选择匿名化政策与补偿方案，影响参与约束和数据供给规模。为简化场景设定，我们假设平台会购买中介提供的所有数据。rational agent 的关键结构对象是最优政策 $X^\ast$、补偿 $m^\ast$、均衡参与率 $r^\ast$ 及参与约束紧绑定性，并报告中介利润与社会福利分解。
+
+\paragraph{（1）中介利润与合同变量.}
+中介利润采用
+\begin{equation}
+R\equiv m_0-\sum_{i=1}^{N} m_i,
+\end{equation}
+其中 $m_i$ 为对消费者的补偿，$m_0$ 为平台向中介支付的费用；匿名化政策 $X\in\{\text{identified},\text{anonymized}\}$ 改变 ``信号 $\rightarrow$ 个体'' 的可匹配性，从而约束个性化定价能力。
+
+\paragraph{（2）参与约束、外部性分解与最小补偿.}
+消费者参与由参与约束决定：
+\begin{equation}
+m_i \ge U_i\big((S_i,X_{-i}),X_{-i}\big)-U_i\big((S_i,X),X\big).
+\end{equation}
+当约束紧绑定时，最小补偿可分解为
+\begin{equation}
+m_i^\star(X)
+= -\underbrace{\big(U_i((S_i,X),X)-U_i(S_i,\emptyset)\big)}_{\Delta U_i(X)}
+\;+\;
+DE_i(X),
+\label{eq:C_decomp}
+\end{equation}
+其中
+\begin{equation}
+DE_i(X)\;\triangleq\; U_i\big((S_i,X_{-i}),X_{-i}\big)-U_i(S_i,\emptyset)
+\label{eq:C_externality}
+\end{equation}
+定义他人披露对 $i$ 的数据外部性。
+\paragraph{（3）参与率固定点.}
+在用于评测的 ex ante 结算中，定义参与的期望净增益
+\begin{equation}
+\Delta U_i(r;m,X)=\mathbb{E}[u_i\mid a_i=1,r]-\mathbb{E}[u_i\mid a_i=0,r],
+\end{equation}
+并与隐私成本 $\tau_i$ 比较得到参与决策；均衡参与率满足
+\begin{equation}
+r^\ast=\Pr_{\tau}\big[\tau_i\le \Delta U_i(r^\ast;m,X)\big].
+\end{equation}
+
+\paragraph{（4）Rational baseline 输出.}
+rational agent 输出 $(X^\ast,m^\ast)$、对应的 $r^\ast$，以及 $R(X^\ast,m^\ast)$ 与福利分解（$\Pi,CS,W$）。同时报告 ``参与约束紧绑定比例''、$DE_i(X^\ast)$ 的统计量与政策切换（identified/anonymized）下的比较静态，作为诊断 LLM 是否真正遵循机制链条的对照锚点。
+
+\paragraph{LLM-as-agent 实现（四种配置）.}
+Scenario~3 同时评估“中介侧机制设计能力”与“消费者侧参与理解能力”，因此实现四种主体配置：
+\begin{itemize}
+  \item \textbf{A: Rational $\times$ Rational（GT 基线）.} 中介采用理论解 $(X^\ast,m^\ast)$，消费者按理性参与规则（由 \eqref{eq:C_fp} / 参与约束）响应；
+  \item \textbf{B: Rational 中介 $\times$ LLM 消费者.} 中介采用理论解 $(X^\ast,m^\ast)$；消费者 $i$ 的信息集 $I_i$ 包含其隐私偏好、补偿额 $m_i$ 与当前政策 $X^{\ast}$，LLM 输出 $a_i\in\{0,1\}$；
+  \item \textbf{C: LLM 中介 $\times$ Rational 消费者.} LLM 接收市场统计摘要与制度约束（政策候选集、补偿盒约束等），输出结构化动作 $(X,m)$；消费者按理性规则响应，环境结算得到 $R$ 与轨迹，用于诊断 LLM 的机制设计是否接近 $(X^\ast,m^\ast)$；
+  \item \textbf{D: LLM 中介 $\times$ LLM 消费者.} 双方均由 LLM 决策，多轮交互下记录 $(X^{(t)},m^{(t)},\mathbf{a}^{(t)})$ 及 $R^{(t)}$，用于收敛/振荡/崩溃等过程性质评估。
+\end{itemize}
+在以上配置下，LLM的动作输出均被约束为可解析结构（例如 $X\in\{\text{identified},\text{anonymized}\}$、$m\in[0,3]^N$ 或其低维参数化版本），并由同一机制结算模块生成终局分解与过程对象，确保对照完全建立在“机制可计算”的共同底座之上。
+
+\subsection{诊断机制理解的三类关键实验与反馈干预}
+\label{subsec:part3_diagnosis}
+
+\textcolor{red}{为了进一步度量LLM对内在机制的理解程度，我们的框架进一步设计了三步互相补充的实验：step1：信息表达梯度定位：提示词实验，定位“概念注入是否触发机制推断”；step2：参数敏感性,检验比较静态是否与理论一致；step3：基于前两步分析设计反馈干预，检验模型能否基于机制生成的反馈改进并收敛，从而区分“理解”与“偶然”。}
+% 仅凭终局指标接近 GT 不能排除提示词诱导后LLM碰巧猜对的情况，因此
+
+\subsubsection{step1：提示词复杂度梯度实验}
+\label{subsubsec:rq1}
+
+在\textbf{保持机制环境、参数实例与 GT 不变}的前提下，仅改变机制描述的显式程度与信息密度，构造版本 $\{\mathrm{v0},\ldots,\mathrm{v5}\}$：从仅包含规则与参数层的v0-v2，到暗示性引导思考外部性影响v3，再到机制概念与因果链条注入v4，再到包含公式的结构化机制解释释v5。我们关注两类诊断信号：其一，表现是否呈现“机制拐点”；其二，改善是否优先体现在\textbf{结构一致性}而非仅体现在终局数值。
+
+\subsubsection{step2：关键参数敏感性分析}
+\label{subsubsec:rq2}
+
+机制理解应在参数扰动下保持方向一致。为了观察LLM在不同参数配置下的表现变化，我们围绕推断外部性链条选择关键扰动维度：相关性强度 $\rho$ 和隐私偏好分布 $\{v_i\}$，以改变用户异质性。敏感性判据强调\textbf{方向性与结构稳定性}：例如 $\rho$ 上升或噪声下降时，模型是否表现出更强外部性意识并相应调整集合结构；$v_i$ 平移或拉伸时，个体行动排序是否保持单调一致。
+
+\subsubsection{step3：机制反馈干预与多轮虚拟博弈}
+\label{subsubsec:rq3}
+
+一次性的静态决策难以区分“偶然正确”与“可持续的机制学习”。因此我们引入多轮虚拟博弈：在给定参数实例下，让同一模型连续进行 $T$ 轮决策；每轮结束后环境返回由机制结算产生的\textbf{结构化反馈摘要}，但\textbf{不直接泄露 GT 集合}。LLM用户可以看到过去数轮的决策历史，若终局偏差与结构偏差随轮次下降，则判定LLM在历史中学习并调整了策略。
+
+\subsection{本节小结与后续接口}
+\label{subsec:framework_summary}
+
+综上，本节构建了完整的benchmark框架，从提供互补机制场景，到引入rational agent与LLM-as-agent，再通过信息表达梯度、参数敏感性与机制反馈干预建立“可诊断”的评测链条。该框架确保：即使模型在终局指标上接近 GT，我们仍能借助结构对象与过程对象检验其是否真正沿机制闭环推断，从而将“终局正确”与“机制正确”显式区分。
+
+
+\section{Benchmark 结果分析}
+\label{sec:results}
+
+\subsection{三类场景的rational agent VS LLM-as-agent}
+\label{subsec:static_results}
+
+我们首先在三个互补场景中比较多个LLM的静态博弈表现，并将评测分解为两类互补指标：其一是经济层面的 \emph{outcome deviation}（以社会福利相对误差衡量），其二是策略结构层面的 \emph{structural consistency}（以预测集合与理论均衡集合的 Jaccard 相似度衡量）。三个场景统一设置消费者数量$N = 20$.
+
+\paragraph{定义：Jaccard 相似度.}
+对任意两个集合 $A,B$，Jaccard 相似度定义为
+\begin{equation}
+J(A,B) \;=\; \frac{|A\cap B|}{|A\cup B|},
+\end{equation}
+其取值范围为 $[0,1]$：$J(A,B)=1$ 表示两集合完全一致，$J(A,B)=0$ 表示两集合不相交。
+
+\begin{table*}[t]
+  \centering
+  \begin{threeparttable}
+    \caption{Jaccard similarity and social welfare deviation across scenarios and model families (Scenario 2 pending).}
+    \label{tab:jaccard_swdev_all_models}
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.15}
+
+    \begin{tabular}{l S[table-format=1.3] S[table-format=1.3] S[table-format=1.3] S[table-format=1.3] S[table-format=1.3] S[table-format=1.3]}
+      \toprule
+      \multicolumn{1}{c}{模型} & \multicolumn{2}{c}{场景1} & \multicolumn{2}{c}{场景2} & \multicolumn{2}{c}{场景3} \\
+      \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+      & \multicolumn{1}{c}{Jaccard} & \multicolumn{1}{c}{SW Deviation} & \multicolumn{1}{c}{Jaccard} & \multicolumn{1}{c}{SW Deviation} & \multicolumn{1}{c}{Jaccard} & \multicolumn{1}{c}{SW Deviation} \\
+      \midrule
+      deepseek-v3-0324 & 1.000 & 0.000 & 0.895 & 0.152 & 0.000 & 0.008 \\
+      deepseek-r1 & 0.438 & 0.479 & 0.850 & 0.101 & 0.000 & 0.008 \\
+      deepseek-v3.1 & 1.000 & 0.000 & 0.833 & 0.118 & 0.000 & 0.008 \\
+      deepseek-v3.2 & 1.000 & 0.000 & 0.879 & 0.165 & 0.053 & 0.011 \\
+      gpt-5 & 0.438 & 0.416 & 0.850 & 0.133 & 0.111 & 0.041 \\
+      gpt-5.1 & 1.000 & 0.000 & 0.216 & 0.365 & 0.500 & 0.034 \\
+      gpt-5.1-2025-11-13 & 1.000 & 0.000 & 0.220 & 0.426 & 0.154 & 0.153 \\
+      gpt-5.2 & 0.938 & 0.005 & 0.753 & 0.133 & 0.167 & 0.012 \\
+      qwen-plus & 1.000 & 0.000 & 0.275 & 0.742 & 0.000 & 0.008 \\
+      qwen3-max & 1.000 & 0.000 & 0.775 & 0.127 & 0.000 & 0.008 \\
+      qwen-plus-2025-12-01 & 1.000 & 0.000 & 0.810 & 0.247 & 0.000 & 0.008 \\
+      qwen3-max-2026-01-23 & 0.938 & 0.008 & 0.795 & 0.116 & 1.000 & 0.019 \\
+      \bottomrule
+    \end{tabular}
+
+    \begin{tablenotes}[flushleft]
+      \footnotesize
+      \item SW deviation is the relative error: $\lvert SW_{\text{llm}}-SW_{\text{gt}}\rvert/\lvert SW_{\text{gt}}\rvert$.
+      \item Scenario 3 results correspond to Config=B and DataStructure=common\_preferences in your current summary.
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table*}
+
+\paragraph{场景一.}
+在场景一中，rational agent 给出目标分享集合 \(S^{\ast}\) 及其最小支持价格 \(\{p_i(S^{\ast})\}\)，并据此得到平台利润、消费者剩余与社会福利分解。表~\ref{tab:jaccard_swdev_all_models} 显示，多数模型在场景一上可达到接近或等于 1 的集合一致性，并实现极低的社会福利偏差；但仍存在少数模型出现显著的结构偏离（例如 Jaccard 仅为 0.438）且伴随较大的福利偏差。这表明：即便在单一场景、单次静态决策中，模型之间也存在“结构性理解”差异，而这种差异可能被单纯的终局指标掩盖。
+
+\paragraph{场景二}
+场景二的机制闭环为“披露比例 \(\sigma\) \(\rightarrow\) 均衡价格 \(\rightarrow\) 匿名者/披露者剩余变化 \(\rightarrow\) 披露选择”。我们的静态结果报告以下结构对象：均衡披露集合 \(D^{\ast}\)、均衡披露比例 \(\sigma^{\ast}\)、平台对匿名者的最优统一价 \(p_u(D^{\ast})\)，以及 \(\Pi(D^{\ast}), CS(D^{\ast}), W(D^{\ast})\) 的分解；并以 \(D^{\text{LLM}}\) 与 \(D^{\ast}\) 的 Jaccard 相似度及社会福利相对误差进行对照。由于场景二的关键不在“某一次选择是否合理”，而在“模型是否沿闭环方向正确推断比较静态”，我们在后续敏感性分析中进一步检验该点（见 \S\ref{subsec:sensitivity}）。
+
+\paragraph{场景三}
+场景三同时考察消费者参与理解与中介侧机制设计能力，我们采用LLM中介与LLM消费者配置。比较静态结果，由于理论分享率较低（仅为 0.05），理论分享集中仅有一个用户，故Jaccard相似度呈现离散化的趋势，且大多接近或等于0；然而所有LLM的社会福利相对误差都充分接近0，表明在接近实际的双边非理性情况下，LLM的决策在经济意义上接近了Nash均衡。
+
+\paragraph{按发布时间观察.}
+表~\ref{tab:jaccard_swdev_all_models} 实际按家族分组，并在家族内按发布时间（版本日期）排序。若认为发布时间越晚的LLM能力越强，一个直观预期是：随发布时间推进，结构一致性（Jaccard）应更稳定地上升、终局偏差（SW deviation）应更稳定地下行。但该表呈现出一个意外现象：\textbf{终局偏差往往更容易随版本迭代被“压低”，而结构一致性并不总随发布时间单调改善。} 换言之，较新的LLM在社会福利相对误差上通常已接近 0，但仍可能在集合结构上出现显著偏离（例如某些LLM在场景1/3 上的 Jaccard 仍远低于 1）。这意味着，把“新=强”仅按终局指标衡量可能会高估机制理解：LLM可能学会了在福利层面不犯大错，却尚未学会更细粒度的机制结构推断与策略集合对齐。
+
+
+\subsection{Step~1：提示词信息密度梯度实验与“机制拐点”}
+\label{subsec:prompt_gradient}
+
+\paragraph{\textbf{实验目的}}
+为了把“理解机制”与“碰巧选对”区分开，以场景一为例，场景一中的均衡分享集合并非由个体的局部比较 \(p_i\) 与 \(v_i\) 单独决定，而是取决于推断外部性如何通过相关系数 \(\rho\) 与噪声 \(\sigma^2\) 转化为基础泄露和边际泄露，并进一步体现为次模性的边际信息变化。我们用提示词复杂度梯度（prompt ladder）来检验：当机制关键概念逐步显式化时，LLM 的策略结构是否出现系统性跃迁；若仅提供更多数值或更长描述而不注入机制概念，则模型更可能停留在启发式的“补偿 vs 成本”框架中。
+
+
+\paragraph{\textbf{实验对象}}
+我们以场景一的静态一次性博弈为对象。每个实例包含一组固定参数
+\[
+I=\bigl(n,\rho,\sigma^2,\{v_i\}_{i=1}^n,\{p_i\}_{i=1}^n\bigr),
+\]
+其中 \(n\) 为用户数，\(\rho\) 表示用户类型相关性强度，\(\sigma^2\) 为观测噪声，\(v_i\) 为用户 \(i\) 的单位隐私偏好（信息成本），\(p_i\) 为平台对用户 \(i\) 的个性化补偿报价。对每个实例，我们根据rational agent得到理性基准的均衡分享集合 \(S^\ast(I)\) 及其结算结果，用于后续一致性评测。
+
+
+\paragraph{\textbf{多版提示词设定}}
+为确保不同提示词版本之间的可比性，我们对所有版本严格固定实例、数值输入与输出协议，每版提示词之间加入一次最小增量改动，保证相邻版本之间的差异可被清晰归因：
+
+\textbf{v0（最简基线）}：仅提供个体私有信息 \((v_i,p_i)\) 与数据市场基本场景设置，用于测量模型在\emph{纯局部成本收益叙事}下的基线决策结构。
+
+\textbf{v1（加入市场参数但不解释）}：在 v0 的基础上增加公共数值信息：\(n\)、\(\rho\)、\(\sigma^2\)、以及隐私偏好分布范围 \([v_{\min},v_{\max}]\)，但不解释任何参数语义、不引入外部性概念，以检验模型能否仅凭符号与数值\emph{自发}推断其机制含义。
+
+\textbf{v2（加入参数语义解释）}：在 v1 基础上补充对 \(\rho\)（可推断强度）与 \(\sigma^2\)（噪声/精度）含义的直观解释，但仍不引入推断外部性、基础/边际泄露等机制概念，用于量化理解参数与理解机制的差距。
+
+\textbf{v3（暗示与诱导思考方向）}：在 v2 基础上暗示性指向推断外部性，诱导思考“基础泄露”（他人分享导致你即便不分享也泄露）与“边际泄露”（你选择分享使泄露从基础跃迁到完全）。该版本是机制可见性的关键分界点，用于检验是否出现结构一致性的跃迁。
+
+\textbf{v4（完整机制：次模性与补偿逻辑）}：在 v3 基础上显式提出推断外部性因果诱导机制，加入次模性以及“补偿旨在覆盖边际隐私损失”的价格逻辑，并明确隐私成本形式为 \(v_i\times \Delta \mathrm{leak}_i\)，可以检验模型是否理解机制逻辑并用于决策。
+
+\textbf{v5（结构化完整版）}：在 v4 的信息集合不变的前提下，结构化地重写提示词，补充具体计算公式。该版本用于检验：同等机制信息下，结构化呈现是否减少理解成本。
+
+对每个模型 \(m\) 与每个版本 \(v\)，我们在同一实例 \(I\) 上对每个用户 \(i=1,\ldots,n\) 独立调用决策提示，得到二元行动 \(a_i\in\{0,1\}\)。将所有选择汇总得到模型诱导的分享集合
+\[
+S_{m,v}(I)=\{i: a_i=1\}.
+\]
+每个LLM代理在决策时都被明确告知“不知道其他人的具体选择”，从而排除顺序博弈或观察学习效应，保证对比集中在提示词信息差异上。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{pic放图/prompt experiments.png}
+    \caption{Caption}
+    \label{fig:placeholder}
+\end{figure}
+\paragraph{\textbf{跨模型家族对照}}
+我们在三大模型家族（GPT、DeepSeek、Qwen）内，选取同系列多版本模型，在同一组场景一实例上，分别运行 v0-v5 并计算 \(d_{\text{dec}}(m,v)\)，得到图~\ref{fig:prompt_ladder_series} 的“提示词版本 \(\rightarrow\) 决策距离”曲线。
+
+%\begin{figure}[t]
+ %   \centering
+   % \includegraphics[width=\linewidth]{figures/prompt_engineering_performance_series.png}
+  %  \caption{场景一提示词复杂度梯度（v0--v5）下，不同模型家族的决策距离 \(d_{\text{dec}}\) 变化。虚线为完美%对齐（\(d_{\text{dec}}=0\)）。横轴标注对应的机制信息增量：v1 仅加入市场参数，v2 加入参数解释，v3 注入推断外部性与边际泄露概念，v4 进一步加入次模性与补偿逻辑，v5 为结构化完整版（含形式化表达）。}
+    %\label{fig:prompt_ladder_series}
+%\end{figure}
+
+
+\paragraph{提示词梯度实验结果分析}
+\label{subsubsec:prompt_ladder_results}
+
+
+
+
+
+展示了场景一在提示词版本 b.v0--b.v5 下的决策距离（decision distance）随提示词复杂度变化的曲线，其中距离越接近 0 表示模型诱导的分享集合与理论均衡集合越一致。在 DeepSeek 家族中，v3.x几乎在全版本区间维持接近零的距离，仅在最高版本出现轻微抬升，表明其对机制对象的表征更“内生”，对提示词形式不敏感；相对地，DeepSeek-r1 呈现强烈非单调，在引入更强机制逻辑后距离显著回弹，显示其容易在更复杂描述下发生机制误用。GPT 家族内部同样存在清晰分层：gpt-5.2 在较早版本即逼近零并保持稳定，而 gpt-5 则在参数解释/机制暗示阶段出现大幅回弹，随后才部分回落，体现出明显的不稳定性；gpt-5.1则更接近“阈值型”行为，需要到更强机制显式化阶段才收敛。Qwen 家族呈现更典型的“提示词阈值”特征：qwen3-max 系列在低到中版本距离较高，直到更强机制显式化后才出现断崖式下降，而 qwen-plus 系列整体更早进入低距离区间，且更新版本在低版本下更平滑。综合而言，本图支持一个明确的能力排序结论：DeepSeek v3.x 与 gpt-5.2（以及 qwen-plus）表现出更强的机制理解与更高的提示词鲁棒性；gpt-5.1 与 qwen3-max 更依赖高版本提示词触发收敛，属于“可纠正但提示词依赖”的中等水平；DeepSeek-r1 与 gpt-5 的非单调回弹则表明其机制一致性更脆弱，理解能力在该任务上相对较弱。
+
+
+\subsection{Step~2：关键参数敏感性分析与“猜对概率”诊断}
+\label{subsec:sensitivity}
+
+\paragraph{研究动机.}
+机制理解不仅应在单一设置下给出合理行动，更应在机制参数变化时呈现与理论一致的比较静态响应。若模型只是“记住某个答案形态”或受提示诱导，其策略往往对关键参数扰动不稳定，甚至出现方向性错误。因此，我们对每个模型家族的代表性版本进行系统的敏感性分析，用以检验其行为是否符合机制的方向性预测。
+
+\paragraph{扰动维度与设置.}
+基于场景参数定义，我们围绕推断外部性链条选择关键扰动参数：
+\begin{itemize}
+  \item \textbf{相关性强度 $\rho$}: 提高 $\rho$ 应增强可推断性与外部性，从而改变“他人分享”对个体决策的边际影响；
+  \item \textbf{隐私偏好分布 $\{v_i\}$}: 改变异质性与整体水平，用以检验模型是否能在个体层面做出一致的边际权衡（高 $v_i$ 更倾向拒绝，低 $v_i$ 更倾向参与，且该排序对机制扰动保持稳定）。
+\end{itemize}
+我们采用“同机制、跨设置”的参数网格或分层抽样生成实例集合，并在每个设置下重复运行以控制采样波动。
+
+\paragraph{机制一致性判据.}
+敏感性分析不仅比较终局值的变化，更强调\textbf{方向性与结构稳定性}：当 $\rho$ 上升或噪声下降时，模型是否表现出更强的外部性意识（例如对“他人分享导致自身隐私损失”给出一致的解释与行动响应）；当 $v_i$ 分布平移或拉伸时，模型输出的个体行动排序是否保持单调一致。若模型在不同扰动下出现非稳定跳变或方向性相反的响应，则支持“伪理解”假设。
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{pic放图/step2.png}
+    \caption{Caption}
+    \label{fig:placeholder}
+\end{figure}
+
+%\begin{figure}[t]
+    %\centering
+  %  \includegraphics[width=\linewidth]{figures/sensitivity_scatter.pdf}
+  %  \caption{场景一敏感性诊断散点图。横轴：结构一致性（如扰动实例上的平均 Jaccard 或方向一致率）；纵轴：估计的“猜对概率” \(\hat{p}_{\text{guess}}\)（越低表示越难由随机猜测解释）。}
+   % \label{fig:sensitivity_scatter}
+%\end{figure}
+
+\textcolor{red}{这里没有结论}
+
+
+\subsection{Step~3：机制反馈干预——多轮虚拟博弈提升弱模型拟合与收敛性}
+\label{subsec:fictitious_play}
+
+\paragraph{虚拟博弈协议（Mechanism-Feedback Fictitious Play）}
+我们将 Scenario~B 的一次性同时决策扩展为有限轮虚拟博弈，用于检验模型能否在\emph{不暴露理论答案}的条件下，依靠机制反馈实现策略改进。给定固定的场景实例与结算规则，在每轮 $t=1,\ldots,T$ 执行以下闭环：
+\begin{enumerate}
+  \item \textbf{信念更新}：基于最近 $w$ 轮历史（默认 $w=10$）计算经验频率信念，即对每个用户 $j$ 估计其分享概率 $\hat{p}^{(t)}_j$。
+  \item \textbf{同步决策}：所有用户代理在同一轮并行输出二元动作 $a_i^{(t)}\in\{0,1\}$，且当轮不可见他人动作。
+  \item \textbf{机制结算}：环境按真实机制计算泄露、补偿、利润与社会福利，并记录轮次级轨迹。
+  \item \textbf{结构化反馈}：向下一轮提供可观测统计（历史参与结构与收益后果），但不提供理论均衡集合本身。
+\end{enumerate}
+收敛判据采用“\textbf{3 轮稳定}”：若最近 3 轮完整行动剖面一致，则提前停止；否则最多运行 $T=50$ 轮。过程评估同时记录每轮与理论均衡分享集合的 Jaccard 相似度轨迹 $J^{(t)}$，用于刻画学习速度与稳定性。
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{fp_similarity_gpt5_vs_deepseek-r1_side_by_side.png}
+    \caption{Fictitious play similarity and strategy evolution under two models.}
+    \label{fig:fp}
+\end{figure}
+
+
+
+
+
+\paragraph{可视化读法与图示设置}
+图~\ref{fig:fp} 展示 GPT-5 与 deepseek-r1 的虚拟博弈轨迹。每张图上半部分为 $J^{(t)}$ 折线，下半部分为用户-轮次行动热图（蓝色为分享，浅色为不分享），右侧单列标注理论均衡中的分享用户。该表示将“过程收敛”与“结构一致性”放在同一图中，便于比较不同模型的学习动力学。
+
+\paragraph{结果分析：两类模型均可被机制反馈“拉回”到高一致性区间}
+从两条轨迹可以观察到一个共同模式：即使初始轮次并未与理论均衡完全一致，随着机制反馈累积，$J^{(t)}$ 均进入高位并保持稳定。这说明在本任务中，结构化反馈能够将一次性决策中的局部偏差转化为可学习信号，推动策略朝理论结构收敛。
+
+\textbf{GPT-5（图~\ref{fig:fp-gpt5}）}呈现典型的“渐进式修正”路径：相似度先快速上升，再伴随小幅回摆，最后稳定在高一致区间。热图对应地显示，少量用户存在间歇性翻转，但整体行动模式逐步固化。这一形态更接近“持续纠错型”学习器：模型能够利用反馈修正偏差，但需要多轮迭代消化机制信号。
+
+\textbf{deepseek-r1（图~\ref{fig:fp-dsr1}）}则表现为更快的高位聚集与更早停机：在较少轮次内即达到稳定剖面并触发提前终止。热图中多数用户较早锁定动作，仅少数局部单元发生短暂调整。该结果表明 deepseek-r1 对反馈信号的响应更“陡峭”，但其优势主要体现在动态纠偏速度，而非静态一步推理的稳健性。
+
+\paragraph{结论与对主实验的补充意义}
+虚拟博弈结果提供了与静态评测互补的证据：
+\begin{itemize}
+  \item 静态测试回答“模型在单轮是否做对”；
+  \item 虚拟博弈回答“模型在机制反馈下是否\emph{学会}做对，以及学得多快、多稳”。
+\end{itemize}
+因此，Step~3 支持本文核心观点：在外部性机制任务中，终局正确性不足以代表机制理解；过程层面的收敛速度、回摆幅度与稳定区间同样是区分模型能力的重要维度。
+
+
+
+\section{相关研究}
+\label{sec:related_work}
+
+\subsection{隐私经济学与数据市场}
+\label{subsec:rw_privacy_econ}
+
+隐私经济学与信息政策的研究系统讨论了个人数据的经济价值、信息披露激励、以及隐私制度安排下的市场与福利后果，形成了理解数据交易与监管的基础框架 \cite{acquisti2016economicsprivacy,varian1996economicsinfo,odlyzko2003privacy,farrell2007privacy,tirole2019data,bergemann2019information}. 
+围绕数据市场中的相关性、推断与外部性，一批工作从“数据分享会影响他人信息与企业响应”的视角刻画了价格、参与与效率的结构性联动 \cite{acemoglu2022toomuchdata,bergemann2022socialdata,choi2019dataexternality,gradwohl2017privacyexternality,ichihashi2019data,ichihashi2020intermediary,fainmesser2019privacy}. 
+在个性化与隐私选择的交叉领域，相关研究覆盖了个性化定价、推荐/广告、以及消费者隐私选择的博弈结构与市场结果 \cite{rhodes2024privacychoice,fudenberg2007behavioralpd,conitzer2012behavioral,montes2019privacy,ali2023privacyprice,anderson2000informed,anderson2023discounts,belleflamme2016privacy}. 
+与“隐私作为可交易对象”的机制设计线索相对应，隐私拍卖、差分隐私下的数据采购与激励相容机制为“可计算机制+可验证基准”提供了重要方法论参照 \cite{ghosh2015sellingprivacy,ligett2012private,kasiviswanathan2011privacy,hardy2013private}。
+
+\subsection{LLM 作为博弈主体与决策基准：行为测量、交互环境与评测框架}
+\label{subsec:rw_llm_agents}
+
+将大语言模型置于博弈论与多主体交互环境中进行行为测量，已成为检验其决策、推理与社会互动能力的重要路径。早期与并行工作多从经典双人/双行动博弈与经济实验范式出发（如囚徒困境、最后通牒、公共品、拍卖与信任博弈等）构建可重复的行为测度与对照评估 \cite{guo2023ultimatum,phelps2023llmPD,aher2023moral,brookins2024llm,economicgames2023survey}. 
+在更复杂的语言协商与多轮谈判任务中，研究者通过谈判博弈与联盟形成环境评估模型的沟通与协商能力 \cite{bakhtin2022diplomacy,abdelnabi2024negotiation}. 
+围绕“语言通信+隐匿信息+欺骗/推断”的设置，社会推理与社交演化相关工作常以桌游/社交推理游戏作为测试床，例如 \textit{Avalon}、\textit{Werewolf}、以及其它长时程多方对话与角色识别任务 \cite{light2023avalonbench,stepputtis2023avalon,xu2023werewolf,xu2024werewolfRL,ogara2023hoodwinked,liang2023whoisspy,wang2024recon}. 
+此外，多智能体社会模拟与开放式互动环境也被用来评估与训练语言代理的“社会智能”，典型代表包括 Generative Agents 与 Sotopia 系列 \cite{park2023generativeagents,zhou2024sotopia,wang2024sotopiapi}。
+
+在 benchmark 方向，通用型 LLM-as-agent 评测强调跨环境的交互式任务完成与工具使用能力，例如 AgentBench、WebArena、以及面向游戏交互与协调能力的基础设施 \cite{liu2023agentbench,zhou2023webarena,gong2023mindagent}. 
+更贴近“博弈/策略决策”的基准则直接把博弈论任务集成到统一评测协议中：GAMA($\gamma$)-Bench 用可调参数的多玩家多轮博弈场景评估模型的 gaming ability \cite{huang2025gama}；GameEval 通过目标驱动的对话式游戏评估合作与对抗情境下的问题求解 \cite{qiao2023gameeval}；GameBench 以跨域文本游戏集合度量战略推理能力 \cite{costarelli2024gamebench}；SmartPlay 将多类游戏拆解到能力维度以分析推理、规划与学习 \cite{wu2024smartplay}；MAgIC 与 LLM-Coordination 则分别从多智能体能力谱系与纯协调博弈角度构建评测框架 \cite{xu2024magic,agashe2023llmco,llmcoordination2024}. 
+这些工作共同推动了“多轮交互、参数可变、跨环境比较”的评测范式 \cite{liu2023agentbench,huang2025gama,wu2024smartplay,costarelli2024gamebench}。与此互补，近期也出现了面向“经济决策/市场机制”语境下的模型评测与多主体仿真研究，为将 LLM 行为嵌入可计算经济环境提供了直接动机 \cite{li2026inequalitydatamarket}。
+
+总体而言，现有研究为 LLM 的博弈行为测量与交互式基准构建提供了丰富工具箱，但在“将评测对象嵌入可验证结构方程定义的可计算经济机制，并对照求解器基准开展机制一致性诊断”的方向仍有进一步拓展空间 \cite{acemoglu2022toomuchdata,rhodes2024privacychoice,bergemann2022socialdata,huang2025gama}.
+
+
+
+
+
+
+
+\section{相关研究}
+\label{sec:related_work}
+
+\subsection{隐私经济学与数据市场}
+\label{subsec:rw_privacy_econ}
+
+隐私经济学的基础脉络系统讨论了个人信息保护、企业的利用方式、以及“通知—同意”框架下消费者决策偏差等问题，为理解数据交易与监管提供了总览性的理论与实证地图。\cite{acquisti2016economicsprivacy}。
+其中一个关键共识是：个体隐私决策往往并非只影响自身，还可能通过信息传播、推断与企业反应机制影响他人，从而形成外部性并带来效率与分配后果 \cite{acquisti2016economicsprivacy}。
+
+在数据市场建模方面，Acemoglu 等在“推断外部性”框架下指出：当分享行为会泄露他人信息时，数据价格会被外部性压低，导致“过多数据共享”；更进一步，平台竞争并不必然修正这一问题，甚至可能降低福利，并提出“中介化数据共享”以改善效率 \cite{acemoglu2022toomuchdata}。在更一般的“社会数据”视角下，Bergemann、Bonatti 与 Gan 将个体数据的相关性显式纳入数据中介模型。\cite{bergemann2022socialdata}。隐私选择外部性的另一条重要工作来自 Rhodes 与 Zhou。他们提出一个统一框架来研究“个性化—隐私选择”，并强调由于企业在产品市场对数据的使用与反应，数据分享者往往对其他消费者施加负外部性，导致相对消费者最优的“过度共享”；并且更激烈竞争或更好数据安全可能通过诱导更多分享而降低消费者剩余 \cite{rhodes2024privacychoice}。
+
+
+除了外部性导致的市场失灵，另一条经典线索把隐私视为可补偿的“成本/商品”，研究如何通过机制设计在获取统计准确性与补偿隐私损失之间实现可行交易。
+Ghosh 与 Roth 在差分隐私视角下研究“卖隐私”的拍卖/机制设计问题，给出可激励相容的采购机制并讨论相关性与估值内生性带来的困难，代表了“隐私可交易性 + 机制可计算”的早期范式 \cite{ghosh2015sellingprivacy}.
+这条研究线与外部性模型互补：前者强调机制规则如何购买信息，后者强调信息相关性如何改变价格与福利结构。
+两者共同表明：若希望“评价一个智能体是否理解机制”，应尽量把环境设计为可求解、可复现、且关键约束（参与约束、价格—参与映射、匿名化选择等）可被诊断 \cite{acemoglu2022toomuchdata}。
+
+\subsection{LLM 作为博弈主体：行为证据、稳定性问题与多轮交互需求}
+\label{subsec:rw_llm_agents}
+
+近两年大量研究开始把 LLM 放入博弈论与行为博弈场景中，直接观察其合作、协调、背叛与策略演化。在重复博弈中，Akata 等让多种 LLM 参与有限次重复的 $2\times 2$ 博弈并与人类对照，发现模型在部分“自利型”博弈上表现突出，但其策略对交互协议与提示设定高度敏感，行为稳定性并不总是可靠 \cite{akata2025repeatedgames}. 在更复杂的语言协商博弈中，Bakhtin 等提出的 \textsc{Cicero} 将语言模型与规划/搜索结合，在七人谈判博弈 \textit{Diplomacy} 中达到接近人类水平，说明 ``LLM(+planning)'' 能在多轮谈判与联盟形成中发挥作用 \cite{bakhtin2022diplomacy}. 但后续分析也指出，类似系统的胜率并不必然意味着其沟通与战略能力可稳健泛化，且可能出现与人类预期不一致的“合作/背叛”模式，从而凸显需要更严格的行为诊断与评测协议 \cite{wongkamjan2024cicero}. 进一步地，从人类实验角度，Dvorak 等发现当被试知道对手由 ChatGPT 代决策时，其公平、信任与合作水平会下降，提示 ``LLM 参与博弈'' 本身会改变人类侧的行为基准与互动结构 \cite{dvorak2025adversereactions}。此外，越来越多工作把经典社会偏好实验（独裁者、最后通牒、信任/投资、公共品等）系统化为 LLM 行为测量工具，展示了模型在不同制度（惩罚/激励/信息披露）下可能出现“搭便车/规范执行”等异质行为 \cite{xie2025categorize,piedrahita2025freeriders}. 这些证据共同强调：要评估 LLM 的“机制理解”，不能只看单轮结果，而必须依赖多轮交互、信息结构变化与稳健性压力测试。
+
+在 benchmark 方向，一类工作将 LLM 视为交互式智能体，在多环境、多轮任务中评估其决策与工具使用能力（例如 AgentBench）\cite{liu2023agentbench}。更贴近博弈决策的基准则直接在多主体博弈环境中对 LLM 的“对抗/策略”能力进行量化：Huang 等提出 GAMA($\gamma$)-Bench，通过多类经典博弈、可调参数与动态计分机制评估模型在多玩家、多动作、多轮交互下的 gaming ability，并强调固定题目易产生泄漏，需用可变设置检验鲁棒性 \cite{huang2025gama}. 类似地，GameBench 以跨域游戏集合衡量战略推理能力，并显示即便强模型在部分博弈中也可能劣于随机策略，从而提示“策略推理”仍是瓶颈 \cite{costarelli2024gamebench}. 这些工作提供了多轮交互、参数可变、鲁棒性评估等方法学工具箱 \cite{liu2023agentbench,huang2025gama,costarelli2024gamebench}，但其 ground truth 往往锚定在得分/胜率/均衡标签等\emph{结果层}对象，较少把评测对象嵌入可验证结构方程所定义的\emph{可计算经济机制}，因此难以回答经济学文献真正关心的机制性问题（例如隐私外部性下为何出现过度共享、为何竞争/安全改善可能反而伤害消费者、以及平台/中介在不同信息结构下为何选择匿名化或个性化）\cite{acemoglu2022toomuchdata,rhodes2024privacychoice,bergemann2022socialdata}. 
+
+本文的贡献正是面向这一缺口：我们以隐私外部性数据市场为机制对象，在每个场景中同时实现求解器支撑的理性基准与 LLM-as-agent，并用结构化诊断指标（终局偏差 + 策略结构一致性 + 信息结构切换下的稳健性）区分“猜对结果”与“理解机制”，从而将 LLM 决策评测从 outcome-level 推进到 mechanism-level \cite{acemoglu2022toomuchdata,rhodes2024privacychoice,bergemann2022socialdata,huang2025gama}.
+
+111111111111111
+
+\subsection{LLM 作为博弈主体：行为证据、稳定性问题与多轮交互需求}
+\label{subsec:rw_llm_agents}
+
+近两年大量研究开始把 LLM 放入博弈论与行为博弈场景中，观察其合作、协调与策略演化。例如，Akata 等用行为博弈方法让多个 LLM 参与有限次重复的 $2\times 2$ 博弈，并比较模型与人类策略表现，展示了 LLM 在某些自利型重复博弈上表现突出，同时也揭示了交互设定对行为的重要影响 \cite{akata2025repeatedgames}.
+
+而在 benchmark 方向，一类工作将 LLM 视为代理智能体，用博弈论环境直接评测 LLM 的“决策/对抗/策略”能力。Huang 等提出 GAMA($\gamma$)-Bench，通过多个经典博弈场景、可调参数与动态计分机制，评估模型在多玩家、多动作、多轮交互下的 gaming ability \cite{huang2025gama}.
+不过，上述通用 agent benchmark 与通用博弈 benchmark 仍存在一个与我们问题直接相关的空白：它们往往把 ground truth 锚定为“任务完成/得分/均衡结果”\cite{rhodes2024privacychoice}，较少把评测对象代入到经济学的博弈场景中，探究经济学原理与机制的作用是否会影响到LLM的行动，从而局限在为LLM在固定规则下的选择打分.这使得这些 benchmark 很难回答经济学中有关隐私外部性的文献最关心的机制性问题：为什么会过度共享、为什么竞争/安全改善可能反而伤害消费者、以及平台/中介在不同信息结构下为何选择匿名化或个性化 \cite{acemoglu2022toomuchdata,rhodes2024privacychoice,bergemann2022socialdata}。
+LLM 决策与多智能体 benchmark 文献则提供了评测交互能力的工具箱（多轮交互、可调参数、跨环境评测、鲁棒性与泄漏风险控制）\cite{liu2023agentbench,huang2025gama}.
+但现有工作尚缺乏一个把两者严格耦合的评测框架：在“可计算的经济机制”中同时实现理论求解器（rational baseline）与 LLM-as-agent，并用结构化诊断指标区分“猜对结果”与“理解机制”。
+
+本文的贡献正是面向这一缺口：以隐私外部性数据市场为机制对象，采用可求解环境与可诊断指标体系，把 LLM 的策略偏差映射回外部性链条与约束结构，从而支持对福利偏差与不平等效应的机制解释，而不仅是结果统计 \cite{acemoglu2022toomuchdata,rhodes2024privacychoice,bergemann2022socialdata,huang2025gama}.
+
+
+
+\section{conclusion}
+
+
+
+\bibliographystyle{plainnat}   % 或 ACM-Reference-Format
+\bibliography{references}     % references.bib
+
+\end{document}
