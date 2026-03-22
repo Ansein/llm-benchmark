@@ -29,7 +29,7 @@ Your job is to read a structured paper parse and extract:
 2. Key parameters and their economic meaning
 3. Three hypotheses (H1, H2, H3) that capture the paper's core testable claims
 
-For Scenario B ("Too Much Data" by Acemoglu et al. 2022), the hypotheses are:
+For Scenario B ("Too Much Data" by Acemoglu et al. 2022), the hypotheses are usually:
 - H1: comparative_static — rho increases → equilibrium share_rate decreases
 - H2: knowledge_dependent — more externality context in prompt → better mechanism understanding
 - H3: dynamic_convergence — LLM converges to BNE through fictitious play belief updating
@@ -44,11 +44,12 @@ Before finalizing paradigm.yaml, you MUST:
 3. Only write_paradigm once all hypotheses are confirmed testable
 
 Use the available tools to query the Paper Agent for clarification and to write the final paradigm.
+Your final action MUST be calling write_paradigm.
 """
 
 
 class ScenarioExtractorAgent:
-    def __init__(self, model: str = "claude-opus-4-6"):
+    def __init__(self, model: str | None = None):
         self.client = AgentClient(model=model)
         self._paper_parse: dict = {}
 
@@ -62,6 +63,12 @@ class ScenarioExtractorAgent:
         Returns the paradigm dict.
         """
         logger.info(f"[{AGENT_NAME}] Starting extraction")
+        deadline = time.time() + 300
+        while not fio.file_exists("paper_parse.json"):
+            if time.time() > deadline:
+                raise TimeoutError("paper_parse.json not available after 5 minutes")
+            logger.info(f"[{AGENT_NAME}] Waiting for paper_parse.json...")
+            time.sleep(2)
         self._paper_parse = fio.read_json("paper_parse.json")
 
         tools = self._build_tools()
@@ -79,19 +86,45 @@ class ScenarioExtractorAgent:
             }
         ]
 
+        logger.info(f"[{AGENT_NAME}] LLM extraction attempt 1")
         self.client.run(
             system=SYSTEM_PROMPT,
             messages=messages,
             tools=tools,
             tool_executor=self._execute_tool,
+            temperature=0.2,
         )
+
+        if not fio.file_exists("paradigm.yaml"):
+            logger.warning(f"[{AGENT_NAME}] paradigm.yaml missing after attempt 1; running strict attempt 2")
+            self.client.run(
+                system=SYSTEM_PROMPT,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": (
+                            "Strict mode: your response must end by calling write_paradigm exactly once. "
+                            "If you need clarification, call query_paper_agent first; then call "
+                            "notify_solver_builder and wait for confirmation; finally call write_paradigm."
+                        ),
+                    }
+                ],
+                tools=tools,
+                tool_executor=self._execute_tool,
+                temperature=0.1,
+                max_iterations=20,
+            )
 
         # Fallback: if Claude didn't write paradigm.yaml, write a default one
         if not fio.file_exists("paradigm.yaml"):
+            logger.error(f"[{AGENT_NAME}] LLM did not call write_paradigm; using fallback paradigm")
             self._write_default_paradigm()
 
         result = fio.read_yaml("paradigm.yaml")
-        logger.info(f"[{AGENT_NAME}] paradigm.yaml written")
+        if result.get("_warning"):
+            logger.warning(f"[{AGENT_NAME}] paradigm.yaml written via fallback path")
+        else:
+            logger.info(f"[{AGENT_NAME}] paradigm.yaml written via LLM tool call")
         return result
 
     # ------------------------------------------------------------------ #
@@ -212,17 +245,19 @@ class ScenarioExtractorAgent:
             return self._wait_for_reply(msg_id, timeout=120)
 
         if name == "notify_solver_builder":
-            fio.send_message(
+            msg_id = fio.send_message(
                 from_agent=AGENT_NAME,
                 to_agent="solver_builder",
                 msg_type="notify",
                 content=inputs["hypotheses_summary"],
             )
-            return "Notification sent to Solver Builder."
+            logger.info(f"[{AGENT_NAME}] tool notify_solver_builder called")
+            return self._wait_for_reply(msg_id, timeout=180)
 
         if name == "write_paradigm":
             fio.write_yaml("paradigm.yaml", inputs)
             self.sign_off()
+            logger.info(f"[{AGENT_NAME}] tool write_paradigm called and signoff written")
             return "paradigm.yaml written and Extractor signed off."
 
         return f"Unknown tool: {name}"

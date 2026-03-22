@@ -1,90 +1,80 @@
-"""
-Scenario B Solver — Inference Externality (Too Much Data)
-Auto-generated fallback by SolverBuilderAgent.
-"""
-import itertools
+import math
+from typing import Dict, Any, List
+
 import numpy as np
 
 
-def solve(N: int, rho: float, v_lo: float, v_hi: float,
-          alpha: float = 1.0, seed: int = 42) -> dict:
-    """
-    Compute the platform-optimal sharing set and equilibrium metrics.
-
-    Parameters
-    ----------
-    N       : number of users
-    rho     : inter-user type correlation
-    v_lo    : lower bound of privacy preference uniform distribution
-    v_hi    : upper bound of privacy preference uniform distribution
-    alpha   : platform's marginal value of information
-    seed    : random seed for reproducibility
-
-    Returns
-    -------
-    dict with keys: sharing_set, share_rate, platform_profit,
-                   social_welfare, total_leakage
-    """
-    rng = np.random.default_rng(seed)
-    v_values = rng.uniform(v_lo, v_hi, N)   # privacy costs
-
-    # Prior covariance matrix: rho off-diagonal, 1 on diagonal
-    Sigma = np.full((N, N), rho)
+def _prior_cov(N: int, rho: float) -> np.ndarray:
+    Sigma = np.full((N, N), float(rho), dtype=float)
     np.fill_diagonal(Sigma, 1.0)
-
-    best_profit = -np.inf
-    best_set = []
-
-    for size in range(N + 1):
-        for S in itertools.combinations(range(N), size):
-            S = list(S)
-            profit, leakage = _platform_profit(S, Sigma, v_values, alpha, N)
-            if profit > best_profit:
-                best_profit = profit
-                best_set = S
-                best_leakage = leakage
-
-    # Compute welfare metrics for the optimal set
-    share_rate = len(best_set) / N
-    # Social welfare = platform profit + sum of (v_i - payment) for sharers
-    payments = v_values[best_set] if best_set else np.array([])
-    consumer_benefit = float(np.sum(payments))  # payment equals their cost
-    social_welfare = best_profit + consumer_benefit
-
-    return {
-        "sharing_set": best_set,
-        "share_rate": share_rate,
-        "platform_profit": float(best_profit),
-        "social_welfare": float(social_welfare),
-        "total_leakage": float(best_leakage),
-    }
+    return Sigma
 
 
-def _platform_profit(S: list, Sigma: np.ndarray,
-                      v_values: np.ndarray, alpha: float, N: int):
-    """Compute platform profit for sharing set S."""
-    if not S:
-        return 0.0, 0.0
+def _posterior_cov(Sigma: np.ndarray, S: List[int]) -> np.ndarray:
+    N = Sigma.shape[0]
+    if len(S) == 0:
+        return Sigma.copy()
+    idx = np.array(S, dtype=int)
+    Sigma_SS = Sigma[np.ix_(idx, idx)]
+    inv_SS = np.linalg.pinv(Sigma_SS)
+    return Sigma - Sigma[:, idx] @ inv_SS @ Sigma[idx, :]
 
-    S_arr = np.array(S)
-    Sigma_S = Sigma[np.ix_(S_arr, S_arr)]
-    try:
-        Sigma_S_inv = np.linalg.inv(Sigma_S)
-    except np.linalg.LinAlgError:
-        return -np.inf, 0.0
 
-    log_det_prior = np.log(np.linalg.det(Sigma))
+def _total_leakage(Sigma: np.ndarray, Sigma_post: np.ndarray) -> float:
+    leak = 0.0
+    for i in range(Sigma.shape[0]):
+        prior_var = max(float(Sigma[i, i]), 1e-15)
+        post_var = max(float(Sigma_post[i, i]), 1e-15)
+        leak += 0.5 * (math.log(prior_var) - math.log(post_var))
+    return float(leak)
 
-    total_leakage = 0.0
-    for i in range(N):
-        # Posterior variance for user i given S
-        sigma_iS = Sigma[i, S_arr]
-        sigma_post_i = Sigma[i, i] - sigma_iS @ Sigma_S_inv @ sigma_iS
-        sigma_post_i = max(sigma_post_i, 1e-12)
-        leakage_i = 0.5 * (np.log(Sigma[i, i]) - np.log(sigma_post_i))
-        total_leakage += leakage_i
 
-    # Platform pays each sharer their privacy cost v_i
-    total_payment = float(np.sum(v_values[S_arr]))
-    profit = alpha * total_leakage - total_payment
-    return profit, total_leakage
+def solve(N: int, rho: float, v_lo: float, v_hi: float, alpha: float, seed: int = 0) -> Dict[str, Any]:
+    rng = np.random.default_rng(seed)
+    if N <= 0:
+        return {
+            "sharing_set": [],
+            "share_rate": 0.0,
+            "platform_profit": 0.0,
+            "social_welfare": 0.0,
+            "total_leakage": 0.0,
+        }
+
+    if N == 1:
+        v = np.array([0.5 * (v_lo + v_hi)], dtype=float)
+    else:
+        v = np.array([v_lo] * (N // 2) + [v_hi] * (N - N // 2), dtype=float)
+        rng.shuffle(v)
+
+    Sigma = _prior_cov(N, rho)
+    if abs(rho) >= 1.0:
+        Sigma = Sigma + 1e-10 * np.eye(N)
+
+    best = None
+    for mask in range(1 << N):
+        S = [i for i in range(N) if (mask >> i) & 1]
+        Sigma_post = _posterior_cov(Sigma, S)
+        leakage = _total_leakage(Sigma, Sigma_post)
+        pay = float(np.sum(v[S]))
+        platform_profit = alpha * leakage - pay
+        social_welfare = leakage - pay
+        cand = {
+            "sharing_set": S,
+            "share_rate": len(S) / N,
+            "platform_profit": platform_profit,
+            "social_welfare": social_welfare,
+            "total_leakage": leakage,
+        }
+        if best is None or cand["platform_profit"] > best["platform_profit"] + 1e-12 or (
+            abs(cand["platform_profit"] - best["platform_profit"]) <= 1e-12 and len(S) < len(best["sharing_set"])
+        ):
+            best = cand
+    return best
+
+
+# Backwards compatibility
+solve_scenario_b = solve
+
+
+if __name__ == "__main__":
+    print(solve(4, 0.3, 0.2, 0.8, 1.0, 0))

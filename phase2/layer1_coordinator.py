@@ -1,10 +1,10 @@
 """
-Layer 1 Coordinator — Plan A
+Layer 1 Coordinator — interactive network mode
 
 Event loop that:
-1. Starts Paper Agent → paper_parse.json
-2. Starts Scenario Extractor + Solver Builder in parallel (pseudo-concurrent via polling)
-3. Routes inter-agent messages
+1. Starts Paper Agent parse
+2. Starts Scenario Extractor + Solver Builder concurrently
+3. Continuously routes messages for all three agents
 4. Detects Gate 1 readiness and prompts human review
 
 Usage:
@@ -136,7 +136,7 @@ def _print_gate1_summary() -> None:
 # Main coordinator loop
 # ---------------------------------------------------------------------------
 
-def run(pdf_path: Path, model: str = "claude-opus-4-6") -> None:
+def run(pdf_path: Path, model: str | None = None) -> None:
     """
     Run the Layer 1 coordination loop.
 
@@ -162,22 +162,26 @@ def run(pdf_path: Path, model: str = "claude-opus-4-6") -> None:
     extractor = ScenarioExtractorAgent(model=model)
     solver_builder = SolverBuilderAgent(model=model)
 
-    # ── Phase A: Paper Agent ─────────────────────────────────────────
-    logger.info("=== Phase A: Paper Agent parsing ===")
-    paper_agent.parse_paper(dest)
+    # ── Phase A/B: fully interactive concurrent run ──────────────────
+    logger.info("=== Phase A/B: Paper <-> Extractor <-> Solver interactive run ===")
 
-    # Paper Agent doesn't have a separate sign-off file — write one now
-    fio.write_json("paper_signoff.json", {
-        "agent": PAPER,
-        "signed": True,
-        "timestamp": time.time(),
-    })
-    logger.info("Paper Agent complete, paper_signoff.json written")
+    paper_done = threading.Event()
+    paper_error = [None]
 
-    # ── Phase B: Extractor first, then Solver Builder ────────────────
-    # Sequential to avoid rate-limit contention on shared API endpoint.
-    # Paper Agent stays active throughout to answer queries from both.
-    logger.info("=== Phase B-1: Scenario Extractor ===")
+    def run_paper():
+        try:
+            paper_agent.parse_paper(dest)
+            fio.write_json("paper_signoff.json", {
+                "agent": PAPER,
+                "signed": True,
+                "timestamp": time.time(),
+            })
+            logger.info("Paper Agent complete, paper_signoff.json written")
+        except Exception as e:
+            paper_error[0] = e
+            logger.error(f"Paper Agent failed: {e}")
+        finally:
+            paper_done.set()
 
     extractor_done = threading.Event()
     extractor_error = [None]
@@ -191,19 +195,6 @@ def run(pdf_path: Path, model: str = "claude-opus-4-6") -> None:
         finally:
             extractor_done.set()
 
-    t_extractor = threading.Thread(target=run_extractor, daemon=True)
-    t_extractor.start()
-
-    while not extractor_done.is_set():
-        paper_agent.handle_pending_messages()
-        time.sleep(POLL_INTERVAL)
-    paper_agent.handle_pending_messages()
-
-    if extractor_error[0]:
-        logger.error(f"Extractor error: {extractor_error[0]}")
-
-    logger.info("=== Phase B-2: Solver Builder ===")
-
     solver_done = threading.Event()
     solver_error = [None]
 
@@ -216,14 +207,29 @@ def run(pdf_path: Path, model: str = "claude-opus-4-6") -> None:
         finally:
             solver_done.set()
 
+    t_paper = threading.Thread(target=run_paper, daemon=True)
+    t_extractor = threading.Thread(target=run_extractor, daemon=True)
     t_solver = threading.Thread(target=run_solver, daemon=True)
+    t_paper.start()
+    t_extractor.start()
     t_solver.start()
 
-    while not solver_done.is_set():
+    while not (paper_done.is_set() and extractor_done.is_set() and solver_done.is_set()):
+        # Interactive message routing among all agents.
         paper_agent.handle_pending_messages()
+        extractor.handle_pending_messages()
+        solver_builder.handle_pending_messages()
         time.sleep(POLL_INTERVAL)
-    paper_agent.handle_pending_messages()
 
+    # Final drain after worker threads complete.
+    paper_agent.handle_pending_messages()
+    extractor.handle_pending_messages()
+    solver_builder.handle_pending_messages()
+
+    if paper_error[0]:
+        logger.error(f"Paper Agent error: {paper_error[0]}")
+    if extractor_error[0]:
+        logger.error(f"Extractor error: {extractor_error[0]}")
     if solver_error[0]:
         logger.error(f"Solver Builder error: {solver_error[0]}")
 
@@ -265,8 +271,8 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--model",
-        default="claude-opus-4-6",
-        help="Claude model to use for all agents",
+        default=None,
+        help="Override model for all L1 agents (default: use phase2/config.json)",
     )
     args = parser.parse_args()
 

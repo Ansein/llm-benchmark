@@ -1,0 +1,27 @@
+{
+  "must_keep_prompt_versions": [
+    "b.v1",
+    "b.v2",
+    "b.v3",
+    "b.v4",
+    "b.v5",
+    "b.v6"
+  ],
+  "forbidden_changes": [
+    "change output JSON schema",
+    "modify payoff definition",
+    "modify solver or ground-truth logic"
+  ],
+  "required_ablation": {
+    "baseline_versions": [
+      "b.v4",
+      "b.v6"
+    ],
+    "new_version_slot": "b.v7"
+  },
+  "evaluation_guardrails": {
+    "same_models_as_layer3": true,
+    "same_test_type": "PromptLadderTest"
+  },
+  "timestamp": 1774138442.2238245
+}

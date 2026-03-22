@@ -41,7 +41,7 @@ Always respond in JSON format when asked to produce structured output.
 
 
 class PaperAgent:
-    def __init__(self, model: str = "claude-opus-4-6"):
+    def __init__(self, model: str | None = None):
         self.client = AgentClient(model=model)
         self._full_text: str = ""
         self._sections: dict = {}
@@ -57,9 +57,16 @@ class PaperAgent:
         """
         logger.info(f"[{AGENT_NAME}] Parsing {pdf_path}")
 
-        # Step 1: raw extraction
-        self._full_text = pdf.extract_full_text(pdf_path)
-        self._sections = pdf.extract_sections(pdf_path)
+        # Step 1: raw extraction with quality report (text + OCR fallback)
+        self._full_text, quality_report = pdf.extract_full_text_with_report(pdf_path)
+        self._sections = pdf.extract_sections_from_text(self._full_text)
+        fio.write_json("input/paper_quality_report.json", quality_report)
+        summary = quality_report.get("summary", {})
+        logger.info(
+            f"[{AGENT_NAME}] PDF quality: pages={summary.get('total_pages', 0)}, "
+            f"ocr_fallback_pages={summary.get('ocr_fallback_pages', 0)}, "
+            f"low_quality_pages={summary.get('low_quality_pages', 0)}"
+        )
 
         # Step 2: ask Claude to structure it — use key sections, not raw truncated text
         key_sections = ["abstract", "model_setup", "equilibrium_definition",

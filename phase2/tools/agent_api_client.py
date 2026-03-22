@@ -14,7 +14,7 @@ Configuration via phase2/config.json:
         "agent_llm": {
             "provider": "anthropic",
             "model": "claude-opus-4-6",
-            "api_key": "sk-ant-...",
+            "api_keys": ["sk-ant-1", "sk-ant-2"],
             "base_url": null
         }
     }
@@ -46,7 +46,11 @@ def load_agent_llm_config() -> dict:
     if _CONFIG_PATH.exists():
         with _CONFIG_PATH.open("r", encoding="utf-8") as f:
             data = json.load(f)
-        return data.get("agent_llm", {})
+        cfg = data.get("agent_llm", {})
+        # Default request timeout keeps calls from hanging indefinitely
+        # and enables deterministic retry behavior on unstable links.
+        cfg.setdefault("timeout", 120)
+        return cfg
 
     # Env-variable fallback
     provider = os.environ.get("AGENT_LLM_PROVIDER", "anthropic")
@@ -55,14 +59,25 @@ def load_agent_llm_config() -> dict:
             "provider": "anthropic",
             "model": os.environ.get("AGENT_LLM_MODEL", "claude-opus-4-6"),
             "api_key": os.environ.get("ANTHROPIC_API_KEY"),
+            "api_keys": _parse_env_api_keys("ANTHROPIC_API_KEYS"),
+            "timeout": int(os.environ.get("AGENT_LLM_TIMEOUT", "120")),
         }
     else:
         return {
             "provider": "openai",
             "model": os.environ.get("AGENT_LLM_MODEL", "gpt-4o"),
             "api_key": os.environ.get("OPENAI_API_KEY"),
+            "api_keys": _parse_env_api_keys("OPENAI_API_KEYS"),
             "base_url": os.environ.get("AGENT_LLM_BASE_URL"),
+            "timeout": int(os.environ.get("AGENT_LLM_TIMEOUT", "120")),
         }
+
+
+def _parse_env_api_keys(env_name: str) -> list[str]:
+    raw = os.environ.get(env_name, "")
+    if not raw.strip():
+        return []
+    return [k.strip() for k in raw.split(",") if k.strip()]
 
 
 # ---------------------------------------------------------------------------
@@ -134,31 +149,70 @@ class AgentClient:
         provider: str | None = None,
         model: str | None = None,
         api_key: str | None = None,
+        api_keys: list[str] | None = None,
         base_url: str | None = None,
+        timeout: float | None = None,
     ):
         cfg = load_agent_llm_config()
 
         self.provider = (provider or cfg.get("provider", "anthropic")).lower()
         self.model = model or cfg.get("model", "claude-opus-4-6")
-        self.api_key = api_key or cfg.get("api_key")
         self.base_url = base_url or cfg.get("base_url")
+        self.timeout = timeout if timeout is not None else float(cfg.get("timeout", 120))
 
-        self._client = self._build_client()
-        logger.info(f"AgentClient: provider={self.provider}, model={self.model}")
+        cfg_keys = cfg.get("api_keys")
+        key_pool = api_keys if api_keys is not None else cfg_keys
+        self.api_keys = self._normalize_api_keys(primary=api_key or cfg.get("api_key"), pool=key_pool)
+        self._clients = [self._build_client(key) for key in self.api_keys]
+        self._client_idx = 0
+        logger.info(
+            f"AgentClient: provider={self.provider}, model={self.model}, key_pool_size={len(self.api_keys)}, timeout={self.timeout}s"
+        )
 
-    def _build_client(self) -> Any:
+    @staticmethod
+    def _normalize_api_keys(primary: str | None, pool: Any) -> list[str | None]:
+        keys: list[str | None] = []
+        seen = set()
+        if primary:
+            keys.append(primary)
+            seen.add(primary)
+        if isinstance(pool, list):
+            for k in pool:
+                if isinstance(k, str) and k and k not in seen:
+                    keys.append(k)
+                    seen.add(k)
+        if not keys:
+            return [None]
+        return keys
+
+    def _build_client(self, api_key: str | None) -> Any:
         if self.provider == "anthropic":
             import anthropic
-            return anthropic.Anthropic(api_key=self.api_key)
+            return anthropic.Anthropic(api_key=api_key, timeout=self.timeout)
         else:
             # openai or any compatible endpoint
             import openai
             kwargs: dict[str, Any] = {}
-            if self.api_key:
-                kwargs["api_key"] = self.api_key
+            if api_key:
+                kwargs["api_key"] = api_key
             if self.base_url:
                 kwargs["base_url"] = self.base_url
+            kwargs["timeout"] = self.timeout
             return openai.OpenAI(**kwargs)
+
+    @property
+    def _client(self) -> Any:
+        return self._clients[self._client_idx]
+
+    def _rotate_client(self, reason: str) -> bool:
+        if len(self._clients) <= 1:
+            return False
+        prev = self._client_idx
+        self._client_idx = (self._client_idx + 1) % len(self._clients)
+        logger.warning(
+            f"[{self.provider}] rotating API key due to {reason}: slot {prev + 1}/{len(self._clients)} -> {self._client_idx + 1}/{len(self._clients)}"
+        )
+        return True
 
     # ------------------------------------------------------------------ #
     # Main interface                                                      #
@@ -247,11 +301,24 @@ class AgentClient:
 
     def _call_with_retry_anthropic(self, kwargs, max_retries=3):
         import anthropic as _anthropic
+        rl_attempt = 0
         for attempt in range(max_retries):
             try:
                 return self._client.messages.create(**kwargs)
+            except (_anthropic.APIConnectionError, _anthropic.APITimeoutError) as e:
+                if attempt < max_retries - 1:
+                    wait = min(2 * (2 ** attempt), 20)
+                    logger.warning(
+                        f"[anthropic] connection/timeout error: {type(e).__name__}; retrying in {wait}s"
+                    )
+                    time.sleep(wait)
+                    continue
+                raise
             except _anthropic.RateLimitError:
-                wait = 30 * (attempt + 1)
+                rl_attempt += 1
+                if self._rotate_client("rate_limit"):
+                    continue
+                wait = min(10 * (2 ** (rl_attempt - 1)), 120)
                 logger.warning(f"[anthropic] rate limited, waiting {wait}s")
                 time.sleep(wait)
             except _anthropic.APIStatusError as e:
@@ -349,12 +416,27 @@ class AgentClient:
         for attempt in range(max_retries):
             try:
                 return self._client.chat.completions.create(**kwargs)
+            except (_openai.APIConnectionError, _openai.APITimeoutError) as e:
+                if attempt < max_retries - 1:
+                    # Connection failures are usually transient; rotate key/client
+                    # and back off quickly to improve recovery in batch agent runs.
+                    self._rotate_client("connection_error")
+                    wait = min(2 * (2 ** attempt), 20)
+                    logger.warning(
+                        f"[openai] connection/timeout error: {type(e).__name__}; retrying in {wait}s "
+                        f"(attempt {attempt + 1}/{max_retries})"
+                    )
+                    time.sleep(wait)
+                    continue
+                raise
             except _openai.RateLimitError:
                 rl_attempt += 1
                 if rl_attempt >= rl_retries:
                     raise
-                wait = 30 * (2 ** (rl_attempt - 1))
-                wait = min(wait, 300)
+                if self._rotate_client("rate_limit"):
+                    continue
+                wait = 10 * (2 ** (rl_attempt - 1))
+                wait = min(wait, 120)
                 logger.warning(f"[openai] rate limited, waiting {wait}s (attempt {rl_attempt}/{rl_retries})")
                 time.sleep(wait)
             except _openai.APIStatusError as e:

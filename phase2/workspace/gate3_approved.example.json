@@ -1,0 +1,12 @@
+{
+  "approved": true,
+  "reviewer_notes": "提示词改动针对根因且不破坏跨版本可比性；批准进入复测。",
+  "reviewer": "your_name",
+  "checklist_result": {
+    "root_cause_match": true,
+    "comparability_guardrails_ok": true,
+    "rollback_plan_defined": true,
+    "open_issues": []
+  },
+  "timestamp": 1773980000.0
+}

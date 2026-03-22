@@ -1,0 +1,13 @@
+{
+  "approved": true,
+  "reviewer_notes": "实验设计覆盖H1/H2/H3，预算可接受；同意进入Layer 3。",
+  "reviewer": "your_name",
+  "checklist_result": {
+    "market_design_faithful_to_paper": true,
+    "hypothesis_test_mapping_ok": true,
+    "budget_runtime_ok": true,
+    "reproducibility_policy_ok": true,
+    "open_issues": []
+  },
+  "timestamp": 1773980000.0
+}

@@ -1,41 +1,6 @@
-scenario_id: scenario_b
-paper: Acemoglu et al. 2022 - Too Much Data
-game_type: static_bayesian_game
-players:
-- role: user
-  count: N
-  action_space:
-  - share
-  - not_share
-- role: platform
-  count: 1
-  action_space: continuous_price_vector
-equilibrium_concept: Nash_BNE
-key_parameters:
-- name: rho
-  description: inter-user type correlation
-  range:
-  - 0
-  - 1
-- name: v
-  description: privacy preference value
-  range: continuous
-hypotheses:
-- id: H1
-  statement: rho increases → equilibrium share_rate decreases
-  nature: comparative_static
-  preferred_test: SensitivityTest
-  parameters_to_vary:
-  - rho
-  success_criterion: EAS < 0 for all rho grid points
-- id: H2
-  statement: More externality context in prompt → better mechanism understanding
-  nature: knowledge_dependent
-  preferred_test: PromptLadderTest
-  success_criterion: Jaccard monotone increasing v1→v6
-- id: H3
-  statement: LLM converges to BNE through fictitious play belief updating
-  nature: dynamic_convergence
-  preferred_test: FictitiousPlayTest
-  success_criterion: strategy_delta < 0.01 within 50 rounds
-_warning: Fallback paradigm — Extractor Agent did not call write_paradigm
+scenario_id: B
+equilibrium_concept: Strategic market equilibrium over user sharing decisions and
+  platform prices; the excerpt does not explicitly name a Bayesian Nash, Stackelberg,
+  or pure-strategy equilibrium.
+game_type: data_market_with_privacy_externalities
+paper: Data Markets and Privacy Externalities (Acemoglu et al., 2022)

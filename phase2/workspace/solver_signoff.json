@@ -7,8 +7,8 @@
     "test2": true,
     "test2_detail": "rho=0.3 share=1.000, rho=0.9 share=1.000",
     "test3": true,
-    "test3_detail": "N=8,rho=0.6: share=1.000, profit=103.277",
+    "test3_detail": "N=8,rho=0.6: share=1.000, profit=132.155",
     "all_passed": true
   },
-  "timestamp": 1773509037.4558334
+  "timestamp": 1774138153.9397728
 }

@@ -1,0 +1,53 @@
+{
+  "version": "phase2.layer2.v1",
+  "scenario_id": "B",
+  "paper": "Data Markets and Privacy Externalities (Acemoglu et al., 2022)",
+  "created_at": 1774138265.6837478,
+  "created_by": "market_designer",
+  "models": [
+    "gpt-5.2",
+    "gpt-5.1",
+    "gpt-5.1-2025-11-13"
+  ],
+  "global_limits": {
+    "max_total_calls": 2500,
+    "max_runtime_minutes": 180,
+    "seed": 42,
+    "max_parallel_jobs": 2
+  },
+  "hypothesis_map": {},
+  "tests": {},
+  "execution_policy": {
+    "fail_fast": false,
+    "retry_on_error": 1,
+    "resume_from_artifacts": true
+  },
+  "design_notes": [
+    {
+      "type": "revision_applied",
+      "changes": {
+        "sensitivity_trials": 1,
+        "prompt_rounds": 1
+      },
+      "timestamp": 1774138265.6937404
+    },
+    {
+      "type": "revision_applied",
+      "changes": {
+        "sensitivity_trials": 1,
+        "prompt_rounds": 1
+      },
+      "timestamp": 1774138265.703404
+    },
+    {
+      "type": "revision_applied",
+      "changes": {
+        "sensitivity_trials": 1,
+        "prompt_rounds": 1
+      },
+      "timestamp": 1774138265.7144563
+    }
+  ],
+  "revision": 3,
+  "revised_at": 1774138265.7144573
+}

@@ -13,6 +13,7 @@ Responsibilities:
 
 import json
 import logging
+import os
 import subprocess
 import sys
 import tempfile
@@ -50,6 +51,7 @@ If tests fail, debug and rewrite. Only call solver_sign_off once ALL tests pass.
 
 You may call query_paper_agent to clarify mathematical notation.
 You may call query_extractor to confirm hypothesis testability.
+Your final action MUST be: run_validation -> solver_sign_off (only after all_passed=true).
 """
 
 
@@ -68,11 +70,12 @@ SOLVER_TEMPLATE_HINT = """\
 
 
 class SolverBuilderAgent:
-    def __init__(self, model: str = "claude-opus-4-6"):
+    def __init__(self, model: str | None = None):
         self.client = AgentClient(model=model)
         self._paper_parse: dict = {}
         self._paradigm: dict = {}
         self._validation_results: dict = {}
+        self.allow_fallback = os.environ.get("PHASE2_ALLOW_SOLVER_FALLBACK", "1") == "1"
 
     # ------------------------------------------------------------------ #
     # Main entry                                                         #
@@ -114,22 +117,63 @@ class SolverBuilderAgent:
             }
         ]
 
+        run_error = None
         try:
+            logger.info(f"[{AGENT_NAME}] LLM build attempt 1")
             self.client.run(
                 system=SYSTEM_PROMPT,
                 messages=messages,
                 tools=tools,
                 tool_executor=self._execute_tool,
                 max_iterations=40,
-                max_rate_limit_retries=1,   # fail fast to fallback on rate limit
+                temperature=0.2,
             )
         except Exception as e:
-            logger.warning(f"[{AGENT_NAME}] API failed ({e}), using fallback solver")
+            run_error = e
+            logger.warning(f"[{AGENT_NAME}] API attempt 1 failed: {e}")
+
+        if not fio.file_exists("solver_signoff.json"):
+            logger.info(f"[{AGENT_NAME}] Missing solver_signoff.json after attempt 1; validating and retrying once")
+            local_validation = self._run_validation_tests()
+            self._validation_results = local_validation
+            if local_validation.get("all_passed"):
+                self.sign_off(local_validation)
+            else:
+                try:
+                    repair_msg = [
+                        {
+                            "role": "user",
+                            "content": (
+                                "Repair mode. The current solver did not pass validation. "
+                                "Fix the solver, then run_validation again, then solver_sign_off.\n\n"
+                                f"VALIDATION_REPORT:\n{json.dumps(local_validation, ensure_ascii=False, indent=2)}"
+                            ),
+                        }
+                    ]
+                    self.client.run(
+                        system=SYSTEM_PROMPT,
+                        messages=repair_msg,
+                        tools=tools,
+                        tool_executor=self._execute_tool,
+                        max_iterations=25,
+                        temperature=0.1,
+                    )
+                except Exception as e:
+                    run_error = run_error or e
+                    logger.warning(f"[{AGENT_NAME}] API repair attempt failed: {e}")
 
         solver_path = fio.ws("solver/solver_b.py")
-        if not solver_path.exists():
-            logger.warning(f"[{AGENT_NAME}] Solver file not written — writing fallback")
-            self._write_fallback_solver()
+        signoff_exists = fio.file_exists("solver_signoff.json")
+        if not solver_path.exists() or not signoff_exists:
+            reason = "missing solver file" if not solver_path.exists() else "missing solver signoff"
+            logger.error(f"[{AGENT_NAME}] Build incomplete ({reason})")
+            if self.allow_fallback:
+                logger.warning(f"[{AGENT_NAME}] Using fallback solver (PHASE2_ALLOW_SOLVER_FALLBACK=1)")
+                self._write_fallback_solver()
+            else:
+                raise RuntimeError(
+                    f"[{AGENT_NAME}] Build failed without fallback. Last error: {run_error}"
+                )
 
         logger.info(f"[{AGENT_NAME}] Solver ready at {solver_path}")
         return solver_path
@@ -253,11 +297,13 @@ class SolverBuilderAgent:
     def _execute_tool(self, name: str, inputs: dict) -> str:
         if name == "write_solver":
             fio.write_text("solver/solver_b.py", inputs["code"])
+            logger.info(f"[{AGENT_NAME}] tool write_solver called")
             return "solver_b.py written successfully."
 
         if name == "run_validation":
             results = self._run_validation_tests()
             self._validation_results = results
+            logger.info(f"[{AGENT_NAME}] tool run_validation called; all_passed={results.get('all_passed')}")
             return json.dumps(results, indent=2)
 
         if name == "query_paper_agent":
@@ -280,6 +326,7 @@ class SolverBuilderAgent:
 
         if name == "solver_sign_off":
             self.sign_off(self._validation_results)
+            logger.info(f"[{AGENT_NAME}] tool solver_sign_off called")
             return "Solver Builder signed off for Gate 1."
 
         return f"Unknown tool: {name}"

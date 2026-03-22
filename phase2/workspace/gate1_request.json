@@ -5,13 +5,11 @@
     "scenario_extractor",
     "solver_builder"
   ],
-  "timestamp": 1773509038.0396323,
+  "timestamp": 1774138174.4714918,
   "summary": {
-    "hypotheses_count": 3,
+    "hypotheses_count": 0,
     "solver_validation": "passed",
-    "open_issues": [
-      "24 messages still pending"
-    ]
+    "open_issues": []
   },
   "review_checklist": [
     "solver correctly implements Kalman-like posterior covariance?",
