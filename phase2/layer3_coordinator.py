@@ -58,6 +58,53 @@ def _print_layer3_summary() -> None:
     print("=" * 60 + "\n")
 
 
+def _write_emergency_summary(runner_error: Exception | None = None, analysis_error: Exception | None = None) -> None:
+    if fio.file_exists("metrics/layer3_summary.json"):
+        return
+
+    runner_summary = {}
+    if fio.file_exists("raw_results/run_manifest.json"):
+        runner_summary = fio.read_json("raw_results/run_manifest.json").get("summary", {})
+    elif fio.file_exists("metrics/runner_state.json"):
+        state = fio.read_json("metrics/runner_state.json")
+        runner_summary = {
+            "jobs_total": state.get("jobs_recorded", 0),
+            "jobs_ok": 0,
+            "jobs_error": 0,
+            "estimated_calls_used": state.get("estimated_calls_used", 0),
+            "budget_limit": None,
+            "status": state.get("status"),
+        }
+
+    status_data = {
+        "overall": {"pass_count": 0, "fail_count": 0, "inconclusive_count": 0},
+        "hypotheses": [],
+    }
+    if fio.file_exists("metrics/hypothesis_status.json"):
+        status_data = fio.read_json("metrics/hypothesis_status.json")
+
+    errors = []
+    if runner_error:
+        errors.append(f"runner_error: {runner_error}")
+    if analysis_error:
+        errors.append(f"analysis_error: {analysis_error}")
+
+    fio.write_json(
+        "metrics/layer3_summary.json",
+        {
+            "agent": "analysis",
+            "started_at": time.time(),
+            "finished_at": time.time(),
+            "runner_summary": runner_summary,
+            "overall": status_data.get("overall", {}),
+            "hypotheses": status_data.get("hypotheses", []),
+            "events_processed": 0,
+            "incomplete": True,
+            "errors": errors,
+        },
+    )
+
+
 def run(dry_run: bool = False, ignore_gate: bool = False) -> None:
     if (not ignore_gate) and (not fio.is_gate_approved(2)):
         raise RuntimeError("Gate 2 not approved. Please complete Layer 2 first.")
@@ -96,6 +143,9 @@ def run(dry_run: bool = False, ignore_gate: bool = False) -> None:
 
     t_runner.join()
     t_analysis.join(timeout=30)
+
+    if runner_exc[0] or analysis_exc[0] or t_analysis.is_alive():
+        _write_emergency_summary(runner_error=runner_exc[0], analysis_error=analysis_exc[0])
 
     if runner_exc[0]:
         raise RuntimeError(f"Runner failed: {runner_exc[0]}")

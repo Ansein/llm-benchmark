@@ -5,9 +5,9 @@
     "scenario_extractor",
     "solver_builder"
   ],
-  "timestamp": 1774138174.4714918,
+  "timestamp": 1774276642.3929849,
   "summary": {
-    "hypotheses_count": 0,
+    "hypotheses_count": 3,
     "solver_validation": "passed",
     "open_issues": []
   },

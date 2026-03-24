@@ -3,12 +3,12 @@
   "signed": true,
   "validation_results": {
     "test1": true,
-    "test1_detail": "rho=0 reproducible: 1.000",
+    "test1_detail": "rho=0 reproducible: 0.500",
     "test2": true,
-    "test2_detail": "rho=0.3 share=1.000, rho=0.9 share=1.000",
+    "test2_detail": "rho=0.3 share=0.500, rho=0.9 share=0.500",
     "test3": true,
-    "test3_detail": "N=8,rho=0.6: share=1.000, profit=132.155",
+    "test3_detail": "N=8,rho=0.6: share=0.500, profit=49.799",
     "all_passed": true
   },
-  "timestamp": 1774138153.9397728
+  "timestamp": 1774276460.972589
 }

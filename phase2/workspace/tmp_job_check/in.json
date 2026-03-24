@@ -1,0 +1,1 @@
+{"hypothesis": {"id": "H1", "statement": "x", "nature": "comparative_static", "preferred_test": "SensitivityTest", "success_criterion": "y"}, "model": "dummy-model", "params": {}}

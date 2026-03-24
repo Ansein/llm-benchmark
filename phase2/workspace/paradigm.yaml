@@ -1,6 +1,36 @@
+paper: 'Too Much Data: Prices and Inefficiencies in Data Markets'
 scenario_id: B
-equilibrium_concept: Strategic market equilibrium over user sharing decisions and
-  platform prices; the excerpt does not explicitly name a Bayesian Nash, Stackelberg,
-  or pure-strategy equilibrium.
-game_type: data_market_with_privacy_externalities
-paper: Data Markets and Privacy Externalities (Acemoglu et al., 2022)
+equilibrium_concept: Bayes-Nash equilibrium of the data-sharing game
+game_type: data_sharing_game_with_privacy_externalities
+hypotheses:
+- id: H1
+  nature: comparative_static
+  preferred_test: SensitivityTest
+  parameters_to_vary:
+  - rho
+  statement: As the privacy/externality parameter rho increases, the equilibrium share_rate
+    decreases.
+  success_criterion: 'A monotone negative relationship between rho and equilibrium
+    share_rate: higher rho implies weakly lower share_rate across tested values.'
+- id: H2
+  nature: knowledge_dependent
+  preferred_test: PromptLadderTest
+  parameters_to_vary:
+  - prompt_externality_detail_level
+  statement: Providing more explicit externality context in the prompt improves the
+    model's understanding of the mechanism by which one user’s sharing lowers others’
+    marginal privacy cost and depresses the data price.
+  success_criterion: Mechanism-understanding scores increase with prompt_externality_detail_level,
+    or the model mentions the externality mechanism more accurately and completely
+    at higher detail levels.
+- id: H3
+  nature: dynamic_convergence
+  preferred_test: FictitiousPlayTest
+  parameters_to_vary:
+  - iteration_round
+  - belief_state
+  statement: Under iterative fictitious-play belief updating, the model’s stated sharing
+    strategy converges toward the Bayes-Nash equilibrium prediction.
+  success_criterion: The distance between the model’s strategy output and the Bayes-Nash
+    benchmark declines over iterations and is below a preset tolerance by the final
+    round.

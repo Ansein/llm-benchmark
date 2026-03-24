@@ -11,11 +11,13 @@ Responsibilities:
 from __future__ import annotations
 
 import hashlib
-import io
 import json
 import logging
+import os
+import subprocess
+import sys
+import tempfile
 import time
-import contextlib
 from pathlib import Path
 from typing import Any
 
@@ -38,6 +40,7 @@ class RunnerAgent:
         self._max_total_calls = 2500
         self._estimated_calls_used = 0
         self._tests_cfg: dict[str, Any] = {}
+        self._active_job: dict[str, Any] | None = None
 
     def run_loop(self, max_cycles: int = 2000, idle_sleep: float = 0.2) -> dict[str, Any]:
         logger.info(f"[{AGENT_NAME}] Starting Layer 3 run loop (dry_run={self.dry_run})")
@@ -86,11 +89,18 @@ class RunnerAgent:
         return summary
 
     def _build_initial_queue(self, hypotheses: list[dict[str, Any]], models: list[str]) -> None:
+        from tests import resolve_test_class
+
         for h in hypotheses:
             h_id = h.get("id", "H?")
-            test_name = h.get("preferred_test")
-            if not test_name:
-                continue
+            try:
+                test_name = resolve_test_class(h).test_name
+            except Exception as e:
+                raise RuntimeError(f"Unable to resolve test class for hypothesis {h_id}: {e}") from e
+            if test_name not in self._tests_cfg:
+                raise RuntimeError(
+                    f"Resolved test {test_name!r} for hypothesis {h_id} is missing from market_config tests"
+                )
             for model in models:
                 self._enqueue_job(
                     {
@@ -122,11 +132,7 @@ class RunnerAgent:
             if self.dry_run:
                 result = self._run_hypothesis_test_dry(hypothesis, model, params)
             else:
-                from tests import run_hypothesis_test
-                # Some reused Phase-1 scripts print emoji/non-GBK chars; isolate stdout/stderr
-                # so Windows console encoding does not break test execution.
-                with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-                    result = run_hypothesis_test(hypothesis=hypothesis, model=model, params=params)
+                result = self._run_hypothesis_test_subprocess(hypothesis=hypothesis, model=model, params=params)
 
             status = "ok"
             error = None
@@ -141,6 +147,7 @@ class RunnerAgent:
             }
 
         finished = time.time()
+        self._active_job = None
         self._estimated_calls_used += 1
         artifact = self._write_job_artifact(job, result, status=status, error=error, started=started, finished=finished)
         event = {
@@ -174,10 +181,98 @@ class RunnerAgent:
         metrics = {"dry_score": score % 100, "dry_run": True}
         return {
             "hypothesis": hypothesis,
-            "test_name": hypothesis.get("preferred_test"),
+            "test_name": job_test_name(hypothesis),
             "metrics": metrics,
             "result": {"hypothesis_id": h_id, "passed": passed, "verdict": verdict, "details": {"metrics": metrics}},
         }
+
+    def _run_hypothesis_test_subprocess(
+        self,
+        hypothesis: dict[str, Any],
+        model: str,
+        params: dict[str, Any],
+    ) -> dict[str, Any]:
+        project_root = Path(__file__).resolve().parents[2]
+        with tempfile.TemporaryDirectory(prefix="phase2_job_") as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            input_path = tmp_path / "job_input.json"
+            output_path = tmp_path / "job_output.json"
+            stdout_path = tmp_path / "worker_stdout.log"
+            stderr_path = tmp_path / "worker_stderr.log"
+            input_payload = {
+                "hypothesis": hypothesis,
+                "model": model,
+                "params": params,
+            }
+            input_path.write_text(json.dumps(input_payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            env = os.environ.copy()
+            env.setdefault("PYTHONIOENCODING", "utf-8")
+            cmd = [
+                sys.executable,
+                "-m",
+                "phase2.tests.job_worker",
+                str(input_path),
+                str(output_path),
+            ]
+            expected_units = self._estimate_subtasks(test_name=job_test_name(hypothesis), params=params)
+            self._active_job = {
+                "hypothesis_id": hypothesis.get("id", "H?"),
+                "test_name": job_test_name(hypothesis),
+                "model": model,
+                "started_at": time.time(),
+                "expected_units": expected_units,
+                "completed_units": 0,
+                "recent_artifact_time": None,
+                "progress_note": "worker_started",
+            }
+
+            with stdout_path.open("w", encoding="utf-8", errors="replace") as stdout_f:
+                with stderr_path.open("w", encoding="utf-8", errors="replace") as stderr_f:
+                    proc = subprocess.Popen(
+                        cmd,
+                        cwd=str(project_root),
+                        stdout=stdout_f,
+                        stderr=stderr_f,
+                        env=env,
+                    )
+                    deadline = time.time() + 1800
+                    while True:
+                        ret = proc.poll()
+                        progress = self._collect_subprogress(
+                            test_name=job_test_name(hypothesis),
+                            model=model,
+                            params=params,
+                            started_at=self._active_job["started_at"],
+                        )
+                        self._active_job.update(progress)
+                        self._write_state(status="running")
+                        if ret is not None:
+                            break
+                        if time.time() > deadline:
+                            proc.kill()
+                            proc.wait(timeout=10)
+                            raise RuntimeError("worker timeout (>1800s)")
+                        time.sleep(5)
+
+            stdout_tail = stdout_path.read_text(encoding="utf-8", errors="replace")[-400:]
+            stderr_tail = stderr_path.read_text(encoding="utf-8", errors="replace")[-400:]
+
+            if output_path.exists():
+                payload = json.loads(output_path.read_text(encoding="utf-8"))
+                if payload.get("ok"):
+                    return payload["result"]
+                raise RuntimeError(
+                    "worker exception: "
+                    f"{payload.get('error', 'unknown error')}\n"
+                    f"{payload.get('traceback', '').strip()}"
+                )
+
+            raise RuntimeError(
+                "worker exited without structured output: "
+                f"returncode={proc.returncode}, "
+                f"stdout_tail={stdout_tail!r}, stderr_tail={stderr_tail!r}"
+            )
 
     def _write_job_artifact(
         self,
@@ -244,16 +339,19 @@ class RunnerAgent:
             return
 
         if action == "rerun_hypothesis":
+            from tests import resolve_test_class
+
             hypothesis = directive.get("hypothesis")
             models = directive.get("models", [])
             if not hypothesis:
                 return
+            test_name = resolve_test_class(hypothesis).test_name
             for model in models:
                 self._enqueue_job(
                     {
                         "hypothesis": hypothesis,
                         "hypothesis_id": hypothesis.get("id", "H?"),
-                        "test_name": hypothesis.get("preferred_test"),
+                        "test_name": test_name,
                         "model": model,
                         "retry_count": 0,
                         "source": "rerun_hypothesis",
@@ -292,13 +390,87 @@ class RunnerAgent:
         return out
 
     def _write_state(self, status: str) -> None:
-        fio.write_json(
-            "metrics/runner_state.json",
-            {
-                "status": status,
-                "queue_len": len(self._queue),
-                "jobs_recorded": len(self._results),
-                "estimated_calls_used": self._estimated_calls_used,
-                "timestamp": time.time(),
-            },
-        )
+        payload = {
+            "status": status,
+            "queue_len": len(self._queue),
+            "jobs_recorded": len(self._results),
+            "estimated_calls_used": self._estimated_calls_used,
+            "timestamp": time.time(),
+        }
+        if self._active_job is not None:
+            payload["active_job"] = self._active_job
+        fio.write_json("metrics/runner_state.json", payload)
+
+    def _estimate_subtasks(self, test_name: str, params: dict[str, Any]) -> int | None:
+        if test_name == "SensitivityTest":
+            rho_values = params.get("rho_values", [])
+            v_ranges = params.get("v_ranges", [])
+            num_trials = int(params.get("num_trials", 1))
+            return max(len(rho_values) * len(v_ranges) * num_trials, 1)
+        if test_name == "PromptLadderTest":
+            versions = params.get("versions", [])
+            num_rounds = int(params.get("num_rounds", 1))
+            return max(len(versions) * num_rounds, 1)
+        if test_name == "FictitiousPlayTest":
+            return max(int(params.get("num_trials", 1)) * int(params.get("max_rounds", 50)), 1)
+        return None
+
+    def _collect_subprogress(
+        self,
+        test_name: str,
+        model: str,
+        params: dict[str, Any],
+        started_at: float,
+    ) -> dict[str, Any]:
+        output_dir = params.get("output_dir")
+        if not output_dir:
+            return {"completed_units": 0, "recent_artifact_time": None, "progress_note": "no_output_dir"}
+
+        base = Path(output_dir)
+        if not base.exists():
+            return {"completed_units": 0, "recent_artifact_time": None, "progress_note": "output_dir_not_created"}
+
+        if test_name == "SensitivityTest":
+            pattern = f"**/{model}/result_*.json"
+            files = [p for p in base.glob(pattern) if p.stat().st_mtime >= started_at - 2]
+            latest = max((p.stat().st_mtime for p in files), default=None)
+            return {
+                "completed_units": len(files),
+                "recent_artifact_time": latest,
+                "progress_note": "counting_sensitivity_result_files",
+            }
+
+        if test_name == "PromptLadderTest":
+            files = [
+                p for p in base.glob(f"*_{model}_*.json")
+                if p.is_file() and not p.name.startswith("summary_") and p.stat().st_mtime >= started_at - 2
+            ]
+            latest = max((p.stat().st_mtime for p in files), default=None)
+            return {
+                "completed_units": len(files),
+                "recent_artifact_time": latest,
+                "progress_note": "counting_prompt_version_result_files",
+            }
+
+        if test_name == "FictitiousPlayTest":
+            files = [p for p in base.glob(f"**/{model}_*/*") if p.is_file() and p.stat().st_mtime >= started_at - 2]
+            latest = max((p.stat().st_mtime for p in files), default=None)
+            return {
+                "completed_units": len(files),
+                "recent_artifact_time": latest,
+                "progress_note": "counting_fictitious_play_artifacts",
+            }
+
+        files = [p for p in base.glob("**/*") if p.is_file() and p.stat().st_mtime >= started_at - 2]
+        latest = max((p.stat().st_mtime for p in files), default=None)
+        return {
+            "completed_units": len(files),
+            "recent_artifact_time": latest,
+            "progress_note": "counting_generic_artifacts",
+        }
+
+
+def job_test_name(hypothesis: dict[str, Any]) -> str:
+    from tests import resolve_test_class
+
+    return resolve_test_class(hypothesis).test_name

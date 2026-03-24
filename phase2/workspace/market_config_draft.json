@@ -1,8 +1,8 @@
 {
   "version": "phase2.layer2.v1",
   "scenario_id": "B",
-  "paper": "Data Markets and Privacy Externalities (Acemoglu et al., 2022)",
-  "created_at": 1774138265.6837478,
+  "paper": "Too Much Data: Prices and Inefficiencies in Data Markets",
+  "created_at": 1774277265.339686,
   "created_by": "market_designer",
   "models": [
     "gpt-5.2",
@@ -15,39 +15,74 @@
     "seed": 42,
     "max_parallel_jobs": 2
   },
-  "hypothesis_map": {},
-  "tests": {},
+  "hypothesis_map": {
+    "H1": {
+      "nature": "comparative_static",
+      "preferred_test": "SensitivityTest",
+      "success_criterion": "A monotone negative relationship between rho and equilibrium share_rate: higher rho implies weakly lower share_rate across tested values."
+    },
+    "H2": {
+      "nature": "knowledge_dependent",
+      "preferred_test": "PromptLadderTest",
+      "success_criterion": "Mechanism-understanding scores increase with prompt_externality_detail_level, or the model mentions the externality mechanism more accurately and completely at higher detail levels."
+    },
+    "H3": {
+      "nature": "dynamic_convergence",
+      "preferred_test": "FictitiousPlayTest",
+      "success_criterion": "The distance between the model’s strategy output and the Bayes-Nash benchmark declines over iterations and is below a preset tolerance by the final round."
+    }
+  },
+  "tests": {
+    "SensitivityTest": {
+      "enabled": true,
+      "rho_values": [
+        0.3,
+        0.6,
+        0.9
+      ],
+      "v_ranges": [
+        [
+          0.3,
+          0.6
+        ],
+        [
+          0.6,
+          0.9
+        ],
+        [
+          0.9,
+          1.2
+        ]
+      ],
+      "prompt_version": "b.v4",
+      "num_trials": 2,
+      "output_dir": "phase2/workspace/raw_results/sensitivity"
+    },
+    "PromptLadderTest": {
+      "enabled": true,
+      "versions": [
+        "b.v1",
+        "b.v2",
+        "b.v3",
+        "b.v4",
+        "b.v5",
+        "b.v6"
+      ],
+      "num_rounds": 1,
+      "use_theory_platform": true,
+      "output_dir": "phase2/workspace/raw_results/prompt_ladder"
+    },
+    "FictitiousPlayTest": {
+      "enabled": true,
+      "max_rounds": 50,
+      "belief_window": 10,
+      "num_trials": 1,
+      "output_dir": "phase2/workspace/raw_results/fictitious_play"
+    }
+  },
   "execution_policy": {
     "fail_fast": false,
     "retry_on_error": 1,
     "resume_from_artifacts": true
-  },
-  "design_notes": [
-    {
-      "type": "revision_applied",
-      "changes": {
-        "sensitivity_trials": 1,
-        "prompt_rounds": 1
-      },
-      "timestamp": 1774138265.6937404
-    },
-    {
-      "type": "revision_applied",
-      "changes": {
-        "sensitivity_trials": 1,
-        "prompt_rounds": 1
-      },
-      "timestamp": 1774138265.703404
-    },
-    {
-      "type": "revision_applied",
-      "changes": {
-        "sensitivity_trials": 1,
-        "prompt_rounds": 1
-      },
-      "timestamp": 1774138265.7144563
-    }
-  ],
-  "revision": 3,
-  "revised_at": 1774138265.7144573
+  }
 }

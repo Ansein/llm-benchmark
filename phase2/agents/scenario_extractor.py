@@ -21,6 +21,13 @@ from tools.agent_api_client import AgentClient, make_tool_spec
 logger = logging.getLogger(__name__)
 
 AGENT_NAME = "scenario_extractor"
+ALLOWED_NATURES = {"comparative_static", "knowledge_dependent", "dynamic_convergence"}
+NATURE_TO_TEST = {
+    "comparative_static": "SensitivityTest",
+    "knowledge_dependent": "PromptLadderTest",
+    "dynamic_convergence": "FictitiousPlayTest",
+}
+ALLOWED_TESTS = set(NATURE_TO_TEST.values())
 
 SYSTEM_PROMPT = """You are the Scenario Extractor Agent in a multi-agent research framework.
 
@@ -36,7 +43,13 @@ For Scenario B ("Too Much Data" by Acemoglu et al. 2022), the hypotheses are usu
 
 Each hypothesis must have:
 - id, statement, nature (one of: comparative_static / knowledge_dependent / dynamic_convergence)
-- preferred_test, parameters_to_vary, success_criterion
+- preferred_test (must be one of: SensitivityTest / PromptLadderTest / FictitiousPlayTest)
+- parameters_to_vary, success_criterion
+
+The mapping is fixed:
+- comparative_static -> SensitivityTest
+- knowledge_dependent -> PromptLadderTest
+- dynamic_convergence -> FictitiousPlayTest
 
 Before finalizing paradigm.yaml, you MUST:
 1. Send a query to the Solver Builder asking if all hypotheses are numerically testable
@@ -121,6 +134,11 @@ class ScenarioExtractorAgent:
             self._write_default_paradigm()
 
         result = fio.read_yaml("paradigm.yaml")
+        ok, err = self._validate_paradigm(result)
+        if not ok:
+            logger.error(f"[{AGENT_NAME}] invalid paradigm from LLM: {err}; using fallback paradigm")
+            self._write_default_paradigm()
+            result = fio.read_yaml("paradigm.yaml")
         if result.get("_warning"):
             logger.warning(f"[{AGENT_NAME}] paradigm.yaml written via fallback path")
         else:
@@ -221,7 +239,42 @@ class ScenarioExtractorAgent:
                         },
                         "hypotheses": {
                             "type": "array",
-                            "items": {"type": "object"},
+                            "minItems": 1,
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {"type": "string"},
+                                    "statement": {"type": "string"},
+                                    "nature": {
+                                        "type": "string",
+                                        "enum": [
+                                            "comparative_static",
+                                            "knowledge_dependent",
+                                            "dynamic_convergence",
+                                        ],
+                                    },
+                                    "preferred_test": {
+                                        "type": "string",
+                                        "enum": [
+                                            "SensitivityTest",
+                                            "PromptLadderTest",
+                                            "FictitiousPlayTest",
+                                        ],
+                                    },
+                                    "parameters_to_vary": {
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                    },
+                                    "success_criterion": {"type": "string"},
+                                },
+                                "required": [
+                                    "id",
+                                    "statement",
+                                    "nature",
+                                    "preferred_test",
+                                    "success_criterion",
+                                ],
+                            },
                         },
                     },
                     "required": [
@@ -255,6 +308,10 @@ class ScenarioExtractorAgent:
             return self._wait_for_reply(msg_id, timeout=180)
 
         if name == "write_paradigm":
+            ok, err = self._validate_paradigm(inputs)
+            if not ok:
+                logger.warning(f"[{AGENT_NAME}] write_paradigm rejected: {err}")
+                return f"ERROR: invalid paradigm payload: {err}"
             fio.write_yaml("paradigm.yaml", inputs)
             self.sign_off()
             logger.info(f"[{AGENT_NAME}] tool write_paradigm called and signoff written")
@@ -278,6 +335,36 @@ class ScenarioExtractorAgent:
                     return msg["content"]
             time.sleep(2)
         return f"[Timeout waiting for reply to {original_msg_id}]"
+
+    @staticmethod
+    def _validate_paradigm(paradigm: dict) -> tuple[bool, str]:
+        hypotheses = paradigm.get("hypotheses")
+        if not isinstance(hypotheses, list) or not hypotheses:
+            return False, "hypotheses must be a non-empty list"
+        return ScenarioExtractorAgent._validate_hypotheses(hypotheses)
+
+    @staticmethod
+    def _validate_hypotheses(hypotheses: list[dict]) -> tuple[bool, str]:
+        required = ["id", "statement", "nature", "preferred_test", "success_criterion"]
+        for i, h in enumerate(hypotheses, start=1):
+            if not isinstance(h, dict):
+                return False, f"H{i} must be an object"
+            for k in required:
+                if not str(h.get(k, "")).strip():
+                    return False, f"H{i} missing required field: {k}"
+            nature = h.get("nature")
+            preferred_test = h.get("preferred_test")
+            if nature not in ALLOWED_NATURES:
+                return False, f"H{i} has invalid nature: {nature}"
+            if preferred_test not in ALLOWED_TESTS:
+                return False, f"H{i} has invalid preferred_test: {preferred_test}"
+            expected_test = NATURE_TO_TEST[nature]
+            if preferred_test != expected_test:
+                return False, (
+                    f"H{i} has inconsistent mapping: nature={nature} requires "
+                    f"preferred_test={expected_test}, got {preferred_test}"
+                )
+        return True, ""
 
     # ------------------------------------------------------------------ #
     # Fallback paradigm (Scenario B hardcoded)                           #

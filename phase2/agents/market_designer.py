@@ -20,6 +20,12 @@ from tools import file_io as fio
 logger = logging.getLogger(__name__)
 
 AGENT_NAME = "market_designer"
+VALID_TESTS = {"SensitivityTest", "PromptLadderTest", "FictitiousPlayTest"}
+NATURE_TO_TEST = {
+    "comparative_static": "SensitivityTest",
+    "knowledge_dependent": "PromptLadderTest",
+    "dynamic_convergence": "FictitiousPlayTest",
+}
 
 
 class MarketDesignerAgent:
@@ -34,17 +40,38 @@ class MarketDesignerAgent:
         paper_parse = fio.read_json("paper_parse.json") if fio.file_exists("paper_parse.json") else {}
 
         hypotheses = paradigm.get("hypotheses", [])
+        if not isinstance(hypotheses, list) or not hypotheses:
+            raise RuntimeError(
+                "paradigm.yaml has no executable hypotheses; stop Layer 2 to avoid empty Layer 3 jobs."
+            )
         selected_models = self._select_models(limit=3)
 
         tests: dict[str, dict[str, Any]] = {}
         hypothesis_map: dict[str, dict[str, Any]] = {}
         for h in hypotheses:
             h_id = h.get("id", "H?")
+            nature = h.get("nature")
             preferred_test = h.get("preferred_test")
+            if not preferred_test:
+                raise RuntimeError(f"Hypothesis {h_id} missing preferred_test in paradigm.yaml")
+            if preferred_test not in VALID_TESTS:
+                raise RuntimeError(
+                    f"Hypothesis {h_id} has unsupported preferred_test={preferred_test!r}"
+                )
+            expected_test = NATURE_TO_TEST.get(nature)
+            if expected_test != preferred_test:
+                raise RuntimeError(
+                    f"Hypothesis {h_id} has inconsistent nature/preferred_test: "
+                    f"nature={nature!r}, preferred_test={preferred_test!r}, expected={expected_test!r}"
+                )
             test_cfg = self._build_test_config(preferred_test)
+            if not bool(test_cfg.get("enabled", False)):
+                raise RuntimeError(
+                    f"Hypothesis {h_id} maps to disabled test config for preferred_test={preferred_test!r}"
+                )
             tests[preferred_test] = test_cfg
             hypothesis_map[h_id] = {
-                "nature": h.get("nature"),
+                "nature": nature,
                 "preferred_test": preferred_test,
                 "success_criterion": h.get("success_criterion", ""),
             }
